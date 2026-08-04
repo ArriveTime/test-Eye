@@ -489,9 +489,6 @@
     </div>
 
     <script>
-        // --- Icon Initialization ---
-        lucide.createIcons();
-
         // --- FIREBASE REALTIME DATABASE CONFIGURATION ---
         // Replace the config object below with your actual Firebase project credentials
         const firebaseConfig = {
@@ -545,103 +542,8 @@
         }
 
         initFirebaseTracker();
-        document.getElementById('logTime1').textContent = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
 
-        // --- Time Ticker Logic ---
-        function updateVegasTime() {
-            const timeElement = document.getElementById('vegasClock');
-            if (timeElement) {
-                const options = { 
-                    timeZone: 'America/Los_Angeles',
-                    hour: 'numeric',
-                    minute: '2-digit',
-                    second: '2-digit',
-                    hour12: true
-                };
-                const vegasTime = new Intl.DateTimeFormat('en-US', options).format(new Date());
-                timeElement.textContent = vegasTime;
-            }
-        }
-        setInterval(updateVegasTime, 1000);
-        updateVegasTime();
-
-        // --- Directory Filtering Logic ---
-        function filterCategory(category) {
-            const buttons = ['all', 'sports', 'tickets', 'dining', 'entertainment', 'general'];
-            
-            buttons.forEach(btn => {
-                const el = document.getElementById(`btn-${btn}`);
-                if (el) {
-                    if (btn === category) {
-                        el.className = "bg-amber-500 text-slate-950 font-bold px-3 py-1.5 rounded-lg transition-colors";
-                    } else {
-                        el.className = "bg-slate-900 border border-slate-800 text-slate-300 hover:bg-slate-800 px-3 py-1.5 rounded-lg font-medium transition-colors";
-                    }
-                }
-            });
-
-            const cards = document.querySelectorAll('.tool-card');
-            cards.forEach(card => {
-                if (category === 'all' || card.getAttribute('data-category') === category) {
-                    card.classList.remove('hidden-directory-card');
-                } else {
-                    card.classList.add('hidden-directory-card');
-                }
-            });
-            
-            const searchInput = document.getElementById('directorySearch');
-            if(searchInput) searchInput.value = '';
-        }
-
-        // --- Directory Search Logic ---
-        const searchInput = document.getElementById('directorySearch');
-        if (searchInput) {
-            searchInput.addEventListener('input', (e) => {
-                const searchTerm = e.target.value.toLowerCase();
-                const cards = document.querySelectorAll('.tool-card');
-                
-                if(searchTerm.length > 0) {
-                     const buttons = ['all', 'sports', 'tickets', 'dining', 'entertainment', 'general'];
-                     buttons.forEach(btn => {
-                        const el = document.getElementById(`btn-${btn}`);
-                        if(el) {
-                             el.className = "bg-slate-900 border border-slate-800 text-slate-300 hover:bg-slate-800 px-3 py-1.5 rounded-lg font-medium transition-colors";
-                        }
-                     });
-                }
-
-                cards.forEach(card => {
-                    const keywords = card.getAttribute('data-keywords').toLowerCase();
-                    const title = card.querySelector('h3').textContent.toLowerCase();
-                    
-                    if (keywords.includes(searchTerm) || title.includes(searchTerm)) {
-                        card.classList.remove('hidden-directory-card');
-                    } else {
-                        card.classList.add('hidden-directory-card');
-                    }
-                });
-            });
-        }
-
-        // Handle Search Form
-        const searchForm = document.getElementById('internetSearchForm');
-        if(searchForm) {
-            searchForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                const btn = document.getElementById('searchBtn');
-                const originalText = btn.innerHTML;
-                btn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> Searching...';
-                lucide.createIcons();
-                
-                setTimeout(() => {
-                    btn.innerHTML = originalText;
-                    lucide.createIcons();
-                }, 800);
-            });
-        }
-
-
-        // --- RESTORED FULL LIVE NEWS FEED ITEMS ---
+        // --- FULL LIVE NEWS FEED ITEMS ---
         const sampleNews = [
             {
                 title: "F1 Las Vegas Grand Prix Announces Track Upgrades for 2026",
@@ -777,6 +679,7 @@
                 `;
                 container.appendChild(item);
             });
+            // Render icons safely after elements are injected into the DOM
             lucide.createIcons();
         }
 
@@ -793,10 +696,104 @@
             }
         }
 
+        // --- DOM Ready Execution ---
         document.addEventListener('DOMContentLoaded', () => {
             renderNews(sampleNews);
+            document.getElementById('logTime1').textContent = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
         });
 
+        // --- Time Ticker Logic ---
+        function updateVegasTime() {
+            const timeElement = document.getElementById('vegasClock');
+            if (timeElement) {
+                const options = { 
+                    timeZone: 'America/Los_Angeles',
+                    hour: 'numeric',
+                    minute: '2-digit',
+                    second: '2-digit',
+                    hour12: true
+                };
+                const vegasTime = new Intl.DateTimeFormat('en-US', options).format(new Date());
+                timeElement.textContent = vegasTime;
+            }
+        }
+        setInterval(updateVegasTime, 1000);
+        updateVegasTime();
+
+        // --- Directory Filtering Logic ---
+        function filterCategory(category) {
+            const buttons = ['all', 'sports', 'tickets', 'dining', 'entertainment', 'general'];
+            
+            buttons.forEach(btn => {
+                const el = document.getElementById(`btn-${btn}`);
+                if (el) {
+                    if (btn === category) {
+                        el.className = "bg-amber-500 text-slate-950 font-bold px-3 py-1.5 rounded-lg transition-colors";
+                    } else {
+                        el.className = "bg-slate-900 border border-slate-800 text-slate-300 hover:bg-slate-800 px-3 py-1.5 rounded-lg font-medium transition-colors";
+                    }
+                }
+            });
+
+            const cards = document.querySelectorAll('.tool-card');
+            cards.forEach(card => {
+                if (category === 'all' || card.getAttribute('data-category') === category) {
+                    card.classList.remove('hidden-directory-card');
+                } else {
+                    card.classList.add('hidden-directory-card');
+                }
+            });
+            
+            const searchInput = document.getElementById('directorySearch');
+            if(searchInput) searchInput.value = '';
+        }
+
+        // --- Directory Search Logic ---
+        const searchInput = document.getElementById('directorySearch');
+        if (searchInput) {
+            searchInput.addEventListener('input', (e) => {
+                const searchTerm = e.target.value.toLowerCase();
+                const cards = document.querySelectorAll('.tool-card');
+                
+                if(searchTerm.length > 0) {
+                     const buttons = ['all', 'sports', 'tickets', 'dining', 'entertainment', 'general'];
+                     buttons.forEach(btn => {
+                        const el = document.getElementById(`btn-${btn}`);
+                        if(el) {
+                             el.className = "bg-slate-900 border border-slate-800 text-slate-300 hover:bg-slate-800 px-3 py-1.5 rounded-lg font-medium transition-colors";
+                        }
+                     });
+                }
+
+                cards.forEach(card => {
+                    const keywords = card.getAttribute('data-keywords').toLowerCase();
+                    const title = card.querySelector('h3').textContent.toLowerCase();
+                    
+                    if (keywords.includes(searchTerm) || title.includes(searchTerm)) {
+                        card.classList.remove('hidden-directory-card');
+                    } else {
+                        card.classList.add('hidden-directory-card');
+                    }
+                });
+            });
+        }
+
+        // Handle Search Form
+        const searchForm = document.getElementById('internetSearchForm');
+        if(searchForm) {
+            searchForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const btn = document.getElementById('searchBtn');
+                const originalText = btn.innerHTML;
+                btn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> Searching...';
+                lucide.createIcons();
+                
+                setTimeout(() => {
+                    btn.innerHTML = originalText;
+                    lucide.createIcons();
+                }, 800);
+            });
+        }
 
         // --- Admin Modal Logic ---
         function openAdminModal() {
@@ -834,7 +831,6 @@
                 authenticateAdmin();
             }
         });
-
     </script>
 </body> 
 </html>

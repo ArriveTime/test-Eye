@@ -122,7 +122,7 @@
         <div id="news" class="max-w-4xl mx-auto text-left space-y-6 pt-4 border-t border-slate-800/80"> 
             <div class="flex items-center justify-between border-b border-slate-800 pb-4"> 
                 <h2 class="text-lg font-bold text-white flex items-center gap-2"> 
-                    <i data-lucide="radio" class="w-5 h-5 text-amber-400"></i> Las Vegas Live Feed 
+                    <i data-lucide="radio" class="w-5 h-5 text-amber-400 animate-pulse"></i> Las Vegas Live Feed 
                 </h2> 
                 <div class="flex items-center gap-2"> 
                     <button onclick="fetchLiveNews()" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-2.5 py-1 rounded-lg border border-slate-700 transition-all flex items-center gap-1"> 
@@ -134,7 +134,7 @@
                 </div> 
             </div> 
 
-            <!-- Expanded Live News Feeds Container --> 
+            <!-- Vibrant Colorful Live News Feeds Container --> 
             <div id="liveNewsContainer" class="space-y-3"> 
                 <!-- Articles load dynamically here --> 
             </div> 
@@ -570,7 +570,7 @@
             });
         }
 
-        // Handle the Search Form Submit
+        // Handle Search Form
         const searchForm = document.getElementById('internetSearchForm');
         if(searchForm) {
             searchForm.addEventListener('submit', (e) => {
@@ -588,55 +588,111 @@
         }
 
 
-        // --- EXPANDED LIVE NEWS FEED (8 Comprehensive Updates) ---
+        // --- COLORFUL & CATEGORIZED LIVE NEWS FEED ---
         const sampleNews = [
             {
                 title: "F1 Las Vegas Grand Prix Announces Track Upgrades for 2026",
                 source: "Motorsport Vegas",
+                category: "Racing",
                 time: "10 mins ago",
-                icon: "flag"
+                icon: "flag",
+                bgColor: "bg-red-500/10",
+                borderColor: "border-red-500/30",
+                hoverBorder: "hover:border-red-500/70",
+                iconColor: "text-red-400",
+                iconBg: "bg-red-500/20",
+                tagBg: "bg-red-950/80 text-red-300 border-red-800/50"
             },
             {
                 title: "New Michelin-Starred Concept Opening at Wynn Next Month",
                 source: "Eater Vegas",
+                category: "Dining",
                 time: "32 mins ago",
-                icon: "utensils"
+                icon: "utensils",
+                bgColor: "bg-orange-500/10",
+                borderColor: "border-orange-500/30",
+                hoverBorder: "hover:border-orange-500/70",
+                iconColor: "text-orange-400",
+                iconBg: "bg-orange-500/20",
+                tagBg: "bg-orange-950/80 text-orange-300 border-orange-800/50"
             },
             {
                 title: "Allegiant Stadium Prepares for Sold-Out Concert Series",
                 source: "Vegas Event Hub",
+                category: "Concerts",
                 time: "1 hr ago",
-                icon: "ticket"
+                icon: "ticket",
+                bgColor: "bg-rose-500/10",
+                borderColor: "border-rose-500/30",
+                hoverBorder: "hover:border-rose-500/70",
+                iconColor: "text-rose-400",
+                iconBg: "bg-rose-500/20",
+                tagBg: "bg-rose-950/80 text-rose-300 border-rose-800/50"
             },
             {
                 title: "RTC Announces Weekend Lane Restrictions on Trop/I-15 Interchange",
                 source: "NV DOT",
+                category: "Traffic",
                 time: "2 hrs ago",
-                icon: "cone"
+                icon: "cone",
+                bgColor: "bg-amber-500/10",
+                borderColor: "border-amber-500/30",
+                hoverBorder: "hover:border-amber-500/70",
+                iconColor: "text-amber-400",
+                iconBg: "bg-amber-500/20",
+                tagBg: "bg-amber-950/80 text-amber-300 border-amber-800/50"
             },
             {
                 title: "Sphere Extends High-Tech Immersive Residency Through Fall",
                 source: "Entertainment Weekly LV",
+                category: "Shows",
                 time: "3 hrs ago",
-                icon: "sparkles"
+                icon: "sparkles",
+                bgColor: "bg-purple-500/10",
+                borderColor: "border-purple-500/30",
+                hoverBorder: "hover:border-purple-500/70",
+                iconColor: "text-purple-400",
+                iconBg: "bg-purple-500/20",
+                tagBg: "bg-purple-950/80 text-purple-300 border-purple-800/50"
             },
             {
                 title: "Las Vegas Raiders Kick Off Preseason Training Camp Openings",
                 source: "Silver & Black News",
+                category: "Sports",
                 time: "4 hrs ago",
-                icon: "trophy"
+                icon: "trophy",
+                bgColor: "bg-emerald-500/10",
+                borderColor: "border-emerald-500/30",
+                hoverBorder: "hover:border-emerald-500/70",
+                iconColor: "text-emerald-400",
+                iconBg: "bg-emerald-500/20",
+                tagBg: "bg-emerald-950/80 text-emerald-300 border-emerald-800/50"
             },
             {
                 title: "Downtown Fremont Street Experience Unveils New LED Canopy Show",
                 source: "Fremont Press",
+                category: "Nightlife",
                 time: "5 hrs ago",
-                icon: "tv"
+                icon: "tv",
+                bgColor: "bg-cyan-500/10",
+                borderColor: "border-cyan-500/30",
+                hoverBorder: "hover:border-cyan-500/70",
+                iconColor: "text-cyan-400",
+                iconBg: "bg-cyan-500/20",
+                tagBg: "bg-cyan-950/80 text-cyan-300 border-cyan-800/50"
             },
             {
                 title: "Harry Reid International Reports Record Monthly Passenger Traffic",
                 source: "LV Airport Authority",
+                category: "Travel",
                 time: "6 hrs ago",
-                icon: "plane"
+                icon: "plane",
+                bgColor: "bg-blue-500/10",
+                borderColor: "border-blue-500/30",
+                hoverBorder: "hover:border-blue-500/70",
+                iconColor: "text-blue-400",
+                iconBg: "bg-blue-500/20",
+                tagBg: "bg-blue-950/80 text-blue-300 border-blue-800/50"
             }
         ];
 
@@ -648,19 +704,22 @@
             
             articles.forEach(article => {
                 const item = document.createElement('div');
-                item.className = "bg-slate-900/50 border border-slate-800 p-3.5 rounded-xl hover:border-slate-700 transition-colors flex items-start gap-3.5 cursor-pointer group";
+                item.className = `${article.bgColor} border ${article.borderColor} p-3.5 rounded-xl ${article.hoverBorder} transition-all duration-200 flex items-start gap-3.5 cursor-pointer group shadow-sm`;
                 
                 item.innerHTML = `
-                    <div class="p-2 bg-slate-800/80 rounded-lg text-slate-400 group-hover:text-amber-400 group-hover:bg-slate-800 transition-colors flex-shrink-0">
+                    <div class="p-2.5 ${article.iconBg} rounded-xl ${article.iconColor} group-hover:scale-105 transition-transform flex-shrink-0 mt-0.5">
                         <i data-lucide="${article.icon}" class="w-4 h-4"></i>
                     </div>
                     <div class="flex-1">
-                        <h4 class="text-sm font-semibold text-slate-200 group-hover:text-white transition-colors leading-snug">${article.title}</h4>
-                        <div class="flex items-center gap-2 mt-1.5 text-[11px] text-slate-500">
-                            <span class="font-medium text-slate-400">${article.source}</span>
-                            <span>&bull;</span>
-                            <span>${article.time}</span>
+                        <div class="flex items-center gap-2 mb-1">
+                            <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md border ${article.tagBg}">
+                                ${article.category}
+                            </span>
+                            <span class="text-[11px] text-slate-400 font-medium">${article.source}</span>
+                            <span class="text-slate-600">&bull;</span>
+                            <span class="text-[11px] text-slate-500">${article.time}</span>
                         </div>
+                        <h4 class="text-sm font-bold text-slate-100 group-hover:text-amber-300 transition-colors leading-snug">${article.title}</h4>
                     </div>
                 `;
                 container.appendChild(item);
@@ -671,7 +730,7 @@
         function fetchLiveNews() {
             const container = document.getElementById('liveNewsContainer');
             if(container) {
-                container.innerHTML = '<div class="text-xs text-slate-500 flex items-center gap-2 py-6 justify-center"><i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> Syncing local feeds...</div>';
+                container.innerHTML = '<div class="text-xs text-slate-400 flex items-center gap-2 py-6 justify-center"><i data-lucide="loader-2" class="w-4 h-4 animate-spin text-amber-400"></i> Syncing local feeds...</div>';
                 lucide.createIcons();
                 
                 setTimeout(() => {

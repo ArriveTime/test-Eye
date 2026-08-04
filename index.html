@@ -50,7 +50,7 @@
                 </span> 
                 <span class="text-purple-300 hidden md:inline">|</span> 
                 <span class="flex items-center justify-center gap-1.5 text-cyan-300 font-medium w-full md:w-auto"> 
-                    <i data-lucide="clock" class="w-3.5 h-3.5 flex-shrink-0"></i> <span id="vegasClock">Loading Vegas Time...</span> PST 
+                    <i data-lucide="clock" class="w-3.5 h-3.5 flex-shrink-0"></i> <span id="vegasClock">12:00:00 PM</span> PST 
                 </span> 
             </div> 
             <div class="text-slate-400 hidden md:block"> 
@@ -139,7 +139,7 @@
 
             <!-- Live News Feeds Container --> 
             <div id="liveNewsContainer" class="space-y-3"> 
-                <!-- Articles load dynamically here --> 
+                <!-- Articles loaded instantly via script --> 
             </div> 
         </div> 
     </section> 
@@ -679,7 +679,6 @@
                 `;
                 container.appendChild(item);
             });
-            // Render icons safely after elements are injected into the DOM
             lucide.createIcons();
         }
 
@@ -696,13 +695,13 @@
             }
         }
 
-        // --- DOM Ready Execution ---
+        // --- DOM Ready Execution & Instant Render ---
         document.addEventListener('DOMContentLoaded', () => {
             renderNews(sampleNews);
             document.getElementById('logTime1').textContent = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
         });
 
-        // --- Time Ticker Logic ---
+        // --- Real-Time Vegas Time Ticker Logic ---
         function updateVegasTime() {
             const timeElement = document.getElementById('vegasClock');
             if (timeElement) {

@@ -50,7 +50,7 @@
                 </span> 
                 <span class="text-purple-300 hidden md:inline">|</span> 
                 <span class="flex items-center justify-center gap-1.5 text-cyan-300 font-medium w-full md:w-auto"> 
-                    <i data-lucide="clock" class="w-3.5 h-3.5 flex-shrink-0"></i> <span id="vegasClock">12:00:00 PM</span> PST 
+                    <i data-lucide="clock" class="w-3.5 h-3.5 flex-shrink-0"></i> <span id="vegasClock">Syncing Time...</span> PST 
                 </span> 
             </div> 
             <div class="text-slate-400 hidden md:block"> 
@@ -139,7 +139,7 @@
 
             <!-- Live News Feeds Container --> 
             <div id="liveNewsContainer" class="space-y-3"> 
-                <!-- Articles loaded instantly via script --> 
+                <!-- Articles load dynamically here --> 
             </div> 
         </div> 
     </section> 
@@ -543,7 +543,7 @@
 
         initFirebaseTracker();
 
-        // --- FULL LIVE NEWS FEED ITEMS ---
+        // --- FULL LIVE NEWS FEED ITEMS (8 Items) ---
         const sampleNews = [
             {
                 title: "F1 Las Vegas Grand Prix Announces Track Upgrades for 2026",
@@ -695,12 +695,6 @@
             }
         }
 
-        // --- DOM Ready Execution & Instant Render ---
-        document.addEventListener('DOMContentLoaded', () => {
-            renderNews(sampleNews);
-            document.getElementById('logTime1').textContent = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-        });
-
         // --- Real-Time Vegas Time Ticker Logic ---
         function updateVegasTime() {
             const timeElement = document.getElementById('vegasClock');
@@ -716,8 +710,18 @@
                 timeElement.textContent = vegasTime;
             }
         }
-        setInterval(updateVegasTime, 1000);
-        updateVegasTime();
+
+        // --- DOM Ready Execution ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderNews(sampleNews);
+            updateVegasTime();
+            setInterval(updateVegasTime, 1000);
+            
+            const logTime = document.getElementById('logTime1');
+            if(logTime) {
+                logTime.textContent = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            }
+        });
 
         // --- Directory Filtering Logic ---
         function filterCategory(category) {

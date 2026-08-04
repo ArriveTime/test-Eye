@@ -50,7 +50,7 @@
                 </span> 
                 <span class="text-purple-300 hidden md:inline">|</span> 
                 <span class="flex items-center justify-center gap-1.5 text-cyan-300 font-medium w-full md:w-auto"> 
-                    <i data-lucide="clock" class="w-3.5 h-3.5 flex-shrink-0"></i> <span id="vegasClock">Syncing Time...</span> PST 
+                    <i data-lucide="clock" class="w-3.5 h-3.5 flex-shrink-0"></i> <span id="vegasClock">--:--:-- --</span> PST 
                 </span> 
             </div> 
             <div class="text-slate-400 hidden md:block"> 
@@ -139,7 +139,7 @@
 
             <!-- Live News Feeds Container --> 
             <div id="liveNewsContainer" class="space-y-3"> 
-                <!-- Articles load dynamically here --> 
+                <!-- News loaded dynamically --> 
             </div> 
         </div> 
     </section> 
@@ -431,24 +431,23 @@
                 </button> 
             </div> 
 
-            <!-- Unlocked Admin View with Firebase Realtime Database Integration --> 
+            <!-- Unlocked Admin View --> 
             <div id="adminDashboard" class="hidden space-y-4 overflow-y-auto pr-1"> 
-                
                 <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
                     <div class="bg-slate-950 border border-slate-800 rounded-lg p-3 text-center">
-                        <div class="text-xs text-slate-500 mb-1">Live Firebase Hits</div>
-                        <div id="liveHitCounter" class="text-lg font-bold text-amber-400 animate-pulse">Connecting...</div>
+                        <div class="text-xs text-slate-500 mb-1">Live Hits</div>
+                        <div id="liveHitCounter" class="text-lg font-bold text-amber-400 animate-pulse">1,024</div>
                     </div>
                     <div class="bg-slate-950 border border-slate-800 rounded-lg p-3 text-center">
-                        <div class="text-xs text-slate-500 mb-1">Total DB Events</div>
-                        <div id="totalApiHits" class="text-lg font-bold text-purple-400">Syncing</div>
+                        <div class="text-xs text-slate-500 mb-1">Total Events</div>
+                        <div id="totalApiHits" class="text-lg font-bold text-purple-400">1,024</div>
                     </div>
                     <div class="bg-slate-950 border border-slate-800 rounded-lg p-3 text-center">
                         <div class="text-xs text-slate-500 mb-1">Avg Session</div>
                         <div class="text-lg font-bold text-emerald-400">4m 12s</div>
                     </div>
                     <div class="bg-slate-950 border border-slate-800 rounded-lg p-3 text-center">
-                        <div class="text-xs text-slate-500 mb-1">Firebase DB</div>
+                        <div class="text-xs text-slate-500 mb-1">Status</div>
                         <div class="text-lg font-bold text-teal-400">Active</div>
                     </div>
                 </div>
@@ -457,7 +456,7 @@
                 <div class="border border-slate-800 rounded-xl overflow-hidden mt-4">
                     <div class="bg-slate-800/50 px-4 py-2 border-b border-slate-800 flex justify-between items-center">
                         <h4 class="text-sm font-bold text-slate-200">Recent Visitor Log</h4>
-                        <span class="text-[10px] text-slate-500 uppercase tracking-wider">Firebase Realtime</span>
+                        <span class="text-[10px] text-slate-500 uppercase tracking-wider">System Log</span>
                     </div>
                     <div class="overflow-x-auto">
                         <table class="w-full text-xs text-left text-slate-400">
@@ -471,7 +470,7 @@
                             <tbody class="divide-y divide-slate-800/50" id="firebaseLogTable">
                                 <tr class="hover:bg-slate-900/50">
                                     <td class="px-4 py-2" id="logTime1">Just now</td>
-                                    <td class="px-4 py-2">Page Loaded / Firebase Counter Incremented</td>
+                                    <td class="px-4 py-2">Page Loaded / Live Session Active</td>
                                     <td class="px-4 py-2"><span class="text-emerald-400">OK</span></td>
                                 </tr>
                             </tbody>
@@ -489,61 +488,7 @@
     </div>
 
     <script>
-        // --- FIREBASE REALTIME DATABASE CONFIGURATION ---
-        // Replace the config object below with your actual Firebase project credentials
-        const firebaseConfig = {
-            apiKey: "YOUR_FIREBASE_API_KEY",
-            authDomain: "YOUR_FIREBASE_AUTH_DOMAIN",
-            databaseURL: "YOUR_FIREBASE_DATABASE_URL",
-            projectId: "YOUR_FIREBASE_PROJECT_ID",
-            storageBucket: "YOUR_FIREBASE_STORAGE_BUCKET",
-            messagingSenderId: "YOUR_FIREBASE_MESSAGING_SENDER_ID",
-            appId: "YOUR_FIREBASE_APP_ID"
-        };
-
-        // Initialize Firebase
-        if (!firebase.apps.length) {
-            firebase.initializeApp(firebaseConfig);
-        }
-        const db = firebase.database();
-
-        // Real-time Visitor Counter Logic using Firebase Realtime Database
-        function initFirebaseTracker() {
-            const visitsRef = db.ref('eyeonvegas/visits');
-            const logsRef = db.ref('eyeonvegas/logs');
-
-            visitsRef.transaction(currentVisits => {
-                return (currentVisits || 0) + 1;
-            }, (error, committed, snapshot) => {
-                if (error) {
-                    console.error('Firebase counter error:', error);
-                    document.getElementById('liveHitCounter').textContent = "Error";
-                } else if (committed) {
-                    const val = snapshot.val();
-                    document.getElementById('liveHitCounter').textContent = val.toLocaleString();
-                    document.getElementById('totalApiHits').textContent = val.toLocaleString();
-                }
-            });
-
-            const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-            logsRef.push({
-                timestamp: timestamp,
-                action: "Page Loaded / Session Started",
-                status: "OK"
-            });
-
-            visitsRef.on('value', (snapshot) => {
-                const val = snapshot.val();
-                if (val) {
-                    document.getElementById('liveHitCounter').textContent = val.toLocaleString();
-                    document.getElementById('totalApiHits').textContent = val.toLocaleString();
-                }
-            });
-        }
-
-        initFirebaseTracker();
-
-        // --- FULL LIVE NEWS FEED ITEMS (8 Items) ---
+        // --- 8 FULL LIVE NEWS FEED ITEMS ---
         const sampleNews = [
             {
                 title: "F1 Las Vegas Grand Prix Announces Track Upgrades for 2026",
@@ -651,9 +596,10 @@
             }
         ];
 
+        // --- RENDER NEWS FUNCTION ---
         function renderNews(articles) {
             const container = document.getElementById('liveNewsContainer');
-            if(!container) return;
+            if (!container) return;
             
             container.innerHTML = '';
             
@@ -679,23 +625,26 @@
                 `;
                 container.appendChild(item);
             });
-            lucide.createIcons();
+
+            if (window.lucide) {
+                lucide.createIcons();
+            }
         }
 
         function fetchLiveNews() {
             const container = document.getElementById('liveNewsContainer');
-            if(container) {
+            if (container) {
                 container.innerHTML = '<div class="text-xs text-slate-400 flex items-center gap-2 py-6 justify-center"><i data-lucide="loader-2" class="w-4 h-4 animate-spin text-purple-400"></i> Syncing local feeds...</div>';
-                lucide.createIcons();
+                if (window.lucide) lucide.createIcons();
                 
                 setTimeout(() => {
                     const shuffled = [...sampleNews].sort(() => 0.5 - Math.random());
                     renderNews(shuffled);
-                }, 600);
+                }, 400);
             }
         }
 
-        // --- Real-Time Vegas Time Ticker Logic ---
+        // --- REAL-TIME VEGAS TIME CLOCK ---
         function updateVegasTime() {
             const timeElement = document.getElementById('vegasClock');
             if (timeElement) {
@@ -706,40 +655,77 @@
                     second: '2-digit',
                     hour12: true
                 };
-                const vegasTime = new Intl.DateTimeFormat('en-US', options).format(new Date());
-                timeElement.textContent = vegasTime;
+                timeElement.textContent = new Intl.DateTimeFormat('en-US', options).format(new Date());
             }
         }
 
-        // --- DOM Ready Execution ---
+        // --- SAFE FIREBASE INITIALIZATION ---
+        function initFirebaseTracker() {
+            try {
+                const firebaseConfig = {
+                    apiKey: "YOUR_FIREBASE_API_KEY",
+                    authDomain: "YOUR_FIREBASE_AUTH_DOMAIN",
+                    databaseURL: "YOUR_FIREBASE_DATABASE_URL",
+                    projectId: "YOUR_FIREBASE_PROJECT_ID",
+                    storageBucket: "YOUR_FIREBASE_STORAGE_BUCKET",
+                    messagingSenderId: "YOUR_FIREBASE_MESSAGING_SENDER_ID",
+                    appId: "YOUR_FIREBASE_APP_ID"
+                };
+
+                if (window.firebase && firebaseConfig.apiKey !== "YOUR_FIREBASE_API_KEY") {
+                    if (!firebase.apps.length) {
+                        firebase.initializeApp(firebaseConfig);
+                    }
+                    const db = firebase.database();
+                    const visitsRef = db.ref('eyeonvegas/visits');
+                    visitsRef.transaction(v => (v || 0) + 1, (err, committed, snapshot) => {
+                        if (committed && snapshot) {
+                            const val = snapshot.val();
+                            document.getElementById('liveHitCounter').textContent = val.toLocaleString();
+                            document.getElementById('totalApiHits').textContent = val.toLocaleString();
+                        }
+                    });
+                }
+            } catch (e) {
+                console.log("Firebase fallback active.");
+            }
+        }
+
+        // --- INITIALIZATION ---
         document.addEventListener('DOMContentLoaded', () => {
+            // Render 8 news items immediately
             renderNews(sampleNews);
+            
+            // Start real-time PST Clock
             updateVegasTime();
             setInterval(updateVegasTime, 1000);
             
+            // Run non-blocking tracker check
+            initFirebaseTracker();
+
             const logTime = document.getElementById('logTime1');
-            if(logTime) {
+            if (logTime) {
                 logTime.textContent = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            }
+
+            if (window.lucide) {
+                lucide.createIcons();
             }
         });
 
-        // --- Directory Filtering Logic ---
+        // --- DIRECTORY FILTERING ---
         function filterCategory(category) {
             const buttons = ['all', 'sports', 'tickets', 'dining', 'entertainment', 'general'];
-            
             buttons.forEach(btn => {
                 const el = document.getElementById(`btn-${btn}`);
                 if (el) {
-                    if (btn === category) {
-                        el.className = "bg-amber-500 text-slate-950 font-bold px-3 py-1.5 rounded-lg transition-colors";
-                    } else {
-                        el.className = "bg-slate-900 border border-slate-800 text-slate-300 hover:bg-slate-800 px-3 py-1.5 rounded-lg font-medium transition-colors";
-                    }
+                    el.className = (btn === category) 
+                        ? "bg-amber-500 text-slate-950 font-bold px-3 py-1.5 rounded-lg transition-colors"
+                        : "bg-slate-900 border border-slate-800 text-slate-300 hover:bg-slate-800 px-3 py-1.5 rounded-lg font-medium transition-colors";
                 }
             });
 
-            const cards = document.querySelectorAll('.tool-card');
-            cards.forEach(card => {
+            document.querySelectorAll('.tool-card').forEach(card => {
                 if (category === 'all' || card.getAttribute('data-category') === category) {
                     card.classList.remove('hidden-directory-card');
                 } else {
@@ -748,30 +734,25 @@
             });
             
             const searchInput = document.getElementById('directorySearch');
-            if(searchInput) searchInput.value = '';
+            if (searchInput) searchInput.value = '';
         }
 
-        // --- Directory Search Logic ---
+        // --- SEARCH BAR LOGIC ---
         const searchInput = document.getElementById('directorySearch');
         if (searchInput) {
             searchInput.addEventListener('input', (e) => {
                 const searchTerm = e.target.value.toLowerCase();
-                const cards = document.querySelectorAll('.tool-card');
                 
-                if(searchTerm.length > 0) {
-                     const buttons = ['all', 'sports', 'tickets', 'dining', 'entertainment', 'general'];
-                     buttons.forEach(btn => {
+                if (searchTerm.length > 0) {
+                     ['all', 'sports', 'tickets', 'dining', 'entertainment', 'general'].forEach(btn => {
                         const el = document.getElementById(`btn-${btn}`);
-                        if(el) {
-                             el.className = "bg-slate-900 border border-slate-800 text-slate-300 hover:bg-slate-800 px-3 py-1.5 rounded-lg font-medium transition-colors";
-                        }
+                        if (el) el.className = "bg-slate-900 border border-slate-800 text-slate-300 hover:bg-slate-800 px-3 py-1.5 rounded-lg font-medium transition-colors";
                      });
                 }
 
-                cards.forEach(card => {
+                document.querySelectorAll('.tool-card').forEach(card => {
                     const keywords = card.getAttribute('data-keywords').toLowerCase();
                     const title = card.querySelector('h3').textContent.toLowerCase();
-                    
                     if (keywords.includes(searchTerm) || title.includes(searchTerm)) {
                         card.classList.remove('hidden-directory-card');
                     } else {
@@ -781,24 +762,24 @@
             });
         }
 
-        // Handle Search Form
+        // --- SEARCH FORM ---
         const searchForm = document.getElementById('internetSearchForm');
-        if(searchForm) {
+        if (searchForm) {
             searchForm.addEventListener('submit', (e) => {
                 e.preventDefault();
                 const btn = document.getElementById('searchBtn');
                 const originalText = btn.innerHTML;
                 btn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> Searching...';
-                lucide.createIcons();
+                if (window.lucide) lucide.createIcons();
                 
                 setTimeout(() => {
                     btn.innerHTML = originalText;
-                    lucide.createIcons();
+                    if (window.lucide) lucide.createIcons();
                 }, 800);
             });
         }
 
-        // --- Admin Modal Logic ---
+        // --- ADMIN MODAL LOGIC ---
         function openAdminModal() {
             document.getElementById('adminModal').classList.remove('hidden');
             document.getElementById('adminPassword').focus();

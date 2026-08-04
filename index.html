@@ -26,7 +26,7 @@
     </script> 
     <!-- Lucide Icons --> 
     <script src="https://unpkg.com/lucide@latest"></script> 
-    <!-- Firebase SDK Scripts (Compat / Modular via CDN) --> 
+    <!-- Firebase SDK Scripts (Compat) --> 
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script> 
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script> 
     <style> 
@@ -515,7 +515,6 @@
             const visitsRef = db.ref('eyeonvegas/visits');
             const logsRef = db.ref('eyeonvegas/logs');
 
-            // Increment visit count transactionally
             visitsRef.transaction(currentVisits => {
                 return (currentVisits || 0) + 1;
             }, (error, committed, snapshot) => {
@@ -529,7 +528,6 @@
                 }
             });
 
-            // Log current page load to Firebase
             const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
             logsRef.push({
                 timestamp: timestamp,
@@ -537,7 +535,6 @@
                 status: "OK"
             });
 
-            // Listen for live updates on visit counts
             visitsRef.on('value', (snapshot) => {
                 const val = snapshot.val();
                 if (val) {
@@ -547,7 +544,6 @@
             });
         }
 
-        // Initialize Tracker on Load
         initFirebaseTracker();
         document.getElementById('logTime1').textContent = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
 
@@ -645,7 +641,7 @@
         }
 
 
-        // --- EASY-ON-THE-EYE PALETTE ---
+        // --- RESTORED FULL LIVE NEWS FEED ITEMS ---
         const sampleNews = [
             {
                 title: "F1 Las Vegas Grand Prix Announces Track Upgrades for 2026",
@@ -830,7 +826,7 @@
             document.getElementById('adminPassword').value = '';
             document.getElementById('adminError').classList.add('hidden');
             document.getElementById('adminDashboard').classList.add('hidden');
-            document.getElementById('adminLoginForm').classList.add('hidden');
+            document.getElementById('adminLoginForm').classList.remove('hidden');
         }
         
         document.getElementById('adminPassword')?.addEventListener('keypress', function (e) {

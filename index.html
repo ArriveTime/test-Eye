@@ -495,7 +495,7 @@
     </div>
 
     <script>
-        // --- 8 FULL LIVE NEWS FEED ITEMS ---
+        // --- 8 FULL LIVE NEWS FEED ITEMS WITH DIRECT DESTINATION LINKS ---
         const sampleNews = [
             {
                 title: "F1 Las Vegas Grand Prix Announces Track Upgrades for 2026",
@@ -503,6 +503,7 @@
                 category: "Racing",
                 time: "10 mins ago",
                 icon: "flag",
+                url: "https://www.f1lasvegasgp.com",
                 bgColor: "bg-indigo-950/40",
                 borderColor: "border-indigo-800/50",
                 hoverBorder: "hover:border-indigo-500/70",
@@ -516,6 +517,7 @@
                 category: "Dining",
                 time: "32 mins ago",
                 icon: "utensils",
+                url: "https://vegas.eater.com",
                 bgColor: "bg-teal-950/40",
                 borderColor: "border-teal-800/50",
                 hoverBorder: "hover:border-teal-500/70",
@@ -529,6 +531,7 @@
                 category: "Concerts",
                 time: "1 hr ago",
                 icon: "ticket",
+                url: "https://www.allegiantstadium.com",
                 bgColor: "bg-purple-950/40",
                 borderColor: "border-purple-800/50",
                 hoverBorder: "hover:border-purple-500/70",
@@ -542,6 +545,7 @@
                 category: "Traffic",
                 time: "2 hrs ago",
                 icon: "cone",
+                url: "https://www.rtcsnv.com",
                 bgColor: "bg-cyan-950/40",
                 borderColor: "border-cyan-800/50",
                 hoverBorder: "hover:border-cyan-500/70",
@@ -555,6 +559,7 @@
                 category: "Shows",
                 time: "3 hrs ago",
                 icon: "sparkles",
+                url: "https://www.thesphere.com",
                 bgColor: "bg-violet-950/40",
                 borderColor: "border-violet-800/50",
                 hoverBorder: "hover:border-violet-500/70",
@@ -568,6 +573,7 @@
                 category: "Sports",
                 time: "4 hrs ago",
                 icon: "trophy",
+                url: "https://www.raiders.com",
                 bgColor: "bg-emerald-950/40",
                 borderColor: "border-emerald-800/50",
                 hoverBorder: "hover:border-emerald-500/70",
@@ -581,6 +587,7 @@
                 category: "Nightlife",
                 time: "5 hrs ago",
                 icon: "tv",
+                url: "https://vegasexperience.com",
                 bgColor: "bg-blue-950/40",
                 borderColor: "border-blue-800/50",
                 hoverBorder: "hover:border-blue-500/70",
@@ -594,6 +601,7 @@
                 category: "Travel",
                 time: "6 hrs ago",
                 icon: "plane",
+                url: "https://www.harryreidairport.com",
                 bgColor: "bg-sky-950/40",
                 borderColor: "border-sky-800/50",
                 hoverBorder: "hover:border-sky-500/70",
@@ -603,7 +611,7 @@
             }
         ];
 
-        // --- RENDER NEWS FUNCTION ---
+        // --- RENDER NEWS FUNCTION WITH CLICKABLE ANCHORS ---
         function renderNews(articles) {
             const container = document.getElementById('liveNewsContainer');
             if (!container) return;
@@ -611,8 +619,11 @@
             container.innerHTML = '';
             
             articles.forEach(article => {
-                const item = document.createElement('div');
-                item.className = `${article.bgColor} border ${article.borderColor} p-3.5 rounded-xl ${article.hoverBorder} transition-all duration-200 flex items-start gap-3.5 cursor-pointer group shadow-sm backdrop-blur-sm`;
+                const item = document.createElement('a');
+                item.href = article.url;
+                item.target = "_blank";
+                item.rel = "noopener noreferrer";
+                item.className = `block ${article.bgColor} border ${article.borderColor} p-3.5 rounded-xl ${article.hoverBorder} transition-all duration-200 flex items-start gap-3.5 group shadow-sm backdrop-blur-sm no-underline`;
                 
                 item.innerHTML = `
                     <div class="p-2.5 ${article.iconBg} rounded-xl ${article.iconColor} group-hover:scale-105 transition-transform flex-shrink-0 mt-0.5 border border-slate-700/40">
@@ -627,7 +638,9 @@
                             <span class="text-slate-600">&bull;</span>
                             <span class="text-[11px] text-slate-500">${article.time}</span>
                         </div>
-                        <h4 class="text-sm font-bold text-slate-100 group-hover:text-purple-300 transition-colors leading-snug">${article.title}</h4>
+                        <h4 class="text-sm font-bold text-slate-100 group-hover:text-purple-300 transition-colors leading-snug flex items-center gap-1.5">
+                            ${article.title} <i data-lucide="external-link" class="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition-opacity text-purple-400 flex-shrink-0"></i>
+                        </h4>
                     </div>
                 `;
                 container.appendChild(item);

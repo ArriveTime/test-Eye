@@ -26,9 +26,6 @@
     </script> 
     <!-- Lucide Icons --> 
     <script src="https://unpkg.com/lucide@latest"></script> 
-    <!-- Firebase SDK Scripts (Compat) --> 
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script> 
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script> 
     <style> 
         .hidden-directory-card { 
             display: none !important; 
@@ -684,7 +681,7 @@
             const currentDate = now.toLocaleDateString();
             const currentTime = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
 
-            let ip = "127.0.0.1";
+            let ip = "127.0.0.1 (Local)";
             let location = "Las Vegas, NV";
 
             try {
@@ -729,7 +726,7 @@
                 tbody.innerHTML = '';
 
                 if (data) {
-                    const logsArray = Object.values(data).sort((a, b) => a.timestamp - b.timestamp);
+                    const logsArray = Object.values(data).sort((a, b) => (a.timestamp || 0) - (b.timestamp || 0));
                     document.getElementById('liveHitCounter').textContent = logsArray.length.toLocaleString();
                     document.getElementById('totalApiHits').textContent = logsArray.length.toLocaleString();
 
@@ -738,10 +735,10 @@
                         row.className = "hover:bg-slate-900/50";
                         row.innerHTML = `
                             <td class="px-3 py-2 text-slate-500 font-mono">${index + 1}</td>
-                            <td class="px-3 py-2 text-slate-300">${log.date}</td>
-                            <td class="px-3 py-2 text-slate-300">${log.time}</td>
-                            <td class="px-3 py-2 text-amber-400 font-mono">${log.ip}</td>
-                            <td class="px-3 py-2 text-slate-200">${log.location}</td>
+                            <td class="px-3 py-2 text-slate-300">${log.date || 'Recent'}</td>
+                            <td class="px-3 py-2 text-slate-300">${log.time || '--:--'}</td>
+                            <td class="px-3 py-2 text-amber-400 font-mono">${log.ip || '127.0.0.1'}</td>
+                            <td class="px-3 py-2 text-slate-200">${log.location || 'Las Vegas, NV'}</td>
                             <td class="px-3 py-2"><span class="text-emerald-400">OK</span></td>
                         `;
                         tbody.appendChild(row);
@@ -850,7 +847,7 @@
         function openAdminModal() {
             document.getElementById('adminModal').classList.remove('hidden');
             document.getElementById('adminPassword').focus();
-            fetchGlobalLogs(); // Refresh logs when opening admin modal
+            fetchGlobalLogs();
         }
 
         function closeAdminModal() {

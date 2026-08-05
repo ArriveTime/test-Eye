@@ -412,13 +412,13 @@
                 </div> 
                 <div> 
                     <h3 class="text-lg font-bold text-white">EyeOnVegas Admin</h3> 
-                    <p class="text-xs text-slate-400">Firebase Realtime Visitor Logging Hub</p> 
+                    <p class="text-xs text-slate-400">Global Firebase Realtime Logging Hub</p> 
                 </div> 
             </div> 
 
             <!-- Login Form --> 
             <div id="adminLoginForm" class="space-y-4 my-auto"> 
-                <p class="text-xs text-slate-400">Enter your administrator access code to view cumulative visitor logs.</p> 
+                <p class="text-xs text-slate-400">Enter your administrator access code to view global visitor logs.</p> 
                 <div> 
                     <label class="block text-xs font-medium text-slate-300 mb-1">Passcode</label> 
                     <input type="password" id="adminPassword" placeholder="Enter password..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-slate-100 focus:outline-none focus:border-amber-400"> 
@@ -431,7 +431,7 @@
                 </button> 
             </div> 
 
-            <!-- Unlocked Admin View with Cumulative Table Log --> 
+            <!-- Unlocked Admin View with Global Cumulative Table Log --> 
             <div id="adminDashboard" class="hidden space-y-4 overflow-y-auto pr-1"> 
                 <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
                     <div class="bg-slate-950 border border-slate-800 rounded-lg p-3 text-center">
@@ -439,7 +439,7 @@
                         <div id="liveHitCounter" class="text-lg font-bold text-amber-400 animate-pulse">0</div>
                     </div>
                     <div class="bg-slate-950 border border-slate-800 rounded-lg p-3 text-center">
-                        <div class="text-xs text-slate-500 mb-1">Logged Visits</div>
+                        <div class="text-xs text-slate-500 mb-1">Global Visitors</div>
                         <div id="totalApiHits" class="text-lg font-bold text-purple-400">0</div>
                     </div>
                     <div class="bg-slate-950 border border-slate-800 rounded-lg p-3 text-center">
@@ -448,14 +448,14 @@
                     </div>
                     <div class="bg-slate-950 border border-slate-800 rounded-lg p-3 text-center">
                         <div class="text-xs text-slate-500 mb-1">Status</div>
-                        <div class="text-lg font-bold text-teal-400">Live Firebase</div>
+                        <div class="text-lg font-bold text-teal-400">REST Cloud Sync</div>
                     </div>
                 </div>
 
                 <!-- Cumulative Activity Table Sorted Ascending -->
                 <div class="border border-slate-800 rounded-xl overflow-hidden mt-4">
                     <div class="bg-slate-800/50 px-4 py-2 border-b border-slate-800 flex justify-between items-center">
-                        <h4 class="text-sm font-bold text-slate-200">Cumulative Visitor Log (Ascending Order)</h4>
+                        <h4 class="text-sm font-bold text-slate-200">Global Visitor Log (Ascending Order)</h4>
                         <span class="text-[10px] text-slate-500 uppercase tracking-wider">Date / Time / IP / City / State</span>
                     </div>
                     <div class="overflow-x-auto max-h-64">
@@ -472,7 +472,7 @@
                             </thead>
                             <tbody class="divide-y divide-slate-800/50" id="visitorLogBody">
                                 <tr>
-                                    <td colspan="6" class="px-3 py-4 text-center text-slate-500">Connecting to Firebase log repository...</td>
+                                    <td colspan="6" class="px-3 py-4 text-center text-slate-500">Connecting to global cloud database...</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -481,7 +481,7 @@
 
                 <div class="mt-4 flex justify-between items-center">
                      <button onclick="resetVisitorCounter()" class="text-xs bg-rose-950 hover:bg-rose-900 text-rose-300 border border-rose-800 px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1">
-                         <i data-lucide="rotate-ccw" class="w-3 h-3"></i> Clear Visitor Logs & Counter
+                         <i data-lucide="rotate-ccw" class="w-3 h-3"></i> Clear Global Logs & Counter
                      </button>
                      <button onclick="logoutAdmin()" class="text-xs text-slate-500 hover:text-white border border-slate-700 px-3 py-1.5 rounded-lg transition-colors">
                          Lock Session
@@ -676,110 +676,94 @@
             }
         }
 
-        // --- FIREBASE REAL-TIME CUMULATIVE VISITOR TRACKING & LOGGING ---
-        function initFirebaseTracker() {
+        // --- GLOBAL CLOUD DATABASE REST API TRACKER ---
+        const DB_URL = "https://eyeonvegas-f1a27-default-rtdb.firebaseio.com/visitors";
+
+        async function initGlobalTracker() {
+            const now = new Date();
+            const currentDate = now.toLocaleDateString();
+            const currentTime = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+
+            let ip = "127.0.0.1";
+            let location = "Las Vegas, NV";
+
             try {
-                const firebaseConfig = {
-                    apiKey: "AIzaSyAhpfLTNpXMvAcEcDL9wyMziKkqgPXamrg",
-                    authDomain: "eyeonvegas-f1a27.firebaseapp.com",
-                    projectId: "eyeonvegas-f1a27",
-                    storageBucket: "eyeonvegas-f1a27.firebasestorage.app",
-                    messagingSenderId: "693520484031",
-                    appId: "1:693520484031:web:e9392b77d7adad710e80a",
-                    measurementId: "G-THWVKTENSG",
-                    databaseURL: "https://eyeonvegas-f1a27-default-rtdb.firebaseio.com"
-                };
-
-                if (window.firebase) {
-                    if (!firebase.apps.length) {
-                        firebase.initializeApp(firebaseConfig);
-                    }
-                    const db = firebase.database();
-                    const visitsRef = db.ref('eyeonvegas/visits');
-                    const logsRef = db.ref('eyeonvegas/visitor_logs');
-
-                    // 1. Increment total hit counter transaction safely
-                    visitsRef.transaction(v => (v || 0) + 1, (err, committed, snapshot) => {
-                        if (committed && snapshot) {
-                            const val = snapshot.val();
-                            document.getElementById('liveHitCounter').textContent = val.toLocaleString();
-                        }
-                    });
-
-                    // 2. Fetch visitor IP & Geolocation, then push record to Firebase log
-                    fetch('https://ipapi.co/json/')
-                        .then(res => res.json())
-                        .then(data => {
-                            const now = new Date();
-                            const logEntry = {
-                                date: now.toLocaleDateString(),
-                                time: now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
-                                ip: data.ip || '127.0.0.1',
-                                location: `${data.city || 'Las Vegas'}, ${data.region || 'NV'}`,
-                                timestamp: Date.now() // used for strict ascending sorting
-                            };
-                            logsRef.push(logEntry);
-                        })
-                        .catch(() => {
-                            const now = new Date();
-                            const logEntry = {
-                                date: now.toLocaleDateString(),
-                                time: now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
-                                ip: '127.0.0.1 (Local)',
-                                location: 'Las Vegas, NV',
-                                timestamp: Date.now()
-                            };
-                            logsRef.push(logEntry);
-                        });
-
-                    // 3. Listen to logs in real-time and display in ascending order
-                    logsRef.on('value', (snapshot) => {
-                        const data = snapshot.val();
-                        const tbody = document.getElementById('visitorLogBody');
-                        tbody.innerHTML = '';
-
-                        if (data) {
-                            // Convert firebase object into an array and sort ascending by timestamp
-                            const logsArray = Object.values(data).sort((a, b) => a.timestamp - b.timestamp);
-                            document.getElementById('totalApiHits').textContent = logsArray.length.toLocaleString();
-
-                            logsArray.forEach((log, index) => {
-                                const row = document.createElement('tr');
-                                row.className = "hover:bg-slate-900/50";
-                                row.innerHTML = `
-                                    <td class="px-3 py-2 text-slate-500 font-mono">${index + 1}</td>
-                                    <td class="px-3 py-2 text-slate-300">${log.date}</td>
-                                    <td class="px-3 py-2 text-slate-300">${log.time}</td>
-                                    <td class="px-3 py-2 text-amber-400 font-mono">${log.ip}</td>
-                                    <td class="px-3 py-2 text-slate-200">${log.location}</td>
-                                    <td class="px-3 py-2"><span class="text-emerald-400">OK</span></td>
-                                `;
-                                tbody.appendChild(row);
-                            });
-                        } else {
-                            tbody.innerHTML = '<tr><td colspan="6" class="px-3 py-4 text-center text-slate-500">No logs recorded yet.</td></tr>';
-                            document.getElementById('totalApiHits').textContent = '0';
-                        }
-                    });
+                const ipRes = await fetch('https://ipapi.co/json/');
+                const ipData = await ipRes.json();
+                if (ipData && ipData.ip) {
+                    ip = ipData.ip;
+                    location = `${ipData.city || 'Las Vegas'}, ${ipData.region || 'NV'}`;
                 }
             } catch (e) {
-                console.log("Firebase tracking initialized.");
+                // fallback if geo blocked
+            }
+
+            const newVisitor = {
+                date: currentDate,
+                time: currentTime,
+                ip: ip,
+                location: location,
+                timestamp: Date.now()
+            };
+
+            // Push visitor log to Firebase REST API
+            try {
+                await fetch(`${DB_URL}.json`, {
+                    method: 'POST',
+                    body: JSON.stringify(newVisitor),
+                    headers: { 'Content-Type': 'application/json' }
+                });
+            } catch (e) {
+                // fallback
+            }
+
+            // Fetch all global visitors and render ascending
+            fetchGlobalLogs();
+        }
+
+        async function fetchGlobalLogs() {
+            try {
+                const response = await fetch(`${DB_URL}.json`);
+                const data = await response.json();
+                const tbody = document.getElementById('visitorLogBody');
+                tbody.innerHTML = '';
+
+                if (data) {
+                    const logsArray = Object.values(data).sort((a, b) => a.timestamp - b.timestamp);
+                    document.getElementById('liveHitCounter').textContent = logsArray.length.toLocaleString();
+                    document.getElementById('totalApiHits').textContent = logsArray.length.toLocaleString();
+
+                    logsArray.forEach((log, index) => {
+                        const row = document.createElement('tr');
+                        row.className = "hover:bg-slate-900/50";
+                        row.innerHTML = `
+                            <td class="px-3 py-2 text-slate-500 font-mono">${index + 1}</td>
+                            <td class="px-3 py-2 text-slate-300">${log.date}</td>
+                            <td class="px-3 py-2 text-slate-300">${log.time}</td>
+                            <td class="px-3 py-2 text-amber-400 font-mono">${log.ip}</td>
+                            <td class="px-3 py-2 text-slate-200">${log.location}</td>
+                            <td class="px-3 py-2"><span class="text-emerald-400">OK</span></td>
+                        `;
+                        tbody.appendChild(row);
+                    });
+                } else {
+                    tbody.innerHTML = '<tr><td colspan="6" class="px-3 py-4 text-center text-slate-500">No global logs recorded yet.</td></tr>';
+                    document.getElementById('liveHitCounter').textContent = '0';
+                    document.getElementById('totalApiHits').textContent = '0';
+                }
+            } catch (e) {
+                document.getElementById('visitorLogBody').innerHTML = '<tr><td colspan="6" class="px-3 py-4 text-center text-rose-400">Connecting to cloud database...</td></tr>';
             }
         }
 
         function resetVisitorCounter() {
-            if (confirm('Are you sure you want to clear all cumulative visitor logs and reset counter to 0?')) {
-                try {
-                    const db = firebase.database();
-                    db.ref('eyeonvegas/visits').set(0);
-                    db.ref('eyeonvegas/visitor_logs').remove();
-                    document.getElementById('liveHitCounter').textContent = '0';
-                    document.getElementById('totalApiHits').textContent = '0';
-                    document.getElementById('visitorLogBody').innerHTML = '<tr><td colspan="6" class="px-3 py-4 text-center text-slate-500">Logs cleared.</td></tr>';
-                    alert('Firebase visitor database successfully reset.');
-                } catch (e) {
-                    alert('Error clearing logs.');
-                }
+            if (confirm('Are you sure you want to clear all global visitor logs from the cloud?')) {
+                fetch(`${DB_URL}.json`, { method: 'DELETE' })
+                    .then(() => {
+                        fetchGlobalLogs();
+                        alert('Global cloud database successfully cleared.');
+                    })
+                    .catch(() => alert('Error clearing database.'));
             }
         }
 
@@ -789,7 +773,7 @@
             updateVegasTime();
             setInterval(updateVegasTime, 1000);
             
-            initFirebaseTracker();
+            initGlobalTracker();
 
             if (window.lucide) {
                 lucide.createIcons();
@@ -866,6 +850,7 @@
         function openAdminModal() {
             document.getElementById('adminModal').classList.remove('hidden');
             document.getElementById('adminPassword').focus();
+            fetchGlobalLogs(); // Refresh logs when opening admin modal
         }
 
         function closeAdminModal() {
@@ -881,6 +866,7 @@
                 errorMsg.classList.add('hidden');
                 document.getElementById('adminLoginForm').classList.add('hidden');
                 document.getElementById('adminDashboard').classList.remove('hidden');
+                fetchGlobalLogs();
             } else {
                 errorMsg.classList.remove('hidden');
             }

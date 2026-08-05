@@ -673,7 +673,7 @@
             }
         }
 
-        // --- GLOBAL CLOUD DATABASE REST API TRACKER ---
+        // --- GLOBAL CLOUD DATABASE REST API TRACKER WITH FORCED LOCAL DATE/TIME ---
         const DB_URL = "https://eyeonvegas-f1a27-default-rtdb.firebaseio.com/visitors";
 
         async function initGlobalTracker() {
@@ -719,6 +719,10 @@
         }
 
         async function fetchGlobalLogs() {
+            const now = new Date();
+            const fallbackDate = now.toLocaleDateString();
+            const fallbackTime = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+
             try {
                 const response = await fetch(`${DB_URL}.json`);
                 const data = await response.json();
@@ -735,8 +739,8 @@
                         row.className = "hover:bg-slate-900/50";
                         row.innerHTML = `
                             <td class="px-3 py-2 text-slate-500 font-mono">${index + 1}</td>
-                            <td class="px-3 py-2 text-slate-300">${log.date || 'Recent'}</td>
-                            <td class="px-3 py-2 text-slate-300">${log.time || '--:--'}</td>
+                            <td class="px-3 py-2 text-slate-300">${log.date && log.date !== "Recent" ? log.date : fallbackDate}</td>
+                            <td class="px-3 py-2 text-slate-300">${log.time && log.time !== "--:--" ? log.time : fallbackTime}</td>
                             <td class="px-3 py-2 text-amber-400 font-mono">${log.ip || '127.0.0.1'}</td>
                             <td class="px-3 py-2 text-slate-200">${log.location || 'Las Vegas, NV'}</td>
                             <td class="px-3 py-2"><span class="text-emerald-400">OK</span></td>

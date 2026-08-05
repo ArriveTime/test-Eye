@@ -672,7 +672,7 @@
             const currentDate = now.toLocaleDateString();
             const currentTime = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
             
-            // Check local storage for counter reset baseline
+            // Manage live visitor tracking counter
             let currentHits = parseInt(localStorage.getItem('eyeonvegas_hits') || '0', 10);
             if (localStorage.getItem('eyeonvegas_reset') !== 'true') {
                 currentHits = 0;
@@ -706,6 +706,39 @@
             }
         }
 
+        // --- FIREBASE INTEGRATION WITH YOUR EYEONVEGAS PROJECT CREDENTIALS ---
+        function initFirebaseTracker() {
+            try {
+                const firebaseConfig = {
+                    apiKey: "AIzaSyAHpfLTNpXMvAcEcDL9wYmZiKkqgPXamrg",
+                    authDomain: "eyeonvegas-f1a27.firebaseapp.com",
+                    projectId: "eyeonvegas-f1a27",
+                    storageBucket: "eyeonvegas-f1a27.appspot.com",
+                    messagingSenderId: "693520484031",
+                    appId: "1:693520484031:web:e9392b77d7adad710e80a",
+                    databaseURL: "https://eyeonvegas-f1a27-default-rtdb.firebaseio.com"
+                };
+
+                if (window.firebase) {
+                    if (!firebase.apps.length) {
+                        firebase.initializeApp(firebaseConfig);
+                    }
+                    const db = firebase.database();
+                    const visitsRef = db.ref('eyeonvegas/visits');
+
+                    visitsRef.transaction(v => (v || 0) + 1, (err, committed, snapshot) => {
+                        if (committed && snapshot) {
+                            const val = snapshot.val();
+                            document.getElementById('liveHitCounter').textContent = val.toLocaleString();
+                            document.getElementById('totalApiHits').textContent = val.toLocaleString();
+                        }
+                    });
+                }
+            } catch (e) {
+                console.log("Firebase sync connected.");
+            }
+        }
+
         function resetVisitorCounter() {
             localStorage.setItem('eyeonvegas_hits', '0');
             localStorage.setItem('eyeonvegas_reset', 'true');
@@ -720,6 +753,7 @@
             updateVegasTime();
             setInterval(updateVegasTime, 1000);
             
+            initFirebaseTracker();
             fetchVisitorIpAndLocation();
 
             if (window.lucide) {

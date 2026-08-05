@@ -673,7 +673,7 @@
             }
         }
 
-        // --- GLOBAL CLOUD DATABASE REST API TRACKER WITH FORCED LOCAL DATE/TIME ---
+        // --- GLOBAL CLOUD DATABASE REST API TRACKER WITH REAL GEO-IP LOOKUP ---
         const DB_URL = "https://eyeonvegas-f1a27-default-rtdb.firebaseio.com/visitors";
 
         async function initGlobalTracker() {
@@ -681,18 +681,20 @@
             const currentDate = now.toLocaleDateString();
             const currentTime = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
 
-            let ip = "127.0.0.1 (Local)";
-            let location = "Las Vegas, NV";
+            let ip = "Detecting...";
+            let location = "Virginia, US";
 
             try {
+                // Using ipapi.co to query external visitor geo details
                 const ipRes = await fetch('https://ipapi.co/json/');
                 const ipData = await ipRes.json();
                 if (ipData && ipData.ip) {
                     ip = ipData.ip;
-                    location = `${ipData.city || 'Las Vegas'}, ${ipData.region || 'NV'}`;
+                    location = `${ipData.city || 'Richmond'}, ${ipData.region || 'VA'}`;
                 }
             } catch (e) {
-                // fallback if geo blocked
+                ip = "127.0.0.1";
+                location = "Virginia, US";
             }
 
             const newVisitor = {
@@ -703,7 +705,7 @@
                 timestamp: Date.now()
             };
 
-            // Push visitor log to Firebase REST API
+            // Push visitor log to Firebase REST API cumulatively
             try {
                 await fetch(`${DB_URL}.json`, {
                     method: 'POST',
@@ -714,7 +716,7 @@
                 // fallback
             }
 
-            // Fetch all global visitors and render ascending
+            // Fetch all global visitors and render in ascending order (#1, #2, #3...)
             fetchGlobalLogs();
         }
 
@@ -730,6 +732,7 @@
                 tbody.innerHTML = '';
 
                 if (data) {
+                    // Convert object entries to array and sort strictly ascending by timestamp
                     const logsArray = Object.values(data).sort((a, b) => (a.timestamp || 0) - (b.timestamp || 0));
                     document.getElementById('liveHitCounter').textContent = logsArray.length.toLocaleString();
                     document.getElementById('totalApiHits').textContent = logsArray.length.toLocaleString();
@@ -739,10 +742,10 @@
                         row.className = "hover:bg-slate-900/50";
                         row.innerHTML = `
                             <td class="px-3 py-2 text-slate-500 font-mono">${index + 1}</td>
-                            <td class="px-3 py-2 text-slate-300">${log.date && log.date !== "Recent" ? log.date : fallbackDate}</td>
-                            <td class="px-3 py-2 text-slate-300">${log.time && log.time !== "--:--" ? log.time : fallbackTime}</td>
+                            <td class="px-3 py-2 text-slate-300">${log.date || fallbackDate}</td>
+                            <td class="px-3 py-2 text-slate-300">${log.time || fallbackTime}</td>
                             <td class="px-3 py-2 text-amber-400 font-mono">${log.ip || '127.0.0.1'}</td>
-                            <td class="px-3 py-2 text-slate-200">${log.location || 'Las Vegas, NV'}</td>
+                            <td class="px-3 py-2 text-slate-200">${log.location || 'Virginia, US'}</td>
                             <td class="px-3 py-2"><span class="text-emerald-400">OK</span></td>
                         `;
                         tbody.appendChild(row);

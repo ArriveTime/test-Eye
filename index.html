@@ -143,7 +143,6 @@
 
     <!-- Main Grid Section (Hub Directory) --> 
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 w-full flex-grow"> 
-        
         <div id="directory" class="space-y-6"> 
             <div class="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-800 pb-4 gap-4"> 
                 <h2 class="text-lg font-bold text-white flex items-center gap-2"> 
@@ -161,7 +160,6 @@
 
             <!-- Directory Grid --> 
             <div id="toolGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"> 
-                
                 <!-- Sports Card --> 
                 <div class="tool-card bg-slate-900/60 border border-slate-800 rounded-xl p-5 flex flex-col justify-between hover:border-amber-500/50 transition-all group" data-category="sports" data-keywords="sports raiders golden knights aces allegiant stadium t-mobile arena football hockey basketball schedule"> 
                     <div> 
@@ -366,7 +364,6 @@
                         </a> 
                     </div> 
                 </div> 
-
             </div> 
         </div> 
     </main> 
@@ -409,13 +406,13 @@
                 </div> 
                 <div> 
                     <h3 class="text-lg font-bold text-white">EyeOnVegas Admin</h3> 
-                    <p class="text-xs text-slate-400">Robust Visitor Tracking & Logging Hub</p> 
+                    <p class="text-xs text-slate-400">Global Cloud Realtime Logging Hub</p> 
                 </div> 
             </div> 
 
             <!-- Login Form --> 
             <div id="adminLoginForm" class="space-y-4 my-auto"> 
-                <p class="text-xs text-slate-400">Enter your administrator access code to view cumulative visitor logs.</p> 
+                <p class="text-xs text-slate-400">Enter your administrator access code to view global visitor logs.</p> 
                 <div> 
                     <label class="block text-xs font-medium text-slate-300 mb-1">Passcode</label> 
                     <input type="password" id="adminPassword" placeholder="Enter password..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-slate-100 focus:outline-none focus:border-amber-400"> 
@@ -428,7 +425,7 @@
                 </button> 
             </div> 
 
-            <!-- Unlocked Admin View with Cumulative Ascending Table Log --> 
+            <!-- Unlocked Admin View with Cumulative Table Log --> 
             <div id="adminDashboard" class="hidden space-y-4 overflow-y-auto pr-1"> 
                 <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
                     <div class="bg-slate-950 border border-slate-800 rounded-lg p-3 text-center">
@@ -436,7 +433,7 @@
                         <div id="liveHitCounter" class="text-lg font-bold text-amber-400 animate-pulse">0</div>
                     </div>
                     <div class="bg-slate-950 border border-slate-800 rounded-lg p-3 text-center">
-                        <div class="text-xs text-slate-500 mb-1">Unique Visitors</div>
+                        <div class="text-xs text-slate-500 mb-1">Global Visitors</div>
                         <div id="totalApiHits" class="text-lg font-bold text-purple-400">0</div>
                     </div>
                     <div class="bg-slate-950 border border-slate-800 rounded-lg p-3 text-center">
@@ -444,8 +441,8 @@
                         <div class="text-lg font-bold text-emerald-400">0m 00s</div>
                     </div>
                     <div class="bg-slate-950 border border-slate-800 rounded-lg p-3 text-center">
-                        <div class="text-xs text-slate-500 mb-1">Status</div>
-                        <div class="text-lg font-bold text-teal-400">Live Active</div>
+                        <div class="text-xs text-slate-500 mb-1">Cloud Database</div>
+                        <div id="cloudStatusBadge" class="text-lg font-bold text-teal-400">Syncing...</div>
                     </div>
                 </div>
 
@@ -469,7 +466,7 @@
                             </thead>
                             <tbody class="divide-y divide-slate-800/50" id="visitorLogBody">
                                 <tr>
-                                    <td colspan="6" class="px-3 py-4 text-center text-slate-500">Loading logs...</td>
+                                    <td colspan="6" class="px-3 py-4 text-center text-slate-500">Fetching global visitor records from cloud database...</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -605,7 +602,7 @@
             }
         ];
 
-        // --- RENDER NEWS FUNCTION WITH CLICKABLE ANCHORS ---
+        // --- RENDER NEWS FUNCTION ---
         function renderNews(articles) {
             const container = document.getElementById('liveNewsContainer');
             if (!container) return;
@@ -640,9 +637,7 @@
                 container.appendChild(item);
             });
 
-            if (window.lucide) {
-                lucide.createIcons();
-            }
+            if (window.lucide) lucide.createIcons();
         }
 
         function fetchLiveNews() {
@@ -673,107 +668,133 @@
             }
         }
 
-        // --- ROBUST CUMULATIVE VISITOR TRACKER (LOCAL & CLOUD HYBRID) ---
+        // --- TRUE GLOBAL CLOUD DATABASE TRACKER (FIREBASE REST + REAL GEO) ---
+        const DB_URL = "https://eyeonvegas-f1a27-default-rtdb.firebaseio.com/visitors";
+
         async function initGlobalTracker() {
             const now = new Date();
             const currentDate = now.toLocaleDateString();
             const currentTime = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
 
-            let ip = "192.168.1.1 (Local)";
-            let location = "Richmond, VA";
+            let visitorIp = "Detecting...";
+            let visitorLocation = "Richmond, VA";
 
+            // 1. Fetch real public IP from ipify
             try {
-                const ipRes = await fetch('https://ipapi.co/json/');
+                const ipRes = await fetch('https://api.ipify.org?format=json');
                 const ipData = await ipRes.json();
                 if (ipData && ipData.ip) {
-                    ip = ipData.ip;
-                    location = `${ipData.city || 'Richmond'}, ${ipData.region || 'VA'}`;
+                    visitorIp = ipData.ip;
+                    
+                    // 2. Lookup geolocation for this public IP
+                    try {
+                        const geoRes = await fetch(`https://ipapi.co/${visitorIp}/json/`);
+                        const geoData = await geoRes.json();
+                        if (geoData && geoData.city) {
+                            visitorLocation = `${geoData.city}, ${geoData.region_code || geoData.region || 'VA'}`;
+                        }
+                    } catch(e) {
+                        visitorLocation = "Virginia, US";
+                    }
                 }
             } catch (e) {
-                location = "Richmond, VA";
+                visitorIp = "127.0.0.1";
+                visitorLocation = "Richmond, VA";
             }
 
             const newVisitor = {
                 date: currentDate,
                 time: currentTime,
-                ip: ip,
-                location: location,
+                ip: visitorIp,
+                location: visitorLocation,
                 timestamp: Date.now()
             };
 
-            // Get existing cumulative logs from localStorage
-            let logsArray = [];
+            // 3. Send entry to Cloud Database REST API
             try {
-                const stored = localStorage.getItem('eyeonvegas_visitor_logs');
-                if (stored) {
-                    logsArray = JSON.parse(stored);
-                }
-            } catch (e) {
-                logsArray = [];
-            }
-
-            // Append new visit cumulatively
-            logsArray.push(newVisitor);
-
-            // Save back strictly cumulative
-            try {
-                localStorage.setItem('eyeonvegas_visitor_logs', JSON.stringify(logsArray));
-            } catch (e) {}
-
-            renderLogsTable(logsArray);
-        }
-
-        function renderLogsTable(logsArray) {
-            const tbody = document.getElementById('visitorLogBody');
-            if (!tbody) return;
-            
-            tbody.innerHTML = '';
-
-            if (logsArray && logsArray.length > 0) {
-                // Ensure strict ascending order (#1, #2, #3...)
-                logsArray.sort((a, b) => (a.timestamp || 0) - (b.timestamp || 0));
-
-                document.getElementById('liveHitCounter').textContent = logsArray.length.toLocaleString();
-                document.getElementById('totalApiHits').textContent = logsArray.length.toLocaleString();
-
-                logsArray.forEach((log, index) => {
-                    const row = document.createElement('tr');
-                    row.className = "hover:bg-slate-900/50";
-                    row.innerHTML = `
-                        <td class="px-3 py-2 text-slate-500 font-mono">${index + 1}</td>
-                        <td class="px-3 py-2 text-slate-300">${log.date || 'Active'}</td>
-                        <td class="px-3 py-2 text-slate-300">${log.time || '--:--'}</td>
-                        <td class="px-3 py-2 text-amber-400 font-mono">${log.ip || '192.168.1.1'}</td>
-                        <td class="px-3 py-2 text-slate-200">${log.location || 'Richmond, VA'}</td>
-                        <td class="px-3 py-2"><span class="text-emerald-400">OK</span></td>
-                    `;
-                    tbody.appendChild(row);
+                await fetch(`${DB_URL}.json`, {
+                    method: 'POST',
+                    body: JSON.stringify(newVisitor),
+                    headers: { 'Content-Type': 'application/json' }
                 });
-            } else {
-                tbody.innerHTML = '<tr><td colspan="6" class="px-3 py-4 text-center text-slate-500">No global logs recorded yet.</td></tr>';
-                document.getElementById('liveHitCounter').textContent = '0';
-                document.getElementById('totalApiHits').textContent = '0';
+            } catch (e) {
+                console.log("Cloud push delayed or blocked.");
             }
+
+            // 4. Retrieve all cumulative global logs from Cloud
+            fetchGlobalLogs();
         }
 
-        function fetchGlobalLogs() {
+        async function fetchGlobalLogs() {
+            const statusBadge = document.getElementById('cloudStatusBadge');
+            const tbody = document.getElementById('visitorLogBody');
+            
             try {
-                const stored = localStorage.getItem('eyeonvegas_visitor_logs');
-                if (stored) {
-                    renderLogsTable(JSON.parse(stored));
-                } else {
-                    renderLogsTable([]);
+                const response = await fetch(`${DB_URL}.json`);
+                if (!response.ok) {
+                    if (statusBadge) {
+                        statusBadge.textContent = "Rules Locked";
+                        statusBadge.className = "text-lg font-bold text-rose-400";
+                    }
+                    if (tbody) {
+                        tbody.innerHTML = '<tr><td colspan="6" class="px-3 py-4 text-center text-rose-400">Firebase database rules are blocking access. Update rules to ".read": true, ".write": true</td></tr>';
+                    }
+                    return;
+                }
+
+                const data = await response.json();
+                if (statusBadge) {
+                    statusBadge.textContent = "Global Active";
+                    statusBadge.className = "text-lg font-bold text-emerald-400";
+                }
+
+                if (tbody) {
+                    tbody.innerHTML = '';
+                    if (data) {
+                        // Convert object to array and sort ascending strictly by timestamp (#1, #2, #3...)
+                        const logsArray = Object.values(data).sort((a, b) => (a.timestamp || 0) - (b.timestamp || 0));
+                        
+                        document.getElementById('liveHitCounter').textContent = logsArray.length.toLocaleString();
+                        document.getElementById('totalApiHits').textContent = logsArray.length.toLocaleString();
+
+                        logsArray.forEach((log, index) => {
+                            const row = document.createElement('tr');
+                            row.className = "hover:bg-slate-900/50";
+                            row.innerHTML = `
+                                <td class="px-3 py-2 text-slate-500 font-mono">${index + 1}</td>
+                                <td class="px-3 py-2 text-slate-300">${log.date || 'Recent'}</td>
+                                <td class="px-3 py-2 text-slate-300">${log.time || '--:--'}</td>
+                                <td class="px-3 py-2 text-amber-400 font-mono">${log.ip || '127.0.0.1'}</td>
+                                <td class="px-3 py-2 text-slate-200">${log.location || 'Richmond, VA'}</td>
+                                <td class="px-3 py-2"><span class="text-emerald-400">OK</span></td>
+                            `;
+                            tbody.appendChild(row);
+                        });
+                    } else {
+                        tbody.innerHTML = '<tr><td colspan="6" class="px-3 py-4 text-center text-slate-500">No global logs recorded in cloud yet.</td></tr>';
+                        document.getElementById('liveHitCounter').textContent = '0';
+                        document.getElementById('totalApiHits').textContent = '0';
+                    }
                 }
             } catch (e) {
-                renderLogsTable([]);
+                if (statusBadge) {
+                    statusBadge.textContent = "Network Error";
+                    statusBadge.className = "text-lg font-bold text-amber-400";
+                }
+                if (tbody) {
+                    tbody.innerHTML = '<tr><td colspan="6" class="px-3 py-4 text-center text-slate-400">Unable to connect to Cloud Database endpoint.</td></tr>';
+                }
             }
         }
 
         function resetVisitorCounter() {
-            if (confirm('Are you sure you want to clear all cumulative visitor logs?')) {
-                localStorage.removeItem('eyeonvegas_visitor_logs');
-                fetchGlobalLogs();
-                alert('Cumulative visitor logs successfully cleared.');
+            if (confirm('Are you sure you want to clear all cumulative global logs from the cloud database?')) {
+                fetch(`${DB_URL}.json`, { method: 'DELETE' })
+                    .then(() => {
+                        fetchGlobalLogs();
+                        alert('Global cloud database successfully reset.');
+                    })
+                    .catch(() => alert('Error clearing database.'));
             }
         }
 
@@ -785,9 +806,7 @@
             
             initGlobalTracker();
 
-            if (window.lucide) {
-                lucide.createIcons();
-            }
+            if (window.lucide) lucide.createIcons();
         });
 
         // --- DIRECTORY FILTERING ---

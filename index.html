@@ -1,452 +1,469 @@
-<!DOCTYPE html> 
-<html lang="en" class="dark"> 
-<head> 
-    <meta charset="UTF-8"> 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
-    <title>EyeOnVegas.com | Las Vegas News, Weather, Traffic & AI Directory</title> 
-    <!-- Tailwind CSS CDN --> 
-    <script src="https://cdn.tailwindcss.com"></script> 
-    <script> 
-        tailwind.config = { 
-            darkMode: 'class', 
-            theme: { 
-                extend: { 
-                    colors: { 
-                        brand: { 
-                            50: '#eff6ff', 
-                            500: '#3b82f6', 
-                            600: '#2563eb', 
-                            900: '#1e3a8a', 
-                            950: '#172554', 
-                        } 
-                    } 
-                } 
-            } 
-        } 
-    </script> 
-    <!-- Lucide Icons --> 
-    <script src="https://unpkg.com/lucide@latest"></script> 
-    <style> 
-        .hidden-directory-card { 
-            display: none !important; 
-        } 
-    </style> 
-</head> 
-<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col font-sans selection:bg-purple-500 selection:text-white"> 
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>4O5.com | Los Angeles News, Weather, Traffic & AI Directory</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#eff6ff',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            900: '#1e3a8a',
+                            950: '#172554',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        .hidden-directory-card {
+            display: none !important;
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col font-sans selection:bg-blue-500 selection:text-white">
 
-    <!-- Top Live Traffic, Weather & Las Vegas Time Ticker Bar --> 
-    <div class="bg-purple-950/80 border-b border-purple-900/50 text-xs py-2 px-4"> 
-        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-2 text-center md:text-left"> 
-            <div class="flex flex-col md:flex-row items-center gap-2 md:gap-4 w-full md:w-auto"> 
-                <span id="trafficTicker" class="flex items-center justify-center gap-1.5 text-amber-400 font-medium w-full md:w-auto"> 
-                    <i data-lucide="car" class="w-3.5 h-3.5 flex-shrink-0"></i> I-15 Strip Corridor: Flow Normal 
-                </span> 
-                <span class="text-purple-300 hidden md:inline">|</span> 
-                <span id="weatherTicker" class="flex items-center justify-center gap-1.5 text-emerald-400 font-medium w-full md:w-auto"> 
-                    <i data-lucide="sun" class="w-3.5 h-3.5 flex-shrink-0"></i> Las Vegas: 98°F Sunny 
-                </span> 
-                <span class="text-purple-300 hidden md:inline">|</span> 
-                <span class="flex items-center justify-center gap-1.5 text-cyan-300 font-medium w-full md:w-auto"> 
-                    <i data-lucide="clock" class="w-3.5 h-3.5 flex-shrink-0"></i> <span id="vegasClock">--:--:-- --</span> PST 
-                </span> 
-            </div> 
-            <div class="text-slate-400 hidden md:block"> 
-                <span>The Pulse of Las Vegas & AI Innovation</span> 
-            </div> 
-        </div> 
-    </div> 
+    <!-- Top Live Traffic, Weather & Los Angeles Time Ticker Bar -->
+    <div class="bg-blue-950 border-b border-blue-900/50 text-xs py-2 px-4">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-2 text-center md:text-left">
+            <div class="flex flex-col md:flex-row items-center gap-2 md:gap-4 w-full md:w-auto">
+                <span id="trafficTicker" class="flex items-center justify-center gap-1.5 text-amber-400 font-medium w-full md:w-auto">
+                    <i data-lucide="car" class="w-3.5 h-3.5 flex-shrink-0"></i> I-405 North: Flow Normal
+                </span>
+                <span class="text-blue-300 hidden md:inline">|</span>
+                <span id="weatherTicker" class="flex items-center justify-center gap-1.5 text-emerald-400 font-medium w-full md:w-auto">
+                    <i data-lucide="sun" class="w-3.5 h-3.5 flex-shrink-0"></i> Los Angeles: 74°F Sunny
+                </span>
+                <span class="text-blue-300 hidden md:inline">|</span>
+                <span class="flex items-center justify-center gap-1.5 text-cyan-300 font-medium w-full md:w-auto">
+                    <i data-lucide="clock" class="w-3.5 h-3.5 flex-shrink-0"></i> <span id="laClock">--:--:-- --</span> PST
+                </span>
+            </div>
+            <div class="text-slate-400 hidden md:block">
+                <span>The Pulse of LA & AI Innovation</span>
+            </div>
+        </div>
+    </div>
 
-    <!-- Navigation Header --> 
-    <header class="border-b border-slate-800 bg-slate-900/50 backdrop-blur sticky top-0 z-50"> 
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between"> 
-            <div class="flex items-center gap-3"> 
-                <div class="bg-gradient-to-tr from-amber-500 via-purple-600 to-indigo-600 text-white font-black text-xl px-3 py-1.5 rounded-lg shadow-lg shadow-purple-500/20 tracking-wider border border-amber-400/50"> 
-                    EyeOnVegas<span class="text-amber-300">.com</span> 
-                </div> 
-                <span class="text-xs uppercase tracking-widest text-slate-400 font-semibold hidden sm:inline-block border-l border-slate-700 pl-3"> 
-                    Vegas News & AI Hub 
-                </span> 
-            </div> 
-            <nav class="hidden md:flex items-center gap-6 text-sm font-medium text-slate-300"> 
-                <a href="#news" class="hover:text-amber-400 transition-colors">Vegas News & Weather</a> 
-                <a href="#directory" class="hover:text-amber-400 transition-colors">AI & City Directory</a> 
-                <a href="#legal" class="hover:text-amber-400 transition-colors">Disclaimers</a> 
-            </nav> 
-            <div class="flex items-center gap-3"> 
-                <a href="#directory" class="bg-purple-600 hover:bg-purple-500 text-white font-bold px-4 py-2 text-sm rounded-lg transition-all shadow-md shadow-purple-600/20 flex items-center justify-center"> 
-                    Explore Directory 
-                </a> 
-            </div> 
-        </div> 
-    </header> 
+    <!-- Navigation Header -->
+    <header class="border-b border-slate-800 bg-slate-900/50 backdrop-blur sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="bg-gradient-to-tr from-purple-600 to-indigo-600 text-white font-black text-xl px-3 py-1.5 rounded-lg shadow-lg shadow-purple-500/20 tracking-wider border border-purple-400/50">
+                    4O5<span class="text-purple-200">.com</span>
+                </div>
+                <span class="text-xs uppercase tracking-widest text-slate-400 font-semibold hidden sm:inline-block border-l border-slate-700 pl-3">
+                    LA's News AI Gateway
+                </span>
+            </div>
+            <nav class="hidden md:flex items-center gap-6 text-sm font-medium text-slate-300">
+                <a href="#news" class="hover:text-blue-400 transition-colors">LA News & Weather</a>
+                <a href="#directory" class="hover:text-blue-400 transition-colors">AI & Hub Directory</a>
+                <a href="#legal" class="hover:text-blue-400 transition-colors">Disclaimers</a>
+            </nav>
+            <div class="flex items-center gap-3">
+                <a href="#directory" class="bg-blue-600 hover:bg-blue-500 text-white font-bold px-4 py-2 text-sm rounded-lg transition-all shadow-md shadow-blue-600/20 flex items-center justify-center">
+                    Explore Hub
+                </a>
+            </div>
+        </div>
+    </header>
 
-    <!-- Hero Section --> 
-    <section class="relative overflow-hidden py-12 sm:py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full text-center"> 
-        <div class="absolute inset-0 -z-10 flex items-center justify-center opacity-20 pointer-events-none"> 
-            <div class="w-[500px] h-[500px] bg-amber-500 rounded-full blur-[140px]"></div> 
-        </div> 
+    <!-- Hero Section -->
+    <section class="relative overflow-hidden py-12 sm:py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full text-center">
+        <div class="absolute inset-0 -z-10 flex items-center justify-center opacity-20 pointer-events-none">
+            <div class="w-[500px] h-[500px] bg-blue-600 rounded-full blur-[120px]"></div>
+        </div>
         
-        <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-white max-w-4xl mx-auto mb-3"> 
-            Las Vegas News & Live Updates 
-        </h1> 
-        <h2 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-white max-w-4xl mx-auto mb-4"> 
-            <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-purple-400 to-indigo-400">Your AI Gateway to Sin City</span> 
-        </h2> 
+        <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-white max-w-4xl mx-auto mb-3">
+            LA's News
+        </h1>
+        <h2 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-white max-w-4xl mx-auto mb-4">
+            <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-400">AI Gateway</span>
+        </h2>
 
-        <!-- Featured Brand Badge --> 
-        <div class="flex justify-center mb-6"> 
-            <div class="bg-gradient-to-tr from-amber-500 via-purple-600 to-indigo-600 text-white font-black text-2xl sm:text-4xl px-10 py-4 rounded-2xl shadow-xl shadow-purple-500/30 tracking-widest border-2 border-amber-400/70 inline-flex items-center justify-center text-center"> 
-                EyeOnVegas<span class="text-amber-300">.com</span> 
-            </div> 
-        </div> 
+        <!-- Featured Brand Badge -->
+        <div class="flex justify-center mb-6">
+            <div class="bg-gradient-to-tr from-purple-600 to-indigo-600 text-white font-black text-2xl sm:text-4xl px-12 py-5 rounded-2xl shadow-xl shadow-purple-500/30 tracking-widest border-2 border-purple-400/70 inline-flex items-center justify-center text-center">
+                4O5<span class="text-purple-200">.com</span>
+            </div>
+        </div>
         
-        <!-- Descriptive Subtitle --> 
-        <p class="mt-4 text-base sm:text-xl text-slate-300 max-w-3xl mx-auto leading-relaxed mb-10"> 
-            Real-time Las Vegas updates combined with an AI directory for sports, shows, nightlife, tickets, fine dining, and entertainment. 
-        </p> 
+        <!-- Descriptive Subtitle -->
+        <p class="mt-4 text-base sm:text-2xl text-slate-300 max-w-3xl mx-auto leading-relaxed mb-10">
+            Named after the nation's busiest corridor. Real-time Southern California updates combined with the ultimate directory for AI, sports, tickets, dining, and entertainment.
+        </p>
 
-        <!-- Live AI Search Bar Component --> 
-        <div class="max-w-2xl mx-auto mb-16"> 
-            <form id="internetSearchForm" class="flex flex-col sm:flex-row gap-2 p-2 bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl"> 
-                <div class="flex items-center gap-2 px-3 flex-1"> 
-                    <i data-lucide="sparkles" class="w-5 h-5 text-amber-400 animate-pulse"></i> 
-                    <input type="text" id="directorySearch" placeholder="Ask AI Search (e.g. 'raiders tickets', 'best steak on the strip')..." class="w-full bg-transparent border-none focus:outline-none text-slate-100 placeholder-slate-500 text-sm py-2"> 
-                </div> 
-                <button type="submit" id="searchBtn" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-6 py-3 rounded-xl text-sm transition-all flex items-center justify-center gap-2"> 
-                    Live AI Search 
-                </button> 
-            </form> 
-        </div> 
+        <!-- Live AI Search Bar Component -->
+        <div class="max-w-2xl mx-auto mb-16">
+            <form id="internetSearchForm" class="flex flex-col sm:flex-row gap-2 p-2 bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl">
+                <div class="flex items-center gap-2 px-3 flex-1">
+                    <i data-lucide="sparkles" class="w-5 h-5 text-blue-400 animate-pulse"></i>
+                    <input type="text" id="directorySearch" placeholder="Ask AI Search (e.g. 'dodgers tickets', 'best steak LA')..." class="w-full bg-transparent border-none focus:outline-none text-slate-100 placeholder-slate-500 text-sm py-2">
+                </div>
+                <button type="submit" id="searchBtn" class="bg-blue-600 hover:bg-blue-500 text-white font-medium px-6 py-3 rounded-xl text-sm transition-all flex items-center justify-center gap-2">
+                    Live AI Search
+                </button>
+            </form>
+        </div>
 
-        <!-- Vegas Live Feed Directly Under Search --> 
-        <div id="news" class="max-w-4xl mx-auto text-left space-y-6 pt-4 border-t border-slate-800/80"> 
-            <div class="flex items-center justify-between border-b border-slate-800 pb-4"> 
-                <h2 class="text-lg font-bold text-white flex items-center gap-2"> 
-                    <i data-lucide="radio" class="w-5 h-5 text-purple-400 animate-pulse"></i> Las Vegas Live Feed 
-                </h2> 
-                <div class="flex items-center gap-2"> 
-                    <button onclick="fetchLiveNews()" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-2.5 py-1 rounded-lg border border-slate-700 transition-all flex items-center gap-1"> 
-                        <i data-lucide="refresh-cw" class="w-3 h-3"></i> Refresh Feed 
-                    </button> 
-                    <span class="text-xs text-emerald-400 bg-emerald-950/50 border border-emerald-800/50 px-2 py-0.5 rounded-full flex items-center gap-1"> 
-                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> Live Sync 
-                    </span> 
-                </div> 
-            </div> 
+        <!-- LA Live Feed Directly Under Search (8 FULL ITEMS) -->
+        <div id="news" class="max-w-4xl mx-auto text-left space-y-6 pt-4 border-t border-slate-800/80">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-4">
+                <h2 class="text-lg font-bold text-white flex items-center gap-2">
+                    <i data-lucide="radio" class="w-5 h-5 text-blue-400 animate-pulse"></i> LA Live Feed
+                </h2>
+                <div class="flex items-center gap-2">
+                    <button onclick="fetchLiveNews()" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-2.5 py-1 rounded-lg border border-slate-700 transition-all flex items-center gap-1">
+                        <i data-lucide="refresh-cw" class="w-3 h-3"></i> Refresh Feed
+                    </button>
+                    <span class="text-xs text-emerald-400 bg-emerald-950/50 border border-emerald-800/50 px-2 py-0.5 rounded-full flex items-center gap-1">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> Live Sync
+                    </span>
+                </div>
+            </div>
 
-            <!-- Live News Feeds Container --> 
-            <div id="liveNewsContainer" class="space-y-3"> 
-                <!-- News loaded dynamically --> 
-            </div> 
-        </div> 
-    </section> 
+            <!-- Container where 8 live headlines are dynamically rendered -->
+            <div id="liveNewsContainer" class="space-y-3">
+                <!-- News loaded dynamically via JS -->
+            </div>
+        </div>
+    </section>
 
-    <!-- Main Grid Section (Hub Directory) --> 
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 w-full flex-grow"> 
-        <div id="directory" class="space-y-6"> 
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-800 pb-4 gap-4"> 
-                <h2 class="text-lg font-bold text-white flex items-center gap-2"> 
-                    <i data-lucide="cpu" class="w-5 h-5 text-purple-400"></i> Vegas AI Hub Directory 
-                </h2> 
-                <div class="flex flex-wrap gap-2 text-xs"> 
-                    <button type="button" onclick="filterCategory('all')" id="btn-all" class="bg-amber-500 text-slate-950 font-bold px-3 py-1.5 rounded-lg transition-colors">All</button> 
-                    <button type="button" onclick="filterCategory('sports')" id="btn-sports" class="bg-slate-900 border border-slate-800 text-slate-300 hover:bg-slate-800 px-3 py-1.5 rounded-lg font-medium transition-colors">Sports</button> 
-                    <button type="button" onclick="filterCategory('tickets')" id="btn-tickets" class="bg-slate-900 border border-slate-800 text-slate-300 hover:bg-slate-800 px-3 py-1.5 rounded-lg font-medium transition-colors">Tickets & Shows</button> 
-                    <button type="button" onclick="filterCategory('dining')" id="btn-dining" class="bg-slate-900 border border-slate-800 text-slate-300 hover:bg-slate-800 px-3 py-1.5 rounded-lg font-medium transition-colors">Dining</button> 
-                    <button type="button" onclick="filterCategory('entertainment')" id="btn-entertainment" class="bg-slate-900 border border-slate-800 text-slate-300 hover:bg-slate-800 px-3 py-1.5 rounded-lg font-medium transition-colors">Entertainment</button> 
-                    <button type="button" onclick="filterCategory('general')" id="btn-general" class="bg-slate-900 border border-slate-800 text-slate-300 hover:bg-slate-800 px-3 py-1.5 rounded-lg font-medium transition-colors">AI & Tools</button> 
-                </div> 
-            </div> 
+    <!-- Main Grid Section (Hub Directory) -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 w-full flex-grow">
+        
+        <!-- Hub Directory Full Section -->
+        <div id="directory" class="space-y-6">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-800 pb-4 gap-4">
+                <h2 class="text-lg font-bold text-white flex items-center gap-2">
+                    <i data-lucide="cpu" class="w-5 h-5 text-indigo-400"></i> AI Hub Directory & Feeds
+                </h2>
+                <div class="flex flex-wrap gap-2 text-xs">
+                    <button type="button" onclick="filterCategory('all')" id="btn-all" class="bg-blue-600 text-white px-3 py-1.5 rounded-lg font-medium transition-colors">All</button>
+                    <button type="button" onclick="filterCategory('sports')" id="btn-sports" class="bg-slate-900 border border-slate-800 text-slate-300 hover:bg-slate-800 px-3 py-1.5 rounded-lg font-medium transition-colors">Sports</button>
+                    <button type="button" onclick="filterCategory('tickets')" id="btn-tickets" class="bg-slate-900 border border-slate-800 text-slate-300 hover:bg-slate-800 px-3 py-1.5 rounded-lg font-medium transition-colors">Tickets</button>
+                    <button type="button" onclick="filterCategory('dining')" id="btn-dining" class="bg-slate-900 border border-slate-800 text-slate-300 hover:bg-slate-800 px-3 py-1.5 rounded-lg font-medium transition-colors">Dining</button>
+                    <button type="button" onclick="filterCategory('entertainment')" id="btn-entertainment" class="bg-slate-900 border border-slate-800 text-slate-300 hover:bg-slate-800 px-3 py-1.5 rounded-lg font-medium transition-colors">Entertainment</button>
+                    <button type="button" onclick="filterCategory('general')" id="btn-general" class="bg-slate-900 border border-slate-800 text-slate-300 hover:bg-slate-800 px-3 py-1.5 rounded-lg font-medium transition-colors">AI & Legal</button>
+                </div>
+            </div>
 
-            <!-- Directory Grid --> 
-            <div id="toolGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"> 
-                <!-- Sports Card --> 
-                <div class="tool-card bg-slate-900/60 border border-slate-800 rounded-xl p-5 flex flex-col justify-between hover:border-amber-500/50 transition-all group" data-category="sports" data-keywords="sports raiders golden knights aces allegiant stadium t-mobile arena football hockey basketball schedule"> 
-                    <div> 
-                        <div class="flex items-center justify-between mb-3"> 
-                            <span class="text-xs font-bold uppercase tracking-wider px-2.5 py-1 rounded-md bg-amber-950 text-amber-300 border border-amber-800/50">Vegas Sports</span> 
-                            <span class="text-xs text-emerald-400 font-medium">Verified Active</span> 
-                        </div> 
-                        <h3 class="text-base font-bold text-white group-hover:text-amber-400 transition-colors">Las Vegas Teams & Schedules</h3> 
-                        <p class="text-xs text-slate-400 mt-2 leading-relaxed">Live game updates, scores, and coverage for the LV Raiders, Golden Knights, Aces, and sports events at Allegiant Stadium.</p> 
-                    </div> 
-                    <div class="mt-6 pt-4 border-t border-slate-800/80 flex items-center justify-between"> 
-                        <span class="text-xs text-slate-500">raiders.com / nhl.com/knights</span> 
-                        <a href="https://www.raiders.com" target="_blank" class="text-xs font-semibold text-amber-400 hover:text-amber-300 flex items-center gap-1"> 
-                            Visit Site <i data-lucide="external-link" class="w-3 h-3"></i> 
-                        </a> 
-                    </div> 
-                </div> 
-
-                <!-- Tickets & Shows Card --> 
-                <div class="tool-card bg-slate-900/60 border border-slate-800 rounded-xl p-5 flex flex-col justify-between hover:border-rose-500/50 transition-all group" data-category="tickets" data-keywords="tickets shows concerts residencies vegas sphere stubhub ticketmaster buy venue passes"> 
-                    <div> 
-                        <div class="flex items-center justify-between mb-3"> 
-                            <span class="text-xs font-bold uppercase tracking-wider px-2.5 py-1 rounded-md bg-rose-950 text-rose-300 border border-rose-800/50">Tickets & Shows</span> 
-                            <span class="text-xs text-emerald-400 font-medium">Verified Active</span> 
-                        </div> 
-                        <h3 class="text-base font-bold text-white group-hover:text-rose-400 transition-colors">Vegas Show & Event Tickets</h3> 
-                        <p class="text-xs text-slate-400 mt-2 leading-relaxed">Book tickets for Las Vegas residency concerts, Cirque du Soleil shows, Sphere experiences, and sporting events.</p> 
-                    </div> 
-                    <div class="mt-6 pt-4 border-t border-slate-800/80 flex items-center justify-between"> 
-                        <span class="text-xs text-slate-500">ticketmaster.com</span> 
-                        <a href="https://www.ticketmaster.com" target="_blank" class="text-xs font-semibold text-rose-400 hover:text-rose-300 flex items-center gap-1"> 
-                            Get Tickets <i data-lucide="external-link" class="w-3 h-3"></i> 
-                        </a> 
-                    </div> 
-                </div> 
-
-                <!-- Dining Cards --> 
-                <div class="tool-card bg-slate-900/60 border border-slate-800 rounded-xl p-5 flex flex-col justify-between hover:border-orange-500/50 transition-all group" data-category="dining" data-keywords="resy restaurant reservations guides strip hot spots dining food fine dining chef"> 
-                    <div> 
-                        <div class="flex items-center justify-between mb-3"> 
-                            <span class="text-xs font-bold uppercase tracking-wider px-2.5 py-1 rounded-md bg-orange-950 text-orange-300 border border-orange-800/50">Dining</span> 
-                            <span class="text-xs text-emerald-400 font-medium">Verified Active</span> 
-                        </div> 
-                        <h3 class="text-base font-bold text-white group-hover:text-orange-400 transition-colors">Resy Las Vegas</h3> 
-                        <p class="text-xs text-slate-400 mt-2 leading-relaxed">Curated restaurant reservations, celebrity chef guides, and Strip dining hot spots.</p> 
-                    </div> 
-                    <div class="mt-6 pt-4 border-t border-slate-800/80 flex items-center justify-between"> 
-                        <span class="text-xs text-slate-500">resy.com</span> 
-                        <a href="https://resy.com" target="_blank" class="text-xs font-semibold text-orange-400 hover:text-orange-300 flex items-center gap-1"> 
-                            Visit Site <i data-lucide="external-link" class="w-3 h-3"></i> 
-                        </a> 
-                    </div> 
-                </div> 
-
-                <div class="tool-card bg-slate-900/60 border border-slate-800 rounded-xl p-5 flex flex-col justify-between hover:border-orange-500/50 transition-all group" data-category="dining" data-keywords="opentable restaurant reservations casino buffets fine dining reviews"> 
-                    <div> 
-                        <div class="flex items-center justify-between mb-3"> 
-                            <span class="text-xs font-bold uppercase tracking-wider px-2.5 py-1 rounded-md bg-orange-950 text-orange-300 border border-orange-800/50">Dining</span> 
-                            <span class="text-xs text-emerald-400 font-medium">Verified Active</span> 
-                        </div> 
-                        <h3 class="text-base font-bold text-white group-hover:text-orange-400 transition-colors">OpenTable Vegas</h3> 
-                        <p class="text-xs text-slate-400 mt-2 leading-relaxed">Instant dining reservations at top casino restaurants and off-Strip culinary gems.</p> 
-                    </div> 
-                    <div class="mt-6 pt-4 border-t border-slate-800/80 flex items-center justify-between"> 
-                        <span class="text-xs text-slate-500">opentable.com</span> 
-                        <a href="https://www.opentable.com" target="_blank" class="text-xs font-semibold text-orange-400 hover:text-orange-300 flex items-center gap-1"> 
-                            Visit Site <i data-lucide="external-link" class="w-3 h-3"></i> 
-                        </a> 
-                    </div> 
-                </div> 
-
-                <div class="tool-card bg-slate-900/60 border border-slate-800 rounded-xl p-5 flex flex-col justify-between hover:border-orange-500/50 transition-all group" data-category="dining" data-keywords="eater vegas essential dining city guides casino restaurants food culture"> 
-                    <div> 
-                        <div class="flex items-center justify-between mb-3"> 
-                            <span class="text-xs font-bold uppercase tracking-wider px-2.5 py-1 rounded-md bg-orange-950 text-orange-300 border border-orange-800/50">Dining</span> 
-                            <span class="text-xs text-emerald-400 font-medium">Verified Active</span> 
-                        </div> 
-                        <h3 class="text-base font-bold text-white group-hover:text-orange-400 transition-colors">Eater Vegas</h3> 
-                        <p class="text-xs text-slate-400 mt-2 leading-relaxed">Essential Vegas dining guides, casino restaurant news, and local culinary coverage.</p> 
-                    </div> 
-                    <div class="mt-6 pt-4 border-t border-slate-800/80 flex items-center justify-between"> 
-                        <span class="text-xs text-slate-500">vegas.eater.com</span> 
-                        <a href="https://vegas.eater.com" target="_blank" class="text-xs font-semibold text-orange-400 hover:text-orange-300 flex items-center gap-1"> 
-                            Visit Site <i data-lucide="external-link" class="w-3 h-3"></i> 
-                        </a> 
-                    </div> 
-                </div> 
-
-                <!-- Entertainment Cards --> 
-                <div class="tool-card bg-slate-900/60 border border-slate-800 rounded-xl p-5 flex flex-col justify-between hover:border-cyan-500/50 transition-all group" data-category="entertainment" data-keywords="visit las vegas comprehensive guides local events strip nightlife attractions casinos"> 
-                    <div> 
-                        <div class="flex items-center justify-between mb-3"> 
-                            <span class="text-xs font-bold uppercase tracking-wider px-2.5 py-1 rounded-md bg-cyan-950 text-cyan-300 border border-cyan-800/50">Entertainment</span> 
-                            <span class="text-xs text-emerald-400 font-medium">Verified Active</span> 
-                        </div> 
-                        <h3 class="text-base font-bold text-white group-hover:text-cyan-400 transition-colors">Visit Las Vegas</h3> 
-                        <p class="text-xs text-slate-400 mt-2 leading-relaxed">Official visitor guides to Strip nightlife, resorts, attractions, and entertainment.</p> 
-                    </div> 
-                    <div class="mt-6 pt-4 border-t border-slate-800/80 flex items-center justify-between"> 
-                        <span class="text-xs text-slate-500">visitlasvegas.com</span> 
-                        <a href="https://www.visitlasvegas.com" target="_blank" class="text-xs font-semibold text-cyan-400 hover:text-cyan-300 flex items-center gap-1"> 
-                            Visit Site <i data-lucide="external-link" class="w-3 h-3"></i> 
-                        </a> 
-                    </div> 
-                </div> 
-
-                <div class="tool-card bg-slate-900/60 border border-slate-800 rounded-xl p-5 flex flex-col justify-between hover:border-cyan-500/50 transition-all group" data-category="entertainment" data-keywords="live nation concert tours music festivals residency shows sphere listings"> 
-                    <div> 
-                        <div class="flex items-center justify-between mb-3"> 
-                            <span class="text-xs font-bold uppercase tracking-wider px-2.5 py-1 rounded-md bg-cyan-950 text-cyan-300 border border-cyan-800/50">Entertainment</span> 
-                            <span class="text-xs text-emerald-400 font-medium">Verified Active</span> 
-                        </div> 
-                        <h3 class="text-base font-bold text-white group-hover:text-cyan-400 transition-colors">Live Nation Vegas</h3> 
-                        <p class="text-xs text-slate-400 mt-2 leading-relaxed">Major music residencies, arena concerts, and festival listings across Las Vegas venues.</p> 
-                    </div> 
-                    <div class="mt-6 pt-4 border-t border-slate-800/80 flex items-center justify-between"> 
-                        <span class="text-xs text-slate-500">livenation.com</span> 
-                        <a href="https://www.livenation.com" target="_blank" class="text-xs font-semibold text-cyan-400 hover:text-cyan-300 flex items-center gap-1"> 
-                            Visit Site <i data-lucide="external-link" class="w-3 h-3"></i> 
-                        </a> 
-                    </div> 
-                </div> 
-
-                <!-- General AI Tools --> 
-                <div class="tool-card bg-slate-900/60 border border-slate-800 rounded-xl p-5 flex flex-col justify-between hover:border-blue-500/50 transition-all group" data-category="general" data-keywords="openai gpt-4o general ai free option chatbot model language"> 
-                    <div> 
-                        <div class="flex items-center justify-between mb-3"> 
-                            <span class="text-xs font-bold uppercase tracking-wider px-2.5 py-1 rounded-md bg-blue-950 text-blue-300 border border-blue-800/50">General AI • Free Option</span> 
-                            <span class="text-xs text-emerald-400 font-medium">Verified Active</span> 
-                        </div> 
-                        <h3 class="text-base font-bold text-white group-hover:text-blue-400 transition-colors">OpenAI</h3> 
-                        <p class="text-xs text-slate-400 mt-2 leading-relaxed">General artificial intelligence models including GPT-4o, reasoning tools, and developer APIs.</p> 
-                    </div> 
-                    <div class="mt-6 pt-4 border-t border-slate-800/80 flex items-center justify-between"> 
-                        <span class="text-xs text-slate-500">openai.com</span> 
-                        <a href="https://openai.com" target="_blank" class="text-xs font-semibold text-blue-400 hover:text-blue-300 flex items-center gap-1"> 
-                            Visit Site <i data-lucide="external-link" class="w-3 h-3"></i> 
-                        </a> 
-                    </div> 
-                </div> 
-
-                <div class="tool-card bg-slate-900/60 border border-slate-800 rounded-xl p-5 flex flex-col justify-between hover:border-emerald-500/50 transition-all group" data-category="general" data-keywords="chatgpt openai conversational assistant free ai chatbot model legal"> 
-                    <div> 
-                        <div class="flex items-center justify-between mb-3"> 
-                            <span class="text-xs font-bold uppercase tracking-wider px-2.5 py-1 rounded-md bg-emerald-950 text-emerald-300 border border-emerald-800/50">Legal Free AI Option</span> 
-                            <span class="text-xs text-emerald-400 font-medium">Verified Active</span> 
-                        </div> 
-                        <h3 class="text-base font-bold text-white group-hover:text-emerald-400 transition-colors">ChatGPT</h3> 
-                        <p class="text-xs text-slate-400 mt-2 leading-relaxed">Conversational assistant powered by GPT models for writing, analysis, coding, and itinerary planning.</p> 
-                    </div> 
-                    <div class="mt-6 pt-4 border-t border-slate-800/80 flex items-center justify-between"> 
-                        <span class="text-xs text-slate-500">chatgpt.com</span> 
-                        <a href="https://chatgpt.com" target="_blank" class="text-xs font-semibold text-emerald-400 hover:text-emerald-300 flex items-center gap-1"> 
-                            Visit Site <i data-lucide="external-link" class="w-3 h-3"></i> 
-                        </a> 
-                    </div> 
-                </div> 
-
-                <div class="tool-card bg-slate-900/60 border border-slate-800 rounded-xl p-5 flex flex-col justify-between hover:border-purple-500/50 transition-all group" data-category="general" data-keywords="gemini google free tier multimodal assistant search writing data analysis"> 
-                    <div> 
-                        <div class="flex items-center justify-between mb-3"> 
-                            <span class="text-xs font-bold uppercase tracking-wider px-2.5 py-1 rounded-md bg-purple-950 text-purple-300 border border-purple-800/50">Legal Free AI Option</span> 
-                            <span class="text-xs text-emerald-400 font-medium">Verified Active</span> 
-                        </div> 
-                        <h3 class="text-base font-bold text-white group-hover:text-purple-400 transition-colors">Google Gemini</h3> 
-                        <p class="text-xs text-slate-400 mt-2 leading-relaxed">Multimodal assistant integrated with Google search, live location context, and travel planning.</p> 
-                    </div> 
-                    <div class="mt-6 pt-4 border-t border-slate-800/80 flex items-center justify-between"> 
-                        <span class="text-xs text-slate-500">gemini.google.com</span> 
-                        <a href="https://gemini.google.com" target="_blank" class="text-xs font-semibold text-purple-400 hover:text-purple-300 flex items-center gap-1"> 
-                            Visit Site <i data-lucide="external-link" class="w-3 h-3"></i> 
-                        </a> 
-                    </div> 
-                </div> 
-
-                <!-- Got News? Green Box --> 
-                <div class="tool-card bg-emerald-500 border-2 border-black rounded-xl p-6 flex flex-col justify-between text-black shadow-lg group" data-category="general" data-keywords="got news submit news tips text call contact"> 
-                    <div> 
-                        <h3 class="text-2xl font-black uppercase tracking-wide text-black mb-1">Got News?</h3> 
-                        <p class="text-xs font-bold uppercase tracking-wider text-black/80">Submit Tips & Updates</p> 
-                    </div> 
-                    
-                    <div class="mt-8 pt-4 border-t border-black/20 flex items-center justify-between"> 
-                        <span class="text-lg font-black tracking-tight text-black">480-269-2272</span> 
-                        <a href="tel:4802692272" class="text-xs font-black bg-black text-white px-4 py-2 rounded-lg hover:bg-slate-800 transition-colors flex items-center gap-1.5 shadow-md"> 
-                            Text Now <i data-lucide="message-square" class="w-3.5 h-3.5"></i> 
-                        </a> 
-                    </div> 
-                </div> 
-
-                <!-- Your Ad Here Yellow Box (Last Position) --> 
-                <div class="tool-card bg-yellow-400 border-2 border-black rounded-xl p-6 flex flex-col justify-between text-black shadow-lg group" data-category="general" data-keywords="advertise ad space eyeonvegas text call contact"> 
-                    <div> 
-                        <h3 class="text-2xl font-black uppercase tracking-wide text-black mb-1">Your Ad Here</h3> 
-                        <p class="text-xs font-bold uppercase tracking-wider text-black/70">Prime EyeOnVegas Space</p> 
-                    </div> 
-                    
-                    <div class="mt-8 pt-4 border-t border-black/20 flex items-center justify-between"> 
-                        <span class="text-lg font-black tracking-tight text-black">480-269-2272</span> 
-                        <a href="tel:4802692272" class="text-xs font-black bg-black text-white px-4 py-2 rounded-lg hover:bg-slate-800 transition-colors flex items-center gap-1.5 shadow-md"> 
-                            Call Now <i data-lucide="phone" class="w-3.5 h-3.5"></i> 
-                        </a> 
-                    </div> 
-                </div> 
-            </div> 
-        </div> 
-    </main> 
-
-    <!-- Clean Footer with Admin Portal Link --> 
-    <footer id="legal" class="bg-slate-900 border-t border-slate-800 py-8 px-4 text-xs text-slate-500 mt-auto"> 
-        <div class="max-w-7xl mx-auto flex flex-col gap-6"> 
-            <div class="flex flex-col md:flex-row justify-between items-center gap-4 text-center md:text-left"> 
-                <div> 
-                    <p class="text-slate-400 font-medium">EyeOnVegas.com &copy; 2026. All rights reserved.</p> 
-                    <p class="mt-1">Independent Las Vegas local directory & news portal. All brand names belong to their respective owners.</p> 
-                </div> 
-                <div class="flex items-center gap-4 text-slate-400"> 
-                    <a href="#news" class="hover:text-amber-400 transition-colors">News</a> 
-                    <a href="#directory" class="hover:text-amber-400 transition-colors">Directory</a> 
-                    <a href="#legal" class="hover:text-amber-400 transition-colors">Privacy & Terms</a> 
-                </div> 
-            </div> 
-
-            <!-- Admin Access Link Area --> 
-            <div class="border-t border-slate-800/80 pt-4 flex justify-between items-center bg-slate-950/50 p-3 rounded-xl"> 
-                <span class="text-slate-600 text-[11px]">System Status: Operational</span> 
-                <button onclick="openAdminModal()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white px-3 py-1 rounded-lg border border-slate-700 transition-all flex items-center gap-1.5 text-xs font-semibold"> 
-                    <i data-lucide="lock" class="w-3.5 h-3.5 text-amber-400"></i> Admin 
-                </button> 
-            </div> 
-        </div> 
-    </footer> 
-
-    <!-- Admin Portal Modal --> 
-    <div id="adminModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4"> 
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 max-w-4xl w-full shadow-2xl relative max-h-[85vh] flex flex-col"> 
-            <button onclick="closeAdminModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white"> 
-                <i data-lucide="x" class="w-5 h-5"></i> 
-            </button> 
-            
-            <div class="flex items-center gap-2 mb-4"> 
-                <div class="p-2 bg-amber-500/10 border border-amber-500/30 rounded-lg text-amber-400"> 
-                    <i data-lucide="shield-check" class="w-5 h-5"></i> 
-                </div> 
-                <div> 
-                    <h3 class="text-lg font-bold text-white">EyeOnVegas Admin</h3> 
-                    <p class="text-xs text-slate-400">Global Cloud Realtime Logging Hub</p> 
-                </div> 
-            </div> 
-
-            <!-- Login Form --> 
-            <div id="adminLoginForm" class="space-y-4 my-auto"> 
-                <p class="text-xs text-slate-400">Enter your administrator access code to view global visitor logs.</p> 
-                <div> 
-                    <label class="block text-xs font-medium text-slate-300 mb-1">Passcode</label> 
-                    <input type="password" id="adminPassword" placeholder="Enter password..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-slate-100 focus:outline-none focus:border-amber-400"> 
-                </div> 
-                <p id="adminError" class="text-xs text-rose-400 hidden flex items-center gap-1"> 
-                    <i data-lucide="alert-circle" class="w-3.5 h-3.5"></i> Invalid admin password. 
-                </p> 
-                <button onclick="authenticateAdmin()" class="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold py-2.5 rounded-xl text-sm transition-all"> 
-                    Unlock Dashboard 
-                </button> 
-            </div> 
-
-            <!-- Unlocked Admin View with Cumulative Table Log --> 
-            <div id="adminDashboard" class="hidden space-y-4 overflow-y-auto pr-1"> 
-                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                    <div class="bg-slate-950 border border-slate-800 rounded-lg p-3 text-center">
-                        <div class="text-xs text-slate-500 mb-1">Total Hits</div>
-                        <div id="liveHitCounter" class="text-lg font-bold text-amber-400 animate-pulse">0</div>
+            <!-- Directory Grid -->
+            <div id="toolGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                
+                <!-- Sports Card -->
+                <div class="tool-card bg-slate-900/60 border border-slate-800 rounded-xl p-5 flex flex-col justify-between hover:border-amber-500/50 transition-all group" data-category="sports" data-keywords="sports dodgers lakers la rams clippers kings baseball basketball football game score">
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="text-xs font-bold uppercase tracking-wider px-2.5 py-1 rounded-md bg-amber-950 text-amber-300 border border-amber-800/50">LA Sports Live</span>
+                            <span class="text-xs text-emerald-400 font-medium">Verified Active</span>
+                        </div>
+                        <h3 class="text-base font-bold text-white group-hover:text-amber-400 transition-colors">SoCal Teams & Schedules</h3>
+                        <p class="text-xs text-slate-400 mt-2 leading-relaxed">Live game updates, scores, and schedules for the Los Angeles Dodgers, LA Rams, and regional sports leagues.</p>
                     </div>
-                    <div class="bg-slate-950 border border-slate-800 rounded-lg p-3 text-center">
-                        <div class="text-xs text-slate-500 mb-1">Global Visitors</div>
-                        <div id="totalApiHits" class="text-lg font-bold text-purple-400">0</div>
-                    </div>
-                    <div class="bg-slate-950 border border-slate-800 rounded-lg p-3 text-center">
-                        <div class="text-xs text-slate-500 mb-1">Avg Session</div>
-                        <div class="text-lg font-bold text-emerald-400">0m 00s</div>
-                    </div>
-                    <div class="bg-slate-950 border border-slate-800 rounded-lg p-3 text-center">
-                        <div class="text-xs text-slate-500 mb-1">Cloud Database</div>
-                        <div id="cloudStatusBadge" class="text-lg font-bold text-teal-400">Syncing...</div>
+                    <div class="mt-6 pt-4 border-t border-slate-800/80 flex items-center justify-between">
+                        <span class="text-xs text-slate-500">mlb.com / therams.com</span>
+                        <a href="https://www.mlb.com/dodgers" target="_blank" class="text-xs font-semibold text-amber-400 hover:text-amber-300 flex items-center gap-1">
+                            Visit Site <i data-lucide="external-link" class="w-3 h-3"></i>
+                        </a>
                     </div>
                 </div>
 
-                <!-- Cumulative Activity Table Sorted Ascending -->
+                <!-- Tickets Card -->
+                <div class="tool-card bg-slate-900/60 border border-slate-800 rounded-xl p-5 flex flex-col justify-between hover:border-rose-500/50 transition-all group" data-category="tickets" data-keywords="tickets events sporting events concerts theater passes stubhub ticketmaster buy show">
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="text-xs font-bold uppercase tracking-wider px-2.5 py-1 rounded-md bg-rose-950 text-rose-300 border border-rose-800/50">Tickets & Events</span>
+                            <span class="text-xs text-emerald-400 font-medium">Verified Active</span>
+                        </div>
+                        <h3 class="text-base font-bold text-white group-hover:text-rose-400 transition-colors">LA Event Tickets Hub</h3>
+                        <p class="text-xs text-slate-400 mt-2 leading-relaxed">Secure tickets for all Los Angeles sporting events, concert tours, theater productions, and venue passes across Southern California.</p>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-slate-800/80 flex items-center justify-between">
+                        <span class="text-xs text-slate-500">ticketmaster.com</span>
+                        <a href="https://www.ticketmaster.com" target="_blank" class="text-xs font-semibold text-rose-400 hover:text-rose-300 flex items-center gap-1">
+                            Get Tickets <i data-lucide="external-link" class="w-3 h-3"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Dining Cards -->
+                <div class="tool-card bg-slate-900/60 border border-slate-800 rounded-xl p-5 flex flex-col justify-between hover:border-orange-500/50 transition-all group" data-category="dining" data-keywords="resy restaurant reservations guides hot spots dining food">
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="text-xs font-bold uppercase tracking-wider px-2.5 py-1 rounded-md bg-orange-950 text-orange-300 border border-orange-800/50">Dining</span>
+                            <span class="text-xs text-emerald-400 font-medium">Verified Active</span>
+                        </div>
+                        <h3 class="text-base font-bold text-white group-hover:text-orange-400 transition-colors">Resy LA</h3>
+                        <p class="text-xs text-slate-400 mt-2 leading-relaxed">Curated restaurant reservations, guides, and hot spots.</p>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-slate-800/80 flex items-center justify-between">
+                        <span class="text-xs text-slate-500">resy.com</span>
+                        <a href="https://resy.com" target="_blank" class="text-xs font-semibold text-orange-400 hover:text-orange-300 flex items-center gap-1">
+                            Visit Site <i data-lucide="external-link" class="w-3 h-3"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="tool-card bg-slate-900/60 border border-slate-800 rounded-xl p-5 flex flex-col justify-between hover:border-orange-500/50 transition-all group" data-category="dining" data-keywords="opentable global restaurant reservation review network dining food">
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="text-xs font-bold uppercase tracking-wider px-2.5 py-1 rounded-md bg-orange-950 text-orange-300 border border-orange-800/50">Dining</span>
+                            <span class="text-xs text-emerald-400 font-medium">Verified Active</span>
+                        </div>
+                        <h3 class="text-base font-bold text-white group-hover:text-orange-400 transition-colors">OpenTable LA</h3>
+                        <p class="text-xs text-slate-400 mt-2 leading-relaxed">Global restaurant reservation and review network.</p>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-slate-800/80 flex items-center justify-between">
+                        <span class="text-xs text-slate-500">opentable.com</span>
+                        <a href="https://www.opentable.com" target="_blank" class="text-xs font-semibold text-orange-400 hover:text-orange-300 flex items-center gap-1">
+                            Visit Site <i data-lucide="external-link" class="w-3 h-3"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="tool-card bg-slate-900/60 border border-slate-800 rounded-xl p-5 flex flex-col justify-between hover:border-orange-500/50 transition-all group" data-category="dining" data-keywords="eater essential dining city guides news food culture">
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="text-xs font-bold uppercase tracking-wider px-2.5 py-1 rounded-md bg-orange-950 text-orange-300 border border-orange-800/50">Dining</span>
+                            <span class="text-xs text-emerald-400 font-medium">Verified Active</span>
+                        </div>
+                        <h3 class="text-base font-bold text-white group-hover:text-orange-400 transition-colors">Eater LA</h3>
+                        <p class="text-xs text-slate-400 mt-2 leading-relaxed">Essential dining city guides, news, and food culture.</p>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-slate-800/80 flex items-center justify-between">
+                        <span class="text-xs text-slate-500">la.eater.com</span>
+                        <a href="https://la.eater.com" target="_blank" class="text-xs font-semibold text-orange-400 hover:text-orange-300 flex items-center gap-1">
+                            Visit Site <i data-lucide="external-link" class="w-3 h-3"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Entertainment Cards -->
+                <div class="tool-card bg-slate-900/60 border border-slate-800 rounded-xl p-5 flex flex-col justify-between hover:border-cyan-500/50 transition-all group" data-category="entertainment" data-keywords="discover los angeles comprehensive guides local events neighborhoods attractions">
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="text-xs font-bold uppercase tracking-wider px-2.5 py-1 rounded-md bg-cyan-950 text-cyan-300 border border-cyan-800/50">Entertainment</span>
+                            <span class="text-xs text-emerald-400 font-medium">Verified Active</span>
+                        </div>
+                        <h3 class="text-base font-bold text-white group-hover:text-cyan-400 transition-colors">Discover Los Angeles</h3>
+                        <p class="text-xs text-slate-400 mt-2 leading-relaxed">Comprehensive guides to local events, neighborhoods, and attractions.</p>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-slate-800/80 flex items-center justify-between">
+                        <span class="text-xs text-slate-500">discoverlosangeles.com</span>
+                        <a href="https://www.discoverlosangeles.com" target="_blank" class="text-xs font-semibold text-cyan-400 hover:text-cyan-300 flex items-center gap-1">
+                            Visit Site <i data-lucide="external-link" class="w-3 h-3"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="tool-card bg-slate-900/60 border border-slate-800 rounded-xl p-5 flex flex-col justify-between hover:border-cyan-500/50 transition-all group" data-category="entertainment" data-keywords="ticketmaster tickets concerts sports theater family events">
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="text-xs font-bold uppercase tracking-wider px-2.5 py-1 rounded-md bg-cyan-950 text-cyan-300 border border-cyan-800/50">Entertainment</span>
+                            <span class="text-xs text-emerald-400 font-medium">Verified Active</span>
+                        </div>
+                        <h3 class="text-base font-bold text-white group-hover:text-cyan-400 transition-colors">Ticketmaster LA</h3>
+                        <p class="text-xs text-slate-400 mt-2 leading-relaxed">Tickets for concerts, sports, theater, and family events.</p>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-slate-800/80 flex items-center justify-between">
+                        <span class="text-xs text-slate-500">ticketmaster.com</span>
+                        <a href="https://www.ticketmaster.com" target="_blank" class="text-xs font-semibold text-cyan-400 hover:text-cyan-300 flex items-center gap-1">
+                            Visit Site <i data-lucide="external-link" class="w-3 h-3"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="tool-card bg-slate-900/60 border border-slate-800 rounded-xl p-5 flex flex-col justify-between hover:border-cyan-500/50 transition-all group" data-category="entertainment" data-keywords="live nation concert tours music festivals venue listings">
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="text-xs font-bold uppercase tracking-wider px-2.5 py-1 rounded-md bg-cyan-950 text-cyan-300 border border-cyan-800/50">Entertainment</span>
+                            <span class="text-xs text-emerald-400 font-medium">Verified Active</span>
+                        </div>
+                        <h3 class="text-base font-bold text-white group-hover:text-cyan-400 transition-colors">Live Nation LA</h3>
+                        <p class="text-xs text-slate-400 mt-2 leading-relaxed">Concert tours, music festivals, and venue listings across Southern California.</p>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-slate-800/80 flex items-center justify-between">
+                        <span class="text-xs text-slate-500">livenation.com</span>
+                        <a href="https://www.livenation.com" target="_blank" class="text-xs font-semibold text-cyan-400 hover:text-cyan-300 flex items-center gap-1">
+                            Visit Site <i data-lucide="external-link" class="w-3 h-3"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- General AI & Legal Options -->
+                <div class="tool-card bg-slate-900/60 border border-slate-800 rounded-xl p-5 flex flex-col justify-between hover:border-blue-500/50 transition-all group" data-category="general" data-keywords="openai gpt-4o general ai free option chatbot model language">
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="text-xs font-bold uppercase tracking-wider px-2.5 py-1 rounded-md bg-blue-950 text-blue-300 border border-blue-800/50">General AI • Free Option</span>
+                            <span class="text-xs text-emerald-400 font-medium">Verified Active</span>
+                        </div>
+                        <h3 class="text-base font-bold text-white group-hover:text-blue-400 transition-colors">OpenAI</h3>
+                        <p class="text-xs text-slate-400 mt-2 leading-relaxed">Pioneering general artificial intelligence models including GPT-4o, structured reasoning tools, and developer APIs with free web tiers.</p>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-slate-800/80 flex items-center justify-between">
+                        <span class="text-xs text-slate-500">openai.com</span>
+                        <a href="https://openai.com" target="_blank" class="text-xs font-semibold text-blue-400 hover:text-blue-300 flex items-center gap-1">
+                            Visit Site <i data-lucide="external-link" class="w-3 h-3"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="tool-card bg-slate-900/60 border border-slate-800 rounded-xl p-5 flex flex-col justify-between hover:border-emerald-500/50 transition-all group" data-category="general" data-keywords="chatgpt openai conversational assistant free ai chatbot model legal free ai options">
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="text-xs font-bold uppercase tracking-wider px-2.5 py-1 rounded-md bg-emerald-950 text-emerald-300 border border-emerald-800/50">Legal Free AI Option</span>
+                            <span class="text-xs text-emerald-400 font-medium">Verified Active</span>
+                        </div>
+                        <h3 class="text-base font-bold text-white group-hover:text-emerald-400 transition-colors">ChatGPT</h3>
+                        <p class="text-xs text-slate-400 mt-2 leading-relaxed">Advanced conversational assistant powered by state-of-the-art GPT models for writing, analysis, coding, and general tasks.</p>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-slate-800/80 flex items-center justify-between">
+                        <span class="text-xs text-slate-500">chatgpt.com</span>
+                        <a href="https://chatgpt.com" target="_blank" class="text-xs font-semibold text-emerald-400 hover:text-emerald-300 flex items-center gap-1">
+                            Visit Site <i data-lucide="external-link" class="w-3 h-3"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="tool-card bg-slate-900/60 border border-slate-800 rounded-xl p-5 flex flex-col justify-between hover:border-purple-500/50 transition-all group" data-category="general" data-keywords="gemini google free tier multimodal assistant search writing data analysis">
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="text-xs font-bold uppercase tracking-wider px-2.5 py-1 rounded-md bg-purple-950 text-purple-300 border border-purple-800/50">Legal Free AI Option</span>
+                            <span class="text-xs text-emerald-400 font-medium">Verified Active</span>
+                        </div>
+                        <h3 class="text-base font-bold text-white group-hover:text-purple-400 transition-colors">Google Gemini</h3>
+                        <p class="text-xs text-slate-400 mt-2 leading-relaxed">Multimodal assistant integrated with Google search, writing capabilities, and data analysis.</p>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-slate-800/80 flex items-center justify-between">
+                        <span class="text-xs text-slate-500">gemini.google.com</span>
+                        <a href="https://gemini.google.com" target="_blank" class="text-xs font-semibold text-purple-400 hover:text-purple-300 flex items-center gap-1">
+                            Visit Site <i data-lucide="external-link" class="w-3 h-3"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Got News? Green Box -->
+                <div class="tool-card bg-emerald-500 border-2 border-black rounded-xl p-6 flex flex-col justify-between text-black shadow-lg group" data-category="general" data-keywords="got news submit news tips text call contact">
+                    <div>
+                        <h3 class="text-2xl font-black uppercase tracking-wide text-black mb-1">Got News?</h3>
+                        <p class="text-xs font-bold uppercase tracking-wider text-black/80">Submit Tips & Updates</p>
+                    </div>
+                    
+                    <div class="mt-8 pt-4 border-t border-black/20 flex items-center justify-between">
+                        <span class="text-lg font-black tracking-tight text-black">480-269-2272</span>
+                        <a href="tel:4802692272" class="text-xs font-black bg-black text-white px-4 py-2 rounded-lg hover:bg-slate-800 transition-colors flex items-center gap-1.5 shadow-md">
+                            Text Now <i data-lucide="message-square" class="w-3.5 h-3.5"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Your Ad Here Yellow Box (Last Position) -->
+                <div class="tool-card bg-yellow-400 border-2 border-black rounded-xl p-6 flex flex-col justify-between text-black shadow-lg group" data-category="general" data-keywords="advertise ad space 4o5 text call contact">
+                    <div>
+                        <h3 class="text-2xl font-black uppercase tracking-wide text-black mb-1">Your Ad Here</h3>
+                        <p class="text-xs font-bold uppercase tracking-wider text-black/70">Prime 4O5.com Space</p>
+                    </div>
+                    
+                    <div class="mt-8 pt-4 border-t border-black/20 flex items-center justify-between">
+                        <span class="text-lg font-black tracking-tight text-black">480-269-2272</span>
+                        <a href="tel:4802692272" class="text-xs font-black bg-black text-white px-4 py-2 rounded-lg hover:bg-slate-800 transition-colors flex items-center gap-1.5 shadow-md">
+                            Call Now <i data-lucide="phone" class="w-3.5 h-3.5"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Clean Footer with Admin Portal Link -->
+    <footer id="legal" class="bg-slate-900 border-t border-slate-800 py-8 px-4 text-xs text-slate-500 mt-auto">
+        <div class="max-w-7xl mx-auto flex flex-col gap-6">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-4 text-center md:text-left">
+                <div>
+                    <p class="text-slate-400 font-medium">4O5.com &copy; 2026. All rights reserved.</p>
+                    <p class="mt-1">Independent Los Angeles local directory & news portal. All brand names belong to their respective owners.</p>
+                </div>
+                <div class="flex items-center gap-4 text-slate-400">
+                    <a href="#news" class="hover:text-blue-400 transition-colors">News</a>
+                    <a href="#directory" class="hover:text-blue-400 transition-colors">Directory</a>
+                    <a href="#legal" class="hover:text-blue-400 transition-colors">Privacy & Terms</a>
+                </div>
+            </div>
+
+            <!-- Admin Access Link Area -->
+            <div class="border-t border-slate-800/80 pt-4 flex justify-between items-center bg-slate-950/50 p-3 rounded-xl">
+                <span class="text-slate-600 text-[11px]">System Status: Operational</span>
+                <button onclick="openAdminModal()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white px-3 py-1 rounded-lg border border-slate-700 transition-all flex items-center gap-1.5 text-xs font-semibold">
+                    <i data-lucide="lock" class="w-3.5 h-3.5 text-blue-400"></i> Admin
+                </button>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Admin Portal Modal -->
+    <div id="adminModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 max-w-4xl w-full shadow-2xl relative max-h-[85vh] flex flex-col">
+            <button onclick="closeAdminModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+            
+            <div class="flex items-center gap-2 mb-4">
+                <div class="p-2 bg-blue-500/10 border border-blue-500/30 rounded-lg text-blue-400">
+                    <i data-lucide="shield-check" class="w-5 h-5"></i>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold text-white">4O5 Admin Hub</h3>
+                    <p class="text-xs text-slate-400">Global Visitor Analytics & Sync</p>
+                </div>
+            </div>
+
+            <div id="adminLoginForm" class="space-y-4 my-auto">
+                <p class="text-xs text-slate-400">Enter administrator access code.</p>
+                <div>
+                    <label class="block text-xs font-medium text-slate-300 mb-1">Passcode</label>
+                    <input type="password" id="adminPassword" placeholder="Enter password..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-slate-100 focus:outline-none focus:border-blue-400">
+                </div>
+                <p id="adminError" class="text-xs text-rose-400 hidden flex items-center gap-1">
+                    <i data-lucide="alert-circle" class="w-3.5 h-3.5"></i> Invalid admin password.
+                </p>
+                <button onclick="authenticateAdmin()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-2.5 rounded-xl text-sm transition-all">
+                    Unlock Dashboard
+                </button>
+            </div>
+
+            <div id="adminDashboard" class="hidden space-y-4 overflow-y-auto pr-1">
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                    <div class="bg-slate-950 border border-slate-800 rounded-lg p-3 text-center">
+                        <div class="text-xs text-slate-500 mb-1">Total Hits</div>
+                        <div id="liveHitCounter" class="text-lg font-bold text-blue-400 animate-pulse">1</div>
+                    </div>
+                    <div class="bg-slate-950 border border-slate-800 rounded-lg p-3 text-center">
+                        <div class="text-xs text-slate-500 mb-1">Global Visitors</div>
+                        <div id="totalApiHits" class="text-lg font-bold text-indigo-400">1</div>
+                    </div>
+                    <div class="bg-slate-950 border border-slate-800 rounded-lg p-3 text-center">
+                        <div class="text-xs text-slate-500 mb-1">Avg Session</div>
+                        <div class="text-lg font-bold text-emerald-400">0m 45s</div>
+                    </div>
+                    <div class="bg-slate-950 border border-slate-800 rounded-lg p-3 text-center">
+                        <div class="text-xs text-slate-500 mb-1">Status</div>
+                        <div class="text-lg font-bold text-teal-400">System Active</div>
+                    </div>
+                </div>
+
                 <div class="border border-slate-800 rounded-xl overflow-hidden mt-4">
                     <div class="bg-slate-800/50 px-4 py-2 border-b border-slate-800 flex justify-between items-center">
                         <h4 class="text-sm font-bold text-slate-200">Global Visitor Log (Ascending Order)</h4>
@@ -465,120 +482,38 @@
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-slate-800/50" id="visitorLogBody">
-                                <tr>
-                                    <td colspan="6" class="px-3 py-4 text-center text-slate-500">Fetching global visitor records from cloud database...</td>
+                                <tr class="hover:bg-slate-900/50">
+                                    <td class="px-3 py-2 text-slate-500 font-mono">1</td>
+                                    <td class="px-3 py-2 text-slate-300">Active</td>
+                                    <td class="px-3 py-2 text-slate-300">Live</td>
+                                    <td class="px-3 py-2 text-blue-400 font-mono">Detecting...</td>
+                                    <td class="px-3 py-2 text-slate-200">Los Angeles, CA</td>
+                                    <td class="px-3 py-2"><span class="text-emerald-400">OK</span></td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
 
-                <div class="mt-4 flex justify-between items-center">
-                     <button onclick="resetVisitorCounter()" class="text-xs bg-rose-950 hover:bg-rose-900 text-rose-300 border border-rose-800 px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1">
-                         <i data-lucide="rotate-ccw" class="w-3 h-3"></i> Clear Global Logs & Counter
-                     </button>
+                <div class="mt-4 flex justify-end">
                      <button onclick="logoutAdmin()" class="text-xs text-slate-500 hover:text-white border border-slate-700 px-3 py-1.5 rounded-lg transition-colors">
                          Lock Session
                      </button>
                 </div>
             </div>
-        </div> 
+        </div>
     </div>
 
     <script>
-        // --- 8 FULL LIVE NEWS FEED ITEMS WITH DIRECT DESTINATION LINKS ---
+        // --- 8 FULL LIVE NEWS FEED ITEMS WITH DIRECT LA DESTINATION LINKS ---
         const sampleNews = [
             {
-                title: "F1 Las Vegas Grand Prix Announces Track Upgrades for 2026",
-                source: "Motorsport Vegas",
-                category: "Racing",
-                time: "10 mins ago",
-                icon: "flag",
-                url: "https://www.f1lasvegasgp.com",
-                bgColor: "bg-indigo-950/40",
-                borderColor: "border-indigo-800/50",
-                hoverBorder: "hover:border-indigo-500/70",
-                iconColor: "text-indigo-300",
-                iconBg: "bg-indigo-900/50",
-                tagBg: "bg-indigo-900/80 text-indigo-200 border-indigo-700/50"
-            },
-            {
-                title: "New Michelin-Starred Concept Opening at Wynn Next Month",
-                source: "Eater Vegas",
-                category: "Dining",
-                time: "32 mins ago",
-                icon: "utensils",
-                url: "https://vegas.eater.com",
-                bgColor: "bg-teal-950/40",
-                borderColor: "border-teal-800/50",
-                hoverBorder: "hover:border-teal-500/70",
-                iconColor: "text-teal-300",
-                iconBg: "bg-teal-900/50",
-                tagBg: "bg-teal-900/80 text-teal-200 border-teal-700/50"
-            },
-            {
-                title: "Allegiant Stadium Prepares for Sold-Out Concert Series",
-                source: "Vegas Event Hub",
-                category: "Concerts",
-                time: "1 hr ago",
-                icon: "ticket",
-                url: "https://www.allegiantstadium.com",
-                bgColor: "bg-purple-950/40",
-                borderColor: "border-purple-800/50",
-                hoverBorder: "hover:border-purple-500/70",
-                iconColor: "text-purple-300",
-                iconBg: "bg-purple-900/50",
-                tagBg: "bg-purple-900/80 text-purple-200 border-purple-700/50"
-            },
-            {
-                title: "RTC Announces Weekend Lane Restrictions on Trop/I-15 Interchange",
-                source: "NV DOT",
-                category: "Traffic",
-                time: "2 hrs ago",
-                icon: "cone",
-                url: "https://www.rtcsnv.com",
-                bgColor: "bg-cyan-950/40",
-                borderColor: "border-cyan-800/50",
-                hoverBorder: "hover:border-cyan-500/70",
-                iconColor: "text-cyan-300",
-                iconBg: "bg-cyan-900/50",
-                tagBg: "bg-cyan-900/80 text-cyan-200 border-cyan-700/50"
-            },
-            {
-                title: "Sphere Extends High-Tech Immersive Residency Through Fall",
-                source: "Entertainment Weekly LV",
-                category: "Shows",
-                time: "3 hrs ago",
-                icon: "sparkles",
-                url: "https://www.thesphere.com",
-                bgColor: "bg-violet-950/40",
-                borderColor: "border-violet-800/50",
-                hoverBorder: "hover:border-violet-500/70",
-                iconColor: "text-violet-300",
-                iconBg: "bg-violet-900/50",
-                tagBg: "bg-violet-900/80 text-violet-200 border-violet-700/50"
-            },
-            {
-                title: "Las Vegas Raiders Kick Off Preseason Training Camp Openings",
-                source: "Silver & Black News",
+                title: "Dodgers Secure Big Victory as Mid-Season Pennant Race Heats Up",
+                source: "LA Times Sports",
                 category: "Sports",
-                time: "4 hrs ago",
+                time: "12 mins ago",
                 icon: "trophy",
-                url: "https://www.raiders.com",
-                bgColor: "bg-emerald-950/40",
-                borderColor: "border-emerald-800/50",
-                hoverBorder: "hover:border-emerald-500/70",
-                iconColor: "text-emerald-300",
-                iconBg: "bg-emerald-900/50",
-                tagBg: "bg-emerald-900/80 text-emerald-200 border-emerald-700/50"
-            },
-            {
-                title: "Downtown Fremont Street Experience Unveils New LED Canopy Show",
-                source: "Fremont Press",
-                category: "Nightlife",
-                time: "5 hrs ago",
-                icon: "tv",
-                url: "https://vegasexperience.com",
+                url: "https://www.mlb.com/dodgers",
                 bgColor: "bg-blue-950/40",
                 borderColor: "border-blue-800/50",
                 hoverBorder: "hover:border-blue-500/70",
@@ -587,22 +522,106 @@
                 tagBg: "bg-blue-900/80 text-blue-200 border-blue-700/50"
             },
             {
-                title: "Harry Reid International Reports Record Monthly Passenger Traffic",
-                source: "LV Airport Authority",
+                title: "I-405 Express Lanes Construction Update Announced for Weekend Traffic",
+                source: "Caltrans District 7",
+                category: "Traffic",
+                time: "28 mins ago",
+                icon: "car",
+                url: "https://quickmap.dot.ca.gov/",
+                bgColor: "bg-amber-950/40",
+                borderColor: "border-amber-800/50",
+                hoverBorder: "hover:border-amber-500/70",
+                iconColor: "text-amber-300",
+                iconBg: "bg-amber-900/50",
+                tagBg: "bg-amber-900/80 text-amber-200 border-amber-700/50"
+            },
+            {
+                title: "New Hollywood Rooftop Culinary Experience Opens to Rave Reviews",
+                source: "Eater LA",
+                category: "Dining",
+                time: "45 mins ago",
+                icon: "utensils",
+                url: "https://la.eater.com",
+                bgColor: "bg-orange-950/40",
+                borderColor: "border-orange-800/50",
+                hoverBorder: "hover:border-orange-500/70",
+                iconColor: "text-orange-300",
+                iconBg: "bg-orange-900/50",
+                tagBg: "bg-orange-900/80 text-orange-200 border-orange-700/50"
+            },
+            {
+                title: "LA Rams Announce Open Training Camp Dates at SoFi Stadium Complex",
+                source: "Rams Newsroom",
+                category: "Sports",
+                time: "1 hr ago",
+                icon: "trophy",
+                url: "https://www.therams.com",
+                bgColor: "bg-indigo-950/40",
+                borderColor: "border-indigo-800/50",
+                hoverBorder: "hover:border-indigo-500/70",
+                iconColor: "text-indigo-300",
+                iconBg: "bg-indigo-900/50",
+                tagBg: "bg-indigo-900/80 text-indigo-200 border-indigo-700/50"
+            },
+            {
+                title: "SoFi Stadium to Host Massive Summer Music Festival Lineup",
+                source: "LA Music Hub",
+                category: "Concerts",
+                time: "2 hrs ago",
+                icon: "ticket",
+                url: "https://www.sofistadium.com",
+                bgColor: "bg-purple-950/40",
+                borderColor: "border-purple-800/50",
+                hoverBorder: "hover:border-purple-500/70",
+                iconColor: "text-purple-300",
+                iconBg: "bg-purple-900/50",
+                tagBg: "bg-purple-900/80 text-purple-200 border-purple-700/50"
+            },
+            {
+                title: "Crypto.com Arena Upgrades Unveiled Ahead of Upcoming Season",
+                source: "Downtown News",
+                category: "Entertainment",
+                time: "3 hrs ago",
+                icon: "sparkles",
+                url: "https://www.cryptoarena.com",
+                bgColor: "bg-teal-950/40",
+                borderColor: "border-teal-800/50",
+                hoverBorder: "hover:border-teal-500/70",
+                iconColor: "text-teal-300",
+                iconBg: "bg-teal-900/50",
+                tagBg: "bg-teal-900/80 text-teal-200 border-teal-700/50"
+            },
+            {
+                title: "Santa Monica Pier Summer Concert Series Returns This Weekend",
+                source: "Westside Pulse",
+                category: "Events",
+                time: "4 hrs ago",
+                icon: "music",
+                url: "https://www.santamonicapier.org",
+                bgColor: "bg-rose-950/40",
+                borderColor: "border-rose-800/50",
+                hoverBorder: "hover:border-rose-500/70",
+                iconColor: "text-rose-300",
+                iconBg: "bg-rose-900/50",
+                tagBg: "bg-rose-900/80 text-rose-200 border-rose-700/50"
+            },
+            {
+                title: "LAX Airport Reports Smooth Terminal Operations & New AI Security Gates",
+                source: "LAWA Aviation News",
                 category: "Travel",
-                time: "6 hrs ago",
+                time: "5 hrs ago",
                 icon: "plane",
-                url: "https://www.harryreidairport.com",
-                bgColor: "bg-sky-950/40",
-                borderColor: "border-sky-800/50",
-                hoverBorder: "hover:border-sky-500/70",
-                iconColor: "text-sky-300",
-                iconBg: "bg-sky-900/50",
-                tagBg: "bg-sky-900/80 text-sky-200 border-sky-700/50"
+                url: "https://www.flylax.com",
+                bgColor: "bg-cyan-950/40",
+                borderColor: "border-cyan-800/50",
+                hoverBorder: "hover:border-cyan-500/70",
+                iconColor: "text-cyan-300",
+                iconBg: "bg-cyan-900/50",
+                tagBg: "bg-cyan-900/80 text-cyan-200 border-cyan-700/50"
             }
         ];
 
-        // --- RENDER NEWS FUNCTION ---
+        // --- RENDER 8 NEWS ITEMS WITH CLICKABLE ANCHORS ---
         function renderNews(articles) {
             const container = document.getElementById('liveNewsContainer');
             if (!container) return;
@@ -629,21 +648,23 @@
                             <span class="text-slate-600">&bull;</span>
                             <span class="text-[11px] text-slate-500">${article.time}</span>
                         </div>
-                        <h4 class="text-sm font-bold text-slate-100 group-hover:text-purple-300 transition-colors leading-snug flex items-center gap-1.5">
-                            ${article.title} <i data-lucide="external-link" class="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition-opacity text-purple-400 flex-shrink-0"></i>
+                        <h4 class="text-sm font-bold text-slate-100 group-hover:text-blue-300 transition-colors leading-snug flex items-center gap-1.5">
+                            ${article.title} <i data-lucide="external-link" class="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition-opacity text-blue-400 flex-shrink-0"></i>
                         </h4>
                     </div>
                 `;
                 container.appendChild(item);
             });
 
-            if (window.lucide) lucide.createIcons();
+            if (window.lucide) {
+                lucide.createIcons();
+            }
         }
 
         function fetchLiveNews() {
             const container = document.getElementById('liveNewsContainer');
             if (container) {
-                container.innerHTML = '<div class="text-xs text-slate-400 flex items-center gap-2 py-6 justify-center"><i data-lucide="loader-2" class="w-4 h-4 animate-spin text-purple-400"></i> Syncing local feeds...</div>';
+                container.innerHTML = '<div class="text-xs text-slate-400 flex items-center gap-2 py-6 justify-center"><i data-lucide="loader-2" class="w-4 h-4 animate-spin text-blue-400"></i> Syncing local feeds...</div>';
                 if (window.lucide) lucide.createIcons();
                 
                 setTimeout(() => {
@@ -653,9 +674,9 @@
             }
         }
 
-        // --- REAL-TIME VEGAS TIME CLOCK ---
-        function updateVegasTime() {
-            const timeElement = document.getElementById('vegasClock');
+        // --- REAL-TIME LA CLOCK ---
+        function updateLATime() {
+            const timeElement = document.getElementById('laClock');
             if (timeElement) {
                 const options = { 
                     timeZone: 'America/Los_Angeles',
@@ -668,145 +689,15 @@
             }
         }
 
-        // --- TRUE GLOBAL CLOUD DATABASE TRACKER (FIREBASE REST + REAL GEO) ---
-        const DB_URL = "https://eyeonvegas-f1a27-default-rtdb.firebaseio.com/visitors";
-
-        async function initGlobalTracker() {
-            const now = new Date();
-            const currentDate = now.toLocaleDateString();
-            const currentTime = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-
-            let visitorIp = "Detecting...";
-            let visitorLocation = "Richmond, VA";
-
-            // 1. Fetch real public IP from ipify
-            try {
-                const ipRes = await fetch('https://api.ipify.org?format=json');
-                const ipData = await ipRes.json();
-                if (ipData && ipData.ip) {
-                    visitorIp = ipData.ip;
-                    
-                    // 2. Lookup geolocation for this public IP
-                    try {
-                        const geoRes = await fetch(`https://ipapi.co/${visitorIp}/json/`);
-                        const geoData = await geoRes.json();
-                        if (geoData && geoData.city) {
-                            visitorLocation = `${geoData.city}, ${geoData.region_code || geoData.region || 'VA'}`;
-                        }
-                    } catch(e) {
-                        visitorLocation = "Virginia, US";
-                    }
-                }
-            } catch (e) {
-                visitorIp = "127.0.0.1";
-                visitorLocation = "Richmond, VA";
-            }
-
-            const newVisitor = {
-                date: currentDate,
-                time: currentTime,
-                ip: visitorIp,
-                location: visitorLocation,
-                timestamp: Date.now()
-            };
-
-            // 3. Send entry to Cloud Database REST API
-            try {
-                await fetch(`${DB_URL}.json`, {
-                    method: 'POST',
-                    body: JSON.stringify(newVisitor),
-                    headers: { 'Content-Type': 'application/json' }
-                });
-            } catch (e) {
-                console.log("Cloud push delayed or blocked.");
-            }
-
-            // 4. Retrieve all cumulative global logs from Cloud
-            fetchGlobalLogs();
-        }
-
-        async function fetchGlobalLogs() {
-            const statusBadge = document.getElementById('cloudStatusBadge');
-            const tbody = document.getElementById('visitorLogBody');
-            
-            try {
-                const response = await fetch(`${DB_URL}.json`);
-                if (!response.ok) {
-                    if (statusBadge) {
-                        statusBadge.textContent = "Rules Locked";
-                        statusBadge.className = "text-lg font-bold text-rose-400";
-                    }
-                    if (tbody) {
-                        tbody.innerHTML = '<tr><td colspan="6" class="px-3 py-4 text-center text-rose-400">Firebase database rules are blocking access. Update rules to ".read": true, ".write": true</td></tr>';
-                    }
-                    return;
-                }
-
-                const data = await response.json();
-                if (statusBadge) {
-                    statusBadge.textContent = "Global Active";
-                    statusBadge.className = "text-lg font-bold text-emerald-400";
-                }
-
-                if (tbody) {
-                    tbody.innerHTML = '';
-                    if (data) {
-                        // Convert object to array and sort ascending strictly by timestamp (#1, #2, #3...)
-                        const logsArray = Object.values(data).sort((a, b) => (a.timestamp || 0) - (b.timestamp || 0));
-                        
-                        document.getElementById('liveHitCounter').textContent = logsArray.length.toLocaleString();
-                        document.getElementById('totalApiHits').textContent = logsArray.length.toLocaleString();
-
-                        logsArray.forEach((log, index) => {
-                            const row = document.createElement('tr');
-                            row.className = "hover:bg-slate-900/50";
-                            row.innerHTML = `
-                                <td class="px-3 py-2 text-slate-500 font-mono">${index + 1}</td>
-                                <td class="px-3 py-2 text-slate-300">${log.date || 'Recent'}</td>
-                                <td class="px-3 py-2 text-slate-300">${log.time || '--:--'}</td>
-                                <td class="px-3 py-2 text-amber-400 font-mono">${log.ip || '127.0.0.1'}</td>
-                                <td class="px-3 py-2 text-slate-200">${log.location || 'Richmond, VA'}</td>
-                                <td class="px-3 py-2"><span class="text-emerald-400">OK</span></td>
-                            `;
-                            tbody.appendChild(row);
-                        });
-                    } else {
-                        tbody.innerHTML = '<tr><td colspan="6" class="px-3 py-4 text-center text-slate-500">No global logs recorded in cloud yet.</td></tr>';
-                        document.getElementById('liveHitCounter').textContent = '0';
-                        document.getElementById('totalApiHits').textContent = '0';
-                    }
-                }
-            } catch (e) {
-                if (statusBadge) {
-                    statusBadge.textContent = "Network Error";
-                    statusBadge.className = "text-lg font-bold text-amber-400";
-                }
-                if (tbody) {
-                    tbody.innerHTML = '<tr><td colspan="6" class="px-3 py-4 text-center text-slate-400">Unable to connect to Cloud Database endpoint.</td></tr>';
-                }
-            }
-        }
-
-        function resetVisitorCounter() {
-            if (confirm('Are you sure you want to clear all cumulative global logs from the cloud database?')) {
-                fetch(`${DB_URL}.json`, { method: 'DELETE' })
-                    .then(() => {
-                        fetchGlobalLogs();
-                        alert('Global cloud database successfully reset.');
-                    })
-                    .catch(() => alert('Error clearing database.'));
-            }
-        }
-
         // --- INITIALIZATION ---
         document.addEventListener('DOMContentLoaded', () => {
             renderNews(sampleNews);
-            updateVegasTime();
-            setInterval(updateVegasTime, 1000);
-            
-            initGlobalTracker();
+            updateLATime();
+            setInterval(updateLATime, 1000);
 
-            if (window.lucide) lucide.createIcons();
+            if (window.lucide) {
+                lucide.createIcons();
+            }
         });
 
         // --- DIRECTORY FILTERING ---
@@ -816,7 +707,7 @@
                 const el = document.getElementById(`btn-${btn}`);
                 if (el) {
                     el.className = (btn === category) 
-                        ? "bg-amber-500 text-slate-950 font-bold px-3 py-1.5 rounded-lg transition-colors"
+                        ? "bg-blue-600 text-white font-bold px-3 py-1.5 rounded-lg transition-colors"
                         : "bg-slate-900 border border-slate-800 text-slate-300 hover:bg-slate-800 px-3 py-1.5 rounded-lg font-medium transition-colors";
                 }
             });
@@ -879,7 +770,6 @@
         function openAdminModal() {
             document.getElementById('adminModal').classList.remove('hidden');
             document.getElementById('adminPassword').focus();
-            fetchGlobalLogs();
         }
 
         function closeAdminModal() {
@@ -891,11 +781,10 @@
             const pass = document.getElementById('adminPassword').value;
             const errorMsg = document.getElementById('adminError');
             
-            if (pass === 'vegas26') {
+            if (pass === 'la405') {
                 errorMsg.classList.add('hidden');
                 document.getElementById('adminLoginForm').classList.add('hidden');
                 document.getElementById('adminDashboard').classList.remove('hidden');
-                fetchGlobalLogs();
             } else {
                 errorMsg.classList.remove('hidden');
             }
@@ -914,5 +803,5 @@
             }
         });
     </script>
-</body> 
+</body>
 </html>

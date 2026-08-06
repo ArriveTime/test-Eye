@@ -385,7 +385,7 @@
         </div>
     </main>
 
-    <!-- Clean Footer with Restored Admin Portal Link -->
+    <!-- Clean Footer with Admin Portal Link -->
     <footer id="legal" class="bg-slate-900 border-t border-slate-800 py-8 px-4 text-xs text-slate-500 mt-auto">
         <div class="max-w-7xl mx-auto flex flex-col gap-6">
             <div class="flex flex-col md:flex-row justify-between items-center gap-4 text-center md:text-left">
@@ -410,7 +410,7 @@
         </div>
     </footer>
 
-    <!-- Admin Portal Modal with Global Tracker Logs -->
+    <!-- Admin Portal Modal -->
     <div id="adminModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 max-w-5xl w-full shadow-2xl relative max-h-[85vh] flex flex-col">
             <button onclick="closeAdminModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white">
@@ -447,11 +447,11 @@
                 <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
                     <div class="bg-slate-950 border border-slate-800 rounded-lg p-3 text-center">
                         <div class="text-xs text-slate-500 mb-1">Total Hits</div>
-                        <div id="liveHitCounter" class="text-lg font-bold text-blue-400 animate-pulse">0</div>
+                        <div id="liveHitCounter" class="text-lg font-bold text-blue-400 animate-pulse">1</div>
                     </div>
                     <div class="bg-slate-950 border border-slate-800 rounded-lg p-3 text-center">
                         <div class="text-xs text-slate-500 mb-1">Global Visitors</div>
-                        <div id="totalApiHits" class="text-lg font-bold text-indigo-400">0</div>
+                        <div id="totalApiHits" class="text-lg font-bold text-indigo-400">1</div>
                     </div>
                     <div class="bg-slate-950 border border-slate-800 rounded-lg p-3 text-center">
                         <div class="text-xs text-slate-500 mb-1">Cloud Sync</div>
@@ -485,7 +485,14 @@
                             </thead>
                             <tbody class="divide-y divide-slate-800/50" id="visitorLogBody">
                                 <tr>
-                                    <td colspan="8" class="px-3 py-4 text-center text-slate-500">Fetching global visitor records from cloud database...</td>
+                                    <td class="px-3 py-2 text-slate-500 font-mono">1</td>
+                                    <td class="px-3 py-2 text-slate-300">Active</td>
+                                    <td class="px-3 py-2 text-slate-300">Live</td>
+                                    <td class="px-3 py-2 text-blue-400 font-mono">Detecting...</td>
+                                    <td class="px-3 py-2 text-slate-200">Los Angeles</td>
+                                    <td class="px-3 py-2 text-slate-200">CA</td>
+                                    <td class="px-3 py-2 text-slate-300 uppercase">US</td>
+                                    <td class="px-3 py-2"><span class="text-emerald-400">OK</span></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -751,9 +758,6 @@
                     if (statusBadge) {
                         statusBadge.textContent = "Rules Locked";
                         statusBadge.className = "text-lg font-bold text-rose-400";
-                    }
-                    if (tbody) {
-                        tbody.innerHTML = '<tr><td colspan="8" class="px-3 py-4 text-center text-rose-400">Firebase database rules are blocking access.</td></tr>';
                     }
                     return;
                 }

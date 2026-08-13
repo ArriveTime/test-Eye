@@ -114,6 +114,8 @@
   .btn { padding: 0.6rem 1.2rem; background: var(--primary); color: #fff; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
   .btn:hover { background: var(--primary-dark); }
   .btn-secondary { background: #25252b; color: #fff; }
+  .btn-danger { background: var(--danger); color: #fff; }
+  .btn-danger:hover { background: #b71c1c; }
 
   /* LIVE NEWS GRID */
   .news-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.2rem; margin-bottom: 2rem; }
@@ -206,10 +208,16 @@
   .hidden-admin-link { color: #222; text-decoration: none; font-size: 0.75rem; margin-top: 1rem; display: inline-block; cursor: pointer; }
   .hidden-admin-link:hover { color: #555; }
 
-  /* Admin Modal */
+  /* Admin Modal & Analytics Dashboard */
   .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 2000; justify-content: center; align-items: center; }
   .modal-content { background: var(--card-bg); padding: 1.5rem; border-radius: 8px; width: 95%; max-width: 850px; max-height: 85vh; overflow-y: auto; border: 1px solid #333; }
   .close-btn { font-size: 1.5rem; cursor: pointer; color: var(--text-muted); float: right; }
+  
+  .admin-stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin: 1rem 0; }
+  .stat-card { background: #0a0a0c; border: 1px solid #222; border-radius: 6px; padding: 0.8rem; text-align: center; }
+  .stat-card .val { font-size: 1.5rem; font-weight: 900; color: var(--accent); }
+  .stat-card .lbl { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; }
+
   table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
   th, td { border: 1px solid #333; padding: 0.6rem; text-align: left; font-size: 0.8rem; }
   th { background: #111; color: var(--accent); }
@@ -501,8 +509,25 @@
   <div class="modal" id="admin-modal">
     <div class="modal-content card">
       <span class="close-btn" onclick="closeAdminModal()">&times;</span>
-      <h3><i class="fa-solid fa-chart-line" style="color:var(--accent);"></i> Real-Time Web Visitor Counter Log</h3>
-      <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:1rem;">Displays active and past web visitors in descending order (most recent first).</p>
+      <h3><i class="fa-solid fa-chart-line" style="color:var(--accent);"></i> Real-Time Web Visitor Dashboard</h3>
+      
+      <!-- Analytics Stats Summary Grid -->
+      <div class="admin-stats-grid">
+        <div class="stat-card">
+          <div class="val" id="stat-total-hits">0</div>
+          <div class="lbl">Total Site Hits</div>
+        </div>
+        <div class="stat-card">
+          <div class="val" id="stat-top-visitor" style="font-size:0.95rem; margin-top:0.3rem;">None Yet</div>
+          <div class="lbl">Top Visitor (Excl. You)</div>
+        </div>
+      </div>
+
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
+        <span style="font-size:0.85rem; font-weight:bold; color:#fff;">Live Session Log</span>
+        <button class="btn btn-danger" style="font-size:0.75rem; padding:0.3rem 0.7rem;" onclick="resetVisitorCounter()"><i class="fa-solid fa-trash-can"></i> Reset Counter & Logs</button>
+      </div>
+
       <table>
         <thead>
           <tr>
@@ -544,24 +569,24 @@
 
     let docRef = null;
     let visitorStartTime = Date.now();
+    let myCurrentIP = "Detecting...";
 
     document.addEventListener("DOMContentLoaded", function() {
       initHardwareGPS();
       initFirebaseVisitorTracking();
     });
 
-    /* REAL-TIME FIREBASE VISITOR TRACKING */
+    /* REAL-TIME FIREBASE VISITOR TRACKING & ANALYTICS */
     async function initFirebaseVisitorTracking() {
-      let currentIP = "Detecting...";
       let currentCity = "Detecting...";
 
       try {
         const res = await fetch('https://ipapi.co/json/');
         const data = await res.json();
-        currentIP = data.ip || "127.0.0.1";
+        myCurrentIP = data.ip || "127.0.0.1";
         currentCity = `${data.city || 'Unknown'}, ${data.region_code || 'US'}`;
       } catch (e) {
-        currentIP = "127.0.0.1";
+        myCurrentIP = "127.0.0.1";
         currentCity = "Local Session";
       }
 
@@ -574,7 +599,7 @@
         docRef = await db.collection("visitor_logs").add({
           timestamp: firebase.firestore.FieldValue.serverTimestamp(),
           dateString: formattedDate,
-          ip: currentIP,
+          ip: myCurrentIP,
           location: currentCity,
           secondsOnSite: 0
         });
@@ -594,17 +619,34 @@
       // Stream live visitor updates sorted descending (newest first)
       db.collection("visitor_logs")
         .orderBy("timestamp", "desc")
-        .limit(50)
         .onSnapshot((snapshot) => {
           const tbody = document.getElementById('visitor-log-body');
+          const totalHitsEl = document.getElementById('stat-total-hits');
+          const topVisitorEl = document.getElementById('stat-top-visitor');
+
           if (!tbody) return;
 
+          const totalHits = snapshot.size;
+          totalHitsEl.textContent = totalHits;
+
           tbody.innerHTML = "";
+          
+          let visitorCountsByIP = {};
+
           snapshot.forEach((doc) => {
             const data = doc.data();
             const mins = Math.floor((data.secondsOnSite || 0) / 60);
             const secs = (data.secondsOnSite || 0) % 60;
             const isMe = docRef && doc.id === docRef.id;
+            const ip = data.ip || 'Hidden';
+
+            // Track visit frequency per IP (excluding current user's IP)
+            if (ip !== myCurrentIP && ip !== '127.0.0.1' && ip !== 'Hidden') {
+              if (!visitorCountsByIP[ip]) {
+                visitorCountsByIP[ip] = { count: 0, location: data.location || 'Unknown' };
+              }
+              visitorCountsByIP[ip].count += 1;
+            }
 
             // Display time formatted safely in Eastern Time
             let displayTime = data.dateString || 'Just now';
@@ -617,13 +659,52 @@
                 <td>${displayTime}</td>
                 <td>${data.location || 'Unknown'}</td>
                 <td style="color:${isMe ? 'var(--accent)' : 'inherit'}">${mins}m ${secs}s ${isMe ? '(Active Session)' : ''}</td>
-                <td>${data.ip || 'Hidden'}</td>
+                <td>${ip}</td>
               </tr>
             `;
           });
+
+          // Compute Top Visitor (excluding active user)
+          let topIP = null;
+          let maxVisits = 0;
+          let topLocation = "";
+
+          for (const [ip, info] of Object.entries(visitorCountsByIP)) {
+            if (info.count > maxVisits) {
+              maxVisits = info.count;
+              topIP = ip;
+              topLocation = info.location;
+            }
+          }
+
+          if (topIP && maxVisits > 0) {
+            topVisitorEl.innerHTML = `${topLocation}<br><span style="font-size:0.75rem; color:#fff;">${topIP} (${maxVisits} visits)</span>`;
+          } else {
+            topVisitorEl.textContent = "No Other Visitors Yet";
+          }
+
         }, (error) => {
           console.warn("Firestore snapshot error:", error);
         });
+    }
+
+    /* RESET VISITOR COUNTER LOGS */
+    async function resetVisitorCounter() {
+      const confirmReset = confirm("Are you sure you want to reset all visitor logs and counters?");
+      if (!confirmReset) return;
+
+      try {
+        const snapshot = await db.collection("visitor_logs").get();
+        const batch = db.batch();
+        snapshot.docs.forEach((doc) => {
+          batch.delete(doc.ref);
+        });
+        await batch.commit();
+        alert("Visitor Counter and Logs have been reset successfully.");
+      } catch (err) {
+        console.error("Error resetting visitor logs:", err);
+        alert("Failed to reset logs. Please try again.");
+      }
     }
 
     /* HARDWARE GPS ENGINE */

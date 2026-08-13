@@ -684,7 +684,19 @@
         });
     }
 
-    function openAdminModal(e) { e.preventDefault(); document.getElementById('admin-modal').style.display = 'flex'; }
+    /* ADMIN PASSWORD PROTECTED ACCESS */
+    function openAdminModal(e) {
+      e.preventDefault();
+      const adminPassword = "strike2026"; // You can change this password to whatever you like!
+      const userEntry = prompt("Administrator Access Required.\nPlease enter the admin password:");
+
+      if (userEntry === adminPassword) {
+        document.getElementById('admin-modal').style.display = 'flex';
+      } else if (userEntry !== null) {
+        alert("Access Denied: Incorrect Password.");
+      }
+    }
+
     function closeAdminModal() { document.getElementById('admin-modal').style.display = 'none'; }
 
     /* Comments & Likes */

@@ -456,10 +456,10 @@
       <h2 class="section-title"><span>Contact BowlStrike Team</span></h2>
       <div class="card">
         <form class="contact-form" id="contact-form" onsubmit="sendContactEmail(event)">
-          <input type="text" id="contact-name" placeholder="Your Name" required />
-          <input type="email" id="contact-email" placeholder="Your Email Address" required />
-          <input type="text" id="contact-subject" placeholder="Subject" required />
-          <textarea id="contact-message" placeholder="How can we help you?" required></textarea>
+          <input type="text" name="name" id="contact-name" placeholder="Your Name" required />
+          <input type="email" name="email" id="contact-email" placeholder="Your Email Address" required />
+          <input type="text" name="subject" id="contact-subject" placeholder="Subject" required />
+          <textarea name="message" id="contact-message" placeholder="How can we help you?" required></textarea>
           <button type="submit" class="btn" id="contact-submit-btn"><i class="fa-solid fa-paper-plane"></i> Send Message</button>
           <div id="contact-status" style="font-size:0.85rem; margin-top:0.5rem;"></div>
         </form>
@@ -496,7 +496,14 @@
   </div>
 
   <script>
-    // EXACT FIREBASE CREDENTIALS INTEGRATED
+    // INITIALIZE EMAILJS WITH YOUR EXACT PUBLIC KEY
+    (function(){
+      if (typeof emailjs !== 'undefined') {
+        emailjs.init("qzzSDB57ypIFBik8v");
+      }
+    })();
+
+    // EXACT FIREBASE CREDENTIALS
     const firebaseConfig = {
       apiKey: "AIzaSyAHE9twWdgqm_iPz6CogorkeRMFGnu9834",
       authDomain: "bowlstrike-299d6.firebaseapp.com",
@@ -515,10 +522,6 @@
     let visitorStartTime = Date.now();
 
     document.addEventListener("DOMContentLoaded", function() {
-      // Initialize EmailJS (If public key configured)
-      if (typeof emailjs !== 'undefined') {
-        emailjs.init("YOUR_EMAILJS_PUBLIC_KEY"); // Replace with your EmailJS key if available
-      }
       initHardwareGPS();
       initFirebaseVisitorTracking();
     });
@@ -579,7 +582,7 @@
             const secs = (data.secondsOnSite || 0) % 60;
             const isMe = docRef && doc.id === docRef.id;
 
-            // Display time formatted safely
+            // Display time formatted safely in Eastern Time
             let displayTime = data.dateString || 'Just now';
             if (data.timestamp && data.timestamp.toDate) {
               displayTime = data.timestamp.toDate().toLocaleString("en-US", { timeZone: "America/New_York" });
@@ -656,38 +659,29 @@
         });
     }
 
-    /* Contact Form Functionality */
+    /* Contact Form Functionality with Live EmailJS Credentials */
     function sendContactEmail(e) {
       e.preventDefault();
       const statusDiv = document.getElementById('contact-status');
+      const submitBtn = document.getElementById('contact-submit-btn');
+
       statusDiv.style.color = "var(--accent)";
       statusDiv.textContent = "Sending message...";
+      submitBtn.disabled = true;
 
-      const name = document.getElementById('contact-name').value;
-      const email = document.getElementById('contact-email').value;
-      const subject = document.getElementById('contact-subject').value;
-      const message = document.getElementById('contact-message').value;
-
-      // EmailJS routing call
-      if (typeof emailjs !== 'undefined') {
-        emailjs.send("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", {
-          from_name: name,
-          reply_to: email,
-          subject: subject,
-          message: message
-        }).then(() => {
+      // Executing EmailJS sendForm with your exact credentials
+      emailjs.sendForm('service_x3x3aev', 'template_lsnvdmo', e.target)
+        .then(() => {
           statusDiv.style.color = "var(--success)";
-          statusDiv.textContent = "Message sent successfully!";
+          statusDiv.textContent = "Thank you! Your message has been sent successfully.";
+          submitBtn.disabled = false;
           document.getElementById('contact-form').reset();
-        }).catch((err) => {
+        }, (error) => {
           statusDiv.style.color = "var(--danger)";
-          statusDiv.textContent = "Form submitted (EmailJS configuration pending).";
+          statusDiv.textContent = "Failed to send message. Please try again.";
+          submitBtn.disabled = false;
+          console.error('EmailJS Error:', error);
         });
-      } else {
-        statusDiv.style.color = "var(--success)";
-        statusDiv.textContent = "Thank you! Message submitted.";
-        document.getElementById('contact-form').reset();
-      }
     }
 
     function openAdminModal(e) { e.preventDefault(); document.getElementById('admin-modal').style.display = 'flex'; }

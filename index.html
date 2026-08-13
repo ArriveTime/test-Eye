@@ -203,8 +203,13 @@
   }
   .contact-form textarea { resize: vertical; min-height: 120px; }
   
-  /* Footer & Admin */
-  footer { background: #000; padding: 2rem 1rem; text-align: center; border-top: 1px solid #222; font-size: 0.85rem; color: var(--text-muted); position: relative; }
+  /* Footer & Legal Disclaimers */
+  footer { background: #000; padding: 2.5rem 1rem 1.5rem 1rem; border-top: 1px solid #222; font-size: 0.85rem; color: var(--text-muted); position: relative; }
+  .footer-legal-container { max-width: 1000px; margin: 0 auto 1.5rem auto; text-align: left; background: #0a0a0c; border: 1px solid #1a1a1e; border-radius: 6px; padding: 1.2rem; line-height: 1.5; font-size: 0.78rem; color: #8a8a93; }
+  .footer-legal-container h4 { color: #d0d0d5; font-size: 0.85rem; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 6px; }
+  .footer-legal-container p { margin-bottom: 0.8rem; }
+  .footer-legal-container p:last-child { margin-bottom: 0; }
+  
   .hidden-admin-link { color: #222; text-decoration: none; font-size: 0.75rem; margin-top: 1rem; display: inline-block; cursor: pointer; }
   .hidden-admin-link:hover { color: #555; }
 
@@ -501,7 +506,14 @@
   </div>
 
   <footer>
-    <p>&copy; 2026 BowlStrike.com - National Tenpin Bowler Network</p>
+    <div class="footer-legal-container">
+      <h4><i class="fa-solid fa-scale-balanced" style="color:var(--accent);"></i> Legal Disclaimers & Trademark Notices</h4>
+      <p><strong>Independent Platform Disclaimer:</strong> BowlStrike.com is an independent social platform, news aggregator, and bowler utility hub. BowlStrike.com is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Professional Bowlers Association (PBA®), the United States Bowling Congress (USBC®), Bowlero Corporation, or any of their subsidiaries or affiliates.</p>
+      <p><strong>Trademark Notice:</strong> All product and company names, trademarks, service marks, registered trademarks, and logos mentioned or displayed on this website are the property of their respective owners. Reference to or use of third-party brand names, logos, or news feeds (including PBA, USBC, Storm, Roto Grip, Brunswick, or Columbia 300) is done strictly for informational, descriptive, and news reporting purposes under Fair Use principles and does not imply endorsement, sponsorship, or partnership.</p>
+      <p><strong>Content & Live Feed Disclaimer:</strong> Live news feeds and external links belong to their respective publisher sources. BowlStrike.com does not claim ownership or rights over third-party news material. Live GPS radar locations and alley listings are provided for informational convenience only.</p>
+    </div>
+
+    <p>&copy; 2026 BowlStrike.com - National Tenpin Bowler Network. All rights reserved.</p>
     <a href="#" class="hidden-admin-link" onclick="openAdminModal(event)">admin</a>
   </footer>
 

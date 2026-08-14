@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bowl Strike - Realistic Alley Edition</title>
+  <title>BowlStrike.com - Pro Tour Lanes</title>
   <style>
     :root {
       --bg-color: #07090e;
@@ -40,18 +40,18 @@
     }
 
     .brand-title {
-      font-size: 2rem;
+      font-size: 2.2rem;
       font-weight: 900;
-      letter-spacing: 4px;
+      letter-spacing: 3px;
       text-transform: uppercase;
-      background: linear-gradient(180deg, #ffffff 0%, #8a9bb0 100%);
+      background: linear-gradient(180deg, #ffffff 0%, #00e5ff 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       text-shadow: 0 4px 12px rgba(0,0,0,0.6);
     }
 
     .brand-subtitle {
-      font-size: 0.72rem;
+      font-size: 0.75rem;
       color: var(--accent-gold);
       letter-spacing: 2px;
       text-transform: uppercase;
@@ -193,8 +193,8 @@
 <body>
 
   <header>
-    <div class="brand-title">BOWL STRIKE</div>
-    <div class="brand-subtitle">PRO TOUR LANES</div>
+    <div class="brand-title">BowlStrike.com</div>
+    <div class="brand-subtitle">PRO TOUR EDITION</div>
   </header>
 
   <div id="scoreboard">
@@ -291,7 +291,7 @@
 
     function playCheerSound() {
       if (!audioCtx) return;
-      const duration = 2.4;
+      const duration = 2.8;
       const bufferSize = audioCtx.sampleRate * duration;
       const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
       const data = buffer.getChannelData(0);
@@ -306,7 +306,7 @@
         b4 = 0.55000 * b4 + white * 0.5329522;
         b5 = -0.7616 * b5 - white * 0.0168980;
         data[i] = b0 + b1 + b2 + b3 + b4 + b5 + b6 + white * 0.5362;
-        data[i] *= 0.10;
+        data[i] *= 0.12;
         b6 = white * 0.115926;
       }
 
@@ -315,12 +315,12 @@
 
       const filter = audioCtx.createBiquadFilter();
       filter.type = 'bandpass';
-      filter.frequency.setValueAtTime(900, audioCtx.currentTime);
-      filter.Q.setValueAtTime(1.1, audioCtx.currentTime);
+      filter.frequency.setValueAtTime(950, audioCtx.currentTime);
+      filter.Q.setValueAtTime(1.0, audioCtx.currentTime);
 
       const gain = audioCtx.createGain();
       gain.gain.setValueAtTime(0.01, audioCtx.currentTime);
-      gain.gain.linearRampToValueAtTime(0.45, audioCtx.currentTime + 0.3);
+      gain.gain.linearRampToValueAtTime(0.55, audioCtx.currentTime + 0.25);
       gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
 
       noise.connect(filter);
@@ -338,7 +338,7 @@
     const FOUL_LINE_Y = 580;
 
     let ball = {
-      x: 270,
+      x: 250,
       y: 645,
       radius: 16,
       vx: 0,
@@ -354,16 +354,16 @@
     let dragCurrent = { x: 0, y: 0 };
 
     const pinOrigins = [
-      { id: 1,  row: 1, col: 1, x: 270, y: 200 }, 
-      { id: 2,  row: 2, col: 1, x: 242, y: 177 },
-      { id: 3,  row: 2, col: 2, x: 298, y: 177 },
-      { id: 4,  row: 3, col: 1, x: 214, y: 154 },
-      { id: 5,  row: 3, col: 2, x: 270, y: 154 },
-      { id: 6,  row: 3, col: 3, x: 326, y: 154 },
-      { id: 7,  row: 4, col: 1, x: 186, y: 131 },
-      { id: 8,  row: 4, col: 2, x: 242, y: 131 },
-      { id: 9,  row: 4, col: 3, x: 298, y: 131 },
-      { id: 10, row: 4, col: 4, x: 354, y: 131 }
+      { id: 1,  row: 1, col: 1, x: 250, y: 200 }, 
+      { id: 2,  row: 2, col: 1, x: 222, y: 177 },
+      { id: 3,  row: 2, col: 2, x: 278, y: 177 },
+      { id: 4,  row: 3, col: 1, x: 194, y: 154 },
+      { id: 5,  row: 3, col: 2, x: 250, y: 154 },
+      { id: 6,  row: 3, col: 3, x: 306, y: 154 },
+      { id: 7,  row: 4, col: 1, x: 166, y: 131 },
+      { id: 8,  row: 4, col: 2, x: 222, y: 131 },
+      { id: 9,  row: 4, col: 3, x: 278, y: 131 },
+      { id: 10, row: 4, col: 4, x: 334, y: 131 }
     ];
 
     let pins = [];
@@ -445,6 +445,11 @@
 
     function update() {
       if (ball.isRolling) {
+        // Strike Magnet Assist: Gently nudge trajectory into headpin pocket
+        if (ball.y < 320 && ball.y > 200) {
+          ball.x += (250 - ball.x) * 0.08;
+        }
+
         ball.x += ball.vx;
         ball.y += ball.vy;
         ball.vy *= 0.993;
@@ -452,16 +457,34 @@
 
         let hitThisFrame = 0;
 
+        // Expanded Strike Physics Hit Detection Radius
         pins.forEach(pin => {
           if (pin.isStanding) {
             const dist = Math.hypot(ball.x - pin.x, ball.y - pin.y);
             const scale = getScale(pin.y);
-            if (dist < (ball.radius + 20 * scale)) {
+            if (dist < (ball.radius + 38 * scale)) {
               pin.isStanding = false;
-              pin.knockedX = (pin.x - ball.x) * 0.85 + (Math.random() - 0.5) * 12;
-              pin.knockedY = -Math.abs(ball.vy) * 0.55;
+              pin.knockedX = (pin.x - ball.x) * 1.2 + (Math.random() - 0.5) * 18;
+              pin.knockedY = -Math.abs(ball.vy) * 0.75;
               hitThisFrame++;
             }
+          }
+        });
+
+        // Pin-to-Pin Domino Cascade Effect
+        pins.forEach(pin1 => {
+          if (!pin1.isStanding && pin1.opacity > 0.5) {
+            pins.forEach(pin2 => {
+              if (pin2.isStanding) {
+                const dist = Math.hypot(pin1.x - pin2.x, pin1.y - pin2.y);
+                if (dist < 48) {
+                  pin2.isStanding = false;
+                  pin2.knockedX = (pin2.x - pin1.x) * 1.1 + (Math.random() - 0.5) * 15;
+                  pin2.knockedY = pin1.knockedY * 0.8;
+                  hitThisFrame++;
+                }
+              }
+            });
           }
         });
 
@@ -474,18 +497,11 @@
           if (!pin.isStanding && pin.opacity > 0) {
             pin.x += pin.knockedX;
             pin.y += pin.knockedY;
-            pin.knockedX *= 0.86;
-            pin.knockedY *= 0.86;
+            pin.knockedX *= 0.88;
+            pin.knockedY *= 0.88;
             pin.opacity -= 0.025;
           }
         });
-
-        // Gutter Collision (Adjusted for left ball return channel)
-        const laneLeft = 145 - (ball.y / 720) * 35;
-        const laneRight = 395 + (ball.y / 720) * 35;
-        if (ball.x < laneLeft || ball.x > laneRight) {
-          ball.vx *= 0.12;
-        }
 
         if (ball.y < 110 || Math.abs(ball.vy) < 0.2) {
           endRoll();
@@ -512,8 +528,12 @@
           resetBall();
         }
       } else {
-        if (standingCount === 0) showOverlay("SPARE!");
-        else if (knockedThisRoll === 0) showOverlay("GUTTER!");
+        if (standingCount === 0) {
+          showOverlay("SPARE!");
+          playCheerSound();
+        } else if (knockedThisRoll === 0) {
+          showOverlay("GUTTER!");
+        }
         nextFrame();
       }
 
@@ -521,7 +541,7 @@
     }
 
     function resetBall() {
-      ball.x = 270;
+      ball.x = 250;
       ball.y = 645;
       ball.vx = 0;
       ball.vy = 0;
@@ -563,49 +583,49 @@
       document.getElementById('score-display').innerText = totalScore;
     }
 
-    // High-Detail Rendering Engine
+    // Canvas Rendering Engine
     function draw() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // 1. PINSETTER MASKING GRAPHIC BACKDROP (Above Pins)
+      // 1. BACKDROP & OVERHEAD MASKING UNIT
       ctx.fillStyle = '#05070a';
       ctx.fillRect(0, 0, canvas.width, 120);
 
-      // Masking Panel Main Casing
+      // Casing Box
       const panelGrad = ctx.createLinearGradient(0, 0, 0, 100);
       panelGrad.addColorStop(0, '#1a202c');
       panelGrad.addColorStop(0.5, '#0f141d');
       panelGrad.addColorStop(1, '#080b10');
       ctx.fillStyle = panelGrad;
-      ctx.fillRect(50, 10, 400, 90);
+      ctx.fillRect(40, 10, 420, 90);
 
-      // Panel Metallic Frame & Accents
       ctx.strokeStyle = '#2d3748';
       ctx.lineWidth = 3;
-      ctx.strokeRect(50, 10, 400, 90);
+      ctx.strokeRect(40, 10, 420, 90);
 
-      // Score Display Box on Masking Unit
+      // Score Display Frame on Masking Unit
       ctx.fillStyle = '#030508';
-      ctx.fillRect(200, 25, 100, 32);
+      ctx.fillRect(140, 25, 220, 36);
       ctx.strokeStyle = '#d4af37';
       ctx.lineWidth = 1.5;
-      ctx.strokeRect(200, 25, 100, 32);
+      ctx.strokeRect(140, 25, 220, 36);
 
+      // BowlStrike.com Text Display
       ctx.fillStyle = '#00e5ff';
-      ctx.font = '700 16px "Courier New", monospace';
+      ctx.font = '800 17px "Courier New", monospace';
       ctx.textAlign = 'center';
-      ctx.fillText(`LANE 04`, 250, 46);
+      ctx.fillText(`BowlStrike.com`, 250, 49);
 
-      // Pin Deck Ambient Pit Light Beam
-      const pitGlow = ctx.createRadialGradient(270, 125, 10, 270, 125, 180);
+      // Ambient Pin Light Glow
+      const pitGlow = ctx.createRadialGradient(250, 125, 10, 250, 125, 180);
       pitGlow.addColorStop(0, 'rgba(255, 235, 200, 0.25)');
       pitGlow.addColorStop(1, 'rgba(0, 0, 0, 0)');
       ctx.fillStyle = pitGlow;
-      ctx.fillRect(100, 100, 340, 110);
+      ctx.fillRect(50, 100, 400, 110);
 
       // Pit Cavity Back Wall Depth
       ctx.fillStyle = '#030406';
-      ctx.fillRect(130, 100, 280, 25);
+      ctx.fillRect(100, 100, 300, 25);
 
       // 2. APPROACH HARDWOOD FLOOR
       const approachGrad = ctx.createLinearGradient(0, FOUL_LINE_Y, 0, 720);
@@ -621,10 +641,10 @@
       laneGrad.addColorStop(1, '#ca8d3e');   
 
       ctx.beginPath();
-      ctx.moveTo(180, 125);  
+      ctx.moveTo(140, 125);  
       ctx.lineTo(360, 125);  
       ctx.lineTo(475, FOUL_LINE_Y);  
-      ctx.lineTo(65, FOUL_LINE_Y);   
+      ctx.lineTo(25, FOUL_LINE_Y);   
       ctx.closePath();
       ctx.fillStyle = laneGrad;
       ctx.fill();
@@ -634,12 +654,12 @@
       ctx.lineWidth = 1;
       for (let i = -8; i <= 8; i++) {
         ctx.beginPath();
-        ctx.moveTo(270 + i * 10, 125);
-        ctx.lineTo(270 + i * 25.5, FOUL_LINE_Y);
+        ctx.moveTo(250 + i * 11, 125);
+        ctx.lineTo(250 + i * 27, FOUL_LINE_Y);
         ctx.stroke();
       }
 
-      // Lane Floor Wax Gloss Reflection Sheen
+      // Wax Sheen Reflections
       const waxGrad = ctx.createLinearGradient(0, 200, 0, FOUL_LINE_Y);
       waxGrad.addColorStop(0, 'rgba(255, 255, 255, 0.0)');
       waxGrad.addColorStop(0.6, 'rgba(255, 255, 255, 0.06)');
@@ -647,55 +667,22 @@
       ctx.fillStyle = waxGrad;
       ctx.fill();
 
-      // 4. GUTTERS & CAPPING RAILS
-      // Left Gutter
+      // 4. GUTTERS
       ctx.fillStyle = '#11151c';
+      // Left Gutter
       ctx.beginPath();
-      ctx.moveTo(120, 125); ctx.lineTo(180, 125); ctx.lineTo(65, FOUL_LINE_Y); ctx.lineTo(0, FOUL_LINE_Y);
+      ctx.moveTo(80, 125); ctx.lineTo(140, 125); ctx.lineTo(25, FOUL_LINE_Y); ctx.lineTo(0, FOUL_LINE_Y);
       ctx.fill();
       // Right Gutter
       ctx.beginPath();
       ctx.moveTo(360, 125); ctx.lineTo(420, 125); ctx.lineTo(500, FOUL_LINE_Y); ctx.lineTo(475, FOUL_LINE_Y);
       ctx.fill();
 
-      // 5. SLEEK MAHOGANY & CHARCOAL BALL RETURN SYSTEM (LEFT SIDE)
-      // Ball Return Track Casing
-      const trackGrad = ctx.createLinearGradient(0, 120, 60, 720);
-      trackGrad.addColorStop(0, '#1c130d'); // Mahogany wood tone
-      trackGrad.addColorStop(0.5, '#2d1e15');
-      trackGrad.addColorStop(1, '#0e1217'); // Dark charcoal
-      ctx.fillStyle = trackGrad;
-
-      ctx.beginPath();
-      ctx.moveTo(40, 120);
-      ctx.lineTo(110, 120);
-      ctx.lineTo(50, FOUL_LINE_Y + 140);
-      ctx.lineTo(0, FOUL_LINE_Y + 140);
-      ctx.closePath();
-      ctx.fill();
-
-      // Brushed Chrome Trim Lines on Ball Return
-      ctx.strokeStyle = '#4a5568';
-      ctx.lineWidth = 2;
-      ctx.beginPath();
-      ctx.moveTo(110, 120);
-      ctx.lineTo(50, FOUL_LINE_Y + 140);
-      ctx.stroke();
-
-      // Ball Return Return Hood / Tray (Approach Area)
-      ctx.fillStyle = '#1a202c';
-      ctx.beginPath();
-      ctx.ellipse(30, 670, 25, 40, 0, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.strokeStyle = '#d4af37';
-      ctx.lineWidth = 1.5;
-      ctx.stroke();
-
-      // 6. TARGETING ARROWS & FOUL LINE
+      // 5. TARGETING ARROWS & FOUL LINE
       ctx.fillStyle = '#42280c';
       [-60, -40, -20, 0, 20, 40, 60].forEach(offset => {
         const scale = getScale(420);
-        const ax = 270 + offset * 2.1;
+        const ax = 250 + offset * 2.1;
         ctx.beginPath();
         ctx.moveTo(ax, 420);
         ctx.lineTo(ax - 3 * scale, 432);
@@ -706,9 +693,9 @@
 
       // Foul Line
       ctx.fillStyle = '#000000';
-      ctx.fillRect(55, FOUL_LINE_Y - 2, 425, 5);
+      ctx.fillRect(25, FOUL_LINE_Y - 2, 450, 5);
       ctx.fillStyle = '#d60000';
-      ctx.fillRect(55, FOUL_LINE_Y, 425, 2);
+      ctx.fillRect(25, FOUL_LINE_Y, 450, 2);
 
       // Pin Deck Spots
       pinOrigins.forEach(p => {
@@ -719,7 +706,7 @@
         ctx.fill();
       });
 
-      // 7. REALISTIC BOTTLE-SHAPED PINS
+      // 6. REALISTIC PINS
       const sortedPins = [...pins].sort((a, b) => a.y - b.y);
       sortedPins.forEach(pin => {
         if (pin.opacity <= 0) return;
@@ -728,23 +715,22 @@
         ctx.save();
         ctx.globalAlpha = pin.opacity;
         
-        // Base Drop Shadow
+        // Shadow
         ctx.fillStyle = 'rgba(0,0,0,0.45)';
         ctx.beginPath();
         ctx.ellipse(pin.x, pin.y + 6 * scale, 8.5 * scale, 3 * scale, 0, 0, Math.PI * 2);
         ctx.fill();
 
-        // Pin Body Contoured Path (Authentic Hourglass Bottle Silhouette)
+        // Pin Hourglass Body
         ctx.beginPath();
-        ctx.moveTo(pin.x - 3 * scale, pin.y - 18 * scale); // Crown top
-        ctx.bezierCurveTo(pin.x - 5 * scale, pin.y - 18 * scale, pin.x - 4 * scale, pin.y - 12 * scale, pin.x - 2.5 * scale, pin.y - 9 * scale); // Neck
-        ctx.bezierCurveTo(pin.x - 8 * scale, pin.y - 4 * scale, pin.x - 8.5 * scale, pin.y + 2 * scale, pin.x - 6.5 * scale, pin.y + 6 * scale); // Belly
+        ctx.moveTo(pin.x - 3 * scale, pin.y - 18 * scale);
+        ctx.bezierCurveTo(pin.x - 5 * scale, pin.y - 18 * scale, pin.x - 4 * scale, pin.y - 12 * scale, pin.x - 2.5 * scale, pin.y - 9 * scale);
+        ctx.bezierCurveTo(pin.x - 8 * scale, pin.y - 4 * scale, pin.x - 8.5 * scale, pin.y + 2 * scale, pin.x - 6.5 * scale, pin.y + 6 * scale);
         ctx.lineTo(pin.x + 6.5 * scale, pin.y + 6 * scale);
         ctx.bezierCurveTo(pin.x + 8.5 * scale, pin.y + 2 * scale, pin.x + 8 * scale, pin.y - 4 * scale, pin.x + 2.5 * scale, pin.y - 9 * scale);
         ctx.bezierCurveTo(pin.x + 4 * scale, pin.y - 12 * scale, pin.x + 5 * scale, pin.y - 18 * scale, pin.x + 3 * scale, pin.y - 18 * scale);
         ctx.closePath();
 
-        // Off-White Pearl Lacquer Gradient
         const pinGrad = ctx.createLinearGradient(pin.x - 6 * scale, 0, pin.x + 6 * scale, 0);
         pinGrad.addColorStop(0, '#cfd8dc');
         pinGrad.addColorStop(0.35, '#ffffff');
@@ -753,7 +739,7 @@
         ctx.fillStyle = pinGrad;
         ctx.fill();
 
-        // Dual Red Stripes
+        // Red Neck Bands
         ctx.fillStyle = '#d60000';
         ctx.fillRect(pin.x - 3.2 * scale, pin.y - 13.5 * scale, 6.4 * scale, 1.8 * scale);
         ctx.fillRect(pin.x - 3.6 * scale, pin.y - 10.8 * scale, 7.2 * scale, 1.8 * scale);
@@ -761,7 +747,7 @@
         ctx.restore();
       });
 
-      // 8. AIMING LINE
+      // 7. AIMING LINE
       if (isDragging) {
         ctx.beginPath();
         ctx.moveTo(ball.x, ball.y);
@@ -775,7 +761,7 @@
         ctx.setLineDash([]);
       }
 
-      // 9. BOWLING BALL
+      // 8. BOWLING BALL
       const ballScale = getScale(ball.y);
       const scaledRadius = ball.radius * ballScale;
 

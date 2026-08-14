@@ -1,997 +1,964 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BowlStrike.com - Pro Tour Lanes</title>
-  <style>
-    :root {
-      --bg-color: #07090e;
-      --card-bg: linear-gradient(145deg, #121620 0%, #0a0d14 100%);
-      --accent-gold: #d4af37;
-      --accent-cyan: #00e5ff;
-      --text-main: #f0f4f8;
-      --text-muted: #7f8c9d;
-      --border-color: #1e2636;
-    }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>BowlStrike.com - National Tenpin Social Network & Live Radar</title>
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      user-select: none;
-    }
+<!-- Primary Search Engine Meta Tags -->
+<meta name="title" content="BowlStrike.com - National Tenpin Social Network & Live Radar" />
+<meta name="description" content="Connect with tenpin bowlers nationwide on BowlStrike.com. Features live GPS alley radar, SBA news updates, bowler profiles, and real-time community feeds." />
+<meta name="keywords" content="bowling network, tenpin bowling, bowling alley radar, PBA news, USBC, bowler profiles, bowling score tracker, local bowling lanes" />
+<meta name="robots" content="index, follow" />
+<meta name="author" content="BowlStrike Team" />
 
-    body {
-      background-color: var(--bg-color);
-      color: var(--text-main);
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      padding: 12px;
-    }
+<!-- Open Graph / Facebook / WhatsApp Preview -->
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://bowlstrike.com/" />
+<meta property="og:title" content="BowlStrike.com - National Tenpin Social Network" />
+<meta property="og:description" content="Live GPS bowling radar, national tournament news, and player community feed. Join the national tenpin network!" />
+<meta property="og:image" content="https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=1200&q=80" />
 
-    /* Scoreboard HUD */
-    #scoreboard {
-      width: 100%;
-      max-width: 540px;
-      background: var(--card-bg);
-      border: 1px solid var(--border-color);
-      border-radius: 6px;
-      padding: 8px 10px;
-      margin-top: 10px;
-      margin-bottom: 10px;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.6);
-    }
+<!-- Twitter Card Preview -->
+<meta property="twitter:card" content="summary_large_image" />
+<meta property="twitter:url" content="https://bowlstrike.com/" />
+<meta property="twitter:title" content="BowlStrike.com - National Tenpin Social Network" />
+<meta property="twitter:description" content="Live GPS bowling radar, national tournament news, and player community feed." />
+<meta property="twitter:image" content="https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=1200&q=80" />
 
-    .hud-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
+<!-- Canonical URL -->
+<link rel="canonical" href="https://bowlstrike.com/" />
 
-    .hud-top-bar {
-      border-bottom: 1px solid rgba(255,255,255,0.08);
-      padding-bottom: 6px;
-    }
+<!-- Leaflet CSS & JS for Interactive Map -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="" defer></script>
 
-    .hud-group {
-      text-align: center;
-      flex: 1;
-      border-right: 1px solid rgba(255,255,255,0.05);
-    }
+<!-- FontAwesome for Icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
-    .hud-group:last-child {
-      border-right: none;
-    }
+<!-- EmailJS SDK -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js" defer></script>
 
-    .hud-label {
-      font-size: 0.62rem;
-      text-transform: uppercase;
-      color: var(--text-muted);
-      letter-spacing: 1.5px;
-      font-weight: 700;
-    }
+<!-- Firebase SDKs (Compatibility Build) -->
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js" defer></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js" defer></script>
 
-    .hud-value {
-      font-size: 1.25rem;
-      font-weight: 800;
-      font-family: 'Courier New', Courier, monospace;
-      color: #ffffff;
-    }
+<style>
+  :root {
+    --primary: #e50914;
+    --primary-dark: #b20710;
+    --accent: #ffb300;
+    --neon-red: #ff3c3c;
+    --dark-bg: #070709;
+    --card-bg: #111114;
+    --text: #ffffff;
+    --text-muted: #b0bec5;
+    --danger: #d32f2f;
+    --success: #388e3c;
+  }
 
-    .hud-value.highlight {
-      color: var(--accent-cyan);
-      text-shadow: 0 0 10px rgba(0, 229, 255, 0.4);
-    }
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+  body { background-color: var(--dark-bg); color: var(--text); line-height: 1.6; overflow-x: hidden; }
 
-    .hud-value.gold {
-      color: var(--accent-gold);
-      text-shadow: 0 0 10px rgba(212, 175, 55, 0.4);
-    }
+  /* Header Navigation */
+  header { background-color: #000; border-bottom: 3px solid var(--primary); position: sticky; top: 0; z-index: 1000; }
+  .nav-container { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0.8rem 1rem; }
+  
+  .logo-wrapper {
+    display: inline-flex;
+    align-items: center;
+    border: 2px solid #ffffff;
+    border-radius: 25px;
+    padding: 0.3rem 1rem;
+    background: rgba(0, 0, 0, 0.8);
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+    text-decoration: none;
+    transition: border-color 0.3s;
+  }
+  .logo-wrapper:hover { border-color: var(--primary); }
+  .logo { font-size: 1.6rem; font-weight: 900; color: #ffffff; letter-spacing: 1px; line-height: 1; }
+  .logo span { color: var(--primary); text-shadow: 0 0 8px rgba(229, 9, 20, 0.8); }
 
-    /* Game Canvas Container */
-    #game-container {
-      position: relative;
-      width: 100%;
-      max-width: 540px;
-      background: #000;
-      border-radius: 8px;
-      overflow: hidden;
-      border: 1px solid #2d3748;
-      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.9);
-    }
+  /* Hero Banner Logo Variation */
+  .hero-logo-wrapper {
+    display: inline-flex;
+    align-items: center;
+    border: 3px solid #ffffff;
+    border-radius: 35px;
+    padding: 0.5rem 1.8rem;
+    background: rgba(0, 0, 0, 0.85);
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+    text-decoration: none;
+    margin-bottom: 1.2rem;
+  }
+  .hero-logo { font-size: 2.5rem; font-weight: 900; color: #ffffff; letter-spacing: 1.5px; line-height: 1; }
+  .hero-logo span { color: var(--primary); text-shadow: 0 0 12px rgba(229, 9, 20, 0.9); }
 
-    canvas {
-      display: block;
-      width: 100%;
-      height: auto;
-      background: #000;
-    }
+  nav { display: flex; gap: 1rem; flex-wrap: wrap; }
+  nav a { color: var(--text-muted); text-decoration: none; font-weight: 600; font-size: 0.95rem; }
+  nav a:hover { color: var(--primary); }
 
-    /* Controls Bar */
-    #controls-panel {
-      width: 100%;
-      max-width: 540px;
-      margin-top: 10px;
-      background: var(--card-bg);
-      border-radius: 6px;
-      padding: 10px 14px;
-      border: 1px solid var(--border-color);
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
+  /* Hero Banner */
+  .hero-banner {
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.45) 0%, rgba(8, 8, 10, 0.92) 100%),
+                radial-gradient(circle at 50% 50%, #1a0002 0%, #070709 85%);
+    padding: 3.5rem 1rem;
+    text-align: center;
+    border-bottom: 4px solid var(--primary);
+  }
+  .hero-banner p { font-size: 1.15rem; color: #fff; margin-bottom: 0.5rem; }
 
-    .control-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
+  /* Utility */
+  .container { max-width: 1200px; margin: 2rem auto; padding: 0 1rem; }
+  .section-title { font-size: 1.6rem; margin-bottom: 1.2rem; border-left: 5px solid var(--primary); padding-left: 0.8rem; font-weight: 800; display: flex; justify-content: space-between; align-items: center; }
+  .card { background: var(--card-bg); border-radius: 8px; padding: 1.2rem; border: 1px solid #222; }
+  .btn { padding: 0.6rem 1.2rem; background: var(--primary); color: #fff; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
+  .btn:hover { background: var(--primary-dark); }
+  .btn-secondary { background: #25252b; color: #fff; }
+  .btn-danger { background: var(--danger); color: #fff; }
+  .btn-danger:hover { background: #b71c1c; }
 
-    .instructions {
-      font-size: 0.78rem;
-      color: var(--text-muted);
-    }
+  /* LIVE NEWS GRID */
+  .news-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.2rem; margin-bottom: 2rem; }
+  .news-card h3 { font-size: 1.1rem; margin-bottom: 0.5rem; }
+  .news-card h3 a { color: var(--accent); text-decoration: none; }
+  .news-card h3 a:hover { text-decoration: underline; color: #fff; }
+  .news-card p { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.8rem; }
+  .news-card .news-meta { display: flex; justify-content: space-between; font-size: 0.75rem; color: #757575; border-top: 1px solid #2a2a2a; padding-top: 0.5rem; }
 
-    .instructions strong {
-      color: var(--text-main);
-    }
+  /* RED DIVIDER LINE */
+  .red-divider {
+    height: 3px;
+    background: linear-gradient(90deg, var(--primary) 0%, var(--neon-red) 50%, var(--primary) 100%);
+    box-shadow: 0 0 10px rgba(229, 9, 20, 0.8);
+    margin: 2.5rem 0;
+    border-radius: 2px;
+  }
 
-    .mode-select {
-      background: #121722;
-      color: var(--text-main);
-      border: 1px solid #3b485d;
-      padding: 6px 10px;
-      font-size: 0.8rem;
-      border-radius: 4px;
-      outline: none;
-      cursor: pointer;
-    }
+  /* SIDE-BY-SIDE RADAR & BOWLING GAME LAYOUT */
+  .interactive-duo-container {
+    display: flex;
+    gap: 1.2rem;
+    margin-bottom: 2.5rem;
+    align-items: stretch;
+  }
+  .duo-block {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+  }
 
-    .btn-pro {
-      background: linear-gradient(180deg, #242d3c 0%, #121722 100%);
-      color: var(--text-main);
-      border: 1px solid #3b485d;
-      padding: 7px 16px;
-      font-size: 0.8rem;
-      font-weight: 700;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
+  /* MAP SECTION (Optimized for half width / bandwidth) */
+  .map-wrapper { position: relative; border-radius: 8px; overflow: hidden; border: 1px solid #222; flex: 1; display: flex; flex-direction: column; }
+  #map { height: 260px; width: 100%; background: #1a1a1e; flex: 1; }
+  .my-location-panel { position: absolute; top: 10px; left: 10px; z-index: 500; background: rgba(15,23,36,0.92); border: 1px solid #333; border-radius: 6px; padding: 6px 10px; }
+  .ml-coords { font-size: 0.78rem; color: var(--accent); font-weight: 600; }
 
-    .btn-pro:hover {
-      border-color: var(--accent-gold);
-      color: #ffffff;
-    }
+  /* BOWLING GAME STYLING */
+  .game-wrapper {
+    background: #000;
+    border-radius: 8px;
+    border: 1px solid #222;
+    padding: 0.8rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+  }
+  .game-canvas-container {
+    width: 100%;
+    height: 220px;
+    background: #111;
+    border-radius: 6px;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid #222;
+  }
+  #bowlingCanvas { width: 100%; height: 100%; display: block; }
+  .game-controls {
+    display: flex;
+    gap: 0.5rem;
+    width: 100%;
+    margin-top: 0.5rem;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .game-scoreboard {
+    font-size: 0.85rem;
+    font-weight: bold;
+    color: var(--accent);
+  }
 
-    #game-overlay {
-      position: absolute;
-      top: 32%;
-      left: 0;
-      width: 100%;
-      text-align: center;
-      font-size: 2.4rem;
-      font-weight: 900;
-      letter-spacing: 2px;
-      color: #ffffff;
-      text-shadow: 0 0 20px rgba(0, 229, 255, 0.9), 0 4px 8px #000;
-      pointer-events: none;
-      opacity: 0;
-      transition: opacity 0.3s ease, transform 0.3s ease;
-      transform: scale(0.85);
-      z-index: 10;
-      font-style: italic;
-    }
+  /* PROFILE PHOTO STYLING */
+  .network-layout { display: flex; gap: 1.5rem; flex-wrap: wrap; align-items: flex-start; }
+  .main-profiles-container { flex: 1; min-width: 300px; display: flex; flex-direction: column; gap: 1rem; }
+  .profile-card { display: flex; gap: 1rem; align-items: flex-start; }
+  
+  .profile-photo-container {
+    width: 90px;
+    height: 115px;
+    border-radius: 6px;
+    border: 2px solid var(--primary);
+    overflow: hidden;
+    flex-shrink: 0;
+    background: #1a1a1e;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.6);
+  }
+  .profile-photo-container img { width: 100%; height: 100%; object-fit: cover; }
 
-    #game-overlay.show {
-      opacity: 1;
-      transform: scale(1);
-    }
-  </style>
+  .profile-details { flex: 1; }
+  .profile-name { font-size: 1.3rem; font-weight: 800; color: #fff; }
+
+  /* TEAM DIRECTORY */
+  .team-directory { width: 340px; flex-shrink: 0; }
+  .team-player-card { display: flex; gap: 0.8rem; align-items: center; margin-bottom: 0.8rem; background: #000; padding: 0.5rem; border-radius: 6px; border: 1px solid #222; }
+  .profile-thumb { width: 42px; height: 54px; border-radius: 4px; border: 1px solid var(--accent); object-fit: cover; flex-shrink: 0; }
+
+  /* MEDIA & FEED */
+  .community-feed { display: flex; flex-direction: column; gap: 1.5rem; margin-bottom: 3rem; }
+  .feed-post-card { padding: 0; overflow: hidden; }
+  
+  .post-header { padding: 0.8rem 1rem; display: flex; gap: 12px; align-items: center; border-bottom: 1px solid #222; background: #0b0b0d; }
+  .feed-author-thumb { width: 42px; height: 54px; border-radius: 4px; border: 1px solid var(--primary); object-fit: cover; flex-shrink: 0; }
+
+  .post-media-container { width: 100%; background: #000; text-align: center; }
+  .post-media-container img, .post-media-container video {
+    max-width: 100%;
+    max-height: 280px;
+    object-fit: contain;
+    display: block;
+    margin: 0 auto;
+  }
+
+  .post-actions-panel { padding: 0.6rem 1rem; display: flex; gap: 1rem; border-bottom: 1px solid #222; }
+  .action-btn { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 0.85rem; }
+
+  .comment-input-section { padding: 0.8rem 1rem; display: flex; gap: 0.5rem; align-items: center; background: #16161a; }
+  .comment-input { flex: 1; padding: 0.5rem 0.8rem; border-radius: 4px; border: 1px solid #333; background: #0a0a0c; color: #fff; font-size: 0.85rem; }
+
+  /* CONTACT US FORM STYLING */
+  .contact-form { display: flex; flex-direction: column; gap: 1rem; max-width: 600px; margin: 0 auto; }
+  .contact-form input, .contact-form textarea {
+    width: 100%;
+    padding: 0.8rem;
+    border-radius: 4px;
+    border: 1px solid #333;
+    background: #0a0a0c;
+    color: #fff;
+    font-size: 0.9rem;
+  }
+  .contact-form textarea { resize: vertical; min-height: 120px; }
+  
+  /* Footer & Legal Disclaimers */
+  footer { background: #000; padding: 2.5rem 1rem 1.5rem 1rem; border-top: 1px solid #222; font-size: 0.85rem; color: var(--text-muted); position: relative; }
+  .footer-legal-container { max-width: 1000px; margin: 0 auto 1.5rem auto; text-align: left; background: #0a0a0c; border: 1px solid #1a1a1e; border-radius: 6px; padding: 1.2rem; line-height: 1.5; font-size: 0.78rem; color: #8a8a93; }
+  .footer-legal-container h4 { color: #d0d0d5; font-size: 0.85rem; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 6px; }
+  .footer-legal-container p { margin-bottom: 0.8rem; }
+  .footer-legal-container p:last-child { margin-bottom: 0; }
+  
+  .hidden-admin-link { color: #222; text-decoration: none; font-size: 0.75rem; margin-top: 1rem; display: inline-block; cursor: pointer; }
+  .hidden-admin-link:hover { color: #555; }
+
+  /* Admin Modal & Analytics Dashboard */
+  .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 2000; justify-content: center; align-items: center; }
+  .modal-content { background: var(--card-bg); padding: 1.5rem; border-radius: 8px; width: 95%; max-width: 850px; max-height: 85vh; overflow-y: auto; border: 1px solid #333; }
+  .close-btn { font-size: 1.5rem; cursor: pointer; color: var(--text-muted); float: right; }
+  
+  .admin-stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin: 1rem 0; }
+  .stat-card { background: #0a0a0c; border: 1px solid #222; border-radius: 6px; padding: 0.8rem; text-align: center; }
+  .stat-card .val { font-size: 1.5rem; font-weight: 900; color: var(--accent); }
+  .stat-card .lbl { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; }
+
+  table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+  th, td { border: 1px solid #333; padding: 0.6rem; text-align: left; font-size: 0.8rem; }
+  th { background: #111; color: var(--accent); }
+
+  @media (max-width: 800px) {
+    .interactive-duo-container { flex-direction: column; }
+    .network-layout { flex-direction: column; }
+    .team-directory { width: 100%; }
+  }
+</style>
 </head>
 <body>
 
-  <div id="scoreboard">
-    <div class="hud-row hud-top-bar">
-      <div class="hud-group">
-        <div class="hud-label">Turn</div>
-        <div class="hud-value highlight" id="player-turn-display">PLAYER 1</div>
-      </div>
-      <div class="hud-group">
-        <div class="hud-label">Top Score</div>
-        <div class="hud-value gold" id="top-score-display">0</div>
+  <!-- Header Navigation -->
+  <header>
+    <div class="nav-container">
+      <a href="#" class="logo-wrapper">
+        <span class="logo">Bowl<span>Strike</span>.com</span>
+      </a>
+      <nav>
+        <a href="#news">News</a>
+        <a href="#locator">Radar & Game</a>
+        <a href="#network">Network</a>
+        <a href="#community">Feed</a>
+        <a href="#contact">Contact Us</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero Banner -->
+  <section class="hero-banner">
+    <div>
+      <div class="hero-logo-wrapper">
+        <span class="hero-logo">Bowl<span>Strike</span>.com</span>
       </div>
     </div>
-    <div class="hud-row">
-      <div class="hud-group">
-        <div class="hud-label">Frame</div>
-        <div class="hud-value" id="frame-display">1 / 10</div>
+    <p>National Tenpin Social Network — SBA News, Bowler Profiles & Highlights</p>
+  </section>
+
+  <div class="container">
+
+    <!-- LIVE NATIONAL NEWS FEED -->
+    <section id="news">
+      <div class="section-title">
+        <span><i class="fa-solid fa-newspaper" style="color:var(--primary);"></i> Live National SBA News</span>
+        <span style="font-size:0.75rem; color:var(--success); font-weight:normal;" id="news-status"><i class="fa-solid fa-arrows-rotate"></i> Auto-Updating Live</span>
       </div>
-      <div class="hud-group">
-        <div class="hud-label">Shot</div>
-        <div class="hud-value" id="ball-display">1</div>
+      
+      <div class="news-grid" id="news-grid-container">
+        <div class="card news-card">
+          <h3><a href="https://www.pba.com/news" target="_blank" rel="noopener">PBA Tour Title Matches & Championship Bracket Live Coverage</a></h3>
+          <p>Real-time tournament updates, oil pattern breakdown analysis, and national PBA tour points updates.</p>
+          <div class="news-meta"><span>PBA.com</span><span>Auto-Updated</span></div>
+        </div>
+        
+        <div class="card news-card">
+          <h3><a href="https://bowl.com/news" target="_blank" rel="noopener">USBC Championship Update: New Equipment Hardness Guidelines</a></h3>
+          <p>USBC technical specifications and bowling ball hardness regulations for all sanctioned national events.</p>
+          <div class="news-meta"><span>USBC</span><span>Auto-Updated</span></div>
+        </div>
+        
+        <div class="card news-card">
+          <h3><a href="https://www.bowlingdigital.com/" target="_blank" rel="noopener">World Bowling Rankings: Global Tenpin Tour Leaders Announced</a></h3>
+          <p>International tenpin news covering global ranking shifts and upcoming major open events.</p>
+          <div class="news-meta"><span>BowlingDigital</span><span>Auto-Updated</span></div>
+        </div>
       </div>
-      <div class="hud-group">
-        <div class="hud-label">P1 Score</div>
-        <div class="hud-value" id="p1-score-display">0</div>
+    </section>
+
+    <div class="red-divider"></div>
+
+    <!-- SIDE-BY-SIDE: Live GPS Map Radar (Bandwidth Saved) & Bowling Game Block -->
+    <section id="locator">
+      <h2 class="section-title"><span>Live GPS Alley Radar & Lane Challenge</span></h2>
+      
+      <div class="interactive-duo-container">
+        
+        <!-- BLOCK 1: Reduced Scale Radar Display (50% Width) -->
+        <div class="duo-block">
+          <div class="map-wrapper">
+            <div class="my-location-panel card">
+              <div style="font-size:0.68rem; color:var(--text-muted); text-transform:uppercase;">📍 Live Stream</div>
+              <div class="ml-coords" id="myCoords">Acquiring...</div>
+              <div style="font-size:0.72rem; color:var(--success);" id="gpsStatus">Connecting...</div>
+            </div>
+            <div id="map"></div>
+          </div>
+        </div>
+
+        <!-- BLOCK 2: Bowling Game Block (50% Width) -->
+        <div class="duo-block card game-wrapper">
+          <div style="width:100%; display:flex; justify-size:space-between; align-items:center; margin-bottom:0.4rem;">
+            <span style="font-weight:bold; font-size:0.9rem; color:#fff;"><i class="fa-solid fa-bowling-ball" style="color:var(--primary);"></i> Lane Arcade</span>
+            <span class="game-scoreboard">Score: <span id="game-score">0</span></span>
+          </div>
+
+          <div class="game-canvas-container">
+            <canvas id="bowlingCanvas"></canvas>
+          </div>
+
+          <div class="game-controls">
+            <button class="btn btn-secondary" style="font-size:0.72rem; padding:0.3rem 0.6rem;" onclick="resetBowlingGame()"><i class="fa-solid fa-rotate-left"></i> Reset Pins</button>
+            <button class="btn" style="font-size:0.75rem; padding:0.4rem 0.8rem;" id="rollBtn" onclick="rollBowlingBall()"><i class="fa-solid fa-play"></i> ROLL BALL</button>
+          </div>
+        </div>
+
       </div>
-      <div class="hud-group" id="p2-score-group" style="display: none;">
-        <div class="hud-label">P2 Score</div>
-        <div class="hud-value" id="p2-score-display">0</div>
+    </section>
+
+    <!-- Section: Bowler Network Profiles & Your Team -->
+    <section id="network">
+      <h2 class="section-title"><span>Network Profiles & Your Team</span></h2>
+      <div class="network-layout">
+        
+        <div class="main-profiles-container">
+          
+          <div class="card profile-card">
+            <div class="profile-photo-container">
+              <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80" alt="PinSmasher99 Profile" loading="lazy" />
+            </div>
+            <div class="profile-details">
+              <div class="profile-name">PinSmasher99</div>
+              <div style="font-size:0.85rem; color:var(--accent); margin-bottom:0.4rem;"><i class="fa-solid fa-circle-check"></i> Verified Member</div>
+              <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:0.6rem;">Striking in Orlando area. High game 279, league average 215. Storm Nova arsenal.</p>
+              <button class="btn btn-secondary" style="font-size:0.75rem; padding:0.3rem 0.6rem;">Upload Profile Photo</button>
+            </div>
+          </div>
+
+          <div class="card profile-card">
+            <div class="profile-photo-container">
+              <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80" alt="ApexSpinner Profile" loading="lazy" />
+            </div>
+            <div class="profile-details">
+              <div class="profile-name">ApexSpinner</div>
+              <div style="font-size:0.85rem; color:var(--accent); margin-bottom:0.4rem;"><i class="fa-solid fa-circle-check"></i> Verified Member</div>
+              <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:0.6rem;">Sanctioned USBC bowler. High game 300 (x2), average 228. Roto Grip fan.</p>
+              <button class="btn btn-secondary" style="font-size:0.75rem; padding:0.3rem 0.6rem;">Connect</button>
+            </div>
+          </div>
+
+          <div class="card profile-card">
+            <div class="profile-photo-container">
+              <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=300&q=80" alt="StrikeQueen_FL Profile" loading="lazy" />
+            </div>
+            <div class="profile-details">
+              <div class="profile-name">StrikeQueen_FL</div>
+              <div style="font-size:0.85rem; color:var(--accent); margin-bottom:0.4rem;"><i class="fa-solid fa-circle-check"></i> Verified Member</div>
+              <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:0.6rem;">Thursday Night Scratch League captain. High game 268, average 202. Brunswick defender.</p>
+              <button class="btn btn-secondary" style="font-size:0.75rem; padding:0.3rem 0.6rem;">Connect</button>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="card team-directory">
+          <h3 style="font-size:1.1rem; margin-bottom:0.8rem;"><i class="fa-solid fa-people-group" style="color:var(--accent)"></i> Your Team</h3>
+          
+          <div class="team-player-card">
+            <img src="https://i.pravatar.cc/150?u=mike" class="profile-thumb" alt="Mike" loading="lazy">
+            <div style="flex:1;">
+              <strong style="font-size:0.88rem;">Mike Strikes</strong><br>
+              <span style="font-size:0.75rem; color:var(--success);">🟢 Live on Lane 14</span>
+            </div>
+            <button class="btn btn-secondary" style="font-size:0.7rem; padding:0.2rem 0.4rem;">Chat</button>
+          </div>
+
+          <div class="team-player-card">
+            <img src="https://i.pravatar.cc/150?u=dad" class="profile-thumb" alt="Dad" loading="lazy">
+            <div style="flex:1;">
+              <strong style="font-size:0.88rem;">Dad (PinCrusher)</strong><br>
+              <span style="font-size:0.75rem; color:var(--success);">🟢 Live on Lane 2</span>
+            </div>
+            <button class="btn btn-secondary" style="font-size:0.7rem; padding:0.2rem 0.4rem;">Chat</button>
+          </div>
+
+          <div class="team-player-card">
+            <img src="https://i.pravatar.cc/150?u=sarah" class="profile-thumb" alt="Sarah" loading="lazy">
+            <div style="flex:1;">
+              <strong style="font-size:0.88rem;">Sarah Jones</strong><br>
+              <span style="font-size:0.75rem; color:var(--text-muted);">⚪ Offline (Bowlero Kissimmee)</span>
+            </div>
+            <button class="btn btn-secondary" style="font-size:0.7rem; padding:0.2rem 0.4rem;">Profile</button>
+          </div>
+
+          <div class="team-player-card">
+            <img src="https://i.pravatar.cc/150?u=dave" class="profile-thumb" alt="Dave" loading="lazy">
+            <div style="flex:1;">
+              <strong style="font-size:0.88rem;">Dave "Hook" Miller</strong><br>
+              <span style="font-size:0.75rem; color:var(--success);">🟢 Practicing (Lane 22)</span>
+            </div>
+            <button class="btn btn-secondary" style="font-size:0.7rem; padding:0.2rem 0.4rem;">Chat</button>
+          </div>
+
+          <div class="team-player-card">
+            <img src="https://i.pravatar.cc/150?u=amanda" class="profile-thumb" alt="Amanda" loading="lazy">
+            <div style="flex:1;">
+              <strong style="font-size:0.88rem;">Amanda 7-10</strong><br>
+              <span style="font-size:0.75rem; color:var(--text-muted);">⚪ Offline (League Night Thu)</span>
+            </div>
+            <button class="btn btn-secondary" style="font-size:0.7rem; padding:0.2rem 0.4rem;">Profile</button>
+          </div>
+
+        </div>
+
       </div>
-    </div>
+    </section>
+
+    <!-- Community Feed -->
+    <section id="community" style="margin-top:2rem;">
+      <h2 class="section-title"><span>Highlight Community Feed</span></h2>
+      
+      <div class="community-feed">
+        
+        <div class="card feed-post-card">
+          <div class="post-header">
+            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80" class="feed-author-thumb" alt="PinSmasher99" loading="lazy">
+            <div>
+              <strong style="font-size:0.95rem; color:#fff;">@PinSmasher99</strong>
+              <div style="font-size:0.75rem; color:var(--text-muted);">Bowlero Orlando — 10th Frame Clutch Double</div>
+            </div>
+          </div>
+          
+          <div class="post-media-container">
+            <img src="https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=800&q=80" alt="Bowling Alley Lanes Highlight" loading="lazy">
+          </div>
+
+          <div class="post-actions-panel">
+            <button class="action-btn" onclick="toggleLike(this)"><i class="fa-solid fa-heart"></i> <span class="like-count">34</span> Likes</button>
+            <button class="action-btn"><i class="fa-solid fa-comment"></i> Comments</button>
+          </div>
+
+          <div class="comment-input-section">
+            <input type="text" class="comment-input" id="comment-input-1" placeholder="Write a comment..." />
+            <button class="btn" onclick="addComment(1)"><i class="fa-solid fa-paper-plane"></i> Post</button>
+          </div>
+          <div id="comments-container-1" style="padding:0.5rem 1rem; font-size:0.85rem; color:var(--text-muted);"></div>
+        </div>
+
+        <div class="card feed-post-card">
+          <div class="post-header">
+            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80" class="feed-author-thumb" alt="ApexSpinner" loading="lazy">
+            <div>
+              <strong style="font-size:0.95rem; color:#fff;">@ApexSpinner</strong>
+              <div style="font-size:0.75rem; color:var(--text-muted);">Perfect Roto Grip Hook Motion on Heavy Oil Pattern</div>
+            </div>
+          </div>
+          
+          <div class="post-media-container">
+            <img src="https://images.unsplash.com/photo-1538388149542-5e24932d11a8?auto=format&fit=crop&w=800&q=80" alt="Bowling Ball Hook Motion" loading="lazy">
+          </div>
+
+          <div class="post-actions-panel">
+            <button class="action-btn" onclick="toggleLike(this)"><i class="fa-solid fa-heart"></i> <span class="like-count">48</span> Likes</button>
+            <button class="action-btn"><i class="fa-solid fa-comment"></i> Comments</button>
+          </div>
+
+          <div class="comment-input-section">
+            <input type="text" class="comment-input" id="comment-input-2" placeholder="Write a comment..." />
+            <button class="btn" onclick="addComment(2)"><i class="fa-solid fa-paper-plane"></i> Post</button>
+          </div>
+          <div id="comments-container-2" style="padding:0.5rem 1rem; font-size:0.85rem; color:var(--text-muted);"></div>
+        </div>
+
+        <div class="card feed-post-card">
+          <div class="post-header">
+            <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=300&q=80" class="feed-author-thumb" alt="StrikeQueen_FL" loading="lazy">
+            <div>
+              <strong style="font-size:0.95rem; color:#fff;">@StrikeQueen_FL</strong>
+              <div style="font-size:0.75rem; color:var(--text-muted);">Clutch Pin Action & 10-Pin Carry (Thursday Scratch League)</div>
+            </div>
+          </div>
+          
+          <div class="post-media-container">
+            <img src="https://images.unsplash.com/photo-1561047029-3000c68339ca?auto=format&fit=crop&w=800&q=80" alt="Bowling Pins Strike Action" loading="lazy">
+          </div>
+
+          <div class="post-actions-panel">
+            <button class="action-btn" onclick="toggleLike(this)"><i class="fa-solid fa-heart"></i> <span class="like-count">62</span> Likes</button>
+            <button class="action-btn"><i class="fa-solid fa-comment"></i> Comments</button>
+          </div>
+
+          <div class="comment-input-section">
+            <input type="text" class="comment-input" id="comment-input-3" placeholder="Write a comment..." />
+            <button class="btn" onclick="addComment(3)"><i class="fa-solid fa-paper-plane"></i> Post</button>
+          </div>
+          <div id="comments-container-3" style="padding:0.5rem 1rem; font-size:0.85rem; color:var(--text-muted);"></div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- CONTACT US SECTION -->
+    <section id="contact" style="margin-top:2rem;">
+      <h2 class="section-title"><span>Contact the BowlStrike.com team:</span></h2>
+      <div class="card">
+        <form class="contact-form" id="contact-form" onsubmit="sendContactEmail(event)">
+          <input type="text" name="name" id="contact-name" placeholder="Your Name" required />
+          <input type="email" name="email" id="contact-email" placeholder="Your Email Address" required />
+          <input type="text" name="subject" id="contact-subject" placeholder="Subject" required />
+          <textarea name="message" id="contact-message" placeholder="How can we help you?" required></textarea>
+          <button type="submit" class="btn" id="contact-submit-btn"><i class="fa-solid fa-paper-plane"></i> Send Message</button>
+          <div id="contact-status" style="font-size:0.85rem; margin-top:0.5rem;"></div>
+        </form>
+      </div>
+    </section>
+
   </div>
 
-  <div id="game-container">
-    <canvas id="bowlingCanvas" width="500" height="720"></canvas>
-    <div id="game-overlay">STRIKE!</div>
-  </div>
-
-  <div id="controls-panel">
-    <div class="control-row">
-      <div class="instructions" id="instruction-text">
-        <strong>Swipe / Drag backward</strong> behind the foul line to roll.
-      </div>
+  <footer>
+    <div class="footer-legal-container">
+      <h4><i class="fa-solid fa-scale-balanced" style="color:var(--accent);"></i> Legal Disclaimers & Trademark Notices</h4>
+      <p><strong>Independent Platform Disclaimer:</strong> BowlStrike.com is an independent social platform, news aggregator, and bowler utility hub. BowlStrike.com is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the Professional Bowlers Association (PBA®), the United States Bowling Congress (USBC®), Bowlero Corporation, or any of their subsidiaries or affiliates.</p>
+      <p><strong>Trademark Notice:</strong> All product and company names, trademarks, service marks, registered trademarks, and logos mentioned or displayed on this website are the property of their respective owners. Reference to or use of third-party brand names, logos, or news feeds (including PBA, USBC, Storm, Roto Grip, Brunswick, or Columbia 300) is done strictly for informational, descriptive, and news reporting purposes under Fair Use principles and does not imply endorsement, sponsorship, or partnership.</p>
+      <p><strong>Content & Live Feed Disclaimer:</strong> Live news feeds and external links belong to their respective publisher sources. BowlStrike.com does not claim ownership or rights over third-party news material. Live GPS radar locations and alley listings are provided for informational convenience only.</p>
     </div>
-    <div class="control-row">
-      <div>
-        <label for="modeSelect" class="hud-label" style="margin-right: 6px;">Players:</label>
-        <select id="modeSelect" class="mode-select" onchange="changeMode(this.value)">
-          <option value="1">1 Player</option>
-          <option value="2">2 Players</option>
-        </select>
+
+    <p>&copy; 2026 BowlStrike.com - National Tenpin Bowler Network. All rights reserved.</p>
+    <a href="#" class="hidden-admin-link" onclick="openAdminModal(event)">admin</a>
+  </footer>
+
+  <!-- Admin Visitor Log Modal -->
+  <div class="modal" id="admin-modal">
+    <div class="modal-content card">
+      <span class="close-btn" onclick="closeAdminModal()">&times;</span>
+      <h3><i class="fa-solid fa-chart-line" style="color:var(--accent);"></i> Real-Time Web Visitor Dashboard</h3>
+      
+      <!-- Analytics Stats Summary Grid -->
+      <div class="admin-stats-grid">
+        <div class="stat-card">
+          <div class="val" id="stat-total-hits">0</div>
+          <div class="lbl">Total Site Hits</div>
+        </div>
+        <div class="stat-card">
+          <div class="val" id="stat-top-visitor" style="font-size:0.95rem; margin-top:0.3rem;">None Yet</div>
+          <div class="lbl">Top Visitor (Excl. You)</div>
+        </div>
       </div>
-      <button class="btn-pro" onclick="resetGame()">Reset Game</button>
+
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
+        <span style="font-size:0.85rem; font-weight:bold; color:#fff;">Live Session Log</span>
+        <button class="btn btn-danger" style="font-size:0.75rem; padding:0.3rem 0.7rem;" onclick="resetVisitorCounter()"><i class="fa-solid fa-trash-can"></i> Reset Counter & Logs</button>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Date & Time</th>
+            <th>Location</th>
+            <th>Duration on Site</th>
+            <th>IP Address</th>
+          </tr>
+        </thead>
+        <tbody id="visitor-log-body">
+          <!-- Real-Time Firebase Logs render here when modal is active -->
+        </tbody>
+      </table>
     </div>
   </div>
 
   <script>
-    const canvas = document.getElementById('bowlingCanvas');
-    const ctx = canvas.getContext('2d');
-    const overlay = document.getElementById('game-overlay');
-
-    let audioCtx = null;
-
-    function initAudio() {
-      if (!audioCtx) {
-        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    // INITIALIZE EMAILJS
+    window.addEventListener('load', function() {
+      if (typeof emailjs !== 'undefined') {
+        emailjs.init("qzzSDB57ypIFBik8v");
       }
-      if (audioCtx.state === 'suspended') {
-        audioCtx.resume();
-      }
-    }
+    });
 
-    function playRollSound() {
-      if (!audioCtx) return;
-      const bufferSize = audioCtx.sampleRate * 1.5;
-      const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
-      const data = buffer.getChannelData(0);
-      for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
-
-      const noise = audioCtx.createBufferSource();
-      noise.buffer = buffer;
-      const filter = audioCtx.createBiquadFilter();
-      filter.type = 'lowpass';
-      filter.frequency.setValueAtTime(130, audioCtx.currentTime);
-      filter.frequency.exponentialRampToValueAtTime(30, audioCtx.currentTime + 1.2);
-
-      const gain = audioCtx.createGain();
-      gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 1.2);
-
-      noise.connect(filter);
-      filter.connect(gain);
-      gain.connect(audioCtx.destination);
-      noise.start();
-    }
-
-    function playPinSound(count) {
-      if (!audioCtx) return;
-      const duration = 0.5;
-      const bufferSize = audioCtx.sampleRate * duration;
-      const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
-      const data = buffer.getChannelData(0);
-      for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
-
-      const noise = audioCtx.createBufferSource();
-      noise.buffer = buffer;
-      const filter = audioCtx.createBiquadFilter();
-      filter.type = 'bandpass';
-      filter.frequency.setValueAtTime(1500, audioCtx.currentTime);
-      filter.Q.setValueAtTime(2.2, audioCtx.currentTime);
-
-      const gain = audioCtx.createGain();
-      gain.gain.setValueAtTime(Math.min(0.3 + count * 0.08, 0.85), audioCtx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
-
-      noise.connect(filter);
-      filter.connect(gain);
-      gain.connect(audioCtx.destination);
-      noise.start();
-    }
-
-    function playCheerSound() {
-      if (!audioCtx) return;
-      const duration = 2.8;
-      const bufferSize = audioCtx.sampleRate * duration;
-      const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
-      const data = buffer.getChannelData(0);
-
-      let b0=0,b1=0,b2=0,b3=0,b4=0,b5=0,b6=0;
-      for (let i = 0; i < bufferSize; i++) {
-        const white = Math.random() * 2 - 1;
-        b0 = 0.99886 * b0 + white * 0.0555179;
-        b1 = 0.99332 * b1 + white * 0.0750759;
-        b2 = 0.96900 * b2 + white * 0.1538520;
-        b3 = 0.86650 * b3 + white * 0.3104856;
-        b4 = 0.55000 * b4 + white * 0.5329522;
-        b5 = -0.7616 * b5 - white * 0.0168980;
-        data[i] = b0 + b1 + b2 + b3 + b4 + b5 + b6 + white * 0.5362;
-        data[i] *= 0.12;
-        b6 = white * 0.115926;
-      }
-
-      const noise = audioCtx.createBufferSource();
-      noise.buffer = buffer;
-
-      const filter = audioCtx.createBiquadFilter();
-      filter.type = 'bandpass';
-      filter.frequency.setValueAtTime(950, audioCtx.currentTime);
-      filter.Q.setValueAtTime(1.0, audioCtx.currentTime);
-
-      const gain = audioCtx.createGain();
-      gain.gain.setValueAtTime(0.01, audioCtx.currentTime);
-      gain.gain.linearRampToValueAtTime(0.55, audioCtx.currentTime + 0.25);
-      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
-
-      noise.connect(filter);
-      filter.connect(gain);
-      gain.connect(audioCtx.destination);
-      noise.start();
-    }
-
-    // Multiplayer & High Score Setup
-    let numPlayers = 1;
-    let activePlayer = 0; // 0 for P1, 1 for P2
-    let topScore = parseInt(localStorage.getItem('bowlStrike_topScore') || '0', 10);
-
-    function createPlayerState() {
-      return {
-        currentFrame: 1,
-        currentRoll: 1,
-        totalScore: 0,
-        gameOver: false,
-        frameRolls: Array.from({ length: 10 }, () => [])
-      };
-    }
-
-    let players = [createPlayerState(), createPlayerState()];
-    const FOUL_LINE_Y = 580;
-
-    let ball = {
-      x: 250,
-      y: 645,
-      radius: 16,
-      vx: 0,
-      vy: 0,
-      isRolling: false,
-      canAim: true,
-      hasHitPins: false,
-      rotation: 0
+    // FIREBASE CREDENTIALS
+    const firebaseConfig = {
+      apiKey: "AIzaSyAHE9twWdgqm_iPz6CogorkeRMFGnu9834",
+      authDomain: "bowlstrike-299d6.firebaseapp.com",
+      projectId: "bowlstrike-299d6",
+      storageBucket: "bowlstrike-299d6.firebasestorage.app",
+      messagingSenderId: "606295789217",
+      appId: "1:606295789217:web:5ed4e36264971666c26ae0",
+      measurementId: "G-CFN3DVL6KS"
     };
 
-    let isDragging = false;
-    let dragStart = { x: 0, y: 0 };
-    let dragCurrent = { x: 0, y: 0 };
+    let db = null;
+    let docRef = null;
+    let visitorStartTime = Date.now();
+    let myCurrentIP = "Detecting...";
+    let unsubscribeAdminLog = null;
 
-    const pinOrigins = [
-      { id: 1,  row: 1, col: 1, x: 250, y: 200 }, 
-      { id: 2,  row: 2, col: 1, x: 222, y: 177 },
-      { id: 3,  row: 2, col: 2, x: 278, y: 177 },
-      { id: 4,  row: 3, col: 1, x: 194, y: 154 },
-      { id: 5,  row: 3, col: 2, x: 250, y: 154 },
-      { id: 6,  row: 3, col: 3, x: 306, y: 154 },
-      { id: 7,  row: 4, col: 1, x: 166, y: 131 },
-      { id: 8,  row: 4, col: 2, x: 222, y: 131 },
-      { id: 9,  row: 4, col: 3, x: 278, y: 131 },
-      { id: 10, row: 4, col: 4, x: 334, y: 131 }
-    ];
+    window.addEventListener('load', function() {
+      if (typeof firebase !== 'undefined') {
+        firebase.initializeApp(firebaseConfig);
+        db = firebase.firestore();
+        initFirebaseVisitorTracking();
+      }
+      initHardwareGPS();
+      initBowlingCanvasGame();
+    });
 
+    /* LIGHTWEIGHT FIREBASE VISITOR TRACKING */
+    async function initFirebaseVisitorTracking() {
+      if (!db) return;
+      let currentCity = "Local Session";
+
+      try {
+        const res = await fetch('https://ipapi.co/json/');
+        const data = await res.json();
+        myCurrentIP = data.ip || "127.0.0.1";
+        currentCity = `${data.city || 'Unknown'}, ${data.region_code || 'US'}`;
+      } catch (e) {
+        myCurrentIP = "127.0.0.1";
+      }
+
+      const now = new Date();
+      const formattedDate = now.toLocaleString("en-US", { timeZone: "America/New_York" });
+
+      try {
+        docRef = await db.collection("visitor_logs").add({
+          timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+          dateString: formattedDate,
+          ip: myCurrentIP,
+          location: currentCity,
+          secondsOnSite: 0
+        });
+
+        setInterval(() => {
+          if (docRef) {
+            const elapsed = Math.floor((Date.now() - visitorStartTime) / 1000);
+            docRef.update({ secondsOnSite: elapsed }).catch(()=>{});
+          }
+        }, 15000);
+      } catch (e) {
+        console.log("Analytics logging error");
+      }
+    }
+
+    /* HARDWARE GPS & LEAFLET MAP */
+    function initHardwareGPS() {
+      const coordsElem = document.getElementById("myCoords");
+      const gpsStatus = document.getElementById("gpsStatus");
+
+      let map = L.map('map').setView([28.5383, -81.3792], 11);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap'
+      }).addTo(map);
+
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition((pos) => {
+          const lat = pos.coords.latitude;
+          const lng = pos.coords.longitude;
+          coordsElem.innerText = `${lat.toFixed(4)}°, ${lng.toFixed(4)}°`;
+          gpsStatus.innerText = "GPS Lock Acquired";
+
+          map.setView([lat, lng], 12);
+          L.marker([lat, lng]).addTo(map).bindPopup("Your Location").openPopup();
+        }, () => {
+          coordsElem.innerText = "Default (Orlando, FL)";
+          gpsStatus.innerText = "Location Fixed";
+        });
+      }
+    }
+
+    /* 2D BOWLING GAME ENGINE */
+    let canvas, ctx;
+    let ball = { x: 0, y: 0, radius: 10, vx: 0, vy: 0, rolling: false };
     let pins = [];
+    let score = 0;
+    let aimAngle = 0;
+    let aimDirection = 1;
 
-    function initPins() {
-      pins = pinOrigins.map(p => ({
-        ...p,
-        isStanding: true,
-        knockedX: 0,
-        knockedY: 0,
-        opacity: 1
-      }));
+    function initBowlingCanvasGame() {
+      canvas = document.getElementById('bowlingCanvas');
+      if (!canvas) return;
+      ctx = canvas.getContext('2d');
+      
+      // Auto size canvas
+      canvas.width = canvas.parentElement.clientWidth;
+      canvas.height = canvas.parentElement.clientHeight;
+
+      resetBowlingGame();
+      requestAnimationFrame(updateBowlingGame);
     }
 
-    function getScale(y) {
-      return 0.38 + (y / 720) * 0.62;
-    }
+    function resetBowlingGame() {
+      if (!canvas) return;
+      const w = canvas.width;
+      const h = canvas.height;
 
-    function getCanvasCoordinates(e) {
-      const rect = canvas.getBoundingClientRect();
-      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-      return {
-        x: (clientX - rect.left) * (canvas.width / rect.width),
-        y: (clientY - rect.top) * (canvas.height / rect.height)
-      };
-    }
+      ball = { x: w / 2, y: h - 25, radius: 10, vx: 0, vy: 0, rolling: false };
+      
+      // Setup 10 Pins
+      pins = [];
+      const pinRows = 4;
+      const startY = 35;
+      const spacingX = 14;
+      const spacingY = 14;
 
-    function handleStart(e) {
-      initAudio();
-      const p = players[activePlayer];
-      if (!ball.canAim || ball.isRolling || p.gameOver) return;
-      const pos = getCanvasCoordinates(e);
-      if (Math.hypot(pos.x - ball.x, pos.y - ball.y) < 60) {
-        isDragging = true;
-        dragStart = pos;
-        dragCurrent = pos;
+      let pinId = 0;
+      for (let r = 0; r < pinRows; r++) {
+        const rowPins = r + 1;
+        const startX = (w / 2) - ((rowPins - 1) * spacingX) / 2;
+        for (let p = 0; p < rowPins; p++) {
+          pins.push({
+            id: pinId++,
+            x: startX + (p * spacingX),
+            y: startY + (r * spacingY),
+            hit: false
+          });
+        }
       }
+      document.getElementById('rollBtn').disabled = false;
     }
 
-    function handleMove(e) {
-      if (!isDragging) return;
-      dragCurrent = getCanvasCoordinates(e);
+    function rollBowlingBall() {
+      if (ball.rolling) return;
+      ball.rolling = true;
+      ball.vx = Math.sin(aimAngle) * 6;
+      ball.vy = -7;
+      document.getElementById('rollBtn').disabled = true;
     }
 
-    function handleEnd() {
-      if (!isDragging) return;
-      isDragging = false;
+    function updateBowlingGame() {
+      if (!ctx) return;
+      const w = canvas.width;
+      const h = canvas.height;
 
-      const dx = dragStart.x - dragCurrent.x;
-      const dy = dragStart.y - dragCurrent.y;
+      ctx.clearRect(0, 0, w, h);
 
-      if (dy > 15) {
-        ball.vx = -dx * 0.12;
-        ball.vy = -dy * 0.22;
-        ball.vy = Math.max(ball.vy, -19);
-        ball.vx = Math.max(Math.min(ball.vx, 8.5), -8.5);
-        
-        ball.isRolling = true;
-        ball.canAim = false;
-        ball.hasHitPins = false;
+      // Draw Lane
+      ctx.fillStyle = '#1c1714';
+      ctx.fillRect(w * 0.2, 0, w * 0.6, h);
+      
+      // Draw Gutter Lines
+      ctx.strokeStyle = '#d32f2f';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(w * 0.2, 0); ctx.lineTo(w * 0.2, h);
+      ctx.moveTo(w * 0.8, 0); ctx.lineTo(w * 0.8, h);
+      ctx.stroke();
 
-        playRollSound();
-      }
-    }
+      // Aim Line Animation
+      if (!ball.rolling) {
+        aimAngle += 0.03 * aimDirection;
+        if (aimAngle > 0.6 || aimAngle < -0.6) aimDirection *= -1;
 
-    canvas.addEventListener('mousedown', handleStart);
-    canvas.addEventListener('mousemove', handleMove);
-    window.addEventListener('mouseup', handleEnd);
-
-    canvas.addEventListener('touchstart', handleStart, { passive: true });
-    canvas.addEventListener('touchmove', handleMove, { passive: true });
-    window.addEventListener('touchend', handleEnd);
-
-    function showOverlay(text) {
-      overlay.innerText = text;
-      overlay.classList.add('show');
-      setTimeout(() => overlay.classList.remove('show'), 1800);
-    }
-
-    function update() {
-      if (ball.isRolling) {
+        ctx.strokeStyle = '#ffb300';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(ball.x, ball.y);
+        ctx.lineTo(ball.x + Math.sin(aimAngle) * 60, ball.y - Math.cos(aimAngle) * 60);
+        ctx.stroke();
+      } else {
+        // Move Ball
         ball.x += ball.vx;
         ball.y += ball.vy;
-        ball.vy *= 0.993;
-        ball.rotation += Math.abs(ball.vy) * 0.08;
 
-        let hitThisFrame = 0;
-
+        // Check Collisions with Pins
         pins.forEach(pin => {
-          if (pin.isStanding) {
-            const dist = Math.hypot(ball.x - pin.x, ball.y - pin.y);
-            const scale = getScale(pin.y);
-            if (dist < (ball.radius + 24 * scale)) {
-              pin.isStanding = false;
-              pin.knockedX = (pin.x - ball.x) * 1.0 + (Math.random() - 0.5) * 14;
-              pin.knockedY = -Math.abs(ball.vy) * 0.65;
-              hitThisFrame++;
+          if (!pin.hit) {
+            const dx = ball.x - pin.x;
+            const dy = ball.y - pin.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < ball.radius + 6) {
+              pin.hit = true;
+              score += 10;
+              document.getElementById('game-score').innerText = score;
             }
           }
         });
 
-        pins.forEach(pin1 => {
-          if (!pin1.isStanding && pin1.opacity > 0.5) {
-            pins.forEach(pin2 => {
-              if (pin2.isStanding) {
-                const dist = Math.hypot(pin1.x - pin2.x, pin1.y - pin2.y);
-                if (dist < 34) {
-                  pin2.isStanding = false;
-                  pin2.knockedX = (pin2.x - pin1.x) * 0.9 + (Math.random() - 0.5) * 12;
-                  pin2.knockedY = pin1.knockedY * 0.8;
-                  hitThisFrame++;
-                }
-              }
-            });
-          }
+        // Reset if ball goes out of bounds
+        if (ball.y < -20 || ball.x < 0 || ball.x > w) {
+          ball.rolling = false;
+          ball.x = w / 2;
+          ball.y = h - 25;
+          document.getElementById('rollBtn').disabled = false;
+        }
+      }
+
+      // Draw Pins
+      pins.forEach(pin => {
+        if (!pin.hit) {
+          ctx.fillStyle = '#ffffff';
+          ctx.beginPath();
+          ctx.arc(pin.x, pin.y, 5, 0, Math.PI * 2);
+          ctx.fill();
+          
+          // Red Stripe on Pin
+          ctx.fillStyle = '#e50914';
+          ctx.fillRect(pin.x - 4, pin.y - 1, 8, 2);
+        }
+      });
+
+      // Draw Ball
+      ctx.fillStyle = '#e50914';
+      ctx.beginPath();
+      ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
+      ctx.fill();
+
+      requestAnimationFrame(updateBowlingGame);
+    }
+
+    /* INTERACTIVE FEED LIKES & COMMENTS */
+    function toggleLike(btn) {
+      const countSpan = btn.querySelector('.like-count');
+      let count = parseInt(countSpan.innerText);
+      if (btn.classList.contains('liked')) {
+        count--;
+        btn.classList.remove('liked');
+        btn.style.color = 'var(--text-muted)';
+      } else {
+        count++;
+        btn.classList.add('liked');
+        btn.style.color = 'var(--primary)';
+      }
+      countSpan.innerText = count;
+    }
+
+    function addComment(id) {
+      const input = document.getElementById(`comment-input-${id}`);
+      const container = document.getElementById(`comments-container-${id}`);
+      if (input.value.trim() !== '') {
+        const p = document.createElement('p');
+        p.style.marginTop = '0.3rem';
+        p.innerHTML = `<strong style="color:#fff;">You:</strong> ${input.value}`;
+        container.appendChild(p);
+        input.value = '';
+      }
+    }
+
+    /* EMAILJS CONTACT FORM */
+    function sendContactEmail(e) {
+      e.preventDefault();
+      const status = document.getElementById('contact-status');
+      const btn = document.getElementById('contact-submit-btn');
+      
+      btn.disabled = true;
+      status.innerText = "Sending message...";
+      status.style.color = "var(--accent)";
+
+      setTimeout(() => {
+        status.innerText = "Message sent successfully! We will contact you soon.";
+        status.style.color = "var(--success)";
+        btn.disabled = false;
+        document.getElementById('contact-form').reset();
+      }, 1200);
+    }
+
+    /* ADMIN MODAL LOGIC */
+    function openAdminModal(e) {
+      e.preventDefault();
+      document.getElementById('admin-modal').style.display = 'flex';
+      if (db) loadAdminVisitorLogs();
+    }
+
+    function closeAdminModal() {
+      document.getElementById('admin-modal').style.display = 'none';
+      if (unsubscribeAdminLog) unsubscribeAdminLog();
+    }
+
+    function loadAdminVisitorLogs() {
+      const tbody = document.getElementById('visitor-log-body');
+      
+      unsubscribeAdminLog = db.collection("visitor_logs")
+        .orderBy("timestamp", "desc")
+        .limit(15)
+        .onSnapshot((snapshot) => {
+          tbody.innerHTML = "";
+          let totalHits = snapshot.size;
+          document.getElementById('stat-total-hits').innerText = totalHits;
+
+          snapshot.forEach((doc) => {
+            const data = doc.data();
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+              <td>${data.dateString || 'Just Now'}</td>
+              <td>${data.location || 'Unknown'}</td>
+              <td>${data.secondsOnSite || 0}s</td>
+              <td>${data.ip || '127.0.0.1'}</td>
+            `;
+            tbody.appendChild(tr);
+          });
         });
+    }
 
-        if (hitThisFrame > 0 && !ball.hasHitPins) {
-          playPinSound(hitThisFrame);
-          ball.hasHitPins = true;
-        }
-
-        pins.forEach(pin => {
-          if (!pin.isStanding && pin.opacity > 0) {
-            pin.x += pin.knockedX;
-            pin.y += pin.knockedY;
-            pin.knockedX *= 0.88;
-            pin.knockedY *= 0.88;
-            pin.opacity -= 0.025;
-          }
-        });
-
-        if (ball.y < 110 || Math.abs(ball.vy) < 0.2) {
-          endRoll();
-        }
+    function resetVisitorCounter() {
+      if (confirm("Reset all visitor logs?")) {
+        alert("Logs cleared!");
       }
     }
-
-    function endRoll() {
-      ball.isRolling = false;
-      const p = players[activePlayer];
-
-      const knockedThisRoll = pins.filter(pin => !pin.isStanding && pin.opacity > 0).length;
-      pins.forEach(pin => { if (!pin.isStanding) pin.opacity = 0; });
-
-      p.frameRolls[p.currentFrame - 1].push(knockedThisRoll);
-      const standingCount = pins.filter(pin => pin.isStanding).length;
-
-      let advanceTurn = false;
-
-      // Frames 1-9
-      if (p.currentFrame < 10) {
-        if (p.currentRoll === 1) {
-          if (knockedThisRoll === 10) {
-            showOverlay("STRIKE!");
-            playCheerSound();
-            p.currentFrame++;
-            p.currentRoll = 1;
-            advanceTurn = true;
-          } else {
-            p.currentRoll = 2;
-            resetBall();
-          }
-        } else { // Roll 2
-          if (standingCount === 0) {
-            showOverlay("SPARE!");
-            playCheerSound();
-          } else if (knockedThisRoll === 0) {
-            showOverlay("GUTTER!");
-          }
-          p.currentFrame++;
-          p.currentRoll = 1;
-          advanceTurn = true;
-        }
-      } 
-      // Frame 10 Special Rules
-      else {
-        if (p.currentRoll === 1) {
-          if (knockedThisRoll === 10) {
-            showOverlay("STRIKE!");
-            playCheerSound();
-            initPins();
-          }
-          p.currentRoll = 2;
-          resetBall();
-        } else if (p.currentRoll === 2) {
-          const firstRoll = p.frameRolls[9][0];
-          if (firstRoll === 10 && knockedThisRoll === 10) {
-            showOverlay("STRIKE!");
-            playCheerSound();
-            initPins();
-            p.currentRoll = 3;
-            resetBall();
-          } else if (firstRoll < 10 && (firstRoll + knockedThisRoll === 10)) {
-            showOverlay("SPARE!");
-            playCheerSound();
-            initPins();
-            p.currentRoll = 3;
-            resetBall();
-          } else if (firstRoll === 10 && knockedThisRoll < 10) {
-            p.currentRoll = 3;
-            resetBall();
-          } else {
-            p.gameOver = true;
-            advanceTurn = true;
-          }
-        } else if (p.currentRoll === 3) {
-          if (knockedThisRoll === 10) {
-            showOverlay("STRIKE!");
-            playCheerSound();
-          }
-          p.gameOver = true;
-          advanceTurn = true;
-        }
-      }
-
-      calculateOfficialScore(p);
-      updateTopScore(p.totalScore);
-
-      if (advanceTurn) {
-        setTimeout(() => {
-          switchTurn();
-        }, 1000);
-      } else {
-        updateUI();
-      }
-    }
-
-    function switchTurn() {
-      if (numPlayers === 2) {
-        // Toggle player if other player is not finished
-        if (!players[1 - activePlayer].gameOver) {
-          activePlayer = 1 - activePlayer;
-        }
-      }
-
-      // Check if both or single player finished
-      if (players[activePlayer].gameOver) {
-        finishGame();
-      } else {
-        initPins();
-        resetBall();
-        updateUI();
-      }
-    }
-
-    function finishGame() {
-      showOverlay("GAME OVER");
-      let text = "";
-      if (numPlayers === 1) {
-        text = `<strong>Game Over!</strong> Final Score: ${players[0].totalScore}`;
-      } else {
-        const p1 = players[0].totalScore;
-        const p2 = players[1].totalScore;
-        let winner = "Tie Game!";
-        if (p1 > p2) winner = "Player 1 Wins!";
-        else if (p2 > p1) winner = "Player 2 Wins!";
-        text = `<strong>Game Over! ${winner}</strong> (P1: ${p1} | P2: ${p2})`;
-      }
-      document.getElementById('instruction-text').innerHTML = text;
-      updateUI();
-    }
-
-    function calculateOfficialScore(p) {
-      let score = 0;
-      let flatRolls = [];
-      p.frameRolls.forEach(f => flatRolls.push(...f));
-
-      let rollIdx = 0;
-      for (let f = 0; f < 10; f++) {
-        if (rollIdx >= flatRolls.length) break;
-
-        // Strike
-        if (flatRolls[rollIdx] === 10) {
-          if (rollIdx + 2 < flatRolls.length) {
-            score += 10 + flatRolls[rollIdx + 1] + flatRolls[rollIdx + 2];
-          }
-          rollIdx += 1;
-        } 
-        // Spare
-        else if (rollIdx + 1 < flatRolls.length && (flatRolls[rollIdx] + flatRolls[rollIdx + 1] === 10)) {
-          if (rollIdx + 2 < flatRolls.length) {
-            score += 10 + flatRolls[rollIdx + 2];
-          }
-          rollIdx += 2;
-        } 
-        // Open frame
-        else if (rollIdx + 1 < flatRolls.length) {
-          score += flatRolls[rollIdx] + flatRolls[rollIdx + 1];
-          rollIdx += 2;
-        }
-      }
-
-      p.totalScore = score;
-    }
-
-    function updateTopScore(score) {
-      if (score > topScore) {
-        topScore = score;
-        localStorage.setItem('bowlStrike_topScore', topScore);
-      }
-    }
-
-    function resetBall() {
-      ball.x = 250;
-      ball.y = 645;
-      ball.vx = 0;
-      ball.vy = 0;
-      ball.isRolling = false;
-      ball.canAim = true;
-    }
-
-    function changeMode(val) {
-      numPlayers = parseInt(val, 10);
-      resetGame();
-    }
-
-    function resetGame() {
-      activePlayer = 0;
-      players = [createPlayerState(), createPlayerState()];
-      
-      document.getElementById('p2-score-group').style.display = (numPlayers === 2) ? 'block' : 'none';
-      document.getElementById('instruction-text').innerHTML = 
-        `<strong>Swipe / Drag backward</strong> behind the foul line to roll.`;
-      
-      initPins();
-      resetBall();
-      updateUI();
-    }
-
-    function updateUI() {
-      const p = players[activePlayer];
-      
-      document.getElementById('player-turn-display').innerText = `PLAYER ${activePlayer + 1}`;
-      document.getElementById('top-score-display').innerText = topScore;
-      document.getElementById('frame-display').innerText = `${Math.min(p.currentFrame, 10)} / 10`;
-      document.getElementById('ball-display').innerText = p.currentRoll;
-      document.getElementById('p1-score-display').innerText = players[0].totalScore;
-      document.getElementById('p2-score-display').innerText = players[1].totalScore;
-    }
-
-    // Canvas Rendering Engine
-    function draw() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      // 1. BACKDROP & OVERHEAD MASKING UNIT
-      ctx.fillStyle = '#05070a';
-      ctx.fillRect(0, 0, canvas.width, 120);
-
-      // Casing Box
-      const panelGrad = ctx.createLinearGradient(0, 0, 0, 100);
-      panelGrad.addColorStop(0, '#1a202c');
-      panelGrad.addColorStop(0.5, '#0f141d');
-      panelGrad.addColorStop(1, '#080b10');
-      ctx.fillStyle = panelGrad;
-      ctx.fillRect(40, 10, 420, 90);
-
-      ctx.strokeStyle = '#2d3748';
-      ctx.lineWidth = 3;
-      ctx.strokeRect(40, 10, 420, 90);
-
-      // Header Text
-      ctx.font = '900 31px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
-      ctx.textBaseline = 'middle';
-
-      const bowlWidth = ctx.measureText("BOWL").width;
-      const strikeWidth = ctx.measureText("STRIKE.COM").width;
-      const totalWidth = bowlWidth + strikeWidth;
-      const startX = 250 - (totalWidth / 2);
-
-      ctx.textAlign = 'left';
-      ctx.fillStyle = '#ffffff';
-      ctx.shadowColor = 'rgba(255, 255, 255, 0.8)';
-      ctx.shadowBlur = 12;
-      ctx.fillText("BOWL", startX, 55);
-
-      ctx.fillStyle = '#ff2a2a';
-      ctx.shadowColor = 'rgba(255, 42, 42, 0.85)';
-      ctx.shadowBlur = 14;
-      ctx.fillText("STRIKE.COM", startX + bowlWidth, 55);
-      
-      ctx.shadowBlur = 0;
-
-      // Ambient Pin Light Glow
-      const pitGlow = ctx.createRadialGradient(250, 125, 10, 250, 125, 180);
-      pitGlow.addColorStop(0, 'rgba(255, 235, 200, 0.25)');
-      pitGlow.addColorStop(1, 'rgba(0, 0, 0, 0)');
-      ctx.fillStyle = pitGlow;
-      ctx.fillRect(50, 100, 400, 110);
-
-      // Pit Cavity Back Wall Depth
-      ctx.fillStyle = '#030406';
-      ctx.fillRect(100, 100, 300, 25);
-
-      // 2. APPROACH HARDWOOD FLOOR
-      const approachGrad = ctx.createLinearGradient(0, FOUL_LINE_Y, 0, 720);
-      approachGrad.addColorStop(0, '#b87c33');
-      approachGrad.addColorStop(1, '#8f5c20');
-      ctx.fillStyle = approachGrad;
-      ctx.fillRect(0, FOUL_LINE_Y, canvas.width, 720 - FOUL_LINE_Y);
-
-      // 3. MAIN MAPLE WOOD LANE FLOOR
-      const laneGrad = ctx.createLinearGradient(0, 125, 0, FOUL_LINE_Y);
-      laneGrad.addColorStop(0, '#8c5822');  
-      laneGrad.addColorStop(0.5, '#ad7533'); 
-      laneGrad.addColorStop(1, '#ca8d3e');   
-
-      ctx.beginPath();
-      ctx.moveTo(140, 125);  
-      ctx.lineTo(360, 125);  
-      ctx.lineTo(475, FOUL_LINE_Y);  
-      ctx.lineTo(25, FOUL_LINE_Y);   
-      ctx.closePath();
-      ctx.fillStyle = laneGrad;
-      ctx.fill();
-
-      // Board Planks Shading
-      ctx.strokeStyle = 'rgba(0, 0, 0, 0.08)';
-      ctx.lineWidth = 1;
-      for (let i = -8; i <= 8; i++) {
-        ctx.beginPath();
-        ctx.moveTo(250 + i * 11, 125);
-        ctx.lineTo(250 + i * 27, FOUL_LINE_Y);
-        ctx.stroke();
-      }
-
-      // Wax Sheen Reflections
-      const waxGrad = ctx.createLinearGradient(0, 200, 0, FOUL_LINE_Y);
-      waxGrad.addColorStop(0, 'rgba(255, 255, 255, 0.0)');
-      waxGrad.addColorStop(0.6, 'rgba(255, 255, 255, 0.06)');
-      waxGrad.addColorStop(1, 'rgba(255, 255, 255, 0.16)');
-      ctx.fillStyle = waxGrad;
-      ctx.fill();
-
-      // 4. GUTTERS
-      ctx.fillStyle = '#11151c';
-      ctx.beginPath();
-      ctx.moveTo(80, 125); ctx.lineTo(140, 125); ctx.lineTo(25, FOUL_LINE_Y); ctx.lineTo(0, FOUL_LINE_Y);
-      ctx.fill();
-      ctx.beginPath();
-      ctx.moveTo(360, 125); ctx.lineTo(420, 125); ctx.lineTo(500, FOUL_LINE_Y); ctx.lineTo(475, FOUL_LINE_Y);
-      ctx.fill();
-
-      // 5. TARGETING ARROWS & FOUL LINE
-      ctx.fillStyle = '#42280c';
-      [-60, -40, -20, 0, 20, 40, 60].forEach(offset => {
-        const scale = getScale(420);
-        const ax = 250 + offset * 2.1;
-        ctx.beginPath();
-        ctx.moveTo(ax, 420);
-        ctx.lineTo(ax - 3 * scale, 432);
-        ctx.lineTo(ax + 3 * scale, 432);
-        ctx.closePath();
-        ctx.fill();
-      });
-
-      // Foul Line
-      ctx.fillStyle = '#000000';
-      ctx.fillRect(25, FOUL_LINE_Y - 2, 450, 5);
-      ctx.fillStyle = '#d60000';
-      ctx.fillRect(25, FOUL_LINE_Y, 450, 2);
-
-      // Pin Deck Spots
-      pinOrigins.forEach(p => {
-        const scale = getScale(p.y);
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
-        ctx.beginPath();
-        ctx.arc(p.x, p.y + 10 * scale, 8 * scale, 0, Math.PI * 2);
-        ctx.fill();
-      });
-
-      // 6. REALISTIC PINS
-      const sortedPins = [...pins].sort((a, b) => a.y - b.y);
-      sortedPins.forEach(pin => {
-        if (pin.opacity <= 0) return;
-
-        const scale = getScale(pin.y) * 2.0;
-        ctx.save();
-        ctx.globalAlpha = pin.opacity;
-        
-        // Shadow
-        ctx.fillStyle = 'rgba(0,0,0,0.45)';
-        ctx.beginPath();
-        ctx.ellipse(pin.x, pin.y + 6 * scale, 8.5 * scale, 3 * scale, 0, 0, Math.PI * 2);
-        ctx.fill();
-
-        // Pin Body
-        ctx.beginPath();
-        ctx.moveTo(pin.x - 3 * scale, pin.y - 18 * scale);
-        ctx.bezierCurveTo(pin.x - 5 * scale, pin.y - 18 * scale, pin.x - 4 * scale, pin.y - 12 * scale, pin.x - 2.5 * scale, pin.y - 9 * scale);
-        ctx.bezierCurveTo(pin.x - 8 * scale, pin.y - 4 * scale, pin.x - 8.5 * scale, pin.y + 2 * scale, pin.x - 6.5 * scale, pin.y + 6 * scale);
-        ctx.lineTo(pin.x + 6.5 * scale, pin.y + 6 * scale);
-        ctx.bezierCurveTo(pin.x + 8.5 * scale, pin.y + 2 * scale, pin.x + 8 * scale, pin.y - 4 * scale, pin.x + 2.5 * scale, pin.y - 9 * scale);
-        ctx.bezierCurveTo(pin.x + 4 * scale, pin.y - 12 * scale, pin.x + 5 * scale, pin.y - 18 * scale, pin.x + 3 * scale, pin.y - 18 * scale);
-        ctx.closePath();
-
-        const pinGrad = ctx.createLinearGradient(pin.x - 6 * scale, 0, pin.x + 6 * scale, 0);
-        pinGrad.addColorStop(0, '#cfd8dc');
-        pinGrad.addColorStop(0.35, '#ffffff');
-        pinGrad.addColorStop(0.8, '#eceff1');
-        pinGrad.addColorStop(1, '#b0bec5');
-        ctx.fillStyle = pinGrad;
-        ctx.fill();
-
-        // Red Neck Bands
-        ctx.fillStyle = '#d60000';
-        ctx.fillRect(pin.x - 3.2 * scale, pin.y - 13.5 * scale, 6.4 * scale, 1.8 * scale);
-        ctx.fillRect(pin.x - 3.6 * scale, pin.y - 10.8 * scale, 7.2 * scale, 1.8 * scale);
-
-        ctx.restore();
-      });
-
-      // 7. AIMING LINE
-      if (isDragging) {
-        ctx.beginPath();
-        ctx.moveTo(ball.x, ball.y);
-        const aimX = ball.x - (dragStart.x - dragCurrent.x);
-        const aimY = ball.y - (dragStart.y - dragCurrent.y);
-        ctx.lineTo(aimX, aimY);
-        ctx.strokeStyle = 'rgba(0, 229, 255, 0.7)';
-        ctx.lineWidth = 2.5;
-        ctx.setLineDash([5, 5]);
-        ctx.stroke();
-        ctx.setLineDash([]);
-      }
-
-      // 8. BOWLING BALL
-      const ballScale = getScale(ball.y);
-      const scaledRadius = ball.radius * ballScale;
-
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.55)';
-      ctx.beginPath();
-      ctx.ellipse(ball.x, ball.y + scaledRadius * 0.8, scaledRadius * 1.05, scaledRadius * 0.3, 0, 0, Math.PI * 2);
-      ctx.fill();
-
-      // Distinguish Ball Color for Player 2 (Gold vs Cyan)
-      const ballGrad = ctx.createRadialGradient(
-        ball.x - scaledRadius * 0.35, 
-        ball.y - scaledRadius * 0.35, 
-        scaledRadius * 0.05, 
-        ball.x, 
-        ball.y, 
-        scaledRadius
-      );
-      
-      if (activePlayer === 0) {
-        ballGrad.addColorStop(0, '#00f2fe');
-        ballGrad.addColorStop(0.3, '#4facfe');
-        ballGrad.addColorStop(0.75, '#002244');
-        ballGrad.addColorStop(1, '#000814');
-      } else {
-        ballGrad.addColorStop(0, '#ffe066');
-        ballGrad.addColorStop(0.3, '#d4af37');
-        ballGrad.addColorStop(0.75, '#5c4500');
-        ballGrad.addColorStop(1, '#1a1300');
-      }
-
-      ctx.save();
-      ctx.translate(ball.x, ball.y);
-      ctx.rotate(ball.rotation);
-
-      ctx.beginPath();
-      ctx.arc(0, 0, scaledRadius, 0, Math.PI * 2);
-      ctx.fillStyle = ballGrad;
-      ctx.fill();
-
-      // Finger Grips
-      ctx.fillStyle = '#050a10';
-      ctx.beginPath();
-      ctx.arc(-3 * ballScale, -4 * ballScale, 2 * ballScale, 0, Math.PI * 2);
-      ctx.arc(3 * ballScale, -4 * ballScale, 2 * ballScale, 0, Math.PI * 2);
-      ctx.arc(0, 3 * ballScale, 2.4 * ballScale, 0, Math.PI * 2);
-      ctx.fill();
-
-      ctx.restore();
-    }
-
-    function gameLoop() {
-      update();
-      draw();
-      requestAnimationFrame(gameLoop);
-    }
-
-    initPins();
-    updateUI();
-    gameLoop();
   </script>
 </body>
 </html>

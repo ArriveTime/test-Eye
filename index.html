@@ -319,6 +319,72 @@
       osc.stop(audioCtx.currentTime + 0.12);
     }
 
+    // AUDIENCE CHEER / APPLAUSE SYNTHESIZER FOR STRIKES
+    function playCheerSound() {
+      if (!audioCtx) return;
+
+      const duration = 2.5;
+      const bufferSize = audioCtx.sampleRate * duration;
+      const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+      const data = buffer.getChannelData(0);
+
+      // Pink noise-based applause texture
+      let b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0, b5 = 0, b6 = 0;
+      for (let i = 0; i < bufferSize; i++) {
+        const white = Math.random() * 2 - 1;
+        b0 = 0.99886 * b0 + white * 0.0555179;
+        b1 = 0.99332 * b1 + white * 0.0750759;
+        b2 = 0.96900 * b2 + white * 0.1538520;
+        b3 = 0.86650 * b3 + white * 0.3104856;
+        b4 = 0.55000 * b4 + white * 0.5329522;
+        b5 = -0.7616 * b5 - white * 0.0168980;
+        data[i] = b0 + b1 + b2 + b3 + b4 + b5 + b6 + white * 0.5362;
+        data[i] *= 0.11;
+        b6 = white * 0.115926;
+      }
+
+      const crowdNoise = audioCtx.createBufferSource();
+      crowdNoise.buffer = buffer;
+
+      // Bandpass filter to simulate crowd vocal resonance
+      const crowdFilter = audioCtx.createBiquadFilter();
+      crowdFilter.type = 'bandpass';
+      crowdFilter.frequency.setValueAtTime(850, audioCtx.currentTime);
+      crowdFilter.Q.setValueAtTime(1.2, audioCtx.currentTime);
+
+      // Envelope swell and fade out
+      const crowdGain = audioCtx.createGain();
+      crowdGain.gain.setValueAtTime(0.01, audioCtx.currentTime);
+      crowdGain.gain.linearRampToValueAtTime(0.5, audioCtx.currentTime + 0.3);
+      crowdGain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+
+      crowdNoise.connect(crowdFilter);
+      crowdFilter.connect(crowdGain);
+      crowdGain.connect(audioCtx.destination);
+
+      crowdNoise.start();
+
+      // Multi-tonal vocal roar harmonics
+      [320, 480, 640].forEach((freq) => {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(freq * 1.15, audioCtx.currentTime + 0.4);
+        osc.frequency.exponentialRampToValueAtTime(freq * 0.9, audioCtx.currentTime + duration);
+
+        gain.gain.setValueAtTime(0.001, audioCtx.currentTime);
+        gain.gain.linearRampToValueAtTime(0.08, audioCtx.currentTime + 0.25);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration - 0.2);
+
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + duration);
+      });
+    }
+
     // Game Variables
     let currentFrame = 1;
     let currentRoll = 1;
@@ -346,18 +412,18 @@
     let dragStart = { x: 0, y: 0 };
     let dragCurrent = { x: 0, y: 0 };
 
-    // Pin Layout Setup
+    // Pin Layout Setup (Widened spacing to accommodate doubled pin size)
     const pinOrigins = [
       { id: 1,  row: 1, col: 1, x: 250, y: 175 }, 
-      { id: 2,  row: 2, col: 1, x: 232, y: 158 },
-      { id: 3,  row: 2, col: 2, x: 268, y: 158 },
-      { id: 4,  row: 3, col: 1, x: 214, y: 141 },
-      { id: 5,  row: 3, col: 2, x: 250, y: 141 },
-      { id: 6,  row: 3, col: 3, x: 286, y: 141 },
-      { id: 7,  row: 4, col: 1, x: 196, y: 124 },
-      { id: 8,  row: 4, col: 2, x: 232, y: 124 },
-      { id: 9,  row: 4, col: 3, x: 268, y: 124 },
-      { id: 10, row: 4, col: 4, x: 304, y: 124 }
+      { id: 2,  row: 2, col: 1, x: 222, y: 152 },
+      { id: 3,  row: 2, col: 2, x: 278, y: 152 },
+      { id: 4,  row: 3, col: 1, x: 194, y: 129 },
+      { id: 5,  row: 3, col: 2, x: 250, y: 129 },
+      { id: 6,  row: 3, col: 3, x: 306, y: 129 },
+      { id: 7,  row: 4, col: 1, x: 166, y: 106 },
+      { id: 8,  row: 4, col: 2, x: 222, y: 106 },
+      { id: 9,  row: 4, col: 3, x: 278, y: 106 },
+      { id: 10, row: 4, col: 4, x: 334, y: 106 }
     ];
 
     let pins = [];
@@ -448,12 +514,12 @@
 
         let hitThisFrame = 0;
 
-        // Pin Collision Check
+        // Pin Collision Check (Adjusted for doubled pin width)
         pins.forEach(pin => {
           if (pin.isStanding) {
             const dist = Math.hypot(ball.x - pin.x, ball.y - pin.y);
             const scale = getScale(pin.y);
-            if (dist < (ball.radius + 11 * scale)) {
+            if (dist < (ball.radius + 22 * scale)) { // 22px hit radius (doubled size)
               pin.isStanding = false;
               pin.knockedX = (pin.x - ball.x) * 0.85 + (Math.random() - 0.5) * 12;
               pin.knockedY = -Math.abs(ball.vy) * 0.55;
@@ -506,6 +572,7 @@
       if (currentRoll === 1) {
         if (standingCount === 0) {
           showOverlay("STRIKE!");
+          playCheerSound(); // Triggers audience cheering crowd sound
           nextFrame();
         } else {
           currentRoll = 2;
@@ -576,9 +643,9 @@
 
       // Sweep Bar Housing / Pin Pit Wall
       ctx.fillStyle = '#0c0f17';
-      ctx.fillRect(100, 40, 300, 70);
+      ctx.fillRect(100, 30, 300, 80);
       ctx.fillStyle = '#1e2638';
-      ctx.fillRect(100, 105, 300, 5);
+      ctx.fillRect(100, 110, 300, 5);
 
       // 2. Approach Hardwood Floor (Behind Foul Line)
       const approachGrad = ctx.createLinearGradient(0, FOUL_LINE_Y, 0, 700);
@@ -661,37 +728,36 @@
       });
 
       // 6. PRO FOUL LINE & SENSORS
-      // The Black/Red Foul Line
       ctx.fillStyle = '#111111';
       ctx.fillRect(45, FOUL_LINE_Y - 2, 410, 5);
       ctx.fillStyle = '#cc0000';
       ctx.fillRect(45, FOUL_LINE_Y, 410, 2);
 
-      // Foul Line Infrared Sensor Lights on Side Capping
+      // Foul Sensors
       ctx.fillStyle = '#1e293b';
       ctx.fillRect(40, FOUL_LINE_Y - 6, 12, 12);
       ctx.fillRect(448, FOUL_LINE_Y - 6, 12, 12);
-      ctx.fillStyle = '#00ffcc'; // Sensor active LED
+      ctx.fillStyle = '#00ffcc';
       ctx.beginPath();
       ctx.arc(46, FOUL_LINE_Y, 2.5, 0, Math.PI * 2);
       ctx.arc(454, FOUL_LINE_Y, 2.5, 0, Math.PI * 2);
       ctx.fill();
 
-      // 7. Pin Deck Spots
+      // 7. Pin Deck Spots (Expanded for larger pin base)
       pinOrigins.forEach(p => {
         const scale = getScale(p.y);
         ctx.fillStyle = 'rgba(0, 0, 0, 0.15)';
         ctx.beginPath();
-        ctx.arc(p.x, p.y + 4 * scale, 4 * scale, 0, Math.PI * 2);
+        ctx.arc(p.x, p.y + 8 * scale, 8 * scale, 0, Math.PI * 2);
         ctx.fill();
       });
 
-      // 8. Render Pins (Back to Front)
+      // 8. Render Doubled-Size Pins (Back to Front)
       const sortedPins = [...pins].sort((a, b) => a.y - b.y);
       sortedPins.forEach(pin => {
         if (pin.opacity <= 0) return;
 
-        const scale = getScale(pin.y);
+        const scale = getScale(pin.y) * 2.0; // DOUBLED PIN SCALE FACTOR
         ctx.save();
         ctx.globalAlpha = pin.opacity;
         
@@ -710,7 +776,7 @@
         ctx.fillStyle = pinGrad;
         ctx.beginPath();
         ctx.arc(pin.x, pin.y - 12 * scale, 6 * scale, 0, Math.PI * 2); // Head
-        ctx.arc(pin.x, pin.y, 9 * scale, 0, Math.PI * 2);            // Belly
+        ctx.arc(pin.x, pin.y, 9 * scale, 0, Math.PI * 2);            // Body
         ctx.fill();
 
         // Dual Red Stripes

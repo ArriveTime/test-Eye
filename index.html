@@ -192,7 +192,7 @@
     <div class="instructions" id="instruction-text">
       <strong>Swipe / Drag backward</strong> behind the foul line to roll.
     </div>
-    <button class="btn-pro" onclick="resetGame()">Reset Frame</button>
+    <button class="btn-pro" onclick="resetGame()">Reset Game</button>
   </div>
 
   <script>
@@ -301,10 +301,11 @@
     }
 
     // State Variables
-    let currentFrame = 1;
-    let currentRoll = 1;
+    let currentFrame = 1; // 1 to 10
+    let currentRoll = 1;  // 1, 2 (or 3 in Frame 10)
     let totalScore = 0;
     let gameOver = false;
+    let frameRolls = Array.from({ length: 10 }, () => []);
 
     const FOUL_LINE_Y = 580;
 
@@ -476,32 +477,129 @@
     function endRoll() {
       ball.isRolling = false;
       const knockedThisRoll = pins.filter(p => !p.isStanding && p.opacity > 0).length;
-      totalScore += knockedThisRoll;
-
       pins.forEach(p => { if (!p.isStanding) p.opacity = 0; });
+
+      frameRolls[currentFrame - 1].push(knockedThisRoll);
 
       const standingCount = pins.filter(p => p.isStanding).length;
 
-      if (currentRoll === 1) {
-        if (standingCount === 0) {
-          showOverlay("STRIKE!");
-          playCheerSound();
-          nextFrame();
-        } else {
+      // Handle standard frames 1 through 9
+      if (currentFrame < 10) {
+        if (currentRoll === 1) {
+          if (knockedThisRoll === 10) {
+            showOverlay("STRIKE!");
+            playCheerSound();
+            advanceFrame();
+          } else {
+            currentRoll = 2;
+            resetBall();
+          }
+        } else { // Roll 2
+          if (standingCount === 0) {
+            showOverlay("SPARE!");
+            playCheerSound();
+          } else if (knockedThisRoll === 0) {
+            showOverlay("GUTTER!");
+          }
+          advanceFrame();
+        }
+      } 
+      // Handle Frame 10 rules
+      else {
+        if (currentRoll === 1) {
+          if (knockedThisRoll === 10) {
+            showOverlay("STRIKE!");
+            playCheerSound();
+            initPins(); // reset pins for roll 2
+          }
           currentRoll = 2;
           resetBall();
+        } else if (currentRoll === 2) {
+          const firstRoll = frameRolls[9][0];
+          if (firstRoll === 10 && knockedThisRoll === 10) {
+            showOverlay("STRIKE!");
+            playCheerSound();
+            initPins();
+            currentRoll = 3;
+            resetBall();
+          } else if (firstRoll < 10 && (firstRoll + knockedThisRoll === 10)) {
+            showOverlay("SPARE!");
+            playCheerSound();
+            initPins();
+            currentRoll = 3;
+            resetBall();
+          } else if (firstRoll === 10 && knockedThisRoll < 10) {
+            currentRoll = 3;
+            resetBall();
+          } else {
+            // No strike or spare in frame 10, game ends after 2 rolls
+            finishGame();
+          }
+        } else if (currentRoll === 3) {
+          if (knockedThisRoll === 10) {
+            showOverlay("STRIKE!");
+            playCheerSound();
+          }
+          finishGame();
         }
-      } else {
-        if (standingCount === 0) {
-          showOverlay("SPARE!");
-          playCheerSound();
-        } else if (knockedThisRoll === 0) {
-          showOverlay("GUTTER!");
-        }
-        nextFrame();
       }
 
+      calculateOfficialScore();
       updateUI();
+    }
+
+    function advanceFrame() {
+      currentFrame++;
+      currentRoll = 1;
+      setTimeout(() => {
+        initPins();
+        resetBall();
+      }, 1000);
+    }
+
+    function finishGame() {
+      gameOver = true;
+      showOverlay("GAME OVER");
+      document.getElementById('instruction-text').innerHTML = 
+        `<strong>Game Over! Final Score: ${totalScore}</strong>. Click Reset Game to play again.`;
+    }
+
+    // Official 10-Pin Bowling Scoring Algorithm
+    function calculateOfficialScore() {
+      let score = 0;
+      let flatRolls = [];
+      
+      frameRolls.forEach(f => {
+        flatRolls.push(...f);
+      });
+
+      let rollIdx = 0;
+
+      for (let f = 0; f < 10; f++) {
+        if (rollIdx >= flatRolls.length) break;
+
+        // Strike
+        if (flatRolls[rollIdx] === 10) {
+          if (rollIdx + 2 < flatRolls.length) {
+            score += 10 + flatRolls[rollIdx + 1] + flatRolls[rollIdx + 2];
+          }
+          rollIdx += 1;
+        } 
+        // Spare
+        else if (rollIdx + 1 < flatRolls.length && (flatRolls[rollIdx] + flatRolls[rollIdx + 1] === 10)) {
+          if (rollIdx + 2 < flatRolls.length) {
+            score += 10 + flatRolls[rollIdx + 2];
+          }
+          rollIdx += 2;
+        } 
+        // Open frame
+        else if (rollIdx + 1 < flatRolls.length) {
+          score += flatRolls[rollIdx] + flatRolls[rollIdx + 1];
+          rollIdx += 2;
+        }
+      }
+
+      totalScore = score;
     }
 
     function resetBall() {
@@ -513,27 +611,12 @@
       ball.canAim = true;
     }
 
-    function nextFrame() {
-      if (currentFrame >= 10) {
-        gameOver = true;
-        showOverlay("GAME OVER");
-        document.getElementById('instruction-text').innerHTML = 
-          `<strong>Final Score: ${totalScore}</strong>. Click Reset to start again.`;
-      } else {
-        currentFrame++;
-        currentRoll = 1;
-        setTimeout(() => {
-          initPins();
-          resetBall();
-        }, 1200);
-      }
-    }
-
     function resetGame() {
       currentFrame = 1;
       currentRoll = 1;
       totalScore = 0;
       gameOver = false;
+      frameRolls = Array.from({ length: 10 }, () => []);
       document.getElementById('instruction-text').innerHTML = 
         `<strong>Swipe / Drag backward</strong> behind the foul line to roll.`;
       initPins();
@@ -571,26 +654,25 @@
       ctx.font = '900 31px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
       ctx.textBaseline = 'middle';
 
-      // Measure text widths for precise side-by-side alignment
       const bowlWidth = ctx.measureText("BOWL").width;
       const strikeWidth = ctx.measureText("STRIKE.COM").width;
       const totalWidth = bowlWidth + strikeWidth;
       const startX = 250 - (totalWidth / 2);
 
-      // Draw "BOWL" in White
+      // "BOWL" in White
       ctx.textAlign = 'left';
       ctx.fillStyle = '#ffffff';
       ctx.shadowColor = 'rgba(255, 255, 255, 0.8)';
       ctx.shadowBlur = 12;
       ctx.fillText("BOWL", startX, 55);
 
-      // Draw "STRIKE.COM" in Red
+      // "STRIKE.COM" in Red
       ctx.fillStyle = '#ff2a2a';
       ctx.shadowColor = 'rgba(255, 42, 42, 0.85)';
       ctx.shadowBlur = 14;
       ctx.fillText("STRIKE.COM", startX + bowlWidth, 55);
       
-      ctx.shadowBlur = 0; // reset shadow for rest of canvas
+      ctx.shadowBlur = 0;
 
       // Ambient Pin Light Glow
       const pitGlow = ctx.createRadialGradient(250, 125, 10, 250, 125, 180);
@@ -645,11 +727,9 @@
 
       // 4. GUTTERS
       ctx.fillStyle = '#11151c';
-      // Left Gutter
       ctx.beginPath();
       ctx.moveTo(80, 125); ctx.lineTo(140, 125); ctx.lineTo(25, FOUL_LINE_Y); ctx.lineTo(0, FOUL_LINE_Y);
       ctx.fill();
-      // Right Gutter
       ctx.beginPath();
       ctx.moveTo(360, 125); ctx.lineTo(420, 125); ctx.lineTo(500, FOUL_LINE_Y); ctx.lineTo(475, FOUL_LINE_Y);
       ctx.fill();
@@ -697,7 +777,7 @@
         ctx.ellipse(pin.x, pin.y + 6 * scale, 8.5 * scale, 3 * scale, 0, 0, Math.PI * 2);
         ctx.fill();
 
-        // Pin Hourglass Body
+        // Pin Body
         ctx.beginPath();
         ctx.moveTo(pin.x - 3 * scale, pin.y - 18 * scale);
         ctx.bezierCurveTo(pin.x - 5 * scale, pin.y - 18 * scale, pin.x - 4 * scale, pin.y - 12 * scale, pin.x - 2.5 * scale, pin.y - 9 * scale);

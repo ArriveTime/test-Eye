@@ -149,9 +149,9 @@
     flex-direction: column;
   }
 
-  /* MAP SECTION (Optimized for half width / bandwidth) */
-  .map-wrapper { position: relative; border-radius: 8px; overflow: hidden; border: 1px solid #222; flex: 1; display: flex; flex-direction: column; }
-  #map { height: 260px; width: 100%; background: #1a1a1e; flex: 1; }
+  /* MAP SECTION */
+  .map-wrapper { position: relative; border-radius: 8px; overflow: hidden; border: 1px solid #222; flex: 1; display: flex; flex-direction: column; min-height: 280px; }
+  #map { height: 100%; width: 100%; min-height: 280px; background: #1a1a1e; flex: 1; }
   .my-location-panel { position: absolute; top: 10px; left: 10px; z-index: 500; background: rgba(15,23,36,0.92); border: 1px solid #333; border-radius: 6px; padding: 6px 10px; }
   .ml-coords { font-size: 0.78rem; color: var(--accent); font-weight: 600; }
 
@@ -255,7 +255,7 @@
   .contact-form textarea { resize: vertical; min-height: 120px; }
   
   /* Footer & Legal Disclaimers */
-  footer { background: #000; padding: 2.5rem 1rem 1.5rem 1rem; border-top: 1px solid #222; font-size: 0.85rem; color: var(--text-muted); position: relative; }
+  footer { background: #000; padding: 2.5rem 1rem 1.5rem 1rem; border-top: 1px solid #222; font-size: 0.85rem; color: var(--text-muted); position: relative; text-align: center; }
   .footer-legal-container { max-width: 1000px; margin: 0 auto 1.5rem auto; text-align: left; background: #0a0a0c; border: 1px solid #1a1a1e; border-radius: 6px; padding: 1.2rem; line-height: 1.5; font-size: 0.78rem; color: #8a8a93; }
   .footer-legal-container h4 { color: #d0d0d5; font-size: 0.85rem; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 6px; }
   .footer-legal-container p { margin-bottom: 0.8rem; }
@@ -345,16 +345,16 @@
 
     <div class="red-divider"></div>
 
-    <!-- SIDE-BY-SIDE: Live GPS Map Radar (Bandwidth Saved) & Bowling Game Block -->
+    <!-- SIDE-BY-SIDE: Live GPS Map Radar & Bowling Game Block -->
     <section id="locator">
       <h2 class="section-title"><span>Live GPS Alley Radar & Lane Challenge</span></h2>
       
       <div class="interactive-duo-container">
         
-        <!-- BLOCK 1: Reduced Scale Radar Display (50% Width) -->
+        <!-- BLOCK 1: Reduced Scale Radar Display -->
         <div class="duo-block">
           <div class="map-wrapper">
-            <div class="my-location-panel card">
+            <div class="my-location-panel">
               <div style="font-size:0.68rem; color:var(--text-muted); text-transform:uppercase;">📍 Live Stream</div>
               <div class="ml-coords" id="myCoords">Acquiring...</div>
               <div style="font-size:0.72rem; color:var(--success);" id="gpsStatus">Connecting...</div>
@@ -363,9 +363,9 @@
           </div>
         </div>
 
-        <!-- BLOCK 2: Bowling Game Block (50% Width) -->
+        <!-- BLOCK 2: Bowling Game Block -->
         <div class="duo-block card game-wrapper">
-          <div style="width:100%; display:flex; justify-size:space-between; align-items:center; margin-bottom:0.4rem;">
+          <div style="width:100%; display:flex; justify-content:space-between; align-items:center; margin-bottom:0.4rem;">
             <span style="font-weight:bold; font-size:0.9rem; color:#fff;"><i class="fa-solid fa-bowling-ball" style="color:var(--primary);"></i> Lane Arcade</span>
             <span class="game-scoreboard">Score: <span id="game-score">0</span></span>
           </div>
@@ -591,7 +591,7 @@
     </div>
 
     <p>&copy; 2026 BowlStrike.com - National Tenpin Bowler Network. All rights reserved.</p>
-    <a href="#" class="hidden-admin-link" onclick="openAdminModal(event)">admin</a>
+    <a class="hidden-admin-link" onclick="openAdminModal(event)">admin</a>
   </footer>
 
   <!-- Admin Visitor Log Modal -->
@@ -613,225 +613,167 @@
       </div>
 
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
-        <span style="font-size:0.85rem; font-weight:bold; color:#fff;">Live Session Log</span>
-        <button class="btn btn-danger" style="font-size:0.75rem; padding:0.3rem 0.7rem;" onclick="resetVisitorCounter()"><i class="fa-solid fa-trash-can"></i> Reset Counter & Logs</button>
+        <span style="font-size:0.9rem; font-weight:bold; color:#fff;">Recent Access Logs</span>
+        <button class="btn btn-danger" style="font-size:0.75rem; padding:0.3rem 0.6rem;" onclick="clearLogs()"><i class="fa-solid fa-trash"></i> Clear Logs</button>
       </div>
 
-      <table>
-        <thead>
-          <tr>
-            <th>Date & Time</th>
-            <th>Location</th>
-            <th>Duration on Site</th>
-            <th>IP Address</th>
-          </tr>
-        </thead>
-        <tbody id="visitor-log-body">
-          <!-- Real-Time Firebase Logs render here when modal is active -->
-        </tbody>
-      </table>
+      <div style="overflow-x:auto;">
+        <table>
+          <thead>
+            <tr>
+              <th>Timestamp</th>
+              <th>IP / Location</th>
+              <th>Browser / Device</th>
+              <th>Page</th>
+            </tr>
+          </thead>
+          <tbody id="visitor-log-tbody">
+            <tr><td colspan="4" style="text-align:center; color:var(--text-muted);">No log entries recorded.</td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 
   <script>
-    // INITIALIZE EMAILJS
-    window.addEventListener('load', function() {
+    // --- GLOBAL STATE & INIT ---
+    let map = null;
+    let ballX = 150, ballY = 190, ballRadius = 10, ballVX = 0, ballVY = 0, isRolling = false;
+    let score = 0;
+    let pins = [];
+
+    document.addEventListener('DOMContentLoaded', () => {
+      // EmailJS Init
       if (typeof emailjs !== 'undefined') {
-        emailjs.init("qzzSDB57ypIFBik8v");
+        emailjs.init("PUBLIC_KEY_HERE"); // Placeholder for user EmailJS key
       }
+
+      initMap();
+      initBowlingGame();
+      logVisitorHit();
     });
 
-    // FIREBASE CREDENTIALS
-    const firebaseConfig = {
-      apiKey: "AIzaSyAHE9twWdgqm_iPz6CogorkeRMFGnu9834",
-      authDomain: "bowlstrike-299d6.firebaseapp.com",
-      projectId: "bowlstrike-299d6",
-      storageBucket: "bowlstrike-299d6.firebasestorage.app",
-      messagingSenderId: "606295789217",
-      appId: "1:606295789217:web:5ed4e36264971666c26ae0",
-      measurementId: "G-CFN3DVL6KS"
-    };
+    // --- LEAFLET GPS MAP RADAR ---
+    function initMap() {
+      if (typeof L === 'undefined') return;
+      
+      const defaultCoords = [28.5383, -81.3792]; // Orlando Default
+      map = L.map('map').setView(defaultCoords, 11);
 
-    let db = null;
-    let docRef = null;
-    let visitorStartTime = Date.now();
-    let myCurrentIP = "Detecting...";
-    let unsubscribeAdminLog = null;
-
-    window.addEventListener('load', function() {
-      if (typeof firebase !== 'undefined') {
-        firebase.initializeApp(firebaseConfig);
-        db = firebase.firestore();
-        initFirebaseVisitorTracking();
-      }
-      initHardwareGPS();
-      initBowlingCanvasGame();
-    });
-
-    /* LIGHTWEIGHT FIREBASE VISITOR TRACKING */
-    async function initFirebaseVisitorTracking() {
-      if (!db) return;
-      let currentCity = "Local Session";
-
-      try {
-        const res = await fetch('https://ipapi.co/json/');
-        const data = await res.json();
-        myCurrentIP = data.ip || "127.0.0.1";
-        currentCity = `${data.city || 'Unknown'}, ${data.region_code || 'US'}`;
-      } catch (e) {
-        myCurrentIP = "127.0.0.1";
-      }
-
-      const now = new Date();
-      const formattedDate = now.toLocaleString("en-US", { timeZone: "America/New_York" });
-
-      try {
-        docRef = await db.collection("visitor_logs").add({
-          timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-          dateString: formattedDate,
-          ip: myCurrentIP,
-          location: currentCity,
-          secondsOnSite: 0
-        });
-
-        setInterval(() => {
-          if (docRef) {
-            const elapsed = Math.floor((Date.now() - visitorStartTime) / 1000);
-            docRef.update({ secondsOnSite: elapsed }).catch(()=>{});
-          }
-        }, 15000);
-      } catch (e) {
-        console.log("Analytics logging error");
-      }
-    }
-
-    /* HARDWARE GPS & LEAFLET MAP */
-    function initHardwareGPS() {
-      const coordsElem = document.getElementById("myCoords");
-      const gpsStatus = document.getElementById("gpsStatus");
-
-      let map = L.map('map').setView([28.5383, -81.3792], 11);
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; OpenStreetMap'
+        attribution: '&copy; OpenStreetMap contributors'
       }).addTo(map);
 
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition((pos) => {
-          const lat = pos.coords.latitude;
-          const lng = pos.coords.longitude;
-          coordsElem.innerText = `${lat.toFixed(4)}°, ${lng.toFixed(4)}°`;
-          gpsStatus.innerText = "GPS Lock Acquired";
+      // Add Sample Bowling Alley Pins
+      const sampleAlleys = [
+        { name: "Bowlero Orlando", lat: 28.5500, lng: -81.3500 },
+        { name: "Kissimmee Lanes", lat: 28.3000, lng: -81.4100 },
+        { name: "Aloma Bowl", lat: 28.6000, lng: -81.3000 }
+      ];
 
-          map.setView([lat, lng], 12);
-          L.marker([lat, lng]).addTo(map).bindPopup("Your Location").openPopup();
+      sampleAlleys.forEach(alley => {
+        L.marker([alley.lat, alley.lng]).addTo(map)
+          .bindPopup(`<b>${alley.name}</b><br>Active Bowlers Live`);
+      });
+
+      // User Location Geolocation
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(pos => {
+          const uLat = pos.coords.latitude;
+          const uLng = pos.coords.longitude;
+          document.getElementById('myCoords').innerText = `${uLat.toFixed(3)}°, ${uLng.toFixed(3)}°`;
+          document.getElementById('gpsStatus').innerText = "Signal Locked";
+          
+          map.setView([uLat, uLng], 12);
+          L.circleMarker([uLat, uLng], { radius: 8, color: '#e50914', fillColor: '#ff3c3c', fillOpacity: 0.8 }).addTo(map)
+            .bindPopup("<b>Your Radar Location</b>").openPopup();
         }, () => {
-          coordsElem.innerText = "Default (Orlando, FL)";
-          gpsStatus.innerText = "Location Fixed";
+          document.getElementById('myCoords').innerText = "GPS Offline";
+          document.getElementById('gpsStatus').innerText = "Using Regional Feed";
         });
       }
     }
 
-    /* 2D BOWLING GAME ENGINE */
-    let canvas, ctx;
-    let ball = { x: 0, y: 0, radius: 10, vx: 0, vy: 0, rolling: false };
-    let pins = [];
-    let score = 0;
-    let aimAngle = 0;
-    let aimDirection = 1;
-
-    function initBowlingCanvasGame() {
-      canvas = document.getElementById('bowlingCanvas');
+    // --- CANVAS BOWLING ARCADE GAME ---
+    function initBowlingGame() {
+      const canvas = document.getElementById('bowlingCanvas');
       if (!canvas) return;
-      ctx = canvas.getContext('2d');
+      const ctx = canvas.getContext('2d');
       
-      // Auto size canvas
       canvas.width = canvas.parentElement.clientWidth;
       canvas.height = canvas.parentElement.clientHeight;
 
-      resetBowlingGame();
-      requestAnimationFrame(updateBowlingGame);
+      resetPins(canvas);
+      requestAnimationFrame(() => updateGame(canvas, ctx));
     }
 
-    function resetBowlingGame() {
-      if (!canvas) return;
-      const w = canvas.width;
-      const h = canvas.height;
-
-      ball = { x: w / 2, y: h - 25, radius: 10, vx: 0, vy: 0, rolling: false };
-      
-      // Setup 10 Pins
+    function resetPins(canvas) {
+      const startX = canvas.width / 2;
+      const startY = 30;
       pins = [];
-      const pinRows = 4;
-      const startY = 35;
-      const spacingX = 14;
-      const spacingY = 14;
+      let rowOffset = 14;
 
-      let pinId = 0;
-      for (let r = 0; r < pinRows; r++) {
-        const rowPins = r + 1;
-        const startX = (w / 2) - ((rowPins - 1) * spacingX) / 2;
-        for (let p = 0; p < rowPins; p++) {
+      // Create 10 Pin Triangle
+      for (let row = 0; row < 4; row++) {
+        for (let col = 0; col <= row; col++) {
           pins.push({
-            id: pinId++,
-            x: startX + (p * spacingX),
-            y: startY + (r * spacingY),
+            x: startX + (col * 16) - (row * 8),
+            y: startY + (row * rowOffset),
             hit: false
           });
         }
       }
-      document.getElementById('rollBtn').disabled = false;
+      ballX = canvas.width / 2;
+      ballY = canvas.height - 25;
+      ballVX = 0;
+      ballVY = 0;
+      isRolling = false;
     }
 
     function rollBowlingBall() {
-      if (ball.rolling) return;
-      ball.rolling = true;
-      ball.vx = Math.sin(aimAngle) * 6;
-      ball.vy = -7;
-      document.getElementById('rollBtn').disabled = true;
+      if (isRolling) return;
+      isRolling = true;
+      ballVX = (Math.random() - 0.5) * 1.5; // Slight hook bias
+      ballVY = -5;
     }
 
-    function updateBowlingGame() {
-      if (!ctx) return;
-      const w = canvas.width;
-      const h = canvas.height;
+    function resetBowlingGame() {
+      const canvas = document.getElementById('bowlingCanvas');
+      resetPins(canvas);
+    }
 
-      ctx.clearRect(0, 0, w, h);
+    function updateGame(canvas, ctx) {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       // Draw Lane
-      ctx.fillStyle = '#1c1714';
-      ctx.fillRect(w * 0.2, 0, w * 0.6, h);
-      
-      // Draw Gutter Lines
-      ctx.strokeStyle = '#d32f2f';
+      ctx.fillStyle = '#1e140a';
+      ctx.fillRect(canvas.width * 0.2, 0, canvas.width * 0.6, canvas.height);
+      ctx.strokeStyle = '#ffb300';
       ctx.lineWidth = 2;
-      ctx.beginPath();
-      ctx.moveTo(w * 0.2, 0); ctx.lineTo(w * 0.2, h);
-      ctx.moveTo(w * 0.8, 0); ctx.lineTo(w * 0.8, h);
-      ctx.stroke();
+      ctx.strokeRect(canvas.width * 0.2, 0, canvas.width * 0.6, canvas.height);
 
-      // Aim Line Animation
-      if (!ball.rolling) {
-        aimAngle += 0.03 * aimDirection;
-        if (aimAngle > 0.6 || aimAngle < -0.6) aimDirection *= -1;
+      // Draw Pins
+      pins.forEach(pin => {
+        if (!pin.hit) {
+          ctx.beginPath();
+          ctx.arc(pin.x, pin.y, 5, 0, Math.PI * 2);
+          ctx.fillStyle = '#ffffff';
+          ctx.fill();
+          ctx.strokeStyle = '#e50914';
+          ctx.stroke();
+        }
+      });
 
-        ctx.strokeStyle = '#ffb300';
-        ctx.lineWidth = 2;
-        ctx.beginPath();
-        ctx.moveTo(ball.x, ball.y);
-        ctx.lineTo(ball.x + Math.sin(aimAngle) * 60, ball.y - Math.cos(aimAngle) * 60);
-        ctx.stroke();
-      } else {
-        // Move Ball
-        ball.x += ball.vx;
-        ball.y += ball.vy;
+      // Update & Draw Ball
+      if (isRolling) {
+        ballX += ballVX;
+        ballY += ballVY;
 
-        // Check Collisions with Pins
+        // Check Collision with Pins
         pins.forEach(pin => {
           if (!pin.hit) {
-            const dx = ball.x - pin.x;
-            const dy = ball.y - pin.y;
-            const dist = Math.sqrt(dx * dx + dy * dy);
-            if (dist < ball.radius + 6) {
+            let dist = Math.hypot(pin.x - ballX, pin.y - ballY);
+            if (dist < ballRadius + 5) {
               pin.hit = true;
               score += 10;
               document.getElementById('game-score').innerText = score;
@@ -839,125 +781,115 @@
           }
         });
 
-        // Reset if ball goes out of bounds
-        if (ball.y < -20 || ball.x < 0 || ball.x > w) {
-          ball.rolling = false;
-          ball.x = w / 2;
-          ball.y = h - 25;
-          document.getElementById('rollBtn').disabled = false;
+        // End of Roll Reset
+        if (ballY < -10) {
+          ballY = canvas.height - 25;
+          ballX = canvas.width / 2;
+          ballVX = 0;
+          ballVY = 0;
+          isRolling = false;
         }
       }
 
-      // Draw Pins
-      pins.forEach(pin => {
-        if (!pin.hit) {
-          ctx.fillStyle = '#ffffff';
-          ctx.beginPath();
-          ctx.arc(pin.x, pin.y, 5, 0, Math.PI * 2);
-          ctx.fill();
-          
-          // Red Stripe on Pin
-          ctx.fillStyle = '#e50914';
-          ctx.fillRect(pin.x - 4, pin.y - 1, 8, 2);
-        }
-      });
-
-      // Draw Ball
-      ctx.fillStyle = '#e50914';
       ctx.beginPath();
-      ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
+      ctx.arc(ballX, ballY, ballRadius, 0, Math.PI * 2);
+      ctx.fillStyle = '#e50914';
       ctx.fill();
+      ctx.strokeStyle = '#ffffff';
+      ctx.stroke();
 
-      requestAnimationFrame(updateBowlingGame);
+      requestAnimationFrame(() => updateGame(canvas, ctx));
     }
 
-    /* INTERACTIVE FEED LIKES & COMMENTS */
+    // --- INTERACTIVE COMMUNITY FEED & LIKES ---
     function toggleLike(btn) {
-      const countSpan = btn.querySelector('.like-count');
-      let count = parseInt(countSpan.innerText);
+      let countSpan = btn.querySelector('.like-count');
+      let currentLikes = parseInt(countSpan.innerText);
       if (btn.classList.contains('liked')) {
-        count--;
         btn.classList.remove('liked');
         btn.style.color = 'var(--text-muted)';
+        countSpan.innerText = currentLikes - 1;
       } else {
-        count++;
         btn.classList.add('liked');
         btn.style.color = 'var(--primary)';
-      }
-      countSpan.innerText = count;
-    }
-
-    function addComment(id) {
-      const input = document.getElementById(`comment-input-${id}`);
-      const container = document.getElementById(`comments-container-${id}`);
-      if (input.value.trim() !== '') {
-        const p = document.createElement('p');
-        p.style.marginTop = '0.3rem';
-        p.innerHTML = `<strong style="color:#fff;">You:</strong> ${input.value}`;
-        container.appendChild(p);
-        input.value = '';
+        countSpan.innerText = currentLikes + 1;
       }
     }
 
-    /* EMAILJS CONTACT FORM */
+    function addComment(postId) {
+      const input = document.getElementById(`comment-input-${postId}`);
+      const container = document.getElementById(`comments-container-${postId}`);
+      if (!input.value.trim()) return;
+
+      const commentDiv = document.createElement('div');
+      commentDiv.style.marginTop = '0.3rem';
+      commentDiv.innerHTML = `<strong style="color:#fff;">You:</strong> ${input.value}`;
+      container.appendChild(commentDiv);
+      input.value = '';
+    }
+
+    // --- CONTACT FORM EMAILJS HANDLER ---
     function sendContactEmail(e) {
       e.preventDefault();
       const status = document.getElementById('contact-status');
-      const btn = document.getElementById('contact-submit-btn');
-      
-      btn.disabled = true;
+      status.style.color = 'var(--accent)';
       status.innerText = "Sending message...";
-      status.style.color = "var(--accent)";
 
       setTimeout(() => {
-        status.innerText = "Message sent successfully! We will contact you soon.";
-        status.style.color = "var(--success)";
-        btn.disabled = false;
+        status.style.color = 'var(--success)';
+        status.innerText = "Message transmitted successfully!";
         document.getElementById('contact-form').reset();
       }, 1200);
     }
 
-    /* ADMIN MODAL LOGIC */
+    // --- ADMIN VISITOR LOG & DASHBOARD ---
+    function logVisitorHit() {
+      let logs = JSON.parse(localStorage.getItem('bs_visitor_logs') || '[]');
+      let newLog = {
+        time: new Date().toLocaleTimeString(),
+        ip: "Client (Local)",
+        agent: navigator.userAgent.substring(0, 30) + '...',
+        page: window.location.pathname || '/'
+      };
+      logs.unshift(newLog);
+      if (logs.length > 50) logs.pop();
+      localStorage.setItem('bs_visitor_logs', JSON.stringify(logs));
+    }
+
     function openAdminModal(e) {
       e.preventDefault();
-      document.getElementById('admin-modal').style.display = 'flex';
-      if (db) loadAdminVisitorLogs();
+      const modal = document.getElementById('admin-modal');
+      modal.style.display = 'flex';
+      renderAdminLogs();
     }
 
     function closeAdminModal() {
       document.getElementById('admin-modal').style.display = 'none';
-      if (unsubscribeAdminLog) unsubscribeAdminLog();
     }
 
-    function loadAdminVisitorLogs() {
-      const tbody = document.getElementById('visitor-log-body');
+    function renderAdminLogs() {
+      let logs = JSON.parse(localStorage.getItem('bs_visitor_logs') || '[]');
+      let tbody = document.getElementById('visitor-log-tbody');
+      document.getElementById('stat-total-hits').innerText = logs.length;
       
-      unsubscribeAdminLog = db.collection("visitor_logs")
-        .orderBy("timestamp", "desc")
-        .limit(15)
-        .onSnapshot((snapshot) => {
-          tbody.innerHTML = "";
-          let totalHits = snapshot.size;
-          document.getElementById('stat-total-hits').innerText = totalHits;
+      if (logs.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:var(--text-muted);">No log entries recorded.</td></tr>`;
+        return;
+      }
 
-          snapshot.forEach((doc) => {
-            const data = doc.data();
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-              <td>${data.dateString || 'Just Now'}</td>
-              <td>${data.location || 'Unknown'}</td>
-              <td>${data.secondsOnSite || 0}s</td>
-              <td>${data.ip || '127.0.0.1'}</td>
-            `;
-            tbody.appendChild(tr);
-          });
-        });
+      tbody.innerHTML = logs.map(l => `
+        <tr>
+          <td>${l.time}</td>
+          <td>${l.ip}</td>
+          <td>${l.agent}</td>
+          <td>${l.page}</td>
+        </tr>
+      `).join('');
     }
 
-    function resetVisitorCounter() {
-      if (confirm("Reset all visitor logs?")) {
-        alert("Logs cleared!");
-      }
+    function clearLogs() {
+      localStorage.removeItem('bs_visitor_logs');
+      renderAdminLogs();
     }
   </script>
 </body>

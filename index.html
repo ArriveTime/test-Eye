@@ -178,6 +178,26 @@
     box-shadow: inset 0 0 15px rgba(0,0,0,0.8);
   }
   #bowlingCanvas { width: 100%; height: 100%; display: block; }
+  
+  .gutter-overlay {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.6rem;
+    font-weight: 900;
+    color: #ff3c3c;
+    text-shadow: 0 0 10px #000, 0 0 20px #ff0000;
+    background: rgba(0,0,0,0.85);
+    padding: 6px 16px;
+    border-radius: 6px;
+    border: 2px solid #ff3c3c;
+    display: none;
+    z-index: 10;
+    pointer-events: none;
+    letter-spacing: 1.5px;
+  }
+
   .game-controls {
     display: flex;
     gap: 0.4rem;
@@ -188,7 +208,7 @@
     flex-wrap: wrap;
   }
   .game-scoreboard {
-    font-size: 0.8rem;
+    font-size: 0.85rem;
     font-weight: bold;
     color: var(--accent);
     display: flex;
@@ -402,24 +422,32 @@
           </div>
         </div>
 
-        <!-- BLOCK 2: Professional Bowling Game Block -->
+        <!-- BLOCK 2: Professional Single-Player Bowling Game Block -->
         <div class="duo-block card game-wrapper">
           <div style="width:100%; display:flex; justify-content:space-between; align-items:center; margin-bottom:0.4rem;">
-            <span style="font-weight:bold; font-size:0.9rem; color:#fff;" id="turn-indicator"><i class="fa-solid fa-bowling-ball" style="color:#00aaff;"></i> Player 1's Turn</span>
+            <span style="font-weight:bold; font-size:0.9rem; color:#fff;"><i class="fa-solid fa-bowling-ball" style="color:#00aaff;"></i> Solo Bowler Challenge</span>
             <div class="game-scoreboard">
-              <span>P1: <strong id="p1-score" style="color:#fff;">0</strong></span>
-              <span id="p2-score-box" style="display:none; border-left:1px solid #333; padding-left:8px;">P2: <strong id="p2-score" style="color:#fff;">0</strong></span>
+              <span>Score: <strong id="p1-score" style="color:#fff;">0</strong></span>
             </div>
           </div>
 
           <div class="game-canvas-container">
+            <div id="gutterOverlay" class="gutter-overlay">GUTTER BALL!</div>
             <canvas id="bowlingCanvas"></canvas>
           </div>
 
           <div class="game-controls">
-            <button class="btn btn-secondary" style="font-size:0.72rem; padding:0.3rem 0.6rem;" onclick="togglePlayerMode()" id="modeBtn"><i class="fa-solid fa-user-group"></i> Mode: 1P</button>
-            <button class="btn btn-secondary" style="font-size:0.72rem; padding:0.3rem 0.6rem;" onclick="resetBowlingGame()"><i class="fa-solid fa-rotate-left"></i> Reset Pins</button>
-            <button class="btn" style="font-size:0.75rem; padding:0.4rem 0.8rem; background:linear-gradient(180deg, #0088ff 0%, #0055cc 100%);" id="rollBtn" onclick="rollBowlingBall()"><i class="fa-solid fa-play"></i> ROLL BALL</button>
+            <!-- Position Aim Controls -->
+            <div style="display:flex; gap:4px; align-items:center;">
+              <span style="font-size:0.72rem; color:var(--text-muted); font-weight:bold;">Aim Ball:</span>
+              <button class="btn btn-secondary" style="font-size:0.75rem; padding:0.3rem 0.6rem;" onclick="moveBall(-12)"><i class="fa-solid fa-chevron-left"></i> Left</button>
+              <button class="btn btn-secondary" style="font-size:0.75rem; padding:0.3rem 0.6rem;" onclick="moveBall(12)">Right <i class="fa-solid fa-chevron-right"></i></button>
+            </div>
+
+            <div style="display:flex; gap:4px; align-items:center;">
+              <button class="btn btn-secondary" style="font-size:0.72rem; padding:0.3rem 0.6rem;" onclick="resetBowlingGame()"><i class="fa-solid fa-rotate-left"></i> Reset Pins</button>
+              <button class="btn" style="font-size:0.75rem; padding:0.4rem 0.8rem; background:linear-gradient(180deg, #0088ff 0%, #0055cc 100%);" id="rollBtn" onclick="rollBowlingBall()"><i class="fa-solid fa-play"></i> ROLL BALL</button>
+            </div>
           </div>
         </div>
 
@@ -755,7 +783,7 @@
     function playCheerSound() {
       try {
         const ctx = getAudioContext();
-        const duration = 1.8;
+        const duration = 2.2;
         const bufferSize = ctx.sampleRate * duration;
         const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
         const output = buffer.getChannelData(0);
@@ -772,7 +800,7 @@
 
         const gain = ctx.createGain();
         gain.gain.setValueAtTime(0.01, ctx.currentTime);
-        gain.gain.linearRampToValueAtTime(0.5, ctx.currentTime + 0.3);
+        gain.gain.linearRampToValueAtTime(0.6, ctx.currentTime + 0.3);
         gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + duration);
 
         crowdNoise.connect(filter);
@@ -785,28 +813,47 @@
       }
     }
 
-    // Professional Arcade Engine Setup
-    let isTwoPlayer = false;
-    let activePlayer = 1; // 1 or 2
-    let p1Score = 0;
-    let p2Score = 0;
-    
+    // Play Gutter Ball Sound
+    function playGutterSound() {
+      try {
+        const ctx = getAudioContext();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(150, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(40, ctx.currentTime + 0.6);
+
+        gain.gain.setValueAtTime(0.4, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.6);
+
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+
+        osc.start();
+        osc.stop(ctx.currentTime + 0.6);
+      } catch (e) {
+        console.log("Audio play blocked", e);
+      }
+    }
+
+    // Single-Player Arcade Engine Setup
+    let playerScore = 0;
     let ball = { x: 0, y: 0, radius: 11, isRolling: false, vy: 0, vx: 0 };
     let pins = [];
+    let rollHits = 0;
 
-    function togglePlayerMode() {
-      isTwoPlayer = !isTwoPlayer;
-      const btn = document.getElementById('modeBtn');
-      const p2Box = document.getElementById('p2-score-box');
-      if (isTwoPlayer) {
-        btn.innerHTML = '<i class="fa-solid fa-users"></i> Mode: 2P';
-        p2Box.style.display = 'inline';
-      } else {
-        btn.innerHTML = '<i class="fa-solid fa-user"></i> Mode: 1P';
-        p2Box.style.display = 'none';
-        activePlayer = 1;
-      }
-      resetBowlingGame();
+    function moveBall(offset) {
+      if (ball.isRolling) return;
+      const canvas = document.getElementById('bowlingCanvas');
+      if (!canvas) return;
+
+      const laneLeft = canvas.width * 0.22 + ball.radius;
+      const laneRight = (canvas.width * 0.78) - ball.radius;
+
+      ball.x += offset;
+      if (ball.x < laneLeft) ball.x = laneLeft;
+      if (ball.x > laneRight) ball.x = laneRight;
     }
 
     function initBowlingGame() {
@@ -867,6 +914,18 @@
         ctx.lineTo(laneRight, canvas.height - 35);
         ctx.stroke();
 
+        // Aiming Guideline Line when ball is stationary
+        if (!ball.isRolling) {
+          ctx.strokeStyle = 'rgba(255, 255, 255, 0.25)';
+          ctx.lineWidth = 1.5;
+          ctx.setLineDash([4, 4]);
+          ctx.beginPath();
+          ctx.moveTo(ball.x, ball.y);
+          ctx.lineTo(ball.x, 30);
+          ctx.stroke();
+          ctx.setLineDash([]);
+        }
+
         // Directional Target Arrows
         ctx.fillStyle = 'rgba(0,0,0,0.35)';
         for (let a = -2; a <= 2; a++) {
@@ -909,40 +968,39 @@
         if (ball.isRolling) {
           ball.y -= ball.vy;
           ball.x += ball.vx;
+
+          // Check if Ball Traveled into Gutters
+          if (ball.x < laneLeft || ball.x > laneRight) {
+            triggerGutterBall();
+          }
           
           // Collision Check with Pins
-          let hitCountThisRoll = 0;
           pins.forEach(pin => {
             if (pin.standing) {
               let dist = Math.hypot(ball.x - pin.x, ball.y - pin.y);
               if (dist < ball.radius + 6.5) {
                 pin.standing = false;
-                hitCountThisRoll++;
-                if (activePlayer === 1) {
-                  p1Score += 10;
-                  document.getElementById('p1-score').innerText = p1Score;
-                } else {
-                  p2Score += 10;
-                  document.getElementById('p2-score').innerText = p2Score;
-                }
+                rollHits++;
+                playerScore += 10;
+                document.getElementById('p1-score').innerText = playerScore;
               }
             }
           });
 
-          if (hitCountThisRoll > 0) {
+          if (rollHits > 0) {
             playPinCrashSound();
-            let standingLeft = pins.filter(p => p.standing).length;
-            if (standingLeft === 0) {
-              playCheerSound(); // STRIKE AUDIENCE CHEER!
-            }
           }
 
           // Top Barrier Reached
           if (ball.y < 20) {
             ball.isRolling = false;
-            if (isTwoPlayer) {
-              activePlayer = activePlayer === 1 ? 2 : 1;
-              document.getElementById('turn-indicator').innerHTML = `<i class="fa-solid fa-bowling-ball" style="color:${activePlayer === 1 ? '#00aaff' : '#ffb300'}"></i> Player ${activePlayer}'s Turn`;
+            
+            // Evaluate Roll Result
+            let standingLeft = pins.filter(p => p.standing).length;
+            if (standingLeft === 0) {
+              playCheerSound(); // STRIKE CHEER!
+            } else if (rollHits === 0) {
+              triggerGutterBall(); // No pins hit = Gutter Ball
             }
           }
         }
@@ -973,11 +1031,21 @@
       requestAnimationFrame(updateGame);
     }
 
+    function triggerGutterBall() {
+      const overlay = document.getElementById('gutterOverlay');
+      if (overlay) {
+        overlay.style.display = 'block';
+        playGutterSound();
+        setTimeout(() => { overlay.style.display = 'none'; }, 1800);
+      }
+    }
+
     function resetPins(canvas) {
       const c = canvas || document.getElementById('bowlingCanvas');
       ball.x = c.width / 2;
       ball.y = c.height - 18;
       ball.isRolling = false;
+      rollHits = 0;
 
       pins = [];
       const startY = 32;
@@ -998,14 +1066,15 @@
       getAudioContext(); // Initialize web audio context on user interaction
       ball.isRolling = true;
       ball.vy = 4.2;
-      ball.vx = (Math.random() - 0.5) * 0.6; // Slight realistic hook variation
+      ball.vx = (Math.random() - 0.5) * 0.3; // Slight natural roll variance
+      rollHits = 0;
     }
 
     function resetBowlingGame() {
-      p1Score = 0;
-      p2Score = 0;
+      playerScore = 0;
       document.getElementById('p1-score').innerText = '0';
-      document.getElementById('p2-score').innerText = '0';
+      const overlay = document.getElementById('gutterOverlay');
+      if (overlay) overlay.style.display = 'none';
       const canvas = document.getElementById('bowlingCanvas');
       resetPins(canvas);
     }

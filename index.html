@@ -3,16 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bowl Strike - Professional Edition</title>
+  <title>Bowl Strike - Realistic Alley Edition</title>
   <style>
     :root {
-      --bg-color: #0b0d12;
-      --card-bg: linear-gradient(145deg, #161b26 0%, #0e121a 100%);
+      --bg-color: #07090e;
+      --card-bg: linear-gradient(145deg, #121620 0%, #0a0d14 100%);
       --accent-gold: #d4af37;
       --accent-cyan: #00e5ff;
       --text-main: #f0f4f8;
       --text-muted: #7f8c9d;
-      --border-color: #232d3d;
+      --border-color: #1e2636;
     }
 
     * {
@@ -36,7 +36,7 @@
 
     header {
       text-align: center;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
 
     .brand-title {
@@ -44,14 +44,14 @@
       font-weight: 900;
       letter-spacing: 4px;
       text-transform: uppercase;
-      background: linear-gradient(180deg, #ffffff 0%, #a0b0c0 100%);
+      background: linear-gradient(180deg, #ffffff 0%, #8a9bb0 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      text-shadow: 0 4px 12px rgba(0,0,0,0.5);
+      text-shadow: 0 4px 12px rgba(0,0,0,0.6);
     }
 
     .brand-subtitle {
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       color: var(--accent-gold);
       letter-spacing: 2px;
       text-transform: uppercase;
@@ -59,15 +59,15 @@
       margin-top: 2px;
     }
 
-    /* Pro Scoreboard HUD */
+    /* Scoreboard HUD */
     #scoreboard {
       width: 100%;
-      max-width: 560px;
+      max-width: 540px;
       background: var(--card-bg);
       border: 1px solid var(--border-color);
       border-radius: 6px;
-      padding: 10px 16px;
-      margin-bottom: 12px;
+      padding: 8px 14px;
+      margin-bottom: 10px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -85,16 +85,15 @@
     }
 
     .hud-label {
-      font-size: 0.65rem;
+      font-size: 0.62rem;
       text-transform: uppercase;
       color: var(--text-muted);
       letter-spacing: 1.5px;
       font-weight: 700;
-      margin-bottom: 2px;
     }
 
     .hud-value {
-      font-size: 1.5rem;
+      font-size: 1.4rem;
       font-weight: 800;
       font-family: 'Courier New', Courier, monospace;
       color: #ffffff;
@@ -109,29 +108,29 @@
     #game-container {
       position: relative;
       width: 100%;
-      max-width: 560px;
+      max-width: 540px;
       background: #000;
       border-radius: 8px;
       overflow: hidden;
-      border: 1px solid #334155;
-      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.8), 0 0 1px 1px rgba(255,255,255,0.1);
+      border: 1px solid #2d3748;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.9);
     }
 
     canvas {
       display: block;
       width: 100%;
       height: auto;
-      background: #06080c;
+      background: #000;
     }
 
-    /* Controls & Information Bar */
+    /* Controls Bar */
     #controls-panel {
       width: 100%;
-      max-width: 560px;
-      margin-top: 12px;
+      max-width: 540px;
+      margin-top: 10px;
       background: var(--card-bg);
       border-radius: 6px;
-      padding: 12px 16px;
+      padding: 10px 14px;
       border: 1px solid var(--border-color);
       display: flex;
       align-items: center;
@@ -139,9 +138,8 @@
     }
 
     .instructions {
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       color: var(--text-muted);
-      line-height: 1.3;
     }
 
     .instructions strong {
@@ -149,38 +147,35 @@
     }
 
     .btn-pro {
-      background: linear-gradient(180deg, #2a3446 0%, #171e2b 100%);
+      background: linear-gradient(180deg, #242d3c 0%, #121722 100%);
       color: var(--text-main);
-      border: 1px solid #405068;
-      padding: 8px 18px;
-      font-size: 0.85rem;
+      border: 1px solid #3b485d;
+      padding: 7px 16px;
+      font-size: 0.8rem;
       font-weight: 700;
       letter-spacing: 1px;
       text-transform: uppercase;
       border-radius: 4px;
       cursor: pointer;
       transition: all 0.2s ease;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.4);
     }
 
     .btn-pro:hover {
-      background: linear-gradient(180deg, #344258 0%, #1e2738 100%);
       border-color: var(--accent-gold);
       color: #ffffff;
     }
 
-    /* Broadcast Banner Overlay */
     #game-overlay {
       position: absolute;
-      top: 30%;
+      top: 32%;
       left: 0;
       width: 100%;
       text-align: center;
-      font-size: 2.8rem;
+      font-size: 2.6rem;
       font-weight: 900;
       letter-spacing: 3px;
       color: #ffffff;
-      text-shadow: 0 0 20px rgba(0, 229, 255, 0.8), 0 4px 8px #000;
+      text-shadow: 0 0 20px rgba(0, 229, 255, 0.9), 0 4px 8px #000;
       pointer-events: none;
       opacity: 0;
       transition: opacity 0.3s ease, transform 0.3s ease;
@@ -199,10 +194,9 @@
 
   <header>
     <div class="brand-title">BOWL STRIKE</div>
-    <div class="brand-subtitle">PRO TOUR ALLEY</div>
+    <div class="brand-subtitle">PRO TOUR LANES</div>
   </header>
 
-  <!-- Pro Scoreboard HUD -->
   <div id="scoreboard">
     <div class="hud-group">
       <div class="hud-label">Frame</div>
@@ -218,16 +212,14 @@
     </div>
   </div>
 
-  <!-- Main Canvas -->
   <div id="game-container">
-    <canvas id="bowlingCanvas" width="500" height="700"></canvas>
+    <canvas id="bowlingCanvas" width="500" height="720"></canvas>
     <div id="game-overlay">STRIKE!</div>
   </div>
 
-  <!-- Control Footer -->
   <div id="controls-panel">
     <div class="instructions" id="instruction-text">
-      <strong>Swipe / Drag backward</strong> from behind the foul line to launch.
+      <strong>Swipe / Drag backward</strong> behind the foul line to roll.
     </div>
     <button class="btn-pro" onclick="resetGame()">Reset Frame</button>
   </div>
@@ -237,7 +229,6 @@
     const ctx = canvas.getContext('2d');
     const overlay = document.getElementById('game-overlay');
 
-    // Web Audio Synthesizer (Zero External Dependencies)
     let audioCtx = null;
 
     function initAudio() {
@@ -254,20 +245,17 @@
       const bufferSize = audioCtx.sampleRate * 1.5;
       const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
       const data = buffer.getChannelData(0);
-      for (let i = 0; i < bufferSize; i++) {
-        data[i] = Math.random() * 2 - 1;
-      }
+      for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
 
       const noise = audioCtx.createBufferSource();
       noise.buffer = buffer;
-
       const filter = audioCtx.createBiquadFilter();
       filter.type = 'lowpass';
-      filter.frequency.setValueAtTime(140, audioCtx.currentTime);
-      filter.frequency.exponentialRampToValueAtTime(35, audioCtx.currentTime + 1.2);
+      filter.frequency.setValueAtTime(130, audioCtx.currentTime);
+      filter.frequency.exponentialRampToValueAtTime(30, audioCtx.currentTime + 1.2);
 
       const gain = audioCtx.createGain();
-      gain.gain.setValueAtTime(0.25, audioCtx.currentTime);
+      gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
       gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 1.2);
 
       noise.connect(filter);
@@ -282,54 +270,33 @@
       const bufferSize = audioCtx.sampleRate * duration;
       const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
       const data = buffer.getChannelData(0);
-      for (let i = 0; i < bufferSize; i++) {
-        data[i] = Math.random() * 2 - 1;
-      }
+      for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
 
       const noise = audioCtx.createBufferSource();
       noise.buffer = buffer;
-
       const filter = audioCtx.createBiquadFilter();
       filter.type = 'bandpass';
-      filter.frequency.setValueAtTime(1400, audioCtx.currentTime);
-      filter.Q.setValueAtTime(2.5, audioCtx.currentTime);
+      filter.frequency.setValueAtTime(1500, audioCtx.currentTime);
+      filter.Q.setValueAtTime(2.2, audioCtx.currentTime);
 
       const gain = audioCtx.createGain();
-      const volume = Math.min(0.25 + count * 0.08, 0.85);
-      gain.gain.setValueAtTime(volume, audioCtx.currentTime);
+      gain.gain.setValueAtTime(Math.min(0.3 + count * 0.08, 0.85), audioCtx.currentTime);
       gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
 
       noise.connect(filter);
       filter.connect(gain);
       gain.connect(audioCtx.destination);
-
-      const osc = audioCtx.createOscillator();
-      const oscGain = audioCtx.createGain();
-      osc.type = 'triangle';
-      osc.frequency.setValueAtTime(240, audioCtx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(50, audioCtx.currentTime + 0.12);
-      oscGain.gain.setValueAtTime(0.6, audioCtx.currentTime);
-      oscGain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.12);
-
-      osc.connect(oscGain);
-      oscGain.connect(audioCtx.destination);
-
       noise.start();
-      osc.start();
-      osc.stop(audioCtx.currentTime + 0.12);
     }
 
-    // AUDIENCE CHEER / APPLAUSE SYNTHESIZER FOR STRIKES
     function playCheerSound() {
       if (!audioCtx) return;
-
-      const duration = 2.5;
+      const duration = 2.4;
       const bufferSize = audioCtx.sampleRate * duration;
       const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
       const data = buffer.getChannelData(0);
 
-      // Pink noise-based applause texture
-      let b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0, b5 = 0, b6 = 0;
+      let b0=0,b1=0,b2=0,b3=0,b4=0,b5=0,b6=0;
       for (let i = 0; i < bufferSize; i++) {
         const white = Math.random() * 2 - 1;
         b0 = 0.99886 * b0 + white * 0.0555179;
@@ -339,66 +306,41 @@
         b4 = 0.55000 * b4 + white * 0.5329522;
         b5 = -0.7616 * b5 - white * 0.0168980;
         data[i] = b0 + b1 + b2 + b3 + b4 + b5 + b6 + white * 0.5362;
-        data[i] *= 0.11;
+        data[i] *= 0.10;
         b6 = white * 0.115926;
       }
 
-      const crowdNoise = audioCtx.createBufferSource();
-      crowdNoise.buffer = buffer;
+      const noise = audioCtx.createBufferSource();
+      noise.buffer = buffer;
 
-      // Bandpass filter to simulate crowd vocal resonance
-      const crowdFilter = audioCtx.createBiquadFilter();
-      crowdFilter.type = 'bandpass';
-      crowdFilter.frequency.setValueAtTime(850, audioCtx.currentTime);
-      crowdFilter.Q.setValueAtTime(1.2, audioCtx.currentTime);
+      const filter = audioCtx.createBiquadFilter();
+      filter.type = 'bandpass';
+      filter.frequency.setValueAtTime(900, audioCtx.currentTime);
+      filter.Q.setValueAtTime(1.1, audioCtx.currentTime);
 
-      // Envelope swell and fade out
-      const crowdGain = audioCtx.createGain();
-      crowdGain.gain.setValueAtTime(0.01, audioCtx.currentTime);
-      crowdGain.gain.linearRampToValueAtTime(0.5, audioCtx.currentTime + 0.3);
-      crowdGain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+      const gain = audioCtx.createGain();
+      gain.gain.setValueAtTime(0.01, audioCtx.currentTime);
+      gain.gain.linearRampToValueAtTime(0.45, audioCtx.currentTime + 0.3);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
 
-      crowdNoise.connect(crowdFilter);
-      crowdFilter.connect(crowdGain);
-      crowdGain.connect(audioCtx.destination);
-
-      crowdNoise.start();
-
-      // Multi-tonal vocal roar harmonics
-      [320, 480, 640].forEach((freq) => {
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(freq * 1.15, audioCtx.currentTime + 0.4);
-        osc.frequency.exponentialRampToValueAtTime(freq * 0.9, audioCtx.currentTime + duration);
-
-        gain.gain.setValueAtTime(0.001, audioCtx.currentTime);
-        gain.gain.linearRampToValueAtTime(0.08, audioCtx.currentTime + 0.25);
-        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration - 0.2);
-
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-        osc.start();
-        osc.stop(audioCtx.currentTime + duration);
-      });
+      noise.connect(filter);
+      filter.connect(gain);
+      gain.connect(audioCtx.destination);
+      noise.start();
     }
 
-    // Game Variables
+    // State Variables
     let currentFrame = 1;
     let currentRoll = 1;
     let totalScore = 0;
     let gameOver = false;
 
-    // FOUL LINE Y-COORDINATE
-    const FOUL_LINE_Y = 570;
+    const FOUL_LINE_Y = 580;
 
-    // Ball Object
     let ball = {
-      x: 250,
-      y: 630, // Starts on the approach behind the foul line
-      radius: 17,
+      x: 270,
+      y: 645,
+      radius: 16,
       vx: 0,
       vy: 0,
       isRolling: false,
@@ -407,23 +349,21 @@
       rotation: 0
     };
 
-    // Aiming / Dragging
     let isDragging = false;
     let dragStart = { x: 0, y: 0 };
     let dragCurrent = { x: 0, y: 0 };
 
-    // Pin Layout Setup (Widened spacing to accommodate doubled pin size)
     const pinOrigins = [
-      { id: 1,  row: 1, col: 1, x: 250, y: 175 }, 
-      { id: 2,  row: 2, col: 1, x: 222, y: 152 },
-      { id: 3,  row: 2, col: 2, x: 278, y: 152 },
-      { id: 4,  row: 3, col: 1, x: 194, y: 129 },
-      { id: 5,  row: 3, col: 2, x: 250, y: 129 },
-      { id: 6,  row: 3, col: 3, x: 306, y: 129 },
-      { id: 7,  row: 4, col: 1, x: 166, y: 106 },
-      { id: 8,  row: 4, col: 2, x: 222, y: 106 },
-      { id: 9,  row: 4, col: 3, x: 278, y: 106 },
-      { id: 10, row: 4, col: 4, x: 334, y: 106 }
+      { id: 1,  row: 1, col: 1, x: 270, y: 200 }, 
+      { id: 2,  row: 2, col: 1, x: 242, y: 177 },
+      { id: 3,  row: 2, col: 2, x: 298, y: 177 },
+      { id: 4,  row: 3, col: 1, x: 214, y: 154 },
+      { id: 5,  row: 3, col: 2, x: 270, y: 154 },
+      { id: 6,  row: 3, col: 3, x: 326, y: 154 },
+      { id: 7,  row: 4, col: 1, x: 186, y: 131 },
+      { id: 8,  row: 4, col: 2, x: 242, y: 131 },
+      { id: 9,  row: 4, col: 3, x: 298, y: 131 },
+      { id: 10, row: 4, col: 4, x: 354, y: 131 }
     ];
 
     let pins = [];
@@ -439,10 +379,9 @@
     }
 
     function getScale(y) {
-      return 0.35 + (y / 700) * 0.65;
+      return 0.38 + (y / 720) * 0.62;
     }
 
-    // Input Handling
     function getCanvasCoordinates(e) {
       const rect = canvas.getBoundingClientRect();
       const clientX = e.touches ? e.touches[0].clientX : e.clientX;
@@ -504,7 +443,6 @@
       setTimeout(() => overlay.classList.remove('show'), 1800);
     }
 
-    // Physics Engine Update
     function update() {
       if (ball.isRolling) {
         ball.x += ball.vx;
@@ -514,12 +452,11 @@
 
         let hitThisFrame = 0;
 
-        // Pin Collision Check (Adjusted for doubled pin width)
         pins.forEach(pin => {
           if (pin.isStanding) {
             const dist = Math.hypot(ball.x - pin.x, ball.y - pin.y);
             const scale = getScale(pin.y);
-            if (dist < (ball.radius + 22 * scale)) { // 22px hit radius (doubled size)
+            if (dist < (ball.radius + 20 * scale)) {
               pin.isStanding = false;
               pin.knockedX = (pin.x - ball.x) * 0.85 + (Math.random() - 0.5) * 12;
               pin.knockedY = -Math.abs(ball.vy) * 0.55;
@@ -533,7 +470,6 @@
           ball.hasHitPins = true;
         }
 
-        // Pin Scatter Dynamics
         pins.forEach(pin => {
           if (!pin.isStanding && pin.opacity > 0) {
             pin.x += pin.knockedX;
@@ -544,15 +480,14 @@
           }
         });
 
-        // Gutter Trap
-        const laneLeft = 135 - (ball.y / 700) * 35;
-        const laneRight = 365 + (ball.y / 700) * 35;
+        // Gutter Collision (Adjusted for left ball return channel)
+        const laneLeft = 145 - (ball.y / 720) * 35;
+        const laneRight = 395 + (ball.y / 720) * 35;
         if (ball.x < laneLeft || ball.x > laneRight) {
           ball.vx *= 0.12;
         }
 
-        // End of Shot Detection
-        if (ball.y < 85 || Math.abs(ball.vy) < 0.2) {
+        if (ball.y < 110 || Math.abs(ball.vy) < 0.2) {
           endRoll();
         }
       }
@@ -563,27 +498,22 @@
       const knockedThisRoll = pins.filter(p => !p.isStanding && p.opacity > 0).length;
       totalScore += knockedThisRoll;
 
-      pins.forEach(p => {
-        if (!p.isStanding) p.opacity = 0;
-      });
+      pins.forEach(p => { if (!p.isStanding) p.opacity = 0; });
 
       const standingCount = pins.filter(p => p.isStanding).length;
 
       if (currentRoll === 1) {
         if (standingCount === 0) {
           showOverlay("STRIKE!");
-          playCheerSound(); // Triggers audience cheering crowd sound
+          playCheerSound();
           nextFrame();
         } else {
           currentRoll = 2;
           resetBall();
         }
       } else {
-        if (standingCount === 0) {
-          showOverlay("SPARE!");
-        } else if (knockedThisRoll === 0) {
-          showOverlay("GUTTER!");
-        }
+        if (standingCount === 0) showOverlay("SPARE!");
+        else if (knockedThisRoll === 0) showOverlay("GUTTER!");
         nextFrame();
       }
 
@@ -591,8 +521,8 @@
     }
 
     function resetBall() {
-      ball.x = 250;
-      ball.y = 630;
+      ball.x = 270;
+      ball.y = 645;
       ball.vx = 0;
       ball.vy = 0;
       ball.isRolling = false;
@@ -621,7 +551,7 @@
       totalScore = 0;
       gameOver = false;
       document.getElementById('instruction-text').innerHTML = 
-        `<strong>Swipe / Drag backward</strong> from behind the foul line to launch.`;
+        `<strong>Swipe / Drag backward</strong> behind the foul line to roll.`;
       initPins();
       resetBall();
       updateUI();
@@ -633,161 +563,205 @@
       document.getElementById('score-display').innerText = totalScore;
     }
 
-    // High-Resolution Professional Drawing Loop
+    // High-Detail Rendering Engine
     function draw() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // 1. Pit Area (Back Wall Cavity)
-      ctx.fillStyle = '#040508';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      // 1. PINSETTER MASKING GRAPHIC BACKDROP (Above Pins)
+      ctx.fillStyle = '#05070a';
+      ctx.fillRect(0, 0, canvas.width, 120);
 
-      // Sweep Bar Housing / Pin Pit Wall
-      ctx.fillStyle = '#0c0f17';
-      ctx.fillRect(100, 30, 300, 80);
-      ctx.fillStyle = '#1e2638';
-      ctx.fillRect(100, 110, 300, 5);
+      // Masking Panel Main Casing
+      const panelGrad = ctx.createLinearGradient(0, 0, 0, 100);
+      panelGrad.addColorStop(0, '#1a202c');
+      panelGrad.addColorStop(0.5, '#0f141d');
+      panelGrad.addColorStop(1, '#080b10');
+      ctx.fillStyle = panelGrad;
+      ctx.fillRect(50, 10, 400, 90);
 
-      // 2. Approach Hardwood Floor (Behind Foul Line)
-      const approachGrad = ctx.createLinearGradient(0, FOUL_LINE_Y, 0, 700);
-      approachGrad.addColorStop(0, '#c2873e');
-      approachGrad.addColorStop(1, '#9e6727');
+      // Panel Metallic Frame & Accents
+      ctx.strokeStyle = '#2d3748';
+      ctx.lineWidth = 3;
+      ctx.strokeRect(50, 10, 400, 90);
+
+      // Score Display Box on Masking Unit
+      ctx.fillStyle = '#030508';
+      ctx.fillRect(200, 25, 100, 32);
+      ctx.strokeStyle = '#d4af37';
+      ctx.lineWidth = 1.5;
+      ctx.strokeRect(200, 25, 100, 32);
+
+      ctx.fillStyle = '#00e5ff';
+      ctx.font = '700 16px "Courier New", monospace';
+      ctx.textAlign = 'center';
+      ctx.fillText(`LANE 04`, 250, 46);
+
+      // Pin Deck Ambient Pit Light Beam
+      const pitGlow = ctx.createRadialGradient(270, 125, 10, 270, 125, 180);
+      pitGlow.addColorStop(0, 'rgba(255, 235, 200, 0.25)');
+      pitGlow.addColorStop(1, 'rgba(0, 0, 0, 0)');
+      ctx.fillStyle = pitGlow;
+      ctx.fillRect(100, 100, 340, 110);
+
+      // Pit Cavity Back Wall Depth
+      ctx.fillStyle = '#030406';
+      ctx.fillRect(130, 100, 280, 25);
+
+      // 2. APPROACH HARDWOOD FLOOR
+      const approachGrad = ctx.createLinearGradient(0, FOUL_LINE_Y, 0, 720);
+      approachGrad.addColorStop(0, '#b87c33');
+      approachGrad.addColorStop(1, '#8f5c20');
       ctx.fillStyle = approachGrad;
-      ctx.fillRect(0, FOUL_LINE_Y, canvas.width, 700 - FOUL_LINE_Y);
+      ctx.fillRect(0, FOUL_LINE_Y, canvas.width, 720 - FOUL_LINE_Y);
 
-      // Approach Dots
-      ctx.fillStyle = '#4a2e0e';
-      [-80, -40, 0, 40, 80].forEach(offset => {
-        ctx.beginPath();
-        ctx.arc(250 + offset, 660, 3, 0, Math.PI * 2);
-        ctx.fill();
-      });
-
-      // 3. Main Maple Wood Lane Floor
-      const laneGrad = ctx.createLinearGradient(0, 100, 0, FOUL_LINE_Y);
-      laneGrad.addColorStop(0, '#9c6527');  // Dry deck near pins
-      laneGrad.addColorStop(0.5, '#bd8239'); // Oiled mid-lane
-      laneGrad.addColorStop(1, '#d19448');   // Oiled head deck
+      // 3. MAIN MAPLE WOOD LANE FLOOR
+      const laneGrad = ctx.createLinearGradient(0, 125, 0, FOUL_LINE_Y);
+      laneGrad.addColorStop(0, '#8c5822');  
+      laneGrad.addColorStop(0.5, '#ad7533'); 
+      laneGrad.addColorStop(1, '#ca8d3e');   
 
       ctx.beginPath();
-      ctx.moveTo(170, 100);  
-      ctx.lineTo(330, 100);  
-      ctx.lineTo(445, FOUL_LINE_Y);  
-      ctx.lineTo(55, FOUL_LINE_Y);   
+      ctx.moveTo(180, 125);  
+      ctx.lineTo(360, 125);  
+      ctx.lineTo(475, FOUL_LINE_Y);  
+      ctx.lineTo(65, FOUL_LINE_Y);   
       ctx.closePath();
       ctx.fillStyle = laneGrad;
       ctx.fill();
 
-      // Board Lines Shading
-      ctx.strokeStyle = 'rgba(0, 0, 0, 0.07)';
+      // Board Planks Shading
+      ctx.strokeStyle = 'rgba(0, 0, 0, 0.08)';
       ctx.lineWidth = 1;
-      for (let i = -7; i <= 7; i++) {
+      for (let i = -8; i <= 8; i++) {
         ctx.beginPath();
-        ctx.moveTo(250 + i * 10, 100);
-        ctx.lineTo(250 + i * 26, FOUL_LINE_Y);
+        ctx.moveTo(270 + i * 10, 125);
+        ctx.lineTo(270 + i * 25.5, FOUL_LINE_Y);
         ctx.stroke();
       }
 
-      // Oiled Lane Wax Reflection Surface
-      const waxGrad = ctx.createLinearGradient(0, 250, 0, FOUL_LINE_Y);
+      // Lane Floor Wax Gloss Reflection Sheen
+      const waxGrad = ctx.createLinearGradient(0, 200, 0, FOUL_LINE_Y);
       waxGrad.addColorStop(0, 'rgba(255, 255, 255, 0.0)');
-      waxGrad.addColorStop(0.7, 'rgba(255, 255, 255, 0.08)');
-      waxGrad.addColorStop(1, 'rgba(255, 255, 255, 0.18)');
+      waxGrad.addColorStop(0.6, 'rgba(255, 255, 255, 0.06)');
+      waxGrad.addColorStop(1, 'rgba(255, 255, 255, 0.16)');
       ctx.fillStyle = waxGrad;
       ctx.fill();
 
-      // 4. Heavy Metallic Gutters
+      // 4. GUTTERS & CAPPING RAILS
       // Left Gutter
-      ctx.fillStyle = '#12161f';
+      ctx.fillStyle = '#11151c';
       ctx.beginPath();
-      ctx.moveTo(110, 100); ctx.lineTo(170, 100); ctx.lineTo(55, FOUL_LINE_Y); ctx.lineTo(0, FOUL_LINE_Y);
+      ctx.moveTo(120, 125); ctx.lineTo(180, 125); ctx.lineTo(65, FOUL_LINE_Y); ctx.lineTo(0, FOUL_LINE_Y);
       ctx.fill();
       // Right Gutter
       ctx.beginPath();
-      ctx.moveTo(330, 100); ctx.lineTo(390, 100); ctx.lineTo(500, FOUL_LINE_Y); ctx.lineTo(445, FOUL_LINE_Y);
+      ctx.moveTo(360, 125); ctx.lineTo(420, 125); ctx.lineTo(500, FOUL_LINE_Y); ctx.lineTo(475, FOUL_LINE_Y);
       ctx.fill();
 
-      // Gutter Capping Rails (Chrome Accents)
-      ctx.strokeStyle = '#334155';
+      // 5. SLEEK MAHOGANY & CHARCOAL BALL RETURN SYSTEM (LEFT SIDE)
+      // Ball Return Track Casing
+      const trackGrad = ctx.createLinearGradient(0, 120, 60, 720);
+      trackGrad.addColorStop(0, '#1c130d'); // Mahogany wood tone
+      trackGrad.addColorStop(0.5, '#2d1e15');
+      trackGrad.addColorStop(1, '#0e1217'); // Dark charcoal
+      ctx.fillStyle = trackGrad;
+
+      ctx.beginPath();
+      ctx.moveTo(40, 120);
+      ctx.lineTo(110, 120);
+      ctx.lineTo(50, FOUL_LINE_Y + 140);
+      ctx.lineTo(0, FOUL_LINE_Y + 140);
+      ctx.closePath();
+      ctx.fill();
+
+      // Brushed Chrome Trim Lines on Ball Return
+      ctx.strokeStyle = '#4a5568';
       ctx.lineWidth = 2;
       ctx.beginPath();
-      ctx.moveTo(170, 100); ctx.lineTo(55, FOUL_LINE_Y);
-      ctx.moveTo(330, 100); ctx.lineTo(445, FOUL_LINE_Y);
+      ctx.moveTo(110, 120);
+      ctx.lineTo(50, FOUL_LINE_Y + 140);
       ctx.stroke();
 
-      // 5. PBA 7-Arrow Targeting System
-      ctx.fillStyle = '#4a2e0e';
+      // Ball Return Return Hood / Tray (Approach Area)
+      ctx.fillStyle = '#1a202c';
+      ctx.beginPath();
+      ctx.ellipse(30, 670, 25, 40, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = '#d4af37';
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+
+      // 6. TARGETING ARROWS & FOUL LINE
+      ctx.fillStyle = '#42280c';
       [-60, -40, -20, 0, 20, 40, 60].forEach(offset => {
-        const scale = getScale(410);
-        const ax = 250 + offset * 2.1;
+        const scale = getScale(420);
+        const ax = 270 + offset * 2.1;
         ctx.beginPath();
-        ctx.moveTo(ax, 410);
-        ctx.lineTo(ax - 3 * scale, 422);
-        ctx.lineTo(ax + 3 * scale, 422);
+        ctx.moveTo(ax, 420);
+        ctx.lineTo(ax - 3 * scale, 432);
+        ctx.lineTo(ax + 3 * scale, 432);
         ctx.closePath();
         ctx.fill();
       });
 
-      // 6. PRO FOUL LINE & SENSORS
-      ctx.fillStyle = '#111111';
-      ctx.fillRect(45, FOUL_LINE_Y - 2, 410, 5);
-      ctx.fillStyle = '#cc0000';
-      ctx.fillRect(45, FOUL_LINE_Y, 410, 2);
+      // Foul Line
+      ctx.fillStyle = '#000000';
+      ctx.fillRect(55, FOUL_LINE_Y - 2, 425, 5);
+      ctx.fillStyle = '#d60000';
+      ctx.fillRect(55, FOUL_LINE_Y, 425, 2);
 
-      // Foul Sensors
-      ctx.fillStyle = '#1e293b';
-      ctx.fillRect(40, FOUL_LINE_Y - 6, 12, 12);
-      ctx.fillRect(448, FOUL_LINE_Y - 6, 12, 12);
-      ctx.fillStyle = '#00ffcc';
-      ctx.beginPath();
-      ctx.arc(46, FOUL_LINE_Y, 2.5, 0, Math.PI * 2);
-      ctx.arc(454, FOUL_LINE_Y, 2.5, 0, Math.PI * 2);
-      ctx.fill();
-
-      // 7. Pin Deck Spots (Expanded for larger pin base)
+      // Pin Deck Spots
       pinOrigins.forEach(p => {
         const scale = getScale(p.y);
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.15)';
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
         ctx.beginPath();
-        ctx.arc(p.x, p.y + 8 * scale, 8 * scale, 0, Math.PI * 2);
+        ctx.arc(p.x, p.y + 10 * scale, 8 * scale, 0, Math.PI * 2);
         ctx.fill();
       });
 
-      // 8. Render Doubled-Size Pins (Back to Front)
+      // 7. REALISTIC BOTTLE-SHAPED PINS
       const sortedPins = [...pins].sort((a, b) => a.y - b.y);
       sortedPins.forEach(pin => {
         if (pin.opacity <= 0) return;
 
-        const scale = getScale(pin.y) * 2.0; // DOUBLED PIN SCALE FACTOR
+        const scale = getScale(pin.y) * 2.0;
         ctx.save();
         ctx.globalAlpha = pin.opacity;
         
-        // Pin Base Shadow
-        ctx.fillStyle = 'rgba(0,0,0,0.5)';
+        // Base Drop Shadow
+        ctx.fillStyle = 'rgba(0,0,0,0.45)';
         ctx.beginPath();
-        ctx.ellipse(pin.x, pin.y + 5 * scale, 8.5 * scale, 3 * scale, 0, 0, Math.PI * 2);
+        ctx.ellipse(pin.x, pin.y + 6 * scale, 8.5 * scale, 3 * scale, 0, 0, Math.PI * 2);
         ctx.fill();
 
-        // Pin Body (Lacquer White Gradient)
-        const pinGrad = ctx.createLinearGradient(pin.x - 5 * scale, 0, pin.x + 5 * scale, 0);
-        pinGrad.addColorStop(0, '#d9d9d9');
-        pinGrad.addColorStop(0.4, '#ffffff');
-        pinGrad.addColorStop(1, '#b0b0b0');
-
-        ctx.fillStyle = pinGrad;
+        // Pin Body Contoured Path (Authentic Hourglass Bottle Silhouette)
         ctx.beginPath();
-        ctx.arc(pin.x, pin.y - 12 * scale, 6 * scale, 0, Math.PI * 2); // Head
-        ctx.arc(pin.x, pin.y, 9 * scale, 0, Math.PI * 2);            // Body
+        ctx.moveTo(pin.x - 3 * scale, pin.y - 18 * scale); // Crown top
+        ctx.bezierCurveTo(pin.x - 5 * scale, pin.y - 18 * scale, pin.x - 4 * scale, pin.y - 12 * scale, pin.x - 2.5 * scale, pin.y - 9 * scale); // Neck
+        ctx.bezierCurveTo(pin.x - 8 * scale, pin.y - 4 * scale, pin.x - 8.5 * scale, pin.y + 2 * scale, pin.x - 6.5 * scale, pin.y + 6 * scale); // Belly
+        ctx.lineTo(pin.x + 6.5 * scale, pin.y + 6 * scale);
+        ctx.bezierCurveTo(pin.x + 8.5 * scale, pin.y + 2 * scale, pin.x + 8 * scale, pin.y - 4 * scale, pin.x + 2.5 * scale, pin.y - 9 * scale);
+        ctx.bezierCurveTo(pin.x + 4 * scale, pin.y - 12 * scale, pin.x + 5 * scale, pin.y - 18 * scale, pin.x + 3 * scale, pin.y - 18 * scale);
+        ctx.closePath();
+
+        // Off-White Pearl Lacquer Gradient
+        const pinGrad = ctx.createLinearGradient(pin.x - 6 * scale, 0, pin.x + 6 * scale, 0);
+        pinGrad.addColorStop(0, '#cfd8dc');
+        pinGrad.addColorStop(0.35, '#ffffff');
+        pinGrad.addColorStop(0.8, '#eceff1');
+        pinGrad.addColorStop(1, '#b0bec5');
+        ctx.fillStyle = pinGrad;
         ctx.fill();
 
         // Dual Red Stripes
         ctx.fillStyle = '#d60000';
-        ctx.fillRect(pin.x - 4.5 * scale, pin.y - 14 * scale, 9 * scale, 2 * scale);
-        ctx.fillRect(pin.x - 5 * scale, pin.y - 10.5 * scale, 10 * scale, 2 * scale);
+        ctx.fillRect(pin.x - 3.2 * scale, pin.y - 13.5 * scale, 6.4 * scale, 1.8 * scale);
+        ctx.fillRect(pin.x - 3.6 * scale, pin.y - 10.8 * scale, 7.2 * scale, 1.8 * scale);
 
         ctx.restore();
       });
 
-      // 9. Aiming Vector Line
+      // 8. AIMING LINE
       if (isDragging) {
         ctx.beginPath();
         ctx.moveTo(ball.x, ball.y);
@@ -801,17 +775,15 @@
         ctx.setLineDash([]);
       }
 
-      // 10. Render Reactive-Resin Pearl Bowling Ball
+      // 9. BOWLING BALL
       const ballScale = getScale(ball.y);
       const scaledRadius = ball.radius * ballScale;
 
-      // Ball Contact Shadow
       ctx.fillStyle = 'rgba(0, 0, 0, 0.55)';
       ctx.beginPath();
       ctx.ellipse(ball.x, ball.y + scaledRadius * 0.8, scaledRadius * 1.05, scaledRadius * 0.3, 0, 0, Math.PI * 2);
       ctx.fill();
 
-      // Pro Pearl Resin Core Gradient
       const ballGrad = ctx.createRadialGradient(
         ball.x - scaledRadius * 0.35, 
         ball.y - scaledRadius * 0.35, 
@@ -834,12 +806,6 @@
       ctx.fillStyle = ballGrad;
       ctx.fill();
 
-      // Pearl Swirl Texture Highlight
-      ctx.beginPath();
-      ctx.arc(-scaledRadius * 0.2, -scaledRadius * 0.2, scaledRadius * 0.5, 0, Math.PI * 2);
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.12)';
-      ctx.fill();
-
       // Finger Grips
       ctx.fillStyle = '#050a10';
       ctx.beginPath();
@@ -851,7 +817,6 @@
       ctx.restore();
     }
 
-    // Main Game Loop
     function gameLoop() {
       update();
       draw();

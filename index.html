@@ -34,31 +34,6 @@
       padding: 12px;
     }
 
-    header {
-      text-align: center;
-      margin-bottom: 10px;
-    }
-
-    .brand-title {
-      font-size: 2.2rem;
-      font-weight: 900;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-      background: linear-gradient(180deg, #ffffff 0%, #00e5ff 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      text-shadow: 0 4px 12px rgba(0,0,0,0.6);
-    }
-
-    .brand-subtitle {
-      font-size: 0.75rem;
-      color: var(--accent-gold);
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      font-weight: 700;
-      margin-top: 2px;
-    }
-
     /* Scoreboard HUD */
     #scoreboard {
       width: 100%;
@@ -67,6 +42,7 @@
       border: 1px solid var(--border-color);
       border-radius: 6px;
       padding: 8px 14px;
+      margin-top: 10px;
       margin-bottom: 10px;
       display: flex;
       justify-content: space-between;
@@ -191,11 +167,6 @@
   </style>
 </head>
 <body>
-
-  <header>
-    <div class="brand-title">BowlStrike.com</div>
-    <div class="brand-subtitle">PRO TOUR EDITION</div>
-  </header>
 
   <div id="scoreboard">
     <div class="hud-group">
@@ -445,11 +416,6 @@
 
     function update() {
       if (ball.isRolling) {
-        // Strike Magnet Assist: Gently nudge trajectory into headpin pocket
-        if (ball.y < 320 && ball.y > 200) {
-          ball.x += (250 - ball.x) * 0.08;
-        }
-
         ball.x += ball.vx;
         ball.y += ball.vy;
         ball.vy *= 0.993;
@@ -457,15 +423,15 @@
 
         let hitThisFrame = 0;
 
-        // Expanded Strike Physics Hit Detection Radius
+        // Balanced Strike Physics Hit Detection Radius
         pins.forEach(pin => {
           if (pin.isStanding) {
             const dist = Math.hypot(ball.x - pin.x, ball.y - pin.y);
             const scale = getScale(pin.y);
-            if (dist < (ball.radius + 38 * scale)) {
+            if (dist < (ball.radius + 24 * scale)) {
               pin.isStanding = false;
-              pin.knockedX = (pin.x - ball.x) * 1.2 + (Math.random() - 0.5) * 18;
-              pin.knockedY = -Math.abs(ball.vy) * 0.75;
+              pin.knockedX = (pin.x - ball.x) * 1.0 + (Math.random() - 0.5) * 14;
+              pin.knockedY = -Math.abs(ball.vy) * 0.65;
               hitThisFrame++;
             }
           }
@@ -477,9 +443,9 @@
             pins.forEach(pin2 => {
               if (pin2.isStanding) {
                 const dist = Math.hypot(pin1.x - pin2.x, pin1.y - pin2.y);
-                if (dist < 48) {
+                if (dist < 34) {
                   pin2.isStanding = false;
-                  pin2.knockedX = (pin2.x - pin1.x) * 1.1 + (Math.random() - 0.5) * 15;
+                  pin2.knockedX = (pin2.x - pin1.x) * 0.9 + (Math.random() - 0.5) * 12;
                   pin2.knockedY = pin1.knockedY * 0.8;
                   hitThisFrame++;
                 }
@@ -603,18 +569,15 @@
       ctx.lineWidth = 3;
       ctx.strokeRect(40, 10, 420, 90);
 
-      // Score Display Frame on Masking Unit
-      ctx.fillStyle = '#030508';
-      ctx.fillRect(140, 25, 220, 36);
-      ctx.strokeStyle = '#d4af37';
-      ctx.lineWidth = 1.5;
-      ctx.strokeRect(140, 25, 220, 36);
-
-      // BowlStrike.com Text Display
+      // Large BowlStrike.com Focal Display
       ctx.fillStyle = '#00e5ff';
-      ctx.font = '800 17px "Courier New", monospace';
+      ctx.shadowColor = 'rgba(0, 229, 255, 0.7)';
+      ctx.shadowBlur = 12;
+      ctx.font = '900 32px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
       ctx.textAlign = 'center';
-      ctx.fillText(`BowlStrike.com`, 250, 49);
+      ctx.textBaseline = 'middle';
+      ctx.fillText(`BOWLSTRIKE.COM`, 250, 55);
+      ctx.shadowBlur = 0; // reset shadow for rest of canvas
 
       // Ambient Pin Light Glow
       const pitGlow = ctx.createRadialGradient(250, 125, 10, 250, 125, 180);

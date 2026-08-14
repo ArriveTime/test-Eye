@@ -423,7 +423,6 @@
 
         let hitThisFrame = 0;
 
-        // Balanced Strike Physics Hit Detection Radius
         pins.forEach(pin => {
           if (pin.isStanding) {
             const dist = Math.hypot(ball.x - pin.x, ball.y - pin.y);
@@ -437,7 +436,6 @@
           }
         });
 
-        // Pin-to-Pin Domino Cascade Effect
         pins.forEach(pin1 => {
           if (!pin1.isStanding && pin1.opacity > 0.5) {
             pins.forEach(pin2 => {
@@ -569,14 +567,29 @@
       ctx.lineWidth = 3;
       ctx.strokeRect(40, 10, 420, 90);
 
-      // Large BowlStrike.com Focal Display
-      ctx.fillStyle = '#00e5ff';
-      ctx.shadowColor = 'rgba(0, 229, 255, 0.7)';
-      ctx.shadowBlur = 12;
-      ctx.font = '900 32px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
-      ctx.textAlign = 'center';
+      // Two-Color BOWLSTRIKE.COM Focal Header
+      ctx.font = '900 31px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
       ctx.textBaseline = 'middle';
-      ctx.fillText(`BOWLSTRIKE.COM`, 250, 55);
+
+      // Measure text widths for precise side-by-side alignment
+      const bowlWidth = ctx.measureText("BOWL").width;
+      const strikeWidth = ctx.measureText("STRIKE.COM").width;
+      const totalWidth = bowlWidth + strikeWidth;
+      const startX = 250 - (totalWidth / 2);
+
+      // Draw "BOWL" in White
+      ctx.textAlign = 'left';
+      ctx.fillStyle = '#ffffff';
+      ctx.shadowColor = 'rgba(255, 255, 255, 0.8)';
+      ctx.shadowBlur = 12;
+      ctx.fillText("BOWL", startX, 55);
+
+      // Draw "STRIKE.COM" in Red
+      ctx.fillStyle = '#ff2a2a';
+      ctx.shadowColor = 'rgba(255, 42, 42, 0.85)';
+      ctx.shadowBlur = 14;
+      ctx.fillText("STRIKE.COM", startX + bowlWidth, 55);
+      
       ctx.shadowBlur = 0; // reset shadow for rest of canvas
 
       // Ambient Pin Light Glow

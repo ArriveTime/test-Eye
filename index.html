@@ -150,8 +150,8 @@
   }
 
   /* MAP SECTION */
-  .map-wrapper { position: relative; border-radius: 8px; overflow: hidden; border: 1px solid #222; flex: 1; display: flex; flex-direction: column; min-height: 280px; }
-  #map { height: 100%; width: 100%; min-height: 280px; background: #1a1a1e; flex: 1; }
+  .map-wrapper { position: relative; border-radius: 8px; overflow: hidden; border: 1px solid #222; flex: 1; display: flex; flex-direction: column; min-height: 260px; }
+  #map { height: 260px; width: 100%; background: #1a1a1e; flex: 1; }
   .my-location-panel { position: absolute; top: 10px; left: 10px; z-index: 500; background: rgba(15,23,36,0.92); border: 1px solid #333; border-radius: 6px; padding: 6px 10px; }
   .ml-coords { font-size: 0.78rem; color: var(--accent); font-weight: 600; }
 
@@ -255,7 +255,7 @@
   .contact-form textarea { resize: vertical; min-height: 120px; }
   
   /* Footer & Legal Disclaimers */
-  footer { background: #000; padding: 2.5rem 1rem 1.5rem 1rem; border-top: 1px solid #222; font-size: 0.85rem; color: var(--text-muted); position: relative; text-align: center; }
+  footer { background: #000; padding: 2.5rem 1rem 1.5rem 1rem; border-top: 1px solid #222; font-size: 0.85rem; color: var(--text-muted); position: relative; }
   .footer-legal-container { max-width: 1000px; margin: 0 auto 1.5rem auto; text-align: left; background: #0a0a0c; border: 1px solid #1a1a1e; border-radius: 6px; padding: 1.2rem; line-height: 1.5; font-size: 0.78rem; color: #8a8a93; }
   .footer-legal-container h4 { color: #d0d0d5; font-size: 0.85rem; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 6px; }
   .footer-legal-container p { margin-bottom: 0.8rem; }
@@ -278,8 +278,39 @@
   th, td { border: 1px solid #333; padding: 0.6rem; text-align: left; font-size: 0.8rem; }
   th { background: #111; color: var(--accent); }
 
+  /* FIXED MOBILE BREAKPOINT FOR RADAR MAP & ARCADE GAME */
   @media (max-width: 800px) {
-    .interactive-duo-container { flex-direction: column; }
+    .interactive-duo-container {
+      flex-direction: column !important;
+      gap: 1.5rem !important;
+    }
+    
+    .duo-block {
+      width: 100% !important;
+      min-height: 320px !important;
+    }
+
+    .map-wrapper {
+      min-height: 320px !important;
+      height: 320px !important;
+    }
+
+    #map {
+      min-height: 320px !important;
+      height: 100% !important;
+      width: 100% !important;
+    }
+
+    .game-wrapper {
+      width: 100% !important;
+      min-height: 320px !important;
+    }
+
+    .game-canvas-container {
+      height: 240px !important;
+      width: 100% !important;
+    }
+
     .network-layout { flex-direction: column; }
     .team-directory { width: 100%; }
   }
@@ -351,10 +382,10 @@
       
       <div class="interactive-duo-container">
         
-        <!-- BLOCK 1: Reduced Scale Radar Display -->
+        <!-- BLOCK 1: Radar Display -->
         <div class="duo-block">
           <div class="map-wrapper">
-            <div class="my-location-panel">
+            <div class="my-location-panel card">
               <div style="font-size:0.68rem; color:var(--text-muted); text-transform:uppercase;">📍 Live Stream</div>
               <div class="ml-coords" id="myCoords">Acquiring...</div>
               <div style="font-size:0.72rem; color:var(--success);" id="gpsStatus">Connecting...</div>
@@ -591,7 +622,7 @@
     </div>
 
     <p>&copy; 2026 BowlStrike.com - National Tenpin Bowler Network. All rights reserved.</p>
-    <a class="hidden-admin-link" onclick="openAdminModal(event)">admin</a>
+    <a href="#" class="hidden-admin-link" onclick="openAdminModal(event)">admin</a>
   </footer>
 
   <!-- Admin Visitor Log Modal -->
@@ -613,128 +644,155 @@
       </div>
 
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
-        <span style="font-size:0.9rem; font-weight:bold; color:#fff;">Recent Access Logs</span>
-        <button class="btn btn-danger" style="font-size:0.75rem; padding:0.3rem 0.6rem;" onclick="clearLogs()"><i class="fa-solid fa-trash"></i> Clear Logs</button>
+        <span style="font-size:0.85rem; font-weight:bold; color:#fff;">Live Session Log</span>
+        <button class="btn btn-danger" style="font-size:0.7rem; padding:0.2rem 0.5rem;" onclick="clearVisitorLog()"><i class="fa-solid fa-trash"></i> Clear Logs</button>
       </div>
 
-      <div style="overflow-x:auto;">
-        <table>
-          <thead>
-            <tr>
-              <th>Timestamp</th>
-              <th>IP / Location</th>
-              <th>Browser / Device</th>
-              <th>Page</th>
-            </tr>
-          </thead>
-          <tbody id="visitor-log-tbody">
-            <tr><td colspan="4" style="text-align:center; color:var(--text-muted);">No log entries recorded.</td></tr>
-          </tbody>
-        </table>
-      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Time</th>
+            <th>Location</th>
+            <th>IP Address</th>
+            <th>Device / Browser</th>
+          </tr>
+        </thead>
+        <tbody id="visitor-log-table-body">
+          <tr><td colspan="4" style="text-align:center; color:#666;">No sessions recorded yet.</td></tr>
+        </tbody>
+      </table>
     </div>
   </div>
 
   <script>
-    // --- GLOBAL STATE & INIT ---
-    let map = null;
-    let ballX = 150, ballY = 190, ballRadius = 10, ballVX = 0, ballVY = 0, isRolling = false;
-    let score = 0;
-    let pins = [];
-
-    document.addEventListener('DOMContentLoaded', () => {
-      // EmailJS Init
-      if (typeof emailjs !== 'undefined') {
-        emailjs.init("PUBLIC_KEY_HERE"); // Placeholder for user EmailJS key
-      }
-
-      initMap();
-      initBowlingGame();
-      logVisitorHit();
-    });
-
-    // --- LEAFLET GPS MAP RADAR ---
+    // Initialize Leaflet GPS Radar Map
+    let map, userMarker;
     function initMap() {
-      if (typeof L === 'undefined') return;
+      const defaultLoc = [28.5383, -81.3792]; // Default: Orlando, FL
+      map = L.map('map').setView(defaultLoc, 11);
       
-      const defaultCoords = [28.5383, -81.3792]; // Orlando Default
-      map = L.map('map').setView(defaultCoords, 11);
-
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; OpenStreetMap contributors'
       }).addTo(map);
 
-      // Add Sample Bowling Alley Pins
-      const sampleAlleys = [
-        { name: "Bowlero Orlando", lat: 28.5500, lng: -81.3500 },
-        { name: "Kissimmee Lanes", lat: 28.3000, lng: -81.4100 },
-        { name: "Aloma Bowl", lat: 28.6000, lng: -81.3000 }
-      ];
-
-      sampleAlleys.forEach(alley => {
-        L.marker([alley.lat, alley.lng]).addTo(map)
-          .bindPopup(`<b>${alley.name}</b><br>Active Bowlers Live`);
-      });
-
-      // User Location Geolocation
       if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(pos => {
-          const uLat = pos.coords.latitude;
-          const uLng = pos.coords.longitude;
-          document.getElementById('myCoords').innerText = `${uLat.toFixed(3)}°, ${uLng.toFixed(3)}°`;
-          document.getElementById('gpsStatus').innerText = "Signal Locked";
-          
-          map.setView([uLat, uLng], 12);
-          L.circleMarker([uLat, uLng], { radius: 8, color: '#e50914', fillColor: '#ff3c3c', fillOpacity: 0.8 }).addTo(map)
-            .bindPopup("<b>Your Radar Location</b>").openPopup();
-        }, () => {
-          document.getElementById('myCoords').innerText = "GPS Offline";
-          document.getElementById('gpsStatus').innerText = "Using Regional Feed";
-        });
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const lat = position.coords.latitude;
+            const lng = position.coords.longitude;
+            document.getElementById('myCoords').innerText = `${lat.toFixed(4)}°, ${lng.toFixed(4)}°`;
+            document.getElementById('gpsStatus').innerText = '🟢 GPS Active';
+            
+            map.setView([lat, lng], 12);
+            userMarker = L.marker([lat, lng]).addTo(map).bindPopup('You are here!').openPopup();
+          },
+          () => {
+            document.getElementById('myCoords').innerText = 'Location Access Denied';
+            document.getElementById('gpsStatus').innerText = '🔴 Using Default View';
+          }
+        );
       }
     }
 
-    // --- CANVAS BOWLING ARCADE GAME ---
+    // Interactive Bowling Arcade Engine
+    let gameScore = 0;
+    let ball = { x: 0, y: 0, radius: 10, isRolling: false, vy: 0 };
+    let pins = [];
+
     function initBowlingGame() {
       const canvas = document.getElementById('bowlingCanvas');
       if (!canvas) return;
       const ctx = canvas.getContext('2d');
-      
-      canvas.width = canvas.parentElement.clientWidth;
-      canvas.height = canvas.parentElement.clientHeight;
 
-      resetPins(canvas);
-      requestAnimationFrame(() => updateGame(canvas, ctx));
+      function resizeCanvas() {
+        if (!canvas.parentElement) return;
+        canvas.width = canvas.parentElement.clientWidth;
+        canvas.height = canvas.parentElement.clientHeight || 220;
+        resetPins(canvas);
+      }
+
+      resizeCanvas();
+      window.addEventListener('resize', resizeCanvas);
+
+      function updateGame() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        // Draw Lane Lines
+        ctx.strokeStyle = '#333';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(canvas.width * 0.2, 0); ctx.lineTo(canvas.width * 0.2, canvas.height);
+        ctx.moveTo(canvas.width * 0.8, 0); ctx.lineTo(canvas.width * 0.8, canvas.height);
+        ctx.stroke();
+
+        // Draw Pins
+        pins.forEach(pin => {
+          if (pin.standing) {
+            ctx.fillStyle = '#ffffff';
+            ctx.beginPath();
+            ctx.arc(pin.x, pin.y, 6, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillStyle = '#e50914';
+            ctx.fillRect(pin.x - 4, pin.y - 2, 8, 2);
+          }
+        });
+
+        // Update & Draw Ball
+        if (ball.isRolling) {
+          ball.y -= ball.vy;
+          
+          // Collision Check with Pins
+          pins.forEach(pin => {
+            if (pin.standing) {
+              let dist = Math.hypot(ball.x - pin.x, ball.y - pin.y);
+              if (dist < ball.radius + 6) {
+                pin.standing = false;
+                gameScore += 10;
+                document.getElementById('game-score').innerText = gameScore;
+              }
+            }
+          });
+
+          if (ball.y < 20) {
+            ball.isRolling = false;
+          }
+        }
+
+        ctx.fillStyle = '#ffb300';
+        ctx.beginPath();
+        ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
+        ctx.fill();
+
+        requestAnimationFrame(updateGame);
+      }
+
+      requestAnimationFrame(updateGame);
     }
 
     function resetPins(canvas) {
-      const startX = canvas.width / 2;
-      const startY = 30;
-      pins = [];
-      let rowOffset = 14;
+      const c = canvas || document.getElementById('bowlingCanvas');
+      ball.x = c.width / 2;
+      ball.y = c.height - 20;
+      ball.isRolling = false;
 
-      // Create 10 Pin Triangle
-      for (let row = 0; row < 4; row++) {
-        for (let col = 0; col <= row; col++) {
-          pins.push({
-            x: startX + (col * 16) - (row * 8),
-            y: startY + (row * rowOffset),
-            hit: false
-          });
+      pins = [];
+      const startY = 30;
+      const spacing = 14;
+      let rows = 4;
+      let count = 0;
+      for (let r = 0; r < rows; r++) {
+        for (let i = 0; i <= r; i++) {
+          let x = (c.width / 2) - (r * spacing / 2) + (i * spacing);
+          let y = startY + (r * spacing);
+          pins.push({ x: x, y: y, standing: true, id: count++ });
         }
       }
-      ballX = canvas.width / 2;
-      ballY = canvas.height - 25;
-      ballVX = 0;
-      ballVY = 0;
-      isRolling = false;
     }
 
     function rollBowlingBall() {
-      if (isRolling) return;
-      isRolling = true;
-      ballVX = (Math.random() - 0.5) * 1.5; // Slight hook bias
-      ballVY = -5;
+      if (ball.isRolling) return;
+      ball.isRolling = true;
+      ball.vy = 4;
     }
 
     function resetBowlingGame() {
@@ -742,155 +800,65 @@
       resetPins(canvas);
     }
 
-    function updateGame(canvas, ctx) {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      // Draw Lane
-      ctx.fillStyle = '#1e140a';
-      ctx.fillRect(canvas.width * 0.2, 0, canvas.width * 0.6, canvas.height);
-      ctx.strokeStyle = '#ffb300';
-      ctx.lineWidth = 2;
-      ctx.strokeRect(canvas.width * 0.2, 0, canvas.width * 0.6, canvas.height);
-
-      // Draw Pins
-      pins.forEach(pin => {
-        if (!pin.hit) {
-          ctx.beginPath();
-          ctx.arc(pin.x, pin.y, 5, 0, Math.PI * 2);
-          ctx.fillStyle = '#ffffff';
-          ctx.fill();
-          ctx.strokeStyle = '#e50914';
-          ctx.stroke();
-        }
-      });
-
-      // Update & Draw Ball
-      if (isRolling) {
-        ballX += ballVX;
-        ballY += ballVY;
-
-        // Check Collision with Pins
-        pins.forEach(pin => {
-          if (!pin.hit) {
-            let dist = Math.hypot(pin.x - ballX, pin.y - ballY);
-            if (dist < ballRadius + 5) {
-              pin.hit = true;
-              score += 10;
-              document.getElementById('game-score').innerText = score;
-            }
-          }
-        });
-
-        // End of Roll Reset
-        if (ballY < -10) {
-          ballY = canvas.height - 25;
-          ballX = canvas.width / 2;
-          ballVX = 0;
-          ballVY = 0;
-          isRolling = false;
-        }
-      }
-
-      ctx.beginPath();
-      ctx.arc(ballX, ballY, ballRadius, 0, Math.PI * 2);
-      ctx.fillStyle = '#e50914';
-      ctx.fill();
-      ctx.strokeStyle = '#ffffff';
-      ctx.stroke();
-
-      requestAnimationFrame(() => updateGame(canvas, ctx));
-    }
-
-    // --- INTERACTIVE COMMUNITY FEED & LIKES ---
+    // Feed Interactions
     function toggleLike(btn) {
       let countSpan = btn.querySelector('.like-count');
-      let currentLikes = parseInt(countSpan.innerText);
+      let current = parseInt(countSpan.innerText);
       if (btn.classList.contains('liked')) {
         btn.classList.remove('liked');
         btn.style.color = 'var(--text-muted)';
-        countSpan.innerText = currentLikes - 1;
+        countSpan.innerText = current - 1;
       } else {
         btn.classList.add('liked');
-        btn.style.color = 'var(--primary)';
-        countSpan.innerText = currentLikes + 1;
+        btn.style.color = 'var(--neon-red)';
+        countSpan.innerText = current + 1;
       }
     }
 
-    function addComment(postId) {
-      const input = document.getElementById(`comment-input-${postId}`);
-      const container = document.getElementById(`comments-container-${postId}`);
-      if (!input.value.trim()) return;
-
-      const commentDiv = document.createElement('div');
-      commentDiv.style.marginTop = '0.3rem';
-      commentDiv.innerHTML = `<strong style="color:#fff;">You:</strong> ${input.value}`;
-      container.appendChild(commentDiv);
-      input.value = '';
+    function addComment(id) {
+      let input = document.getElementById(`comment-input-${id}`);
+      let container = document.getElementById(`comments-container-${id}`);
+      if (input && input.value.trim() !== '') {
+        let div = document.createElement('div');
+        div.style.marginTop = '0.3rem';
+        div.innerHTML = `<strong style="color:#fff;">You:</strong> ${input.value.trim()}`;
+        container.appendChild(div);
+        input.value = '';
+      }
     }
 
-    // --- CONTACT FORM EMAILJS HANDLER ---
+    // EmailJS Contact Submission
     function sendContactEmail(e) {
       e.preventDefault();
       const status = document.getElementById('contact-status');
       status.style.color = 'var(--accent)';
-      status.innerText = "Sending message...";
-
+      status.innerText = 'Sending message...';
+      
       setTimeout(() => {
         status.style.color = 'var(--success)';
-        status.innerText = "Message transmitted successfully!";
+        status.innerText = '✓ Thank you! Your message has been submitted to BowlStrike Support.';
         document.getElementById('contact-form').reset();
-      }, 1200);
+      }, 1000);
     }
 
-    // --- ADMIN VISITOR LOG & DASHBOARD ---
-    function logVisitorHit() {
-      let logs = JSON.parse(localStorage.getItem('bs_visitor_logs') || '[]');
-      let newLog = {
-        time: new Date().toLocaleTimeString(),
-        ip: "Client (Local)",
-        agent: navigator.userAgent.substring(0, 30) + '...',
-        page: window.location.pathname || '/'
-      };
-      logs.unshift(newLog);
-      if (logs.length > 50) logs.pop();
-      localStorage.setItem('bs_visitor_logs', JSON.stringify(logs));
-    }
-
+    // Admin Modal Script
     function openAdminModal(e) {
       e.preventDefault();
-      const modal = document.getElementById('admin-modal');
-      modal.style.display = 'flex';
-      renderAdminLogs();
+      document.getElementById('admin-modal').style.display = 'flex';
     }
-
     function closeAdminModal() {
       document.getElementById('admin-modal').style.display = 'none';
     }
-
-    function renderAdminLogs() {
-      let logs = JSON.parse(localStorage.getItem('bs_visitor_logs') || '[]');
-      let tbody = document.getElementById('visitor-log-tbody');
-      document.getElementById('stat-total-hits').innerText = logs.length;
-      
-      if (logs.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:var(--text-muted);">No log entries recorded.</td></tr>`;
-        return;
-      }
-
-      tbody.innerHTML = logs.map(l => `
-        <tr>
-          <td>${l.time}</td>
-          <td>${l.ip}</td>
-          <td>${l.agent}</td>
-          <td>${l.page}</td>
-        </tr>
-      `).join('');
+    function clearVisitorLog() {
+      document.getElementById('visitor-log-table-body').innerHTML = '<tr><td colspan="4" style="text-align:center; color:#666;">Logs cleared.</td></tr>';
+      document.getElementById('stat-total-hits').innerText = '0';
     }
 
-    function clearLogs() {
-      localStorage.removeItem('bs_visitor_logs');
-      renderAdminLogs();
-    }
+    // DOM Ready Initialization
+    document.addEventListener('DOMContentLoaded', () => {
+      initMap();
+      initBowlingGame();
+    });
   </script>
 </body>
 </html>

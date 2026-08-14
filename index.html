@@ -1,7 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8" />
+set="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 <title>BowlStrike.com - National Tenpin Social Network & Live Radar</title>
 
@@ -169,7 +166,7 @@
   }
   .game-canvas-container {
     width: 100%;
-    height: 230px;
+    height: 220px;
     background: #0a0a0c;
     border-radius: 6px;
     position: relative;
@@ -184,7 +181,7 @@
     top: 40%;
     left: 50%;
     transform: translate(-50%, -50%);
-    font-size: 1.6rem;
+    font-size: 1.5rem;
     font-weight: 900;
     color: #ff3c3c;
     text-shadow: 0 0 10px #000, 0 0 20px #ff0000;
@@ -198,25 +195,43 @@
     letter-spacing: 1.5px;
   }
 
+  /* SCOREBOARD SHEET */
+  .bowling-scorecard {
+    width: 100%;
+    background: #0d0d11;
+    border: 1px solid #222;
+    border-radius: 6px;
+    margin-bottom: 0.5rem;
+    padding: 0.3rem;
+    overflow-x: auto;
+  }
+  .scorecard-grid {
+    display: flex;
+    justify-content: space-between;
+    gap: 2px;
+  }
+  .frame-box {
+    flex: 1;
+    min-width: 28px;
+    background: #15151c;
+    border: 1px solid #333;
+    border-radius: 3px;
+    text-align: center;
+    padding: 2px;
+  }
+  .frame-box.active { border-color: var(--accent); background: #1f1f2a; }
+  .frame-title { font-size: 0.62rem; color: var(--text-muted); font-weight: bold; border-bottom: 1px solid #2a2a35; }
+  .frame-rolls { font-size: 0.7rem; color: #fff; font-weight: bold; height: 16px; line-height: 16px; letter-spacing: 1px; }
+  .frame-total { font-size: 0.72rem; color: var(--accent); font-weight: 900; height: 16px; line-height: 16px; }
+
   .game-controls {
     display: flex;
     gap: 0.4rem;
     width: 100%;
-    margin-top: 0.5rem;
+    margin-top: 0.4rem;
     justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
-  }
-  .game-scoreboard {
-    font-size: 0.85rem;
-    font-weight: bold;
-    color: var(--accent);
-    display: flex;
-    gap: 12px;
-    background: #0a0a0c;
-    padding: 0.2rem 0.6rem;
-    border-radius: 4px;
-    border: 1px solid #222;
   }
 
   /* PROFILE PHOTO STYLING */
@@ -331,11 +346,11 @@
 
     .game-wrapper {
       width: 100% !important;
-      min-height: 340px !important;
+      min-height: 360px !important;
     }
 
     .game-canvas-container {
-      height: 250px !important;
+      height: 230px !important;
       width: 100% !important;
     }
 
@@ -406,7 +421,7 @@
 
     <!-- SIDE-BY-SIDE: Live GPS Map Radar & Bowling Game Block -->
     <section id="locator">
-      <h2 class="section-title"><span>Live GPS Alley Radar & Professional Lane Challenge</span></h2>
+      <h2 class="section-title"><span>Live GPS Alley Radar & Official Tenpin Challenge</span></h2>
       
       <div class="interactive-duo-container">
         
@@ -424,10 +439,17 @@
 
         <!-- BLOCK 2: Professional Single-Player Bowling Game Block -->
         <div class="duo-block card game-wrapper">
-          <div style="width:100%; display:flex; justify-content:space-between; align-items:center; margin-bottom:0.4rem;">
-            <span style="font-weight:bold; font-size:0.9rem; color:#fff;"><i class="fa-solid fa-bowling-ball" style="color:#00aaff;"></i> Solo Bowler Challenge</span>
-            <div class="game-scoreboard">
-              <span>Score: <strong id="p1-score" style="color:#fff;">0</strong></span>
+          <div style="width:100%; display:flex; justify-content:space-between; align-align:center; margin-bottom:0.3rem;">
+            <span style="font-weight:bold; font-size:0.88rem; color:#fff;"><i class="fa-solid fa-bowling-ball" style="color:#00aaff;"></i> Solo Bowler - Frame <span id="currentFrameDisplay">1</span>/10</span>
+            <div style="font-size:0.85rem; font-weight:bold; color:var(--accent);">
+              Total Score: <strong id="p1-score" style="color:#fff; font-size:1.1rem;">0</strong>
+            </div>
+          </div>
+
+          <!-- Official 10-Frame Scorecard Header -->
+          <div class="bowling-scorecard">
+            <div class="scorecard-grid" id="scorecardGrid">
+              <!-- Dynamically populated 10 frame blocks -->
             </div>
           </div>
 
@@ -445,7 +467,7 @@
             </div>
 
             <div style="display:flex; gap:4px; align-items:center;">
-              <button class="btn btn-secondary" style="font-size:0.72rem; padding:0.3rem 0.6rem;" onclick="resetBowlingGame()"><i class="fa-solid fa-rotate-left"></i> Reset Pins</button>
+              <button class="btn btn-secondary" style="font-size:0.72rem; padding:0.3rem 0.6rem;" onclick="resetBowlingGame()"><i class="fa-solid fa-rotate-left"></i> New Game</button>
               <button class="btn" style="font-size:0.75rem; padding:0.4rem 0.8rem; background:linear-gradient(180deg, #0088ff 0%, #0055cc 100%);" id="rollBtn" onclick="rollBowlingBall()"><i class="fa-solid fa-play"></i> ROLL BALL</button>
             </div>
           </div>
@@ -734,7 +756,7 @@
       }
     }
 
-    // WEB AUDIO SOUND SYNTHESIZER (No external audio files required)
+    // WEB AUDIO SOUND SYNTHESIZER
     let audioCtx = null;
     function getAudioContext() {
       if (!audioCtx) {
@@ -746,7 +768,6 @@
       return audioCtx;
     }
 
-    // Play Wood/Pin Crash Sound
     function playPinCrashSound() {
       try {
         const ctx = getAudioContext();
@@ -779,7 +800,6 @@
       }
     }
 
-    // Play Audience Cheering Sound on Strike
     function playCheerSound() {
       try {
         const ctx = getAudioContext();
@@ -813,7 +833,6 @@
       }
     }
 
-    // Play Gutter Ball Sound
     function playGutterSound() {
       try {
         const ctx = getAudioContext();
@@ -837,14 +856,18 @@
       }
     }
 
-    // Single-Player Arcade Engine Setup
-    let playerScore = 0;
+    // TENPIN BOWLING SCOREBOARD ENGINE (Official USBC Rules)
+    let frames = Array(10).fill(null).map(() => []);
+    let currentFrame = 0;
+    let currentRoll = 1; // 1 or 2 (or 3 in frame 10)
+    let gameEnded = false;
+
     let ball = { x: 0, y: 0, radius: 11, isRolling: false, vy: 0, vx: 0 };
     let pins = [];
-    let rollHits = 0;
+    let rollHitCount = 0;
 
     function moveBall(offset) {
-      if (ball.isRolling) return;
+      if (ball.isRolling || gameEnded) return;
       const canvas = document.getElementById('bowlingCanvas');
       if (!canvas) return;
 
@@ -856,6 +879,211 @@
       if (ball.x > laneRight) ball.x = laneRight;
     }
 
+    function setupPins(canvas) {
+      const c = canvas || document.getElementById('bowlingCanvas');
+      pins = [];
+      const startY = 25; // Top row Y
+      const spacing = 16;
+      let count = 0;
+
+      // Correct Pin Layout:
+      // Row 0 (Top/Back): 4 pins
+      // Row 1: 3 pins
+      // Row 2: 2 pins
+      // Row 3 (Front/Head Pin): 1 pin pointing at bowler
+      for (let r = 0; r < 4; r++) {
+        let pinsInRow = 4 - r; // 4, 3, 2, 1
+        let y = startY + (r * spacing * 0.95);
+        for (let i = 0; i < pinsInRow; i++) {
+          let x = (c.width / 2) - ((pinsInRow - 1) * spacing / 2) + (i * spacing);
+          pins.push({ x: x, y: y, standing: true, alreadyKnocked: false, id: count++ });
+        }
+      }
+    }
+
+    function resetBallPosition(canvas) {
+      const c = canvas || document.getElementById('bowlingCanvas');
+      ball.x = c.width / 2;
+      ball.y = c.height - 18;
+      ball.isRolling = false;
+      rollHitCount = 0;
+    }
+
+    function calculateBowlingScore() {
+      let flatRolls = [];
+      frames.forEach(f => {
+        f.forEach(r => flatRolls.push(r));
+      });
+
+      let totalScore = 0;
+      let frameScores = Array(10).fill('');
+      let rollPtr = 0;
+
+      for (let f = 0; f < 10; f++) {
+        if (f < 9) { // Frames 1-9
+          if (rollPtr >= flatRolls.length) break;
+
+          if (flatRolls[rollPtr] === 10) { // STRIKE!
+            if (rollPtr + 2 < flatRolls.length) { // Needs 2 bonus rolls
+              let frameVal = 10 + flatRolls[rollPtr + 1] + flatRolls[rollPtr + 2];
+              totalScore += frameVal;
+              frameScores[f] = totalScore;
+              rollPtr += 1;
+            } else {
+              break; // Wait for open/resolved frame
+            }
+          } else if (rollPtr + 1 < flatRolls.length) { // SPARE or OPEN
+            let sum = flatRolls[rollPtr] + flatRolls[rollPtr + 1];
+            if (sum === 10) { // SPARE!
+              if (rollPtr + 2 < flatRolls.length) { // Needs 1 bonus roll
+                let frameVal = 10 + flatRolls[rollPtr + 2];
+                totalScore += frameVal;
+                frameScores[f] = totalScore;
+                rollPtr += 2;
+              } else {
+                break; // Wait for open/resolved frame
+              }
+            } else { // OPEN FRAME! Score updates immediately
+              totalScore += sum;
+              frameScores[f] = totalScore;
+              rollPtr += 2;
+            }
+          } else {
+            break; // Roll 2 incomplete
+          }
+        } else { // Frame 10 Special Rule
+          if (rollPtr >= flatRolls.length) break;
+          let f10Rolls = frames[9];
+          let sum10 = f10Rolls.reduce((a, b) => a + b, 0);
+          
+          let f10Finished = false;
+          if (f10Rolls.length === 2 && (f10Rolls[0] + f10Rolls[1] < 10)) {
+            f10Finished = true;
+          } else if (f10Rolls.length === 3) {
+            f10Finished = true;
+          }
+
+          if (f10Finished) {
+            totalScore += sum10;
+            frameScores[9] = totalScore;
+          }
+        }
+      }
+
+      return { totalScore, frameScores };
+    }
+
+    function renderScorecardUI() {
+      const grid = document.getElementById('scorecardGrid');
+      if (!grid) return;
+
+      const { totalScore, frameScores } = calculateBowlingScore();
+      document.getElementById('p1-score').innerText = totalScore;
+      document.getElementById('currentFrameDisplay').innerText = Math.min(currentFrame + 1, 10);
+
+      let html = '';
+      for (let f = 0; f < 10; f++) {
+        let rolls = frames[f];
+        let rollText = '';
+
+        if (f < 9) {
+          if (rolls.length > 0) {
+            if (rolls[0] === 10) rollText = 'X';
+            else rollText = rolls[0].toString();
+          }
+          if (rolls.length > 1) {
+            if (rolls[0] + rolls[1] === 10) rollText += ' /';
+            else rollText += ' ' + rolls[1];
+          }
+        } else { // Frame 10 formatting
+          if (rolls.length > 0) rollText += rolls[0] === 10 ? 'X' : rolls[0];
+          if (rolls.length > 1) {
+            if (rolls[0] !== 10 && rolls[0] + rolls[1] === 10) rollText += ' /';
+            else rollText += ' ' + (rolls[1] === 10 ? 'X' : rolls[1]);
+          }
+          if (rolls.length > 2) {
+            rollText += ' ' + (rolls[2] === 10 ? 'X' : rolls[2]);
+          }
+        }
+
+        let activeClass = (f === currentFrame && !gameEnded) ? 'active' : '';
+        html += `
+          <div class="frame-box ${activeClass}">
+            <div class="frame-title">${f + 1}</div>
+            <div class="frame-rolls">${rollText}</div>
+            <div class="frame-total">${frameScores[f] !== '' ? frameScores[f] : ''}</div>
+          </div>
+        `;
+      }
+      grid.innerHTML = html;
+    }
+
+    function handleRollEnd() {
+      let newlyKnocked = 0;
+      pins.forEach(p => {
+        if (!p.standing && !p.alreadyKnocked) {
+          newlyKnocked++;
+          p.alreadyKnocked = true;
+        }
+      });
+
+      // Register Roll
+      frames[currentFrame].push(newlyKnocked);
+
+      if (currentFrame < 9) { // Frames 1 - 9
+        let rollSum = frames[currentFrame].reduce((a, b) => a + b, 0);
+
+        if (newlyKnocked === 10 && frames[currentFrame].length === 1) {
+          // STRIKE!
+          playCheerSound();
+          currentFrame++;
+          currentRoll = 1;
+          setupPins();
+        } else if (frames[currentFrame].length === 1) {
+          // Roll 1 incomplete, move to Roll 2
+          if (newlyKnocked === 0) triggerGutterBall();
+          currentRoll = 2;
+        } else {
+          // Roll 2 complete
+          if (rollSum === 10) {
+            playCheerSound(); // SPARE CHEER!
+          } else if (newlyKnocked === 0) {
+            triggerGutterBall();
+          }
+          currentFrame++;
+          currentRoll = 1;
+          setupPins();
+        }
+      } else { // Frame 10 logic
+        let f10 = frames[9];
+        let f10Sum = f10.reduce((a, b) => a + b, 0);
+
+        if (f10.length === 1) {
+          if (newlyKnocked === 10) {
+            playCheerSound();
+            setupPins();
+          } else if (newlyKnocked === 0) {
+            triggerGutterBall();
+          }
+          currentRoll = 2;
+        } else if (f10.length === 2) {
+          if (f10[0] === 10 || f10[0] + f10[1] >= 10) { // Spare or Strike in 10th allows Roll 3
+            if (f10[0] + f10[1] === 10 || f10[1] === 10) playCheerSound();
+            setupPins();
+            currentRoll = 3;
+          } else {
+            gameEnded = true;
+          }
+        } else if (f10.length === 3) {
+          if (newlyKnocked === 10) playCheerSound();
+          gameEnded = true;
+        }
+      }
+
+      resetBallPosition();
+      renderScorecardUI();
+    }
+
     function initBowlingGame() {
       const canvas = document.getElementById('bowlingCanvas');
       if (!canvas) return;
@@ -864,8 +1092,10 @@
       function resizeCanvas() {
         if (!canvas.parentElement) return;
         canvas.width = canvas.parentElement.clientWidth;
-        canvas.height = canvas.parentElement.clientHeight || 230;
-        resetPins(canvas);
+        canvas.height = canvas.parentElement.clientHeight || 220;
+        setupPins(canvas);
+        resetBallPosition(canvas);
+        renderScorecardUI();
       }
 
       resizeCanvas();
@@ -879,7 +1109,6 @@
         const laneWidth = canvas.width * 0.56;
         const laneRight = laneLeft + laneWidth;
 
-        // Lane Base Gradient
         let woodGrad = ctx.createLinearGradient(laneLeft, 0, laneRight, 0);
         woodGrad.addColorStop(0, '#3a1f0d');
         woodGrad.addColorStop(0.1, '#c68a4c');
@@ -890,7 +1119,7 @@
         ctx.fillStyle = woodGrad;
         ctx.fillRect(laneLeft, 0, laneWidth, canvas.height);
 
-        // Lane Boards Texture Lines
+        // Boards
         ctx.strokeStyle = 'rgba(0,0,0,0.15)';
         ctx.lineWidth = 1;
         const boardCount = 12;
@@ -914,40 +1143,26 @@
         ctx.lineTo(laneRight, canvas.height - 35);
         ctx.stroke();
 
-        // Aiming Guideline Line when ball is stationary
-        if (!ball.isRolling) {
+        // Aim Line
+        if (!ball.isRolling && !gameEnded) {
           ctx.strokeStyle = 'rgba(255, 255, 255, 0.25)';
           ctx.lineWidth = 1.5;
           ctx.setLineDash([4, 4]);
           ctx.beginPath();
           ctx.moveTo(ball.x, ball.y);
-          ctx.lineTo(ball.x, 30);
+          ctx.lineTo(ball.x, 25);
           ctx.stroke();
           ctx.setLineDash([]);
         }
 
-        // Directional Target Arrows
-        ctx.fillStyle = 'rgba(0,0,0,0.35)';
-        for (let a = -2; a <= 2; a++) {
-          let ax = (canvas.width / 2) + (a * 20);
-          let ay = canvas.height - 80;
-          ctx.beginPath();
-          ctx.moveTo(ax, ay);
-          ctx.lineTo(ax - 3, ay + 8);
-          ctx.lineTo(ax + 3, ay + 8);
-          ctx.fill();
-        }
-
-        // 2. DRAW REALISTIC WHITE BOWLING PINS
+        // 2. DRAW PINS (Head pin at front facing bowler)
         pins.forEach(pin => {
           if (pin.standing) {
-            // Pin Shadow
             ctx.fillStyle = 'rgba(0,0,0,0.4)';
             ctx.beginPath();
             ctx.ellipse(pin.x, pin.y + 6, 7, 3, 0, 0, Math.PI * 2);
             ctx.fill();
 
-            // Pin Body (White 3D Gradient)
             let pinGrad = ctx.createRadialGradient(pin.x - 2, pin.y - 2, 1, pin.x, pin.y, 7);
             pinGrad.addColorStop(0, '#ffffff');
             pinGrad.addColorStop(0.7, '#e0e0e0');
@@ -958,54 +1173,41 @@
             ctx.arc(pin.x, pin.y, 6.5, 0, Math.PI * 2);
             ctx.fill();
 
-            // Red Stripe on Pin
             ctx.fillStyle = '#ff1100';
             ctx.fillRect(pin.x - 4, pin.y - 2, 8, 2);
           }
         });
 
-        // 3. UPDATE & DRAW GLOSSY BLUE BOWLING BALL
+        // 3. UPDATE & DRAW BOWLING BALL
         if (ball.isRolling) {
           ball.y -= ball.vy;
           ball.x += ball.vx;
 
-          // Check if Ball Traveled into Gutters
           if (ball.x < laneLeft || ball.x > laneRight) {
             triggerGutterBall();
           }
           
-          // Collision Check with Pins
           pins.forEach(pin => {
             if (pin.standing) {
               let dist = Math.hypot(ball.x - pin.x, ball.y - pin.y);
               if (dist < ball.radius + 6.5) {
                 pin.standing = false;
-                rollHits++;
-                playerScore += 10;
-                document.getElementById('p1-score').innerText = playerScore;
+                rollHitCount++;
               }
             }
           });
 
-          if (rollHits > 0) {
+          if (rollHitCount > 0) {
             playPinCrashSound();
           }
 
-          // Top Barrier Reached
-          if (ball.y < 20) {
+          if (ball.y < 15) {
             ball.isRolling = false;
-            
-            // Evaluate Roll Result
-            let standingLeft = pins.filter(p => p.standing).length;
-            if (standingLeft === 0) {
-              playCheerSound(); // STRIKE CHEER!
-            } else if (rollHits === 0) {
-              triggerGutterBall(); // No pins hit = Gutter Ball
-            }
+            handleRollEnd();
           }
         }
 
-        // Draw Royal Blue Ball
+        // Draw Ball
         let ballGrad = ctx.createRadialGradient(ball.x - 3, ball.y - 3, 2, ball.x, ball.y, ball.radius);
         ballGrad.addColorStop(0, '#88ccff');
         ballGrad.addColorStop(0.3, '#0066ff');
@@ -1017,7 +1219,6 @@
         ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
         ctx.fill();
 
-        // Finger Holes
         ctx.fillStyle = '#000511';
         ctx.beginPath();
         ctx.arc(ball.x - 3, ball.y - 2, 1.8, 0, Math.PI * 2);
@@ -1040,43 +1241,27 @@
       }
     }
 
-    function resetPins(canvas) {
-      const c = canvas || document.getElementById('bowlingCanvas');
-      ball.x = c.width / 2;
-      ball.y = c.height - 18;
-      ball.isRolling = false;
-      rollHits = 0;
-
-      pins = [];
-      const startY = 32;
-      const spacing = 15;
-      let rows = 4;
-      let count = 0;
-      for (let r = 0; r < rows; r++) {
-        for (let i = 0; i <= r; i++) {
-          let x = (c.width / 2) - (r * spacing / 2) + (i * spacing);
-          let y = startY + (r * spacing * 0.9);
-          pins.push({ x: x, y: y, standing: true, id: count++ });
-        }
-      }
-    }
-
     function rollBowlingBall() {
-      if (ball.isRolling) return;
-      getAudioContext(); // Initialize web audio context on user interaction
+      if (ball.isRolling || gameEnded) return;
+      getAudioContext();
       ball.isRolling = true;
       ball.vy = 4.2;
-      ball.vx = (Math.random() - 0.5) * 0.3; // Slight natural roll variance
-      rollHits = 0;
+      ball.vx = (Math.random() - 0.5) * 0.25;
+      rollHitCount = 0;
     }
 
     function resetBowlingGame() {
-      playerScore = 0;
-      document.getElementById('p1-score').innerText = '0';
+      frames = Array(10).fill(null).map(() => []);
+      currentFrame = 0;
+      currentRoll = 1;
+      gameEnded = false;
+
       const overlay = document.getElementById('gutterOverlay');
       if (overlay) overlay.style.display = 'none';
-      const canvas = document.getElementById('bowlingCanvas');
-      resetPins(canvas);
+
+      setupPins();
+      resetBallPosition();
+      renderScorecardUI();
     }
 
     // Feed Interactions

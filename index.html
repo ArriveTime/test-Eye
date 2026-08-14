@@ -708,7 +708,7 @@
     </div>
   </div>
 
-  <!-- JavaScript logic: Audio, Game Engine (Easier Strikes + Sound Toggle), Radar, Feed -->
+  <!-- JavaScript logic: Audio, Game Engine (Wood Texture Lane Restored + Sound Toggle + Easy Strikes), Radar, Feed -->
   <script>
     // --- Audio System ---
     let audioCtx = null;
@@ -762,7 +762,7 @@
     }
     window.addEventListener('resize', resizeCanvas);
 
-    let ball = { x: 0, y: 0, radius: 14, dx: 0, dy: 0, isRolling: false }; // Increased radius for easier strikes
+    let ball = { x: 0, y: 0, radius: 14, dx: 0, dy: 0, isRolling: false };
     let pins = [];
     let currentFrame = 1;
     let rollInFrame = 1;
@@ -799,7 +799,7 @@
       if (!canvas) return;
       ball.x = canvas.width / 2;
       ball.y = canvas.height - 25;
-      ball.radius = 14; // Larger ball size makes strikes significantly easier
+      ball.radius = 14; // Larger ball size for high strike frequency
       ball.dx = (Math.random() - 0.5) * 0.4;
       ball.dy = 0;
       ball.isRolling = false;
@@ -828,10 +828,8 @@
       pins.forEach(pin => {
         if (pin.standing) {
           let dist = Math.hypot(ball.x - pin.x, ball.y - pin.y);
-          // Increased strike tolerance sweet spot (ball.radius + pin.radius + 12px boost)
           if (dist < ball.radius + pin.radius + 12) {
             pin.standing = false;
-            // Enhanced scattering energy to trigger chain-reaction strikes
             pin.vx = (pin.x - ball.x) * 0.8 + (Math.random() - 0.5) * 4;
             pin.vy = -3;
             playTone(320, 'square', 0.15);
@@ -839,16 +837,16 @@
         }
       });
 
-      // Easy Strike Headpin Magnifier: Slight automated draw toward center headpin
+      // Easy Strike Headpin Magnifier: Smooth pocket pull
       const headpin = pins[0];
       if (headpin && headpin.standing && ball.y < headpin.y + 35 && ball.y > headpin.y) {
         const offset = headpin.x - ball.x;
         if (Math.abs(offset) < 28) {
-          ball.x += offset * 0.15; // Smooth magnet effect toward pocket
+          ball.x += offset * 0.15;
         }
       }
 
-      // Check pin-to-pin collisions (boosted for chain reactions)
+      // Check pin-to-pin collisions
       pins.forEach(p1 => {
         if (!p1.standing) {
           p1.x += p1.vx;
@@ -856,7 +854,7 @@
           pins.forEach(p2 => {
             if (p2.standing) {
               let d = Math.hypot(p1.x - p2.x, p1.y - p2.y);
-              if (d < 22) { // Expanded pin knock-down range
+              if (d < 22) {
                 p2.standing = false;
                 p2.vx = p1.vx * 0.9;
                 p2.vy = p1.vy * 0.9;
@@ -900,39 +898,100 @@
       }
     }
 
+    // DRAW CLASSIC WOOD LANE GRAPHICS
     function drawGame() {
       if (!canvas || !ctx) return;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // Draw Lane
-      ctx.fillStyle = '#1c140d';
-      ctx.fillRect(canvas.width * 0.15, 0, canvas.width * 0.7, canvas.height);
+      const laneWidth = canvas.width * 0.7;
+      const laneLeft = canvas.width * 0.15;
+      const laneRight = laneLeft + laneWidth;
 
-      // Gutters
-      ctx.fillStyle = '#0a0a0c';
-      ctx.fillRect(0, 0, canvas.width * 0.15, canvas.height);
-      ctx.fillRect(canvas.width * 0.85, 0, canvas.width * 0.15, canvas.height);
+      // 1. Dark Alley Floor / Surroundings
+      ctx.fillStyle = '#050508';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      // Draw Pins
+      // 2. Left & Right Gutters (Metallic Dark)
+      ctx.fillStyle = '#111116';
+      ctx.fillRect(0, 0, laneLeft, canvas.height);
+      ctx.fillRect(laneRight, 0, canvas.width * 0.15, canvas.height);
+      
+      ctx.strokeStyle = '#22222a';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(laneLeft, 0); ctx.lineTo(laneLeft, canvas.height);
+      ctx.moveTo(laneRight, 0); ctx.lineTo(laneRight, canvas.height);
+      ctx.stroke();
+
+      // 3. Classic Wood Grain Wooden Lane Body
+      let woodGrad = ctx.createLinearGradient(laneLeft, 0, laneRight, 0);
+      woodGrad.addColorStop(0, '#a86f32');
+      woodGrad.addColorStop(0.15, '#c68a4c');
+      woodGrad.addColorStop(0.5, '#da9d5b');
+      woodGrad.addColorStop(0.85, '#c68a4c');
+      woodGrad.addColorStop(1, '#a86f32');
+      ctx.fillStyle = woodGrad;
+      ctx.fillRect(laneLeft, 0, laneWidth, canvas.height);
+
+      // 4. Longitudinal Wood Planks Details
+      ctx.strokeStyle = 'rgba(80, 45, 10, 0.18)';
+      ctx.lineWidth = 1;
+      const totalPlanks = 12;
+      for (let i = 1; i < totalPlanks; i++) {
+        let px = laneLeft + (laneWidth / totalPlanks) * i;
+        ctx.beginPath();
+        ctx.moveTo(px, 0);
+        ctx.lineTo(px, canvas.height);
+        ctx.stroke();
+      }
+
+      // 5. Pin Deck Base (Lighter Maple Wood at top)
+      ctx.fillStyle = 'rgba(255, 230, 180, 0.15)';
+      ctx.fillRect(laneLeft, 0, laneWidth, 60);
+
+      // 6. Traditional Target Arrows / Dots on Wood
+      ctx.fillStyle = '#42240c';
+      for (let d = 1; d <= 5; d++) {
+        let dotX = laneLeft + (laneWidth / 6) * d;
+        ctx.beginPath();
+        ctx.arc(dotX, canvas.height - 70, 2.5, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // 7. Foul Line Accent
+      ctx.fillStyle = '#d32f2f';
+      ctx.fillRect(laneLeft, canvas.height - 12, laneWidth, 3);
+
+      // 8. Draw Pins (With 3D White/Red Bowling Pin Styling)
       pins.forEach(pin => {
         if (pin.standing) {
           ctx.beginPath();
           ctx.arc(pin.x, pin.y, pin.radius, 0, Math.PI * 2);
           ctx.fillStyle = '#ffffff';
           ctx.fill();
-          ctx.strokeStyle = '#ff0000';
+          ctx.strokeStyle = '#ff3c3c';
           ctx.lineWidth = 2;
           ctx.stroke();
+
+          // Pin Top Crown Highlight
+          ctx.beginPath();
+          ctx.arc(pin.x, pin.y - 1, 2, 0, Math.PI * 2);
+          ctx.fillStyle = '#ff3c3c';
+          ctx.fill();
         }
       });
 
-      // Draw Ball
+      // 9. Draw Bowling Ball
       ctx.beginPath();
       ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
-      ctx.fillStyle = '#00aaff';
+      let ballGrad = ctx.createRadialGradient(ball.x - 3, ball.y - 3, 2, ball.x, ball.y, ball.radius);
+      ballGrad.addColorStop(0, '#66ccff');
+      ballGrad.addColorStop(0.7, '#0077ff');
+      ballGrad.addColorStop(1, '#0033aa');
+      ctx.fillStyle = ballGrad;
       ctx.fill();
       ctx.strokeStyle = '#ffffff';
-      ctx.lineWidth = 2;
+      ctx.lineWidth = 1.5;
       ctx.stroke();
 
       updatePhysics();

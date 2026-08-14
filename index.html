@@ -3,8 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bowl Strike - Realistic Alley</title>
+  <title>Bowl Strike - Professional Edition</title>
   <style>
+    :root {
+      --bg-color: #0b0d12;
+      --card-bg: linear-gradient(145deg, #161b26 0%, #0e121a 100%);
+      --accent-gold: #d4af37;
+      --accent-cyan: #00e5ff;
+      --text-main: #f0f4f8;
+      --text-muted: #7f8c9d;
+      --border-color: #232d3d;
+    }
+
     * {
       box-sizing: border-box;
       margin: 0;
@@ -13,190 +23,213 @@
     }
 
     body {
-      background: #0a0c10;
-      color: #ffffff;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       min-height: 100vh;
-      padding: 10px;
+      padding: 12px;
     }
 
     header {
       text-align: center;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
     }
 
-    h1 {
-      font-size: 2.4rem;
-      color: #ffb700;
-      text-shadow: 0 0 15px rgba(255, 183, 0, 0.6), 0 0 5px #000;
-      letter-spacing: 3px;
-      font-weight: 800;
-    }
-
-    .subtitle {
-      font-size: 0.85rem;
-      color: #8fa0b5;
+    .brand-title {
+      font-size: 2rem;
+      font-weight: 900;
+      letter-spacing: 4px;
       text-transform: uppercase;
-      letter-spacing: 1px;
+      background: linear-gradient(180deg, #ffffff 0%, #a0b0c0 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 4px 12px rgba(0,0,0,0.5);
     }
 
-    /* Scoreboard */
+    .brand-subtitle {
+      font-size: 0.75rem;
+      color: var(--accent-gold);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      font-weight: 700;
+      margin-top: 2px;
+    }
+
+    /* Pro Scoreboard HUD */
     #scoreboard {
       width: 100%;
-      max-width: 550px;
-      background: linear-gradient(180deg, #1b222d 0%, #0f141c 100%);
-      border: 2px solid #2d3848;
-      border-radius: 8px;
-      padding: 8px 15px;
-      margin-bottom: 10px;
+      max-width: 560px;
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 10px 16px;
+      margin-bottom: 12px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      box-shadow: 0 6px 16px rgba(0,0,0,0.7);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.6);
     }
 
-    .score-box {
+    .hud-group {
       text-align: center;
       flex: 1;
+      border-right: 1px solid rgba(255,255,255,0.05);
     }
 
-    .score-label {
-      font-size: 0.7rem;
+    .hud-group:last-child {
+      border-right: none;
+    }
+
+    .hud-label {
+      font-size: 0.65rem;
       text-transform: uppercase;
-      color: #6e829b;
+      color: var(--text-muted);
+      letter-spacing: 1.5px;
+      font-weight: 700;
       margin-bottom: 2px;
-      font-weight: 600;
     }
 
-    .score-value {
-      font-size: 1.6rem;
+    .hud-value {
+      font-size: 1.5rem;
       font-weight: 800;
-      color: #00ffd2;
-      text-shadow: 0 0 8px rgba(0, 255, 210, 0.4);
+      font-family: 'Courier New', Courier, monospace;
+      color: #ffffff;
+    }
+
+    .hud-value.highlight {
+      color: var(--accent-cyan);
+      text-shadow: 0 0 10px rgba(0, 229, 255, 0.4);
     }
 
     /* Game Canvas Container */
     #game-container {
       position: relative;
       width: 100%;
-      max-width: 550px;
+      max-width: 560px;
       background: #000;
-      border-radius: 10px;
+      border-radius: 8px;
       overflow: hidden;
-      border: 3px solid #ffb700;
-      box-shadow: 0 10px 30px rgba(255, 183, 0, 0.25), 0 0 50px rgba(0,0,0,0.8);
+      border: 1px solid #334155;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.8), 0 0 1px 1px rgba(255,255,255,0.1);
     }
 
     canvas {
       display: block;
       width: 100%;
       height: auto;
-      background: #05070a;
+      background: #06080c;
     }
 
-    /* Instructions & Controls Panel */
+    /* Controls & Information Bar */
     #controls-panel {
       width: 100%;
-      max-width: 550px;
-      margin-top: 10px;
-      background: #12161f;
-      border-radius: 8px;
-      padding: 10px;
-      border: 1px solid #222b3a;
-      text-align: center;
+      max-width: 560px;
+      margin-top: 12px;
+      background: var(--card-bg);
+      border-radius: 6px;
+      padding: 12px 16px;
+      border: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
     }
 
     .instructions {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      line-height: 1.3;
+    }
+
+    .instructions strong {
+      color: var(--text-main);
+    }
+
+    .btn-pro {
+      background: linear-gradient(180deg, #2a3446 0%, #171e2b 100%);
+      color: var(--text-main);
+      border: 1px solid #405068;
+      padding: 8px 18px;
       font-size: 0.85rem;
-      color: #b0c0d0;
-      margin-bottom: 8px;
-    }
-
-    .btn {
-      background: linear-gradient(180deg, #ffc800 0%, #d49600 100%);
-      color: #000;
-      border: none;
-      padding: 8px 20px;
-      font-size: 0.95rem;
-      font-weight: bold;
-      border-radius: 20px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      border-radius: 4px;
       cursor: pointer;
-      box-shadow: 0 4px 12px rgba(255, 200, 0, 0.3);
-      transition: all 0.15s ease;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.4);
     }
 
-    .btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 16px rgba(255, 200, 0, 0.4);
+    .btn-pro:hover {
+      background: linear-gradient(180deg, #344258 0%, #1e2738 100%);
+      border-color: var(--accent-gold);
+      color: #ffffff;
     }
 
-    .btn:active {
-      transform: translateY(1px);
-    }
-
-    /* Overlay Banner for Game Events */
+    /* Broadcast Banner Overlay */
     #game-overlay {
       position: absolute;
-      top: 35%;
+      top: 30%;
       left: 0;
       width: 100%;
       text-align: center;
-      font-size: 3rem;
+      font-size: 2.8rem;
       font-weight: 900;
-      color: #00ffd2;
-      text-shadow: 0 0 20px rgba(0, 255, 210, 0.9), 3px 3px 0 #000;
+      letter-spacing: 3px;
+      color: #ffffff;
+      text-shadow: 0 0 20px rgba(0, 229, 255, 0.8), 0 4px 8px #000;
       pointer-events: none;
       opacity: 0;
-      transition: opacity 0.25s ease, transform 0.25s ease;
-      transform: scale(0.7);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      transform: scale(0.85);
       z-index: 10;
+      font-style: italic;
     }
 
     #game-overlay.show {
       opacity: 1;
-      transform: scale(1.1);
+      transform: scale(1);
     }
   </style>
 </head>
 <body>
 
   <header>
-    <h1>BOWL STRIKE</h1>
-    <div class="subtitle">Realistic Alley - BowlStrike.com</div>
+    <div class="brand-title">BOWL STRIKE</div>
+    <div class="brand-subtitle">PRO TOUR ALLEY</div>
   </header>
 
-  <!-- Scoreboard -->
+  <!-- Pro Scoreboard HUD -->
   <div id="scoreboard">
-    <div class="score-box">
-      <div class="score-label">Frame</div>
-      <div class="score-value" id="frame-display">1 / 10</div>
+    <div class="hud-group">
+      <div class="hud-label">Frame</div>
+      <div class="hud-value" id="frame-display">1 / 10</div>
     </div>
-    <div class="score-box">
-      <div class="score-label">Ball</div>
-      <div class="score-value" id="ball-display">1</div>
+    <div class="hud-group">
+      <div class="hud-label">Shot</div>
+      <div class="hud-value" id="ball-display">1</div>
     </div>
-    <div class="score-box">
-      <div class="score-label">Total Score</div>
-      <div class="score-value" id="score-display">0</div>
+    <div class="hud-group">
+      <div class="hud-label">Score</div>
+      <div class="hud-value highlight" id="score-display">0</div>
     </div>
   </div>
 
-  <!-- Main Game Canvas -->
+  <!-- Main Canvas -->
   <div id="game-container">
     <canvas id="bowlingCanvas" width="500" height="700"></canvas>
     <div id="game-overlay">STRIKE!</div>
   </div>
 
-  <!-- Interactive Controls -->
+  <!-- Control Footer -->
   <div id="controls-panel">
     <div class="instructions" id="instruction-text">
-      <strong>Click & Drag (or Swipe)</strong> backward and aim to launch down the wood lane!
+      <strong>Swipe / Drag backward</strong> from behind the foul line to launch.
     </div>
-    <button class="btn" id="action-btn" onclick="resetGame()">Restart Game</button>
+    <button class="btn-pro" onclick="resetGame()">Reset Frame</button>
   </div>
 
   <script>
@@ -204,7 +237,7 @@
     const ctx = canvas.getContext('2d');
     const overlay = document.getElementById('game-overlay');
 
-    // Web Audio API Synthesizer Sound Engine
+    // Web Audio Synthesizer (Zero External Dependencies)
     let audioCtx = null;
 
     function initAudio() {
@@ -216,10 +249,8 @@
       }
     }
 
-    // Sound 1: Ball Rolling down lane
     function playRollSound() {
       if (!audioCtx) return;
-      
       const bufferSize = audioCtx.sampleRate * 1.5;
       const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
       const data = buffer.getChannelData(0);
@@ -232,25 +263,22 @@
 
       const filter = audioCtx.createBiquadFilter();
       filter.type = 'lowpass';
-      filter.frequency.setValueAtTime(160, audioCtx.currentTime);
-      filter.frequency.exponentialRampToValueAtTime(40, audioCtx.currentTime + 1.2);
+      filter.frequency.setValueAtTime(140, audioCtx.currentTime);
+      filter.frequency.exponentialRampToValueAtTime(35, audioCtx.currentTime + 1.2);
 
       const gain = audioCtx.createGain();
-      gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+      gain.gain.setValueAtTime(0.25, audioCtx.currentTime);
       gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 1.2);
 
       noise.connect(filter);
       filter.connect(gain);
       gain.connect(audioCtx.destination);
-
       noise.start();
     }
 
-    // Sound 2: Wood Pin Hit / Clash
     function playPinSound(count) {
       if (!audioCtx) return;
-
-      const duration = 0.6;
+      const duration = 0.5;
       const bufferSize = audioCtx.sampleRate * duration;
       const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
       const data = buffer.getChannelData(0);
@@ -263,11 +291,11 @@
 
       const filter = audioCtx.createBiquadFilter();
       filter.type = 'bandpass';
-      filter.frequency.setValueAtTime(1200, audioCtx.currentTime);
-      filter.Q.setValueAtTime(3, audioCtx.currentTime);
+      filter.frequency.setValueAtTime(1400, audioCtx.currentTime);
+      filter.Q.setValueAtTime(2.5, audioCtx.currentTime);
 
       const gain = audioCtx.createGain();
-      const volume = Math.min(0.2 + count * 0.08, 0.8);
+      const volume = Math.min(0.25 + count * 0.08, 0.85);
       gain.gain.setValueAtTime(volume, audioCtx.currentTime);
       gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
 
@@ -275,58 +303,61 @@
       filter.connect(gain);
       gain.connect(audioCtx.destination);
 
-      // Add wooden thunk body
       const osc = audioCtx.createOscillator();
       const oscGain = audioCtx.createGain();
       osc.type = 'triangle';
-      osc.frequency.setValueAtTime(220, audioCtx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(60, audioCtx.currentTime + 0.15);
-      oscGain.gain.setValueAtTime(0.5, audioCtx.currentTime);
-      oscGain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
+      osc.frequency.setValueAtTime(240, audioCtx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(50, audioCtx.currentTime + 0.12);
+      oscGain.gain.setValueAtTime(0.6, audioCtx.currentTime);
+      oscGain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.12);
 
       osc.connect(oscGain);
       oscGain.connect(audioCtx.destination);
 
       noise.start();
       osc.start();
-      osc.stop(audioCtx.currentTime + 0.15);
+      osc.stop(audioCtx.currentTime + 0.12);
     }
 
-    // Game State Variables
+    // Game Variables
     let currentFrame = 1;
     let currentRoll = 1;
     let totalScore = 0;
     let gameOver = false;
 
+    // FOUL LINE Y-COORDINATE
+    const FOUL_LINE_Y = 570;
+
     // Ball Object
     let ball = {
       x: 250,
-      y: 620,
-      radius: 18,
+      y: 630, // Starts on the approach behind the foul line
+      radius: 17,
       vx: 0,
       vy: 0,
       isRolling: false,
       canAim: true,
-      hasHitPins: false
+      hasHitPins: false,
+      rotation: 0
     };
 
-    // Aiming State
+    // Aiming / Dragging
     let isDragging = false;
     let dragStart = { x: 0, y: 0 };
     let dragCurrent = { x: 0, y: 0 };
 
     // Pin Layout Setup
     const pinOrigins = [
-      { id: 1,  row: 1, col: 1, x: 250, y: 180 }, 
-      { id: 2,  row: 2, col: 1, x: 232, y: 162 },
-      { id: 3,  row: 2, col: 2, x: 268, y: 162 },
-      { id: 4,  row: 3, col: 1, x: 214, y: 144 },
-      { id: 5,  row: 3, col: 2, x: 250, y: 144 },
-      { id: 6,  row: 3, col: 3, x: 286, y: 144 },
-      { id: 7,  row: 4, col: 1, x: 196, y: 126 },
-      { id: 8,  row: 4, col: 2, x: 232, y: 126 },
-      { id: 9,  row: 4, col: 3, x: 268, y: 126 },
-      { id: 10, row: 4, col: 4, x: 304, y: 126 }
+      { id: 1,  row: 1, col: 1, x: 250, y: 175 }, 
+      { id: 2,  row: 2, col: 1, x: 232, y: 158 },
+      { id: 3,  row: 2, col: 2, x: 268, y: 158 },
+      { id: 4,  row: 3, col: 1, x: 214, y: 141 },
+      { id: 5,  row: 3, col: 2, x: 250, y: 141 },
+      { id: 6,  row: 3, col: 3, x: 286, y: 141 },
+      { id: 7,  row: 4, col: 1, x: 196, y: 124 },
+      { id: 8,  row: 4, col: 2, x: 232, y: 124 },
+      { id: 9,  row: 4, col: 3, x: 268, y: 124 },
+      { id: 10, row: 4, col: 4, x: 304, y: 124 }
     ];
 
     let pins = [];
@@ -345,7 +376,7 @@
       return 0.35 + (y / 700) * 0.65;
     }
 
-    // Input Mechanics
+    // Input Handling
     function getCanvasCoordinates(e) {
       const rect = canvas.getBoundingClientRect();
       const clientX = e.touches ? e.touches[0].clientX : e.clientX;
@@ -382,8 +413,8 @@
       if (dy > 15) {
         ball.vx = -dx * 0.12;
         ball.vy = -dy * 0.22;
-        ball.vy = Math.max(ball.vy, -18);
-        ball.vx = Math.max(Math.min(ball.vx, 8), -8);
+        ball.vy = Math.max(ball.vy, -19);
+        ball.vx = Math.max(Math.min(ball.vx, 8.5), -8.5);
         
         ball.isRolling = true;
         ball.canAim = false;
@@ -413,49 +444,48 @@
         ball.x += ball.vx;
         ball.y += ball.vy;
         ball.vy *= 0.993;
+        ball.rotation += Math.abs(ball.vy) * 0.08;
 
         let hitThisFrame = 0;
 
-        // Pin Collisions
+        // Pin Collision Check
         pins.forEach(pin => {
           if (pin.isStanding) {
             const dist = Math.hypot(ball.x - pin.x, ball.y - pin.y);
             const scale = getScale(pin.y);
-            if (dist < (ball.radius + 12 * scale)) {
+            if (dist < (ball.radius + 11 * scale)) {
               pin.isStanding = false;
               pin.knockedX = (pin.x - ball.x) * 0.85 + (Math.random() - 0.5) * 12;
-              pin.knockedY = -Math.abs(ball.vy) * 0.6;
+              pin.knockedY = -Math.abs(ball.vy) * 0.55;
               hitThisFrame++;
             }
           }
         });
 
-        if (hitThisFrame > 0) {
-          if (!ball.hasHitPins) {
-            playPinSound(hitThisFrame);
-            ball.hasHitPins = true;
-          }
+        if (hitThisFrame > 0 && !ball.hasHitPins) {
+          playPinSound(hitThisFrame);
+          ball.hasHitPins = true;
         }
 
-        // Pin Motion & Scatter
+        // Pin Scatter Dynamics
         pins.forEach(pin => {
           if (!pin.isStanding && pin.opacity > 0) {
             pin.x += pin.knockedX;
             pin.y += pin.knockedY;
             pin.knockedX *= 0.86;
             pin.knockedY *= 0.86;
-            pin.opacity -= 0.02;
+            pin.opacity -= 0.025;
           }
         });
 
-        // Gutter physics
-        const laneLeft = 130 - (ball.y / 700) * 35;
-        const laneRight = 370 + (ball.y / 700) * 35;
+        // Gutter Trap
+        const laneLeft = 135 - (ball.y / 700) * 35;
+        const laneRight = 365 + (ball.y / 700) * 35;
         if (ball.x < laneLeft || ball.x > laneRight) {
-          ball.vx *= 0.15;
+          ball.vx *= 0.12;
         }
 
-        // End of Roll State
+        // End of Shot Detection
         if (ball.y < 85 || Math.abs(ball.vy) < 0.2) {
           endRoll();
         }
@@ -495,7 +525,7 @@
 
     function resetBall() {
       ball.x = 250;
-      ball.y = 620;
+      ball.y = 630;
       ball.vx = 0;
       ball.vy = 0;
       ball.isRolling = false;
@@ -505,9 +535,9 @@
     function nextFrame() {
       if (currentFrame >= 10) {
         gameOver = true;
-        showOverlay("GAME OVER!");
+        showOverlay("GAME OVER");
         document.getElementById('instruction-text').innerHTML = 
-          `<strong>Final Score: ${totalScore}</strong>! Click 'Restart Game' to play again.`;
+          `<strong>Final Score: ${totalScore}</strong>. Click Reset to start again.`;
       } else {
         currentFrame++;
         currentRoll = 1;
@@ -524,7 +554,7 @@
       totalScore = 0;
       gameOver = false;
       document.getElementById('instruction-text').innerHTML = 
-        `<strong>Click & Drag (or Swipe)</strong> backward and aim to launch down the wood lane!`;
+        `<strong>Swipe / Drag backward</strong> from behind the foul line to launch.`;
       initPins();
       resetBall();
       updateUI();
@@ -536,76 +566,127 @@
       document.getElementById('score-display').innerText = totalScore;
     }
 
-    // High-Detail Graphic Rendering
+    // High-Resolution Professional Drawing Loop
     function draw() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // 1. Background / Pin Deck Cavity
-      ctx.fillStyle = '#020305';
+      // 1. Pit Area (Back Wall Cavity)
+      ctx.fillStyle = '#040508';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      // Pit Back Wall
-      ctx.fillStyle = '#0d1117';
-      ctx.fillRect(100, 50, 300, 60);
+      // Sweep Bar Housing / Pin Pit Wall
+      ctx.fillStyle = '#0c0f17';
+      ctx.fillRect(100, 40, 300, 70);
+      ctx.fillStyle = '#1e2638';
+      ctx.fillRect(100, 105, 300, 5);
 
-      // 2. Realistic Wood Lane Floor
-      const laneGrad = ctx.createLinearGradient(0, 100, 0, 700);
-      laneGrad.addColorStop(0, '#a26b2b');
-      laneGrad.addColorStop(0.3, '#c98a3e');
-      laneGrad.addColorStop(1, '#e2a14e');
+      // 2. Approach Hardwood Floor (Behind Foul Line)
+      const approachGrad = ctx.createLinearGradient(0, FOUL_LINE_Y, 0, 700);
+      approachGrad.addColorStop(0, '#c2873e');
+      approachGrad.addColorStop(1, '#9e6727');
+      ctx.fillStyle = approachGrad;
+      ctx.fillRect(0, FOUL_LINE_Y, canvas.width, 700 - FOUL_LINE_Y);
+
+      // Approach Dots
+      ctx.fillStyle = '#4a2e0e';
+      [-80, -40, 0, 40, 80].forEach(offset => {
+        ctx.beginPath();
+        ctx.arc(250 + offset, 660, 3, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      // 3. Main Maple Wood Lane Floor
+      const laneGrad = ctx.createLinearGradient(0, 100, 0, FOUL_LINE_Y);
+      laneGrad.addColorStop(0, '#9c6527');  // Dry deck near pins
+      laneGrad.addColorStop(0.5, '#bd8239'); // Oiled mid-lane
+      laneGrad.addColorStop(1, '#d19448');   // Oiled head deck
 
       ctx.beginPath();
       ctx.moveTo(170, 100);  
       ctx.lineTo(330, 100);  
-      ctx.lineTo(445, 700);  
-      ctx.lineTo(55, 700);   
+      ctx.lineTo(445, FOUL_LINE_Y);  
+      ctx.lineTo(55, FOUL_LINE_Y);   
       ctx.closePath();
       ctx.fillStyle = laneGrad;
       ctx.fill();
 
-      // Wood Planks Line Shading
-      ctx.strokeStyle = 'rgba(0, 0, 0, 0.08)';
+      // Board Lines Shading
+      ctx.strokeStyle = 'rgba(0, 0, 0, 0.07)';
       ctx.lineWidth = 1;
-      for (let i = -6; i <= 6; i++) {
+      for (let i = -7; i <= 7; i++) {
         ctx.beginPath();
-        ctx.moveTo(250 + i * 11, 100);
-        ctx.lineTo(250 + i * 28, 700);
+        ctx.moveTo(250 + i * 10, 100);
+        ctx.lineTo(250 + i * 26, FOUL_LINE_Y);
         ctx.stroke();
       }
 
-      // Overhead Glossy Reflections
-      const glossGrad = ctx.createLinearGradient(0, 100, 0, 700);
-      glossGrad.addColorStop(0, 'rgba(255, 255, 255, 0.25)');
-      glossGrad.addColorStop(0.4, 'rgba(255, 255, 255, 0.05)');
-      glossGrad.addColorStop(1, 'rgba(255, 255, 255, 0.0)');
-      ctx.fillStyle = glossGrad;
+      // Oiled Lane Wax Reflection Surface
+      const waxGrad = ctx.createLinearGradient(0, 250, 0, FOUL_LINE_Y);
+      waxGrad.addColorStop(0, 'rgba(255, 255, 255, 0.0)');
+      waxGrad.addColorStop(0.7, 'rgba(255, 255, 255, 0.08)');
+      waxGrad.addColorStop(1, 'rgba(255, 255, 255, 0.18)');
+      ctx.fillStyle = waxGrad;
       ctx.fill();
 
-      // Gutters
-      ctx.fillStyle = '#11141a';
+      // 4. Heavy Metallic Gutters
       // Left Gutter
+      ctx.fillStyle = '#12161f';
       ctx.beginPath();
-      ctx.moveTo(110, 100); ctx.lineTo(170, 100); ctx.lineTo(55, 700); ctx.lineTo(0, 700);
+      ctx.moveTo(110, 100); ctx.lineTo(170, 100); ctx.lineTo(55, FOUL_LINE_Y); ctx.lineTo(0, FOUL_LINE_Y);
       ctx.fill();
       // Right Gutter
       ctx.beginPath();
-      ctx.moveTo(330, 100); ctx.lineTo(390, 100); ctx.lineTo(500, 700); ctx.lineTo(445, 700);
+      ctx.moveTo(330, 100); ctx.lineTo(390, 100); ctx.lineTo(500, FOUL_LINE_Y); ctx.lineTo(445, FOUL_LINE_Y);
       ctx.fill();
 
-      // Target Arrows on Wood Lane
-      ctx.fillStyle = '#613b10';
-      [-30, -15, 0, 15, 30].forEach(offset => {
-        const scale = getScale(420);
-        const ax = 250 + offset * 2.2;
+      // Gutter Capping Rails (Chrome Accents)
+      ctx.strokeStyle = '#334155';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(170, 100); ctx.lineTo(55, FOUL_LINE_Y);
+      ctx.moveTo(330, 100); ctx.lineTo(445, FOUL_LINE_Y);
+      ctx.stroke();
+
+      // 5. PBA 7-Arrow Targeting System
+      ctx.fillStyle = '#4a2e0e';
+      [-60, -40, -20, 0, 20, 40, 60].forEach(offset => {
+        const scale = getScale(410);
+        const ax = 250 + offset * 2.1;
         ctx.beginPath();
-        ctx.moveTo(ax, 420);
-        ctx.lineTo(ax - 4 * scale, 432 * scale + 100);
-        ctx.lineTo(ax + 4 * scale, 432 * scale + 100);
+        ctx.moveTo(ax, 410);
+        ctx.lineTo(ax - 3 * scale, 422);
+        ctx.lineTo(ax + 3 * scale, 422);
         ctx.closePath();
         ctx.fill();
       });
 
-      // 3. Render Pins
+      // 6. PRO FOUL LINE & SENSORS
+      // The Black/Red Foul Line
+      ctx.fillStyle = '#111111';
+      ctx.fillRect(45, FOUL_LINE_Y - 2, 410, 5);
+      ctx.fillStyle = '#cc0000';
+      ctx.fillRect(45, FOUL_LINE_Y, 410, 2);
+
+      // Foul Line Infrared Sensor Lights on Side Capping
+      ctx.fillStyle = '#1e293b';
+      ctx.fillRect(40, FOUL_LINE_Y - 6, 12, 12);
+      ctx.fillRect(448, FOUL_LINE_Y - 6, 12, 12);
+      ctx.fillStyle = '#00ffcc'; // Sensor active LED
+      ctx.beginPath();
+      ctx.arc(46, FOUL_LINE_Y, 2.5, 0, Math.PI * 2);
+      ctx.arc(454, FOUL_LINE_Y, 2.5, 0, Math.PI * 2);
+      ctx.fill();
+
+      // 7. Pin Deck Spots
+      pinOrigins.forEach(p => {
+        const scale = getScale(p.y);
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.15)';
+        ctx.beginPath();
+        ctx.arc(p.x, p.y + 4 * scale, 4 * scale, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      // 8. Render Pins (Back to Front)
       const sortedPins = [...pins].sort((a, b) => a.y - b.y);
       sortedPins.forEach(pin => {
         if (pin.opacity <= 0) return;
@@ -614,58 +695,58 @@
         ctx.save();
         ctx.globalAlpha = pin.opacity;
         
-        // Shadow
-        ctx.fillStyle = 'rgba(0,0,0,0.45)';
+        // Pin Base Shadow
+        ctx.fillStyle = 'rgba(0,0,0,0.5)';
         ctx.beginPath();
-        ctx.ellipse(pin.x, pin.y + 5 * scale, 9 * scale, 3 * scale, 0, 0, Math.PI * 2);
+        ctx.ellipse(pin.x, pin.y + 5 * scale, 8.5 * scale, 3 * scale, 0, 0, Math.PI * 2);
         ctx.fill();
 
-        // Pin Body
-        const pinGrad = ctx.createLinearGradient(pin.x - 6 * scale, 0, pin.x + 6 * scale, 0);
-        pinGrad.addColorStop(0, '#e6e6e6');
-        pinGrad.addColorStop(0.5, '#ffffff');
-        pinGrad.addColorStop(1, '#cccccc');
+        // Pin Body (Lacquer White Gradient)
+        const pinGrad = ctx.createLinearGradient(pin.x - 5 * scale, 0, pin.x + 5 * scale, 0);
+        pinGrad.addColorStop(0, '#d9d9d9');
+        pinGrad.addColorStop(0.4, '#ffffff');
+        pinGrad.addColorStop(1, '#b0b0b0');
 
         ctx.fillStyle = pinGrad;
         ctx.beginPath();
-        ctx.arc(pin.x, pin.y - 12 * scale, 6.5 * scale, 0, Math.PI * 2); // Head
-        ctx.arc(pin.x, pin.y, 9.5 * scale, 0, Math.PI * 2);             // Belly
+        ctx.arc(pin.x, pin.y - 12 * scale, 6 * scale, 0, Math.PI * 2); // Head
+        ctx.arc(pin.x, pin.y, 9 * scale, 0, Math.PI * 2);            // Belly
         ctx.fill();
 
-        // Red Neck Stripes
-        ctx.fillStyle = '#e60000';
-        ctx.fillRect(pin.x - 5 * scale, pin.y - 14 * scale, 10 * scale, 2.5 * scale);
-        ctx.fillRect(pin.x - 5.5 * scale, pin.y - 10 * scale, 11 * scale, 2.5 * scale);
+        // Dual Red Stripes
+        ctx.fillStyle = '#d60000';
+        ctx.fillRect(pin.x - 4.5 * scale, pin.y - 14 * scale, 9 * scale, 2 * scale);
+        ctx.fillRect(pin.x - 5 * scale, pin.y - 10.5 * scale, 10 * scale, 2 * scale);
 
         ctx.restore();
       });
 
-      // 4. Aiming Dotted Line
+      // 9. Aiming Vector Line
       if (isDragging) {
         ctx.beginPath();
         ctx.moveTo(ball.x, ball.y);
         const aimX = ball.x - (dragStart.x - dragCurrent.x);
         const aimY = ball.y - (dragStart.y - dragCurrent.y);
         ctx.lineTo(aimX, aimY);
-        ctx.strokeStyle = 'rgba(0, 255, 210, 0.8)';
-        ctx.lineWidth = 3;
-        ctx.setLineDash([6, 6]);
+        ctx.strokeStyle = 'rgba(0, 229, 255, 0.7)';
+        ctx.lineWidth = 2.5;
+        ctx.setLineDash([5, 5]);
         ctx.stroke();
         ctx.setLineDash([]);
       }
 
-      // 5. Render Marble/Polymer Bowling Ball
+      // 10. Render Reactive-Resin Pearl Bowling Ball
       const ballScale = getScale(ball.y);
       const scaledRadius = ball.radius * ballScale;
 
-      // Ball Shadow
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+      // Ball Contact Shadow
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.55)';
       ctx.beginPath();
-      ctx.ellipse(ball.x, ball.y + scaledRadius * 0.85, scaledRadius * 1.1, scaledRadius * 0.35, 0, 0, Math.PI * 2);
+      ctx.ellipse(ball.x, ball.y + scaledRadius * 0.8, scaledRadius * 1.05, scaledRadius * 0.3, 0, 0, Math.PI * 2);
       ctx.fill();
 
-      // Ball Shading
-      const grad = ctx.createRadialGradient(
+      // Pro Pearl Resin Core Gradient
+      const ballGrad = ctx.createRadialGradient(
         ball.x - scaledRadius * 0.35, 
         ball.y - scaledRadius * 0.35, 
         scaledRadius * 0.05, 
@@ -673,29 +754,35 @@
         ball.y, 
         scaledRadius
       );
-      grad.addColorStop(0, '#33ffff');
-      grad.addColorStop(0.3, '#0088cc');
-      grad.addColorStop(0.8, '#002b4d');
-      grad.addColorStop(1, '#001122');
+      ballGrad.addColorStop(0, '#00f2fe');
+      ballGrad.addColorStop(0.3, '#4facfe');
+      ballGrad.addColorStop(0.75, '#002244');
+      ballGrad.addColorStop(1, '#000814');
+
+      ctx.save();
+      ctx.translate(ball.x, ball.y);
+      ctx.rotate(ball.rotation);
 
       ctx.beginPath();
-      ctx.arc(ball.x, ball.y, scaledRadius, 0, Math.PI * 2);
-      ctx.fillStyle = grad;
+      ctx.arc(0, 0, scaledRadius, 0, Math.PI * 2);
+      ctx.fillStyle = ballGrad;
       ctx.fill();
 
-      // Gloss Ring
+      // Pearl Swirl Texture Highlight
       ctx.beginPath();
-      ctx.arc(ball.x - scaledRadius * 0.3, ball.y - scaledRadius * 0.3, scaledRadius * 0.25, 0, Math.PI * 2);
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.25)';
+      ctx.arc(-scaledRadius * 0.2, -scaledRadius * 0.2, scaledRadius * 0.5, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.12)';
       ctx.fill();
 
-      // Finger Holes
+      // Finger Grips
       ctx.fillStyle = '#050a10';
       ctx.beginPath();
-      ctx.arc(ball.x - 3 * ballScale, ball.y - 4 * ballScale, 2.2 * ballScale, 0, Math.PI * 2);
-      ctx.arc(ball.x + 3 * ballScale, ball.y - 4 * ballScale, 2.2 * ballScale, 0, Math.PI * 2);
-      ctx.arc(ball.x, ball.y + 3 * ballScale, 2.6 * ballScale, 0, Math.PI * 2);
+      ctx.arc(-3 * ballScale, -4 * ballScale, 2 * ballScale, 0, Math.PI * 2);
+      ctx.arc(3 * ballScale, -4 * ballScale, 2 * ballScale, 0, Math.PI * 2);
+      ctx.arc(0, 3 * ballScale, 2.4 * ballScale, 0, Math.PI * 2);
       ctx.fill();
+
+      ctx.restore();
     }
 
     // Main Game Loop

@@ -31,16 +31,17 @@
 
 <!-- Leaflet CSS & JS for Interactive Map -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="" defer></script>
+
 <!-- FontAwesome for Icons -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
 <!-- EmailJS SDK -->
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js" defer></script>
 
 <!-- Firebase SDKs (Compatibility Build) -->
-<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js" defer></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js" defer></script>
 
 <style>
   :root {
@@ -272,19 +273,19 @@
       
       <div class="news-grid" id="news-grid-container">
         <div class="card news-card">
-          <h3><a href="https://www.pba.com/news" target="_blank">PBA Tour Title Matches & Championship Bracket Live Coverage</a></h3>
+          <h3><a href="https://www.pba.com/news" target="_blank" rel="noopener">PBA Tour Title Matches & Championship Bracket Live Coverage</a></h3>
           <p>Real-time tournament updates, oil pattern breakdown analysis, and national PBA tour points updates.</p>
           <div class="news-meta"><span>PBA.com</span><span>Auto-Updated</span></div>
         </div>
         
         <div class="card news-card">
-          <h3><a href="https://bowl.com/news" target="_blank">USBC Championship Update: New Equipment Hardness Guidelines</a></h3>
+          <h3><a href="https://bowl.com/news" target="_blank" rel="noopener">USBC Championship Update: New Equipment Hardness Guidelines</a></h3>
           <p>USBC technical specifications and bowling ball hardness regulations for all sanctioned national events.</p>
           <div class="news-meta"><span>USBC</span><span>Auto-Updated</span></div>
         </div>
         
         <div class="card news-card">
-          <h3><a href="https://www.bowlingdigital.com/" target="_blank">World Bowling Rankings: Global Tenpin Tour Leaders Announced</a></h3>
+          <h3><a href="https://www.bowlingdigital.com/" target="_blank" rel="noopener">World Bowling Rankings: Global Tenpin Tour Leaders Announced</a></h3>
           <p>International tenpin news covering global ranking shifts and upcoming major open events.</p>
           <div class="news-meta"><span>BowlingDigital</span><span>Auto-Updated</span></div>
         </div>
@@ -315,7 +316,7 @@
           
           <div class="card profile-card">
             <div class="profile-photo-container">
-              <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80" alt="PinSmasher99 Profile" />
+              <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80" alt="PinSmasher99 Profile" loading="lazy" />
             </div>
             <div class="profile-details">
               <div class="profile-name">PinSmasher99</div>
@@ -327,7 +328,7 @@
 
           <div class="card profile-card">
             <div class="profile-photo-container">
-              <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80" alt="ApexSpinner Profile" />
+              <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80" alt="ApexSpinner Profile" loading="lazy" />
             </div>
             <div class="profile-details">
               <div class="profile-name">ApexSpinner</div>
@@ -339,7 +340,7 @@
 
           <div class="card profile-card">
             <div class="profile-photo-container">
-              <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=300&q=80" alt="StrikeQueen_FL Profile" />
+              <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=300&q=80" alt="StrikeQueen_FL Profile" loading="lazy" />
             </div>
             <div class="profile-details">
               <div class="profile-name">StrikeQueen_FL</div>
@@ -355,7 +356,7 @@
           <h3 style="font-size:1.1rem; margin-bottom:0.8rem;"><i class="fa-solid fa-people-group" style="color:var(--accent)"></i> Your Team</h3>
           
           <div class="team-player-card">
-            <img src="https://i.pravatar.cc/150?u=mike" class="profile-thumb" alt="Mike">
+            <img src="https://i.pravatar.cc/150?u=mike" class="profile-thumb" alt="Mike" loading="lazy">
             <div style="flex:1;">
               <strong style="font-size:0.88rem;">Mike Strikes</strong><br>
               <span style="font-size:0.75rem; color:var(--success);">🟢 Live on Lane 14</span>
@@ -364,7 +365,7 @@
           </div>
 
           <div class="team-player-card">
-            <img src="https://i.pravatar.cc/150?u=dad" class="profile-thumb" alt="Dad">
+            <img src="https://i.pravatar.cc/150?u=dad" class="profile-thumb" alt="Dad" loading="lazy">
             <div style="flex:1;">
               <strong style="font-size:0.88rem;">Dad (PinCrusher)</strong><br>
               <span style="font-size:0.75rem; color:var(--success);">🟢 Live on Lane 2</span>
@@ -373,7 +374,7 @@
           </div>
 
           <div class="team-player-card">
-            <img src="https://i.pravatar.cc/150?u=sarah" class="profile-thumb" alt="Sarah">
+            <img src="https://i.pravatar.cc/150?u=sarah" class="profile-thumb" alt="Sarah" loading="lazy">
             <div style="flex:1;">
               <strong style="font-size:0.88rem;">Sarah Jones</strong><br>
               <span style="font-size:0.75rem; color:var(--text-muted);">⚪ Offline (Bowlero Kissimmee)</span>
@@ -382,7 +383,7 @@
           </div>
 
           <div class="team-player-card">
-            <img src="https://i.pravatar.cc/150?u=dave" class="profile-thumb" alt="Dave">
+            <img src="https://i.pravatar.cc/150?u=dave" class="profile-thumb" alt="Dave" loading="lazy">
             <div style="flex:1;">
               <strong style="font-size:0.88rem;">Dave "Hook" Miller</strong><br>
               <span style="font-size:0.75rem; color:var(--success);">🟢 Practicing (Lane 22)</span>
@@ -391,7 +392,7 @@
           </div>
 
           <div class="team-player-card">
-            <img src="https://i.pravatar.cc/150?u=amanda" class="profile-thumb" alt="Amanda">
+            <img src="https://i.pravatar.cc/150?u=amanda" class="profile-thumb" alt="Amanda" loading="lazy">
             <div style="flex:1;">
               <strong style="font-size:0.88rem;">Amanda 7-10</strong><br>
               <span style="font-size:0.75rem; color:var(--text-muted);">⚪ Offline (League Night Thu)</span>
@@ -412,7 +413,7 @@
         
         <div class="card feed-post-card">
           <div class="post-header">
-            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80" class="feed-author-thumb" alt="PinSmasher99">
+            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80" class="feed-author-thumb" alt="PinSmasher99" loading="lazy">
             <div>
               <strong style="font-size:0.95rem; color:#fff;">@PinSmasher99</strong>
               <div style="font-size:0.75rem; color:var(--text-muted);">Bowlero Orlando — 10th Frame Clutch Double</div>
@@ -420,7 +421,7 @@
           </div>
           
           <div class="post-media-container">
-            <img src="https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=800&q=80" alt="Bowling Alley Lanes Highlight">
+            <img src="https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=800&q=80" alt="Bowling Alley Lanes Highlight" loading="lazy">
           </div>
 
           <div class="post-actions-panel">
@@ -437,7 +438,7 @@
 
         <div class="card feed-post-card">
           <div class="post-header">
-            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80" class="feed-author-thumb" alt="ApexSpinner">
+            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80" class="feed-author-thumb" alt="ApexSpinner" loading="lazy">
             <div>
               <strong style="font-size:0.95rem; color:#fff;">@ApexSpinner</strong>
               <div style="font-size:0.75rem; color:var(--text-muted);">Perfect Roto Grip Hook Motion on Heavy Oil Pattern</div>
@@ -445,7 +446,7 @@
           </div>
           
           <div class="post-media-container">
-            <img src="https://images.unsplash.com/photo-1538388149542-5e24932d11a8?auto=format&fit=crop&w=800&q=80" alt="Bowling Ball Hook Motion">
+            <img src="https://images.unsplash.com/photo-1538388149542-5e24932d11a8?auto=format&fit=crop&w=800&q=80" alt="Bowling Ball Hook Motion" loading="lazy">
           </div>
 
           <div class="post-actions-panel">
@@ -462,7 +463,7 @@
 
         <div class="card feed-post-card">
           <div class="post-header">
-            <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=300&q=80" class="feed-author-thumb" alt="StrikeQueen_FL">
+            <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=300&q=80" class="feed-author-thumb" alt="StrikeQueen_FL" loading="lazy">
             <div>
               <strong style="font-size:0.95rem; color:#fff;">@StrikeQueen_FL</strong>
               <div style="font-size:0.75rem; color:var(--text-muted);">Clutch Pin Action & 10-Pin Carry (Thursday Scratch League)</div>
@@ -470,7 +471,7 @@
           </div>
           
           <div class="post-media-container">
-            <img src="https://images.unsplash.com/photo-1561047029-3000c68339ca?auto=format&fit=crop&w=800&q=80" alt="Bowling Pins Strike Action">
+            <img src="https://images.unsplash.com/photo-1561047029-3000c68339ca?auto=format&fit=crop&w=800&q=80" alt="Bowling Pins Strike Action" loading="lazy">
           </div>
 
           <div class="post-actions-panel">
@@ -550,21 +551,21 @@
           </tr>
         </thead>
         <tbody id="visitor-log-body">
-          <!-- Real-Time Firebase Logs render here -->
+          <!-- Real-Time Firebase Logs render here when modal is active -->
         </tbody>
       </table>
     </div>
   </div>
 
   <script>
-    // INITIALIZE EMAILJS WITH YOUR EXACT PUBLIC KEY
-    (function(){
+    // INITIALIZE EMAILJS
+    window.addEventListener('load', function() {
       if (typeof emailjs !== 'undefined') {
         emailjs.init("qzzSDB57ypIFBik8v");
       }
-    })();
+    });
 
-    // EXACT FIREBASE CREDENTIALS
+    // FIREBASE CREDENTIALS
     const firebaseConfig = {
       apiKey: "AIzaSyAHE9twWdgqm_iPz6CogorkeRMFGnu9834",
       authDomain: "bowlstrike-299d6.firebaseapp.com",
@@ -575,22 +576,25 @@
       measurementId: "G-CFN3DVL6KS"
     };
 
-    // Initialize Firebase
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
-
+    let db = null;
     let docRef = null;
     let visitorStartTime = Date.now();
     let myCurrentIP = "Detecting...";
+    let unsubscribeAdminLog = null;
 
-    document.addEventListener("DOMContentLoaded", function() {
+    window.addEventListener('load', function() {
+      if (typeof firebase !== 'undefined') {
+        firebase.initializeApp(firebaseConfig);
+        db = firebase.firestore();
+        initFirebaseVisitorTracking();
+      }
       initHardwareGPS();
-      initFirebaseVisitorTracking();
     });
 
-    /* REAL-TIME FIREBASE VISITOR TRACKING & ANALYTICS */
+    /* LIGHTWEIGHT FIREBASE VISITOR TRACKING */
     async function initFirebaseVisitorTracking() {
-      let currentCity = "Detecting...";
+      if (!db) return;
+      let currentCity = "Local Session";
 
       try {
         const res = await fetch('https://ipapi.co/json/');
@@ -599,15 +603,12 @@
         currentCity = `${data.city || 'Unknown'}, ${data.region_code || 'US'}`;
       } catch (e) {
         myCurrentIP = "127.0.0.1";
-        currentCity = "Local Session";
       }
 
-      // Generate local client time string forced to Eastern Time
       const now = new Date();
       const formattedDate = now.toLocaleString("en-US", { timeZone: "America/New_York" });
 
       try {
-        // Add new visitor entry
         docRef = await db.collection("visitor_logs").add({
           timestamp: firebase.firestore.FieldValue.serverTimestamp(),
           dateString: formattedDate,
@@ -616,92 +617,84 @@
           secondsOnSite: 0
         });
 
-        // Periodically update active stay duration in Firebase
+        // Optimized interval to 15 seconds to eliminate CPU/Network lag
         setInterval(() => {
           if (docRef) {
             const seconds = Math.floor((Date.now() - visitorStartTime) / 1000);
             docRef.update({ secondsOnSite: seconds });
           }
-        }, 2000);
+        }, 15000);
 
       } catch (err) {
         console.warn("Firestore access check:", err);
       }
+    }
 
-      // Stream live visitor updates sorted descending (newest first)
-      db.collection("visitor_logs")
-        .orderBy("timestamp", "desc")
-        .onSnapshot((snapshot) => {
-          const tbody = document.getElementById('visitor-log-body');
-          const totalHitsEl = document.getElementById('stat-total-hits');
-          const topVisitorEl = document.getElementById('stat-top-visitor');
+    /* RENDER ADMIN LOGS (Executes ONLY when admin opens modal) */
+    function renderAdminLogs(snapshot) {
+      const tbody = document.getElementById('visitor-log-body');
+      const totalHitsEl = document.getElementById('stat-total-hits');
+      const topVisitorEl = document.getElementById('stat-top-visitor');
 
-          if (!tbody) return;
+      if (!tbody) return;
 
-          const totalHits = snapshot.size;
-          totalHitsEl.textContent = totalHits;
+      const totalHits = snapshot.size;
+      totalHitsEl.textContent = totalHits;
 
-          tbody.innerHTML = "";
-          
-          let visitorCountsByIP = {};
+      tbody.innerHTML = "";
+      let visitorCountsByIP = {};
 
-          snapshot.forEach((doc) => {
-            const data = doc.data();
-            const mins = Math.floor((data.secondsOnSite || 0) / 60);
-            const secs = (data.secondsOnSite || 0) % 60;
-            const isMe = docRef && doc.id === docRef.id;
-            const ip = data.ip || 'Hidden';
+      snapshot.forEach((doc) => {
+        const data = doc.data();
+        const mins = Math.floor((data.secondsOnSite || 0) / 60);
+        const secs = (data.secondsOnSite || 0) % 60;
+        const isMe = docRef && doc.id === docRef.id;
+        const ip = data.ip || 'Hidden';
 
-            // Track visit frequency per IP (excluding current user's IP)
-            if (ip !== myCurrentIP && ip !== '127.0.0.1' && ip !== 'Hidden') {
-              if (!visitorCountsByIP[ip]) {
-                visitorCountsByIP[ip] = { count: 0, location: data.location || 'Unknown' };
-              }
-              visitorCountsByIP[ip].count += 1;
-            }
-
-            // Display time formatted safely in Eastern Time
-            let displayTime = data.dateString || 'Just now';
-            if (data.timestamp && data.timestamp.toDate) {
-              displayTime = data.timestamp.toDate().toLocaleString("en-US", { timeZone: "America/New_York" });
-            }
-
-            tbody.innerHTML += `
-              <tr style="${isMe ? 'background: #1e1112; font-weight: bold;' : ''}">
-                <td>${displayTime}</td>
-                <td>${data.location || 'Unknown'}</td>
-                <td style="color:${isMe ? 'var(--accent)' : 'inherit'}">${mins}m ${secs}s ${isMe ? '(Active Session)' : ''}</td>
-                <td>${ip}</td>
-              </tr>
-            `;
-          });
-
-          // Compute Top Visitor (excluding active user)
-          let topIP = null;
-          let maxVisits = 0;
-          let topLocation = "";
-
-          for (const [ip, info] of Object.entries(visitorCountsByIP)) {
-            if (info.count > maxVisits) {
-              maxVisits = info.count;
-              topIP = ip;
-              topLocation = info.location;
-            }
+        if (ip !== myCurrentIP && ip !== '127.0.0.1' && ip !== 'Hidden') {
+          if (!visitorCountsByIP[ip]) {
+            visitorCountsByIP[ip] = { count: 0, location: data.location || 'Unknown' };
           }
+          visitorCountsByIP[ip].count += 1;
+        }
 
-          if (topIP && maxVisits > 0) {
-            topVisitorEl.innerHTML = `${topLocation}<br><span style="font-size:0.75rem; color:#fff;">${topIP} (${maxVisits} visits)</span>`;
-          } else {
-            topVisitorEl.textContent = "No Other Visitors Yet";
-          }
+        let displayTime = data.dateString || 'Just now';
+        if (data.timestamp && data.timestamp.toDate) {
+          displayTime = data.timestamp.toDate().toLocaleString("en-US", { timeZone: "America/New_York" });
+        }
 
-        }, (error) => {
-          console.warn("Firestore snapshot error:", error);
-        });
+        tbody.innerHTML += `
+          <tr style="${isMe ? 'background: #1e1112; font-weight: bold;' : ''}">
+            <td>${displayTime}</td>
+            <td>${data.location || 'Unknown'}</td>
+            <td style="color:${isMe ? 'var(--accent)' : 'inherit'}">${mins}m ${secs}s ${isMe ? '(Active Session)' : ''}</td>
+            <td>${ip}</td>
+          </tr>
+        `;
+      });
+
+      let topIP = null;
+      let maxVisits = 0;
+      let topLocation = "";
+
+      for (const [ip, info] of Object.entries(visitorCountsByIP)) {
+        if (info.count > maxVisits) {
+          maxVisits = info.count;
+          topIP = ip;
+          topLocation = info.location;
+        }
+      }
+
+      if (topIP && maxVisits > 0) {
+        topVisitorEl.innerHTML = `${topLocation}<br><span style="font-size:0.75rem; color:#fff;">${topIP} (${maxVisits} visits)</span>`;
+      } else {
+        topVisitorEl.textContent = "No Other Visitors Yet";
+      }
     }
 
     /* RESET VISITOR COUNTER LOGS */
     async function resetVisitorCounter() {
+      if (!db) return;
       const confirmReset = confirm("Are you sure you want to reset all visitor logs and counters?");
       if (!confirmReset) return;
 
@@ -723,6 +716,7 @@
     let map, myMarker;
 
     function initHardwareGPS() {
+      if (typeof L === 'undefined') return;
       map = L.map('map', { zoomControl: false, attributionControl: false }).setView([38.8951, -77.0364], 5);
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(map);
 
@@ -730,7 +724,7 @@
         navigator.geolocation.getCurrentPosition(updatePosition, handleGPSError, { enableHighAccuracy: true });
         setInterval(function() {
           navigator.geolocation.getCurrentPosition(updatePosition, null, { enableHighAccuracy: true, maximumAge: 0 });
-        }, 4000);
+        }, 10000);
       } else {
         handleGPSError();
       }
@@ -764,7 +758,7 @@
           if (data.latitude && data.longitude) {
             document.getElementById('myCoords').textContent = `${data.latitude.toFixed(4)}, ${data.longitude.toFixed(4)}`;
             document.getElementById('gpsStatus').textContent = `🟡 IP Fallback (${data.city || 'Local Area'})`;
-            if (!myMarker) {
+            if (!myMarker && map) {
               myMarker = L.marker([data.latitude, data.longitude]).addTo(map);
               map.setView([data.latitude, data.longitude], 12);
             }
@@ -776,7 +770,7 @@
         });
     }
 
-    /* Contact Form Functionality with Live EmailJS Credentials */
+    /* Contact Form Functionality */
     function sendContactEmail(e) {
       e.preventDefault();
       const statusDiv = document.getElementById('contact-status');
@@ -786,7 +780,13 @@
       statusDiv.textContent = "Sending message...";
       submitBtn.disabled = true;
 
-      // Executing EmailJS sendForm with your exact credentials
+      if (typeof emailjs === 'undefined') {
+        statusDiv.style.color = "var(--danger)";
+        statusDiv.textContent = "Email service initializing. Please try again in a moment.";
+        submitBtn.disabled = false;
+        return;
+      }
+
       emailjs.sendForm('service_x3x3aev', 'template_lsnvdmo', e.target)
         .then(() => {
           statusDiv.style.color = "var(--success)";
@@ -804,17 +804,28 @@
     /* ADMIN PASSWORD PROTECTED ACCESS */
     function openAdminModal(e) {
       e.preventDefault();
-      const adminPassword = "strike2026"; // Change password here if needed
+      const adminPassword = "strike2026";
       const userEntry = prompt("Administrator Access Required.\nPlease enter the admin password:");
 
       if (userEntry === adminPassword) {
         document.getElementById('admin-modal').style.display = 'flex';
+        if (db && !unsubscribeAdminLog) {
+          unsubscribeAdminLog = db.collection("visitor_logs")
+            .orderBy("timestamp", "desc")
+            .onSnapshot(renderAdminLogs, err => console.warn(err));
+        }
       } else if (userEntry !== null) {
         alert("Access Denied: Incorrect Password.");
       }
     }
 
-    function closeAdminModal() { document.getElementById('admin-modal').style.display = 'none'; }
+    function closeAdminModal() { 
+      document.getElementById('admin-modal').style.display = 'none'; 
+      if (unsubscribeAdminLog) {
+        unsubscribeAdminLog();
+        unsubscribeAdminLog = null;
+      }
+    }
 
     /* Comments & Likes */
     function addComment(postId) {

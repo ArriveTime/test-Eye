@@ -3,710 +3,529 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Arcade Bowling & Pro Shop</title>
+    <title>Cab0.com — Next-Gen Mobility & Delivery Intelligence</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800;900&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --bg-dark: #070913;
+            --card-bg: rgba(18, 24, 43, 0.75);
+            --card-border: rgba(0, 240, 255, 0.25);
+            --primary-cyan: #00f0ff;
+            --primary-glow: rgba(0, 240, 255, 0.4);
+            --accent-purple: #7000ff;
+            --text-main: #f0f4f8;
+            --text-muted: #8a99ad;
+            --font-head: 'Orbitron', sans-serif;
+            --font-body: 'Plus Jakarta Sans', sans-serif;
+        }
+
         * {
             box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
 
         body {
-            font-family: Arial, sans-serif;
-            background-color: #121212;
-            color: #ffffff;
-            margin: 0;
-            padding: 20px;
+            background-color: var(--bg-dark);
+            background-image: 
+                radial-gradient(circle at 15% 15%, rgba(112, 0, 255, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 85% 85%, rgba(0, 240, 255, 0.12) 0%, transparent 40%);
+            color: var(--text-main);
+            font-family: var(--font-body);
+            min-height: 100vh;
+            overflow-x: hidden;
             display: flex;
             flex-direction: column;
-            align-items: center;
-        }
-
-        h1 {
-            color: #ff9800;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        h2 {
-            color: #ff9800;
-            margin-top: 0;
-            margin-bottom: 15px;
         }
 
         .container {
+            max-width: 850px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 24px 20px;
+            flex: 1;
             display: flex;
             flex-direction: column;
-            gap: 20px;
-            max-width: 1100px;
-            width: 100%;
         }
 
-        /* Scoreboard Styling */
-        .scoreboard-container {
-            width: 100%;
-            overflow-x: auto;
-            background: #222;
-            padding: 15px;
-            border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-        }
-
-        table.scoreboard {
-            width: 100%;
-            border-collapse: collapse;
+        /* HEADER & LOGO */
+        header {
             text-align: center;
-            background-color: #333;
-            min-width: 600px;
+            padding: 20px 0 10px;
         }
 
-        table.scoreboard th, table.scoreboard td {
-            border: 1px solid #555;
-            padding: 8px;
+        .logo {
+            font-family: var(--font-head);
+            font-size: clamp(40px, 8vw, 58px);
+            font-weight: 900;
+            letter-spacing: 2px;
+            color: #fff;
+            text-shadow: 0 0 20px var(--primary-glow);
         }
 
-        table.scoreboard th {
-            background-color: #ff9800;
-            color: #000;
+        .logo .zero {
+            color: var(--primary-cyan);
+            display: inline-block;
+            text-shadow: 0 0 15px var(--primary-cyan);
         }
 
-        .frame-rolls {
-            display: flex;
-            justify-content: space-around;
-            font-size: 0.9em;
-            height: 20px;
-            font-weight: bold;
+        /* WOZNIAK QUOTE CARD */
+        .quote-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            backdrop-filter: blur(12px);
+            border-radius: 16px;
+            padding: 24px;
+            text-align: center;
+            margin: 20px 0;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
         }
 
-        .frame-score {
-            font-weight: bold;
-            font-size: 1.1em;
-            color: #4caf50;
-            margin-top: 5px;
+        .quote-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 2px;
+            background: linear-gradient(90deg, transparent, var(--primary-cyan), transparent);
         }
 
-        /* Main Section Layout */
-        .main-content {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            justify-content: center;
-            width: 100%;
+        .quote-text {
+            font-size: clamp(18px, 4vw, 22px);
+            font-weight: 600;
+            color: #fff;
+            font-style: italic;
+            margin-bottom: 12px;
         }
 
-        /* Game Canvas & Controls Area */
-        .game-section {
-            flex: 1;
-            min-width: 340px;
-            max-width: 420px;
+        .quote-author {
+            font-family: var(--font-head);
+            font-size: 14px;
+            color: var(--primary-cyan);
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+        .quote-sub {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        /* HEADLINE */
+        .headline {
+            text-align: center;
+            font-family: var(--font-head);
+            font-size: clamp(18px, 4.5vw, 28px);
+            font-weight: 800;
+            letter-spacing: 1px;
+            margin: 15px 0 25px;
+            color: var(--text-main);
+        }
+
+        .headline span {
+            color: var(--primary-cyan);
+            border-bottom: 2px solid var(--primary-cyan);
+        }
+
+        /* CATEGORIES & UI BUTTONS */
+        .cat-stack {
             display: flex;
             flex-direction: column;
-            align-items: center;
-            background: #1e1e1e;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            gap: 12px;
+            margin-bottom: 20px;
         }
 
-        canvas {
-            background: #000;
-            border: 3px solid #ff9800;
-            border-radius: 4px;
-        }
-
-        .controls {
-            margin-top: 15px;
-            display: flex;
-            gap: 15px;
-            align-items: center;
-        }
-
-        button {
-            background-color: #ff9800;
-            color: #000;
-            border: none;
-            padding: 10px 20px;
-            font-weight: bold;
-            font-size: 1em;
+        .cat-btn, .action-btn {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 14px;
+            padding: 20px 24px;
+            color: #fff;
+            font-family: var(--font-head);
+            font-size: clamp(16px, 3.8vw, 20px);
+            font-weight: 700;
             cursor: pointer;
-            border-radius: 4px;
-            transition: background 0.2s;
+            transition: all 0.25s ease;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            backdrop-filter: blur(8px);
         }
 
-        button:hover {
-            background-color: #e68a00;
+        .cat-btn:hover, .action-btn:hover {
+            border-color: var(--primary-cyan);
+            box-shadow: 0 0 20px var(--primary-glow);
+            transform: translateY(-2px);
         }
 
-        button:disabled {
-            background-color: #555;
-            color: #888;
-            cursor: not-allowed;
+        .cat-btn.active {
+            background: linear-gradient(135deg, rgba(0,240,255,0.2), rgba(112,0,255,0.2));
+            border-color: var(--primary-cyan);
+            box-shadow: 0 0 25px var(--primary-glow);
         }
 
-        /* Pro Shop Styling */
-        .pro-shop {
+        .vegas-tile {
+            border-style: dashed;
+            border-color: rgba(255, 215, 0, 0.4);
+            color: #ffd700;
+        }
+
+        .vegas-tile.active {
+            border-style: solid;
+            border-color: #ffd700;
+            background: rgba(255, 215, 0, 0.15);
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+        }
+
+        .main-btn {
+            background: linear-gradient(90deg, var(--accent-purple), var(--primary-cyan));
+            border: none;
+            color: #fff;
+            font-family: var(--font-head);
+            font-size: clamp(18px, 4vw, 22px);
+            font-weight: 900;
+            padding: 22px;
+            border-radius: 14px;
+            cursor: pointer;
+            width: 100%;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            box-shadow: 0 0 25px rgba(0, 240, 255, 0.3);
+            transition: all 0.25s ease;
+            text-align: center;
+            text-decoration: none;
+            display: block;
+        }
+
+        .main-btn:hover {
+            box-shadow: 0 0 35px rgba(0, 240, 255, 0.6);
+            transform: scale(1.01);
+        }
+
+        /* INPUT FIELDS */
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            font-family: var(--font-head);
+            font-size: 12px;
+            color: var(--primary-cyan);
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+        }
+
+        .input-field {
+            width: 100%;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 18px 20px;
+            color: #fff;
+            font-family: var(--font-body);
+            font-size: 18px;
+            outline: none;
+            transition: all 0.25s ease;
+        }
+
+        .input-field:focus {
+            border-color: var(--primary-cyan);
+            box-shadow: 0 0 15px var(--primary-glow);
+        }
+
+        /* SORTING & CARDS */
+        .sort-bar {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .sort-btn {
             flex: 1;
-            min-width: 300px;
-            background: #1e1e1e;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            color: var(--text-muted);
+            padding: 16px;
+            border-radius: 12px;
+            font-family: var(--font-head);
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+
+        .sort-btn.active {
+            color: #fff;
+            border-color: var(--primary-cyan);
+            background: rgba(0, 240, 255, 0.15);
+        }
+
+        .pcard {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 14px;
             padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-        }
-
-        .shop-item {
-            background: #2a2a2a;
-            padding: 15px;
             margin-bottom: 12px;
-            border-radius: 6px;
-            border-left: 4px solid #ff9800;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            cursor: pointer;
+            transition: all 0.25s ease;
         }
 
-        .shop-item h3 {
-            margin: 0 0 5px 0;
+        .pcard.selected {
+            border-color: var(--primary-cyan);
+            box-shadow: 0 0 20px var(--primary-glow);
+            background: rgba(0, 240, 255, 0.1);
+        }
+
+        .pcard-badge {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-head);
+            font-weight: 900;
+            font-size: 18px;
             color: #fff;
         }
 
-        .shop-item p {
-            margin: 0 0 10px 0;
-            font-size: 0.9em;
-            color: #ccc;
+        .pcard-title {
+            font-family: var(--font-head);
+            font-size: 18px;
+            color: #fff;
         }
 
-        .shop-item a {
-            display: inline-block;
-            color: #ff9800;
-            text-decoration: none;
-            font-weight: bold;
+        .pcard-sub {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 4px;
         }
 
-        .shop-item a:hover {
-            text-decoration: underline;
+        .pcard-price {
+            margin-left: auto;
+            font-family: var(--font-head);
+            font-size: 22px;
+            color: var(--primary-cyan);
+            font-weight: 800;
         }
+
+        .page { display: none; }
+        .page.active { display: block; }
+
+        .back-btn {
+            background: transparent;
+            border: 1px solid var(--card-border);
+            color: var(--primary-cyan);
+            font-family: var(--font-head);
+            padding: 12px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            margin-bottom: 20px;
+            transition: all 0.2s ease;
+        }
+
+        .back-btn:hover {
+            border-color: var(--primary-cyan);
+            box-shadow: 0 0 10px var(--primary-glow);
+        }
+
+        footer {
+            text-align: center;
+            padding: 24px 20px;
+            font-size: 12px;
+            color: var(--text-muted);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            margin-top: auto;
+        }
+
+        footer a { color: var(--primary-cyan); text-decoration: none; margin: 0 8px; }
     </style>
 </head>
 <body>
 
-    <h1>Arcade Bowling Alley</h1>
-
     <div class="container">
-        <!-- Scoreboard -->
-        <div class="scoreboard-container">
-            <table class="scoreboard">
-                <thead>
-                    <tr>
-                        <th>1</th><th>2</th><th>3</th><th>4</th><th>5</th>
-                        <th>6</th><th>7</th><th>8</th><th>9</th><th>10</th>
-                        <th>Total</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr id="scoreboard-rolls">
-                        <!-- Populated by JavaScript -->
-                    </tr>
-                    <tr id="scoreboard-totals">
-                        <!-- Populated by JavaScript -->
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+        <!-- PAGE 0: DASHBOARD -->
+        <div class="page active" id="pg0">
+            <header>
+                <div class="logo">Cab<span class="zero">0</span>.com</div>
+            </header>
 
-        <div class="main-content">
-            <!-- Bowling Game Canvas -->
-            <div class="game-section">
-                <canvas id="bowlingCanvas" width="360" height="600"></canvas>
-                <div class="controls">
-                    <button id="actionBtn" onclick="handleActionButton()">Set Aim</button>
-                    <button onclick="resetGame()">Reset Game</button>
-                </div>
-                <p id="gameInstructions" style="color: #aaa; margin-top: 10px; text-align: center;">
-                    Step 1: Click "Set Aim" when the ball aligns with your target path.
-                </p>
+            <div class="quote-card">
+                <p class="quote-text">"Best of luck to you on this worthy venture, it's your turn"</p>
+                <div class="quote-author">Steve Wozniak</div>
+                <div class="quote-sub">Apple Co-Founder</div>
             </div>
 
-            <!-- Pro Shop Links -->
-            <div class="pro-shop">
-                <h2>The Pro Shop</h2>
+            <div class="headline">
+                Every Ride. Every Delivery. <span id="main-headline">One Search.</span>
+            </div>
 
-                <div class="shop-item">
-                    <h3>BowlingBall.com</h3>
-                    <p>Top online retailer for bowling balls, bags, shoes, and accessories with free shipping options.</p>
-                    <a href="https://www.bowlingball.com" target="_blank" rel="noopener">Visit BowlingBall.com &rarr;</a>
-                </div>
+            <div class="cat-stack" id="categories-container"></div>
+            <button class="main-btn" onclick="goTo(1)">Find Best Rate →</button>
+        </div>
 
-                <div class="shop-item">
-                    <h3>Bowling.com</h3>
-                    <p>Extensive catalog of performance equipment, bowling shoes, drilling tools, and apparel.</p>
-                    <a href="https://www.bowling.com" target="_blank" rel="noopener">Visit Bowling.com &rarr;</a>
-                </div>
+        <!-- PAGE 1: LOCATIONS -->
+        <div class="page" id="pg1">
+            <button class="back-btn" onclick="goTo(0)">← Main Menu</button>
+            <h2 style="font-family: var(--font-head); margin-bottom: 20px;">Search Details</h2>
 
-                <div class="shop-item">
-                    <h3>BowlersMart</h3>
-                    <p>Nationwide pro shop operator offering high-performance bowling gear and expert reviews.</p>
-                    <a href="https://www.bowlersmart.com" target="_blank" rel="noopener">Visit BowlersMart.com &rarr;</a>
-                </div>
+            <div class="input-group">
+                <label>1. Pickup Location</label>
+                <input type="text" class="input-field" placeholder="Current Location...">
+            </div>
 
-                <div class="shop-item">
-                    <h3>Buddies Pro Shop</h3>
-                    <p>Specialized equipment retailer providing custom drilling services, wrist supports, and grips.</p>
-                    <a href="https://www.buddiesproshop.com" target="_blank" rel="noopener">Visit BuddiesProShop.com &rarr;</a>
-                </div>
+            <div class="input-group">
+                <label>2. Dropoff Destination</label>
+                <input type="text" class="input-field" placeholder="Enter Destination Address...">
+            </div>
+
+            <button class="main-btn" onclick="goTo(2)">Compare Rates →</button>
+        </div>
+
+        <!-- PAGE 2: MARKETPLACE CONSOLE -->
+        <div class="page" id="pg2">
+            <button class="back-btn" onclick="goTo(0)">← Main Menu</button>
+
+            <div class="sort-bar">
+                <button class="sort-btn active" id="sort-price" onclick="setSort('price')">Cheapest</button>
+                <button class="sort-btn" id="sort-time" onclick="setSort('time')">Fastest</button>
+            </div>
+
+            <div id="p3-grid"></div>
+
+            <div style="margin-top: 20px;">
+                <a href="#" id="final-link" target="_blank" class="main-btn">Book Selection</a>
             </div>
         </div>
+
+        <footer>
+            <p>Cab0.com is an independent search console. Not affiliated with Uber, Lyft, or other listed platforms.</p>
+            <p style="margin-top: 8px;"><a href="privacy.html">Privacy Policy</a> | <a href="terms.html">Terms of Service</a></p>
+        </footer>
     </div>
 
     <script>
-        const canvas = document.getElementById('bowlingCanvas');
-        const ctx = canvas.getContext('2d');
+        var isVegasMode = false;
+        var currentCat = 'ride', currentSort = 'price', selectedId = null;
 
-        // Audio Context Synthesizer setup
-        const AudioContext = window.AudioContext || window.webkitAudioContext;
-        let audioCtx;
-
-        function initAudio() {
-            if (!audioCtx) {
-                audioCtx = new AudioContext();
-            }
-        }
-
-        function playCheeringSound() {
-            initAudio();
-            const bufferSize = audioCtx.sampleRate * 2.5;
-            const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
-            const output = buffer.getChannelData(0);
-            for (let i = 0; i < bufferSize; i++) {
-                output[i] = Math.random() * 2 - 1;
-            }
-
-            const whiteNoise = audioCtx.createBufferSource();
-            whiteNoise.buffer = buffer;
-
-            const filter = audioCtx.createBiquadFilter();
-            filter.type = 'bandpass';
-            filter.frequency.setValueAtTime(1000, audioCtx.currentTime);
-            filter.Q.setValueAtTime(1.0, audioCtx.currentTime);
-
-            const gainNode = audioCtx.createGain();
-            gainNode.gain.setValueAtTime(0, audioCtx.currentTime);
-            gainNode.gain.linearRampToValueAtTime(0.5, audioCtx.currentTime + 0.3);
-            gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 2.5);
-
-            whiteNoise.connect(filter);
-            filter.connect(gainNode);
-            gainNode.connect(audioCtx.destination);
-
-            whiteNoise.start();
-        }
-
-        function playPinSound() {
-            initAudio();
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.type = 'triangle';
-            osc.frequency.setValueAtTime(300, audioCtx.currentTime);
-            osc.frequency.exponentialRampToValueAtTime(120, audioCtx.currentTime + 0.1);
-            gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            osc.start();
-            osc.stop(audioCtx.currentTime + 0.1);
-        }
-
-        // Game State Variables
-        let gameState = 'AIMING_POSITION'; // AIMING_POSITION, AIMING_ANGLE, ROLLING, FRAME_OVER, GAME_OVER
-        let currentFrame = 1;
-        let currentRoll = 1;
-        let rolls = Array.from({ length: 10 }, () => []);
-        let overlayText = '';
-        let overlayTimer = 0;
-
-        // Ball State
-        const ball = {
-            x: canvas.width / 2,
-            y: 530,
-            radius: 12,
-            vx: 0,
-            vy: 0,
-            speed: 7
+        var LINKS = {
+            'uber': 'https://m.uber.com',
+            'lyft': 'https://www.lyft.com',
+            'vegas_loop': 'https://www.boringcompany.com/loop',
+            'zoox': 'https://zoox.com',
+            'doordash': 'https://www.doordash.com',
+            'ubereats': 'https://www.ubereats.com',
+            'instacart': 'https://www.instacart.com',
+            'amazon_fresh': 'https://www.amazon.com/fresh',
+            'walmart_plus': 'https://www.walmart.com/plus'
         };
 
-        // Aiming Guides
-        let aimPositionDir = 1;
-        let aimAngle = 0;
-        let aimAngleDir = 1;
+        var PROVIDERS = {
+            ride: [
+                { id:'uber', name:'Uber X', s:'Ub', c:'#111111', price:12.50, time:4 },
+                { id:'lyft', name:'Lyft Ride', s:'Ly', c:'#FF00BF', price:11.20, time:6 }
+            ],
+            loop: [
+                { id:'vegas_loop', name:'Vegas Loop (Tunnel Ride)', s:'TL', c:'#cc0000', price:0.00, time:2 }
+            ],
+            robotaxi: [
+                { id:'zoox', name:'Zoox Autonomous (Free Local)', s:'Zx', c:'#00f0ff', price:0.00, time:5 }
+            ],
+            delivery: [
+                { id:'doordash', name:'DoorDash', s:'DD', c:'#FF3008', price:2.99, time:22 },
+                { id:'ubereats', name:'Uber Eats', s:'UE', c:'#06C167', price:3.49, time:18 }
+            ],
+            grocery: [
+                { id:'amazon_fresh', name:'Amazon Fresh', s:'Az', c:'#FF9900', price:0.00, time:30 },
+                { id:'walmart_plus', name:'Walmart+', s:'Wm', c:'#0071DC', price:0.00, time:45 },
+                { id:'instacart', name:'Instacart', s:'IC', c:'#00AD31', price:4.99, time:40 }
+            ]
+        };
 
-        // Pins Configuration
-        const pinPositions = [
-            { x: 180, y: 100 }, // Pin 1
-            { x: 165, y: 85 }, { x: 195, y: 85 }, // Pins 2, 3
-            { x: 150, y: 70 }, { x: 180, y: 70 }, { x: 210, y: 70 }, // Pins 4, 5, 6
-            { x: 135, y: 55 }, { x: 165, y: 55 }, { x: 195, y: 55 }, { x: 225, y: 55 } // Pins 7, 8, 9, 10
-        ];
-
-        let pins = [];
-
-        function resetPins() {
-            pins = pinPositions.map(pos => ({
-                x: pos.x,
-                y: pos.y,
-                radius: 6,
-                isHit: false
-            }));
+        function toggleVegasMode() {
+            isVegasMode = !isVegasMode;
+            document.getElementById('main-headline').textContent = isVegasMode ? "Vegas Search." : "One Search.";
+            if(!isVegasMode && (currentCat === 'loop' || currentCat === 'robotaxi')) currentCat = 'ride';
+            renderCategories();
         }
 
-        // --- Render Loop ---
-        function update() {
-            if (gameState === 'AIMING_POSITION') {
-                ball.x += aimPositionDir * 1.5;
-                if (ball.x < 110 || ball.x > 250) aimPositionDir *= -1;
-            } else if (gameState === 'AIMING_ANGLE') {
-                aimAngle += aimAngleDir * 0.02;
-                if (aimAngle < -0.6 || aimAngle > 0.6) aimAngleDir *= -1;
-            } else if (gameState === 'ROLLING') {
-                ball.x += ball.vx;
-                ball.y += ball.vy;
+        function renderCategories() {
+            var container = document.getElementById('categories-container');
+            var html = '';
+            
+            var cats = [
+                { id: 'ride', label: 'Rideshare' },
+                { id: 'delivery', label: 'Food Delivery' },
+                { id: 'grocery', label: 'Groceries' }
+            ];
 
-                // Gutter detection
-                if (ball.x < 100 || ball.x > 260) {
-                    if (ball.x < 100) ball.x = 90;
-                    if (ball.x > 260) ball.x = 270;
-                }
-
-                // Collision Detection with Pins
-                let hitPinThisFrame = false;
-                pins.forEach(pin => {
-                    if (!pin.isHit) {
-                        const dist = Math.hypot(ball.x - pin.x, ball.y - pin.y);
-                        if (dist < ball.radius + pin.radius) {
-                            pin.isHit = true;
-                            hitPinThisFrame = true;
-                            knockAdjacentPins(pin);
-                        }
-                    }
-                });
-
-                if (hitPinThisFrame) {
-                    playPinSound();
-                }
-
-                if (ball.y < 40) {
-                    completeRoll();
-                }
+            if(isVegasMode) {
+                cats.splice(1, 0, { id: 'loop', label: 'Vegas Loop' }, { id: 'robotaxi', label: 'Robotaxis' });
             }
 
-            if (overlayTimer > 0) {
-                overlayTimer--;
-            }
-        }
-
-        function knockAdjacentPins(hitPin) {
-            pins.forEach(otherPin => {
-                if (!otherPin.isHit) {
-                    const dist = Math.hypot(hitPin.x - otherPin.x, hitPin.y - otherPin.y);
-                    if (dist < 32 && Math.random() < 0.75) {
-                        otherPin.isHit = true;
-                    }
-                }
-            });
-        }
-
-        function drawAlley() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            // Gutters
-            ctx.fillStyle = '#1a1a1a';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-            // Lane surface
-            ctx.fillStyle = '#d2b48c';
-            ctx.fillRect(100, 0, 160, canvas.height);
-
-            // Lane Markings
-            ctx.fillStyle = '#8b4513';
-            for (let i = 0; i < 5; i++) {
-                ctx.beginPath();
-                ctx.moveTo(120 + i * 30, 350);
-                ctx.lineTo(125 + i * 30, 365);
-                ctx.lineTo(115 + i * 30, 365);
-                ctx.fill();
-            }
-
-            // Foul Line
-            ctx.strokeStyle = '#ff0000';
-            ctx.lineWidth = 3;
-            ctx.beginPath();
-            ctx.moveTo(100, 500);
-            ctx.lineTo(260, 500);
-            ctx.stroke();
-
-            // Draw Pins
-            pins.forEach(pin => {
-                if (!pin.isHit) {
-                    ctx.fillStyle = '#ffffff';
-                    ctx.beginPath();
-                    ctx.arc(pin.x, pin.y, pin.radius, 0, Math.PI * 2);
-                    ctx.fill();
-
-                    ctx.fillStyle = '#ff0000';
-                    ctx.fillRect(pin.x - pin.radius, pin.y - 1, pin.radius * 2, 2);
-                }
+            cats.forEach(c => {
+                var active = currentCat === c.id ? 'active' : '';
+                html += `<div class="cat-btn ${active}" onclick="pickCat('${c.id}')"><span>${c.label}</span><span>→</span></div>`;
             });
 
-            // Draw Ball
-            ctx.fillStyle = '#3f51b5';
-            ctx.beginPath();
-            ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
-            ctx.fill();
+            var vegasActive = isVegasMode ? 'active' : '';
+            var vegasLabel = isVegasMode ? 'Exit Vegas Mode' : 'Vegas Mode';
+            html += `<div class="cat-btn vegas-tile ${vegasActive}" onclick="toggleVegasMode()"><span>${vegasLabel}</span><span>⚡</span></div>`;
 
-            // Ball finger holes
-            ctx.fillStyle = '#000000';
-            ctx.beginPath();
-            ctx.arc(ball.x - 3, ball.y - 3, 2, 0, Math.PI * 2);
-            ctx.arc(ball.x + 3, ball.y - 3, 2, 0, Math.PI * 2);
-            ctx.arc(ball.x, ball.y + 3, 2, 0, Math.PI * 2);
-            ctx.fill();
-
-            // Draw Aiming Guide Line
-            if (gameState === 'AIMING_ANGLE') {
-                ctx.strokeStyle = '#ff9800';
-                ctx.lineWidth = 2;
-                ctx.beginPath();
-                ctx.moveTo(ball.x, ball.y);
-                ctx.lineTo(ball.x + Math.sin(aimAngle) * 80, ball.y - Math.cos(aimAngle) * 80);
-                ctx.stroke();
-            }
-
-            // Draw Overlay Message
-            if (overlayTimer > 0 && overlayText !== '') {
-                ctx.fillStyle = 'rgba(0, 0, 0, 0.75)';
-                ctx.fillRect(20, 250, canvas.width - 40, 80);
-
-                ctx.fillStyle = overlayText === 'STRIKE!' ? '#4caf50' : (overlayText === 'Gutter Ball' ? '#f44336' : '#ff9800');
-                ctx.font = 'bold 30px Arial';
-                ctx.textAlign = 'center';
-                ctx.fillText(overlayText, canvas.width / 2, 300);
-            }
+            container.innerHTML = html;
         }
 
-        function loop() {
-            update();
-            drawAlley();
-            requestAnimationFrame(loop);
+        function goTo(n) {
+            document.querySelectorAll('.page').forEach((p, i) => p.classList.toggle('active', i === n));
+            if (n === 2) renderProviders();
+            window.scrollTo(0,0);
         }
 
-        // --- Controls Logic ---
-        function handleActionButton() {
-            const btn = document.getElementById('actionBtn');
-            const instructions = document.getElementById('gameInstructions');
-
-            if (gameState === 'AIMING_POSITION') {
-                gameState = 'AIMING_ANGLE';
-                btn.innerText = 'Bowl!';
-                instructions.innerText = 'Step 2: Click "Bowl!" to launch in target direction.';
-            } else if (gameState === 'AIMING_ANGLE') {
-                gameState = 'ROLLING';
-                btn.disabled = true;
-                instructions.innerText = 'Rolling...';
-
-                ball.vx = Math.sin(aimAngle) * ball.speed;
-                ball.vy = -Math.cos(aimAngle) * ball.speed;
-            }
+        function pickCat(cat) {
+            currentCat = cat;
+            selectedId = null;
+            renderCategories();
         }
 
-        function completeRoll() {
-            const hitCount = pins.filter(p => p.isHit).length;
-            const previousKnocked = rolls[currentFrame - 1].reduce((a, b) => a + b, 0);
-            const knockedThisRoll = hitCount - previousKnocked;
-
-            rolls[currentFrame - 1].push(knockedThisRoll);
-
-            if (knockedThisRoll === 0) {
-                overlayText = 'Gutter Ball';
-                overlayTimer = 90;
-            } else if (currentRoll === 1 && knockedThisRoll === 10) {
-                overlayText = 'STRIKE!';
-                overlayTimer = 90;
-                playCheeringSound();
-            } else if (currentRoll === 2 && hitCount === 10) {
-                overlayText = 'SPARE!';
-                overlayTimer = 90;
-            } else {
-                overlayText = knockedThisRoll + ' Pin(s)';
-                overlayTimer = 60;
-            }
-
-            // Frame logic
-            if (currentFrame < 10) {
-                if (knockedThisRoll === 10 || currentRoll === 2) {
-                    advanceFrame();
-                } else {
-                    currentRoll = 2;
-                    resetBallPosition();
-                }
-            } else {
-                // Frame 10 rules
-                const frame10Rolls = rolls[9];
-                if (frame10Rolls.length === 1 && frame10Rolls[0] === 10) {
-                    resetPins();
-                    currentRoll = 2;
-                    resetBallPosition();
-                } else if (frame10Rolls.length === 2 && (frame10Rolls[0] + frame10Rolls[1] >= 10)) {
-                    if (frame10Rolls[0] + frame10Rolls[1] === 10) resetPins();
-                    currentRoll = 3;
-                    resetBallPosition();
-                } else if (frame10Rolls.length >= 2 && frame10Rolls[0] + frame10Rolls[1] < 10) {
-                    endGame();
-                } else if (frame10Rolls.length === 3) {
-                    endGame();
-                } else {
-                    currentRoll++;
-                    resetBallPosition();
-                }
-            }
-
-            renderScoreboard();
+        function setSort(type) {
+            currentSort = type;
+            document.querySelectorAll('.sort-btn').forEach(b => b.classList.toggle('active', b.id === 'sort-'+type));
+            renderProviders();
         }
 
-        function resetBallPosition() {
-            ball.x = canvas.width / 2;
-            ball.y = 530;
-            ball.vx = 0;
-            ball.vy = 0;
-            aimAngle = 0;
-            gameState = 'AIMING_POSITION';
+        function renderProviders() {
+            var list = [...PROVIDERS[currentCat]].sort((a,b) => a[currentSort] - b[currentSort]);
+            if (list.length > 0 && !selectedId) selectProvider(list[0].id);
 
-            const btn = document.getElementById('actionBtn');
-            btn.disabled = false;
-            btn.innerText = 'Set Aim';
-            document.getElementById('gameInstructions').innerText = 'Step 1: Position your ball.';
+            var html = '';
+            list.forEach(p => {
+                var sel = p.id === selectedId ? 'selected' : '';
+                var priceStr = p.price === 0 ? "FREE" : `$${p.price.toFixed(2)}`;
+                html += `
+                    <div class="pcard ${sel}" onclick="selectProvider('${p.id}')">
+                        <div class="pcard-badge" style="background:${p.c}">${p.s}</div>
+                        <div>
+                            <div class="pcard-title">${p.name}</div>
+                            <div class="pcard-sub">${p.time} min ETA</div>
+                        </div>
+                        <div class="pcard-price">${priceStr}</div>
+                    </div>
+                `;
+            });
+            document.getElementById('p3-grid').innerHTML = html;
         }
 
-        function advanceFrame() {
-            currentFrame++;
-            currentRoll = 1;
-            resetPins();
-            resetBallPosition();
+        function selectProvider(id) {
+            selectedId = id;
+            document.getElementById('final-link').href = LINKS[id] || '#';
+            renderProviders();
         }
 
-        function endGame() {
-            gameState = 'GAME_OVER';
-            overlayText = 'Game Over!';
-            overlayTimer = 180;
-            document.getElementById('actionBtn').disabled = true;
-            document.getElementById('gameInstructions').innerText = 'Game finished! Click Reset Game to start over.';
-        }
-
-        function resetGame() {
-            currentFrame = 1;
-            currentRoll = 1;
-            rolls = Array.from({ length: 10 }, () => []);
-            resetPins();
-            resetBallPosition();
-            renderScoreboard();
-        }
-
-        // --- Standard Scoring Engine ---
-        function renderScoreboard() {
-            const rollsRow = document.getElementById('scoreboard-rolls');
-            const totalsRow = document.getElementById('scoreboard-totals');
-
-            rollsRow.innerHTML = '';
-            totalsRow.innerHTML = '';
-
-            let runningTotal = 0;
-            const frameScores = calculateScores();
-
-            for (let i = 0; i < 10; i++) {
-                const frameRolls = rolls[i] || [];
-                let displayRolls = '';
-
-                if (i < 9) {
-                    if (frameRolls[0] === 10) {
-                        displayRolls = '&nbsp; X';
-                    } else {
-                        const r1 = frameRolls[0] !== undefined ? frameRolls[0] : '';
-                        let r2 = '';
-                        if (frameRolls[1] !== undefined) {
-                            r2 = (frameRolls[0] + frameRolls[1] === 10) ? '/' : frameRolls[1];
-                        }
-                        displayRolls = `${r1} ${r2}`;
-                    }
-                } else {
-                    const r1 = frameRolls[0] === 10 ? 'X' : frameRolls[0];
-                    let r2 = frameRolls[1];
-                    if (frameRolls[0] !== 10 && frameRolls[0] + frameRolls[1] === 10) {
-                        r2 = '/';
-                    } else if (frameRolls[1] === 10) {
-                        r2 = 'X';
-                    }
-
-                    let r3 = frameRolls[2];
-                    if (frameRolls[2] === 10) r3 = 'X';
-
-                    displayRolls = `${r1 !== undefined ? r1 : ''} ${r2 !== undefined ? r2 : ''} ${r3 !== undefined ? r3 : ''}`;
-                }
-
-                const rollTd = document.createElement('td');
-                rollTd.innerHTML = `<div class="frame-rolls">${displayRolls}</div>`;
-                rollsRow.appendChild(rollTd);
-
-                const totalTd = document.createElement('td');
-                if (frameScores[i] !== null) {
-                    runningTotal += frameScores[i];
-                    totalTd.innerHTML = `<div class="frame-score">${runningTotal}</div>`;
-                } else {
-                    totalTd.innerHTML = `<div class="frame-score"></div>`;
-                }
-                totalsRow.appendChild(totalTd);
-            }
-
-            const grandTotalTd = document.createElement('td');
-            grandTotalTd.innerHTML = `<div class="frame-score">${runningTotal}</div>`;
-            totalsRow.appendChild(grandTotalTd);
-
-            const totalHeaderTd = document.createElement('td');
-            totalHeaderTd.innerHTML = `<strong>Total</strong>`;
-            rollsRow.appendChild(totalHeaderTd);
-        }
-
-        function calculateScores() {
-            const scores = Array(10).fill(null);
-            let flatRolls = [];
-
-            rolls.forEach(f => flatRolls.push(...f));
-
-            let rollIndex = 0;
-            for (let f = 0; f < 10; f++) {
-                if (f < 9) {
-                    if (flatRolls[rollIndex] === 10) {
-                        if (flatRolls[rollIndex + 1] !== undefined && flatRolls[rollIndex + 2] !== undefined) {
-                            scores[f] = 10 + flatRolls[rollIndex + 1] + flatRolls[rollIndex + 2];
-                        }
-                        rollIndex += 1;
-                    } else if (flatRolls[rollIndex] + flatRolls[rollIndex + 1] === 10) {
-                        if (flatRolls[rollIndex + 2] !== undefined) {
-                            scores[f] = 10 + flatRolls[rollIndex + 2];
-                        }
-                        rollIndex += 2;
-                    } else if (flatRolls[rollIndex] !== undefined && flatRolls[rollIndex + 1] !== undefined) {
-                        scores[f] = flatRolls[rollIndex] + flatRolls[rollIndex + 1];
-                        rollIndex += 2;
-                    }
-                } else {
-                    const f10 = rolls[9];
-                    const sum = f10.reduce((a, b) => a + b, 0);
-                    if (f10.length >= 2 && f10[0] + f10[1] < 10) {
-                        scores[f] = sum;
-                    } else if (f10.length === 3) {
-                        scores[f] = sum;
-                    }
-                }
-            }
-            return scores;
-        }
-
-        // Initialize Game
-        resetPins();
-        renderScoreboard();
-        loop();
+        renderCategories();
     </script>
 </body>
 </html>

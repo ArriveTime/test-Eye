@@ -95,8 +95,8 @@ nav a:hover { color: var(--primary); }
 .ml-coords { font-size: 0.78rem; color: #0055cc; font-weight: 600; } 
 /* BOWLING GAME STYLING */ 
 .game-wrapper { background: #fdfdfd; border-radius: 8px; border: 1px solid #ccc; padding: 0.8rem; display: flex; flex-direction: column; justify-content: space-between; align-items: center; position: relative; } 
-.game-canvas-container { width: 100%; height: 210px; background: #f0ede6; border-radius: 6px; position: relative; overflow: hidden; border: 1px solid #ccc; } 
-#bowlingCanvas { width: 100%; height: 100%; display: block; background: #f0ede6; } 
+.game-canvas-container { width: 100%; height: 250px; background: #1a1a1a; border-radius: 6px; position: relative; overflow: hidden; border: 2px solid #333; box-shadow: inset 0 0 15px rgba(0,0,0,0.8); } 
+#bowlingCanvas { width: 100%; height: 100%; display: block; } 
 .gutter-overlay { position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%); font-size: 1.5rem; font-weight: 900; color: #ff3c3c; text-shadow: 0 0 5px #fff; background: rgba(255,255,255,0.9); padding: 6px 16px; border-radius: 6px; border: 2px solid #ff3c3c; display: none; z-index: 10; pointer-events: none; letter-spacing: 1.5px; }
 /* SCOREBOARD SHEET */ 
 .bowling-scorecard { width: 100%; background: #ffffff; border: 1px solid #ccc; border-radius: 6px; margin-bottom: 0.5rem; padding: 0.3rem; overflow-x: auto; } 
@@ -183,7 +183,7 @@ th { background: #f0f0f0; color: #333; }
   .map-wrapper { min-height: 300px !important; height: 300px !important; }
   #map { min-height: 300px !important; height: 100% !important; width: 100% !important; } 
   .game-wrapper { width: 100% !important; min-height: 360px !important; } 
-  .game-canvas-container { height: 210px !important; width: 100%!important; } 
+  .game-canvas-container { height: 250px !important; width: 100%!important; } 
   .network-layout { flex-direction: column; } 
   .team-directory { width: 100%; } 
 } 
@@ -653,7 +653,7 @@ document.addEventListener('DOMContentLoaded', function() {
   initScorecard();
 });
 
-// --- 3. BOWLING GAME CANVAS, LOGIC & AUDIO SYNTHESIZER ---
+// --- 3. HIGH-REALISM BOWLING GAME CANVAS & GRAPHICS ENGINE ---
 let isMuted = false;
 let audioCtx = null;
 
@@ -703,76 +703,162 @@ function playSynthesizedSound(type) {
       osc.stop(audioCtx.currentTime + 0.4);
     }
   } catch (e) {
-    // Graceful fallback if Web Audio API is unavailable
+    // Graceful fallback
   }
 }
 
 const canvas = document.getElementById('bowlingCanvas');
-let ballX = 150, ballY = 180, isRolling = false;
-let currentFrame = 1, frameRolls = [], totalScore = 0;
+let ballX = 150, ballY = 210, isRolling = false;
+let currentFrame = 1, totalScore = 0;
 
-if (canvas) {
+// Track standing pins (true = standing, false = knocked down)
+let standingPins = Array(10).fill(true);
+
+function renderRealisticGameView(currentBallY) {
+  if (!canvas) return;
   const ctx = canvas.getContext('2d');
+  canvas.width = canvas.parentElement.clientWidth || 300;
+  canvas.height = canvas.parentElement.clientHeight || 250;
   
-  function drawLane() {
-    canvas.width = canvas.parentElement.clientWidth || 300;
-    canvas.height = canvas.parentElement.clientHeight || 210;
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    
-    // Lane background
-    ctx.fillStyle = '#f0ede6';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    
-    // Gutters
-    ctx.fillStyle = '#d5d0c5';
-    ctx.fillRect(0, 0, 20, canvas.height);
-    ctx.fillRect(canvas.width - 20, 0, 20, canvas.height);
-    
-    // Pins at top
-    ctx.fillStyle = '#e50914';
-    const pinXCenter = canvas.width / 2;
-    for (let i = -2; i <= 2; i++) {
-      ctx.beginPath();
-      ctx.arc(pinXCenter + (i * 18), 30, 6, 0, Math.PI * 2);
-      ctx.fill();
-    }
+  const w = canvas.width;
+  const h = canvas.height;
+  const laneLeft = w * 0.18;
+  const laneRight = w * 0.82;
+  const laneWidth = laneRight - laneLeft;
 
-    // Ball
-    ctx.fillStyle = '#0088ff';
+  // 1. Dark Alley Backdrop
+  ctx.fillStyle = '#111115';
+  ctx.fillRect(0, 0, w, h);
+
+  // 2. Gutters
+  ctx.fillStyle = '#222228';
+  ctx.fillRect(laneLeft - (laneWidth * 0.12), 0, laneWidth * 0.12, h);
+  ctx.fillRect(laneRight, 0, laneWidth * 0.12, h);
+  
+  // Gutter Shadows
+  ctx.fillStyle = '#0a0a0d';
+  ctx.fillRect(laneLeft - (laneWidth * 0.03), 0, laneWidth * 0.03, h);
+  ctx.fillRect(laneRight, 0, laneWidth * 0.03, h);
+
+  // 3. Wooden Lane Texture & Planking
+  const woodGrad = ctx.createLinearGradient(laneLeft, 0, laneRight, 0);
+  woodGrad.addColorStop(0, '#8B5A2B');
+  woodGrad.addColorStop(0.2, '#CD853F');
+  woodGrad.addColorStop(0.5, '#DEB887');
+  woodGrad.addColorStop(0.8, '#CD853F');
+  woodGrad.addColorStop(1, '#8B5A2B');
+  ctx.fillStyle = woodGrad;
+  ctx.fillRect(laneLeft, 0, laneWidth, h);
+
+  // Wooden Board Lines
+  ctx.strokeStyle = 'rgba(70, 35, 10, 0.35)';
+  ctx.lineWidth = 1;
+  const numBoards = 15;
+  for (let b = 1; b < numBoards; b++) {
+    const bx = laneLeft + (laneWidth / numBoards) * b;
     ctx.beginPath();
-    ctx.arc(ballX, ballY, 12, 0, Math.PI * 2);
+    ctx.moveTo(bx, 0);
+    ctx.lineTo(bx, h);
+    ctx.stroke();
+  }
+
+  // Polished Reflection Highlight
+  const sheenGrad = ctx.createLinearGradient(0, 0, 0, h);
+  sheenGrad.addColorStop(0, 'rgba(255, 255, 255, 0.25)');
+  sheenGrad.addColorStop(0.5, 'rgba(255, 255, 255, 0.08)');
+  sheenGrad.addColorStop(1, 'rgba(0, 0, 0, 0.2)');
+  ctx.fillStyle = sheenGrad;
+  ctx.fillRect(laneLeft, 0, laneWidth, h);
+
+  // Lane Approach Arrows
+  ctx.fillStyle = '#4A230A';
+  const arrowY = h * 0.65;
+  const arrowSpacing = laneWidth / 6;
+  for (let a = 1; a <= 5; a++) {
+    const ax = laneLeft + (arrowSpacing * a);
+    ctx.beginPath();
+    ctx.moveTo(ax, arrowY);
+    ctx.lineTo(ax - 3, arrowY + 10);
+    ctx.lineTo(ax + 3, arrowY + 10);
+    ctx.closePath();
     ctx.fill();
   }
+
+  // Pin Deck Pit Backdrop (Top)
+  ctx.fillStyle = '#050505';
+  ctx.fillRect(laneLeft - (laneWidth * 0.12), 0, laneWidth * 1.24, 38);
+
+  // 4. Official 10-Pin Pyramid Formation (4 Rows)
+  const pinPositions = [
+    { x: w / 2, y: 45 },                              // Pin 1 (Headpin)
+    { x: w / 2 - 14, y: 38 }, { x: w / 2 + 14, y: 38 }, // Row 2 (Pins 2, 3)
+    { x: w / 2 - 28, y: 31 }, { x: w / 2, y: 31 }, { x: w / 2 + 28, y: 31 }, // Row 3 (Pins 4, 5, 6)
+    { x: w / 2 - 42, y: 24 }, { x: w / 2 - 14, y: 24 }, { x: w / 2 + 14, y: 24 }, { x: w / 2 + 42, y: 24 } // Row 4 (Pins 7, 8, 9, 10)
+  ];
+
+  pinPositions.forEach((pin, index) => {
+    if (standingPins[index]) {
+      // Pin Shadow
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
+      ctx.beginPath();
+      ctx.ellipse(pin.x, pin.y + 7, 6, 2.5, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Pin Body (3D White Gradient)
+      const pinGrad = ctx.createRadialGradient(pin.x - 2, pin.y - 2, 1, pin.x, pin.y, 7);
+      pinGrad.addColorStop(0, '#ffffff');
+      pinGrad.addColorStop(0.7, '#f0f0f0');
+      pinGrad.addColorStop(1, '#cccccc');
+      ctx.fillStyle = pinGrad;
+      ctx.beginPath();
+      ctx.arc(pin.x, pin.y, 6.5, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = '#aaaaaa';
+      ctx.lineWidth = 0.8;
+      ctx.stroke();
+
+      // Red Neck Stripes
+      ctx.fillStyle = '#e50914';
+      ctx.fillRect(pin.x - 4, pin.y - 2, 8, 1.8);
+      ctx.fillRect(pin.x - 3, pin.y + 1, 6, 1.2);
+    }
+  });
+
+  // 5. Realistic 3D Bowling Ball
+  const drawY = currentBallY || ballY;
   
-  window.addEventListener('resize', drawLane);
-  drawLane();
+  // Ball Shadow
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.45)';
+  ctx.beginPath();
+  ctx.ellipse(ballX, drawY + 11, 13, 5, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Ball Body Gradient
+  const ballGrad = ctx.createRadialGradient(ballX - 4, drawY - 4, 2, ballX, drawY, 13);
+  ballGrad.addColorStop(0, '#66b3ff');
+  ballGrad.addColorStop(0.3, '#0066cc');
+  ballGrad.addColorStop(0.85, '#003366');
+  ballGrad.addColorStop(1, '#001a33');
+  ctx.fillStyle = ballGrad;
+  ctx.beginPath();
+  ctx.arc(ballX, drawY, 13, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Finger Holes
+  ctx.fillStyle = '#000d1a';
+  ctx.beginPath();
+  ctx.arc(ballX - 3, drawY - 4, 2, 0, Math.PI * 2);
+  ctx.arc(ballX + 3, drawY - 4, 2, 0, Math.PI * 2);
+  ctx.arc(ballX, drawY + 2, 2.3, 0, Math.PI * 2);
+  ctx.fill();
 }
 
 function moveBall(delta) {
   if (isRolling) return;
-  ballX = Math.max(30, Math.min((canvas.width || 300) - 30, ballX + delta));
-  const ctx = canvas.getContext('2d');
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  
-  // Redraw state
-  ctx.fillStyle = '#f0ede6';
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-  ctx.fillStyle = '#d5d0c5';
-  ctx.fillRect(0, 0, 20, canvas.height);
-  ctx.fillRect(canvas.width - 20, 0, 20, canvas.height);
-  
-  ctx.fillStyle = '#e50914';
-  const pinXCenter = canvas.width / 2;
-  for (let i = -2; i <= 2; i++) {
-    ctx.beginPath();
-    ctx.arc(pinXCenter + (i * 18), 30, 6, 0, Math.PI * 2);
-    ctx.fill();
-  }
-
-  ctx.fillStyle = '#0088ff';
-  ctx.beginPath();
-  ctx.arc(ballX, ballY, 12, 0, Math.PI * 2);
-  ctx.fill();
+  const laneLeft = canvas.width * 0.18;
+  const laneRight = canvas.width * 0.82;
+  ballX = Math.max(laneLeft + 15, Math.min(laneRight - 15, ballX + delta));
+  renderRealisticGameView(ballY);
 }
 
 function rollBowlingBall() {
@@ -782,38 +868,48 @@ function rollBowlingBall() {
   
   let animY = ballY;
   const rollInterval = setInterval(() => {
-    animY -= 6;
-    if (animY <= 35) {
+    animY -= 5;
+    if (animY <= 48) {
       clearInterval(rollInterval);
       isRolling = false;
       
-      // Calculate pins hit
+      // Hit detection based on ball position
       const centerDist = Math.abs(ballX - (canvas.width / 2));
-      let pinsHit = 0;
-      if (centerDist < 15) { pinsHit = 10; }
-      else if (centerDist < 35) { pinsHit = Math.floor(Math.random() * 4) + 6; }
-      else if (centerDist < 60) { pinsHit = Math.floor(Math.random() * 4) + 2; }
-      else { pinsHit = 0; }
+      let hitCount = 0;
 
-      if (pinsHit > 0) { playSynthesizedSound('strike'); }
+      if (centerDist < 12) {
+        // Strike - Knock all down
+        standingPins.fill(false);
+        hitCount = 10;
+      } else if (centerDist < 30) {
+        // Partial Hit
+        hitCount = Math.floor(Math.random() * 4) + 5;
+        for (let i = 0; i < hitCount; i++) {
+          standingPins[i] = false;
+        }
+      } else {
+        // Light hit / Gutter
+        hitCount = Math.floor(Math.random() * 3);
+        for (let i = 0; i < hitCount; i++) {
+          standingPins[i] = false;
+        }
+      }
+
+      if (hitCount > 0) playSynthesizedSound('strike');
       
-      recordScore(pinsHit);
-      ballY = 180;
-      moveBall(0);
+      recordScore(hitCount);
+      
+      // Reset pins & ball position for next frame
+      setTimeout(() => {
+        standingPins.fill(true);
+        ballY = 210;
+        renderRealisticGameView(ballY);
+      }, 1000);
+
     } else {
-      const ctx = canvas.getContext('2d');
-      ctx.fillStyle = '#f0ede6';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = '#d5d0c5';
-      ctx.fillRect(0, 0, 20, canvas.height);
-      ctx.fillRect(canvas.width - 20, 0, 20, canvas.height);
-      
-      ctx.fillStyle = '#0088ff';
-      ctx.beginPath();
-      ctx.arc(ballX, animY, 12, 0, Math.PI * 2);
-      ctx.fill();
+      renderRealisticGameView(animY);
     }
-  }, 20);
+  }, 16);
 }
 
 function initScorecard() {
@@ -857,12 +953,18 @@ function recordScore(pins) {
 function resetBowlingGame() {
   currentFrame = 1;
   totalScore = 0;
+  standingPins.fill(true);
   document.getElementById('p1-score').innerText = '0';
   document.getElementById('currentFrameDisplay').innerText = '1';
   initScorecard();
-  ballY = 180;
-  moveBall(0);
+  ballY = 210;
+  renderRealisticGameView(ballY);
 }
+
+window.addEventListener('resize', () => renderRealisticGameView(ballY));
+document.addEventListener('DOMContentLoaded', () => {
+  renderRealisticGameView(ballY);
+});
 
 // --- 4. ADMIN MODAL HELPERS & FEED INTERACTIONS ---
 function openAdminModal() { document.getElementById('adminModal').style.display = 'flex'; }

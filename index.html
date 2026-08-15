@@ -62,32 +62,10 @@
             flex-direction: column;
         }
 
-        /* HEADER & LOGO WITH SVG EMBED */
+        /* HEADER & LOGO */
         header {
             text-align: center;
             padding: 10px 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .logo-wrapper {
-            display: inline-flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .ship-icon {
-            width: clamp(32px, 8vw, 46px);
-            height: clamp(32px, 8vw, 46px);
-            filter: drop-shadow(0 0 10px var(--primary-cyan));
-            animation: float 4s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-6px) rotate(2deg); }
         }
 
         .logo {
@@ -421,21 +399,7 @@
         <!-- PAGE 0: DASHBOARD -->
         <div class="page active" id="pg0">
             <header>
-                <div class="logo-wrapper">
-                    <!-- CUSTOM VECTOR SPACESHIP SVG -->
-                    <svg class="ship-icon" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M32 4L42 24L58 38L44 44L32 60L20 44L6 38L22 24L32 4Z" fill="url(#shipGrad)" stroke="#00f0ff" stroke-width="2" stroke-linejoin="round"/>
-                        <circle cx="32" cy="28" r="4" fill="#00f0ff"/>
-                        <path d="M26 48L32 56L38 48" stroke="#7000ff" stroke-width="3" stroke-linecap="round"/>
-                        <defs>
-                            <linearGradient id="shipGrad" x1="32" y1="4" x2="32" y2="60" gradientUnits="userSpaceOnUse">
-                                <stop stop-color="#12182b"/>
-                                <stop offset="1" stop-color="#00f0ff" stop-opacity="0.4"/>
-                            </linearGradient>
-                        </defs>
-                    </svg>
-                    <div class="logo">Cab<span class="zero">0</span>.com</div>
-                </div>
+                <div class="logo">Cab<span class="zero">0</span>.com</div>
             </header>
 
             <div class="quote-card">
@@ -493,12 +457,12 @@
     </div>
 
     <script>
-        /* STARFIELD CANVAS ENGINE */
+        /* 5-POINT STARFIELD CANVAS ENGINE */
         (function initStarfield() {
             var canvas = document.getElementById('starfield');
             var ctx = canvas.getContext('2d');
             var stars = [];
-            var numStars = 110;
+            var numStars = 65;
 
             function resizeCanvas() {
                 canvas.width = window.innerWidth;
@@ -508,14 +472,45 @@
             window.addEventListener('resize', resizeCanvas);
             resizeCanvas();
 
+            // Function to draw a standard 5-point star
+            function draw5PointStar(ctx, cx, cy, outerRadius, innerRadius, alpha, rotation) {
+                ctx.save();
+                ctx.beginPath();
+                ctx.translate(cx, cy);
+                ctx.rotate(rotation);
+                
+                var points = 5;
+                var step = Math.PI / points;
+
+                for (var i = 0; i < 2 * points; i++) {
+                    var r = (i % 2 === 0) ? outerRadius : innerRadius;
+                    var x = r * Math.sin(i * step);
+                    var y = -r * Math.cos(i * step);
+                    if (i === 0) ctx.moveTo(x, y);
+                    else ctx.lineTo(x, y);
+                }
+
+                ctx.closePath();
+                ctx.fillStyle = "rgba(255, 255, 255, " + alpha + ")";
+                ctx.shadowBlur = outerRadius * 2.5;
+                ctx.shadowColor = "rgba(0, 240, 255, " + (alpha * 0.9) + ")";
+                ctx.fill();
+                ctx.restore();
+            }
+
+            // Create larger, shining star objects
             for (var i = 0; i < numStars; i++) {
+                var size = Math.random() * 8 + 6; // Outer radius between 6px and 14px
                 stars.push({
                     x: Math.random() * canvas.width,
                     y: Math.random() * canvas.height,
-                    size: Math.random() * 1.8 + 0.2,
-                    speed: Math.random() * 0.4 + 0.1,
-                    opacity: Math.random() * 0.8 + 0.2,
-                    pulseSpeed: Math.random() * 0.02 + 0.005
+                    outerRadius: size,
+                    innerRadius: size * 0.4,
+                    speed: Math.random() * 0.25 + 0.05,
+                    opacity: Math.random() * 0.6 + 0.4,
+                    pulseSpeed: Math.random() * 0.015 + 0.005,
+                    rotation: Math.random() * Math.PI,
+                    rotSpeed: (Math.random() - 0.5) * 0.005
                 });
             }
 
@@ -532,27 +527,23 @@
                 ctx.fillStyle = bgGrad;
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-                // Draw Stars
+                // Draw and animate each 5-point star
                 for (var i = 0; i < stars.length; i++) {
                     var s = stars[i];
                     s.y += s.speed;
                     s.opacity += s.pulseSpeed;
+                    s.rotation += s.rotSpeed;
 
-                    if (s.opacity > 1 || s.opacity < 0.2) {
+                    if (s.opacity > 0.95 || s.opacity < 0.25) {
                         s.pulseSpeed = -s.pulseSpeed;
                     }
 
-                    if (s.y > canvas.height) {
-                        s.y = 0;
+                    if (s.y > canvas.height + 20) {
+                        s.y = -20;
                         s.x = Math.random() * canvas.width;
                     }
 
-                    ctx.beginPath();
-                    ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
-                    ctx.fillStyle = "rgba(0, 240, 255, " + Math.abs(s.opacity) + ")";
-                    ctx.shadowBlur = s.size > 1.2 ? 8 : 0;
-                    ctx.shadowColor = '#00f0ff';
-                    ctx.fill();
+                    draw5PointStar(ctx, s.x, s.y, s.outerRadius, s.innerRadius, Math.abs(s.opacity), s.rotation);
                 }
 
                 requestAnimationFrame(animate);

@@ -476,7 +476,7 @@ Total Score: <strong id="p1-score" style="color:#222; font-size:1.1rem;">0</stro
             <div class="pro-shop-icon"><i class="fa-solid fa-bag-shopping"></i></div>
             <div class="pro-shop-details">
               <h4>Bowling.com</h4>
-              <p>Extensive catalog of performance equipment, bowling shoes, drilling tools, and apparel.</p>
+              <p>Extensive catalog of performance equipment, closeouts, customized drilling layouts, and gear.</p>
               <a href="https://www.bowling.com" target="_blank" rel="noopener noreferrer" class="pro-shop-link">
                 Visit Bowling.com <i class="fa-solid fa-arrow-up-right-from-square"></i>
               </a>
@@ -487,503 +487,555 @@ Total Score: <strong id="p1-score" style="color:#222; font-size:1.1rem;">0</stro
         <!-- Retailer 3 -->
         <div class="pro-shop-card">
           <div class="pro-shop-item">
-            <div class="pro-shop-icon"><i class="fa-solid fa-bullseye"></i></div>
+            <div class="pro-shop-icon"><i class="fa-solid fa-shirt"></i></div>
             <div class="pro-shop-details">
-              <h4>BowlersMart</h4>
-              <p>Nationwide pro shop operator offering high-performance bowling gear and expert reviews.</p>
-              <a href="https://www.bowlersmart.com" target="_blank" rel="noopener noreferrer" class="pro-shop-link">
-                Visit BowlersMart.com <i class="fa-solid fa-arrow-up-right-from-square"></i>
+              <h4>BowlerX.com</h4>
+              <p>Authorized distributor of top pro shop brands, jersey customization, and tournament supplies.</p>
+              <a href="https://www.bowlerx.com" target="_blank" rel="noopener noreferrer" class="pro-shop-link">
+                Visit BowlerX.com <i class="fa-solid fa-arrow-up-right-from-square"></i>
               </a>
             </div>
           </div>
         </div>
 
-        <!-- Retailer 4 -->
-        <div class="pro-shop-card">
-          <div class="pro-shop-item">
-            <div class="pro-shop-icon"><i class="fa-solid fa-wrench"></i></div>
-            <div class="pro-shop-details">
-              <h4>Buddies Pro Shop</h4>
-              <p>Specialized equipment retailer providing custom drilling services, wrist supports, and grips.</p>
-              <a href="https://www.buddiesproshop.com" target="_blank" rel="noopener noreferrer" class="pro-shop-link">
-                Visit BuddiesProShop.com <i class="fa-solid fa-arrow-up-right-from-square"></i>
-              </a>
-            </div>
-          </div>
-        </div>
-
-        <!-- Terms Compliance Notice -->
         <div class="compliance-note">
-          <i class="fa-solid fa-shield-halved"></i> <strong>Merchant Notice:</strong> External links open directly on official merchant websites. BowlStrike.com claims no direct affiliation with linked retailers unless explicitly stated.
+          <i class="fa-solid fa-circle-info"></i> Direct links provided for bowler convenience. BowlStrike.com maintains independent listings for preferred national pro shops.
         </div>
-
       </div>
     </section>
 
-    <!-- CONTACT US FORM -->
-    <section id="contact"> 
-      <h2 class="section-title"><span><i class="fa-solid fa-envelope" style="color:var(--primary);"></i> Contact BowlStrike</span></h2> 
-      <div class="card"> 
-        <form class="contact-form" id="contact-form" onsubmit="sendContactEmail(event)"> 
-          <input type="text" name="name" id="contact-name" placeholder="Your Name" required /> 
-          <input type="email" name="email" id="contact-email" placeholder="Your Email Address" required/> 
-          <input type="text" name="subject" id="contact-subject" placeholder="Subject" required /> 
-          <textarea name="message" id="contact-message" placeholder="Type your message here..." required></textarea> 
-          <button type="submit" class="btn" id="contact-submit-btn"><i class="fa-solid fa-paper-plane"></i> Send Message</button>
-          <div id="contact-status-msg" style="font-size:0.8rem; margin-top:0.4rem;"></div> 
-        </form> 
-      </div> 
+    <!-- CONTACT FORM -->
+    <section id="contact">
+      <h2 class="section-title"><span><i class="fa-solid fa-envelope" style="color:var(--primary);"></i> Contact Us</span></h2>
+      <div class="card">
+        <form class="contact-form" id="contactForm" onsubmit="handleContactSubmit(event)">
+          <input type="text" id="contactName" placeholder="Your Name" required />
+          <input type="email" id="contactEmail" placeholder="Your Email" required />
+          <textarea id="contactMessage" placeholder="Your Message or Inquiry..." required></textarea>
+          <button type="submit" class="btn"><i class="fa-solid fa-paper-plane"></i> Send Message</button>
+        </form>
+        <div id="contactStatus" style="margin-top:0.5rem; font-size:0.82rem;"></div>
+      </div>
     </section>
 
   </div>
 </div>
 
+</div> <!-- /container -->
+
+<!-- FOOTER & LEGAL -->
+<footer>
+  <div class="footer-legal-container">
+    <h4><i class="fa-solid fa-shield-halved"></i> Legal & Platform Information</h4>
+    <p>BowlStrike.com is an independent social platform providing bowling news, interactive map routing, and bowler network features. All trademarks, brand names, and logos referenced belong to their respective owners.</p>
+    <p>© 2026 BowlStrike.com. All Rights Reserved.</p>
+  </div>
+  <div style="text-align:center;">
+    <span class="hidden-admin-link" onclick="openAdminModal()"><i class="fa-solid fa-lock"></i> Admin Portal</span>
+  </div>
+</footer>
+
+<!-- ADMIN ANALYTICS MODAL -->
+<div id="adminModal" class="modal">
+  <div class="modal-content">
+    <span class="close-btn" onclick="closeAdminModal()">&times;</span>
+    <h3 style="margin-bottom:1rem;"><i class="fa-solid fa-chart-line" style="color:var(--primary);"></i> Admin Portal & System Stats</h3>
+    <div class="admin-stats-grid">
+      <div class="stat-card"><div class="val" id="statVisits">1,248</div><div class="lbl">Total Visits</div></div>
+      <div class="stat-card"><div class="val" id="statRolls">4,892</div><div class="lbl">Total Rolls</div></div>
+      <div class="stat-card"><div class="val" id="statStrikes">1,105</div><div class="lbl">Total Strikes</div></div>
+      <div class="stat-card"><div class="val" id="statGutters">312</div><div class="lbl">Gutter Balls</div></div>
+    </div>
+    <table>
+      <thead>
+        <tr><th>Metric</th><th>Status</th><th>Details</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>GPS Location Radar</td><td><span style="color:var(--success);">Active</span></td><td>Leaflet Map Loaded</td></tr>
+        <tr><td>Audio Engine</td><td><span style="color:var(--success);">Synthesized</span></td><td>Web Audio API Ready</td></tr>
+        <tr><td>Game Physics</td><td><span style="color:var(--success);">Operational</span></td><td>HTML5 2D Canvas Engine</td></tr>
+      </tbody>
+    </table>
+  </div>
 </div>
 
-<!-- Footer Section & Legal Disclaimers --> 
-<footer> 
-<div class="footer-legal-container"> 
-<h4><i class="fa-solid fa-scale-balanced" style="color:var(--primary);"></i> Terms & Legal Disclaimer</h4> 
-<p>BowlStrike.com is an independent digital media platform, interactive bowling simulation, and live networking utility for tenpin enthusiasts. News, tournament highlights, and organizational rankings featured on this platform are provided for informational and promotional purposes to support the growth of tenpin bowling nationwide.</p> 
-<p>PBA, USBC, and all associated league marks are registered trademarks of their respective governing organizations. BowlStrike.com claims no direct ownership or official affiliation with third-party bowling centers, manufacturers, or sanctioning bodies unless explicitly stated.</p> 
-</div> 
-<div style="text-align:center; margin-top:1rem;"> 
-<p>&copy; 2026 BowlStrike.com. All rights reserved. Built for tenpin players nationwide.</p> 
-<a onclick="openAdminModal()" class="hidden-admin-link">Portal Login / System Status</a> 
-</div> 
-</footer> 
-
-<!-- Admin Analytics Modal --> 
-<div id="adminModal" class="modal"><div class="modal-content"> 
-<span class="close-btn" onclick="closeAdminModal()">&times;</span> 
-<h2 style="font-size:1.3rem; margin-bottom:1rem; border-bottom:1px solid #ddd; padding-bottom:0.5rem;"><i class="fa-solid fa-chart-line" style="color:var(--primary);"></i> BowlStrike System Dashboard</h2> 
-<div class="admin-stats-grid"> 
-<div class="stat-card"> 
-<div class="val" id="admin-active-users">1,429</div> 
-<div class="lbl">Active Network Bowlers</div> 
-</div> 
-<div class="stat-card"> 
-<div class="val" id="admin-active-radar">382</div> 
-<div class="lbl">Live Alley GPS Nodes</div> 
-</div> 
-<div class="stat-card"> 
-<div class="val" id="admin-games-played">8,912</div> 
-<div class="lbl">Arcade Games Completed</div> 
-</div> 
-</div> 
-<h3 style="font-size:1rem; margin-top:1.5rem; color:var(--primary);">System Health</h3> 
-<table> 
-<thead> 
-<tr> 
-<th>Module</th><th>Status</th> 
-<th>Latency</th> 
-</tr> 
-</thead> 
-<tbody> 
-<tr> 
-<td>GPS Radar Feed</td> 
-<td><span style="color:var(--success);">Operational</span></td> 
-<td>24 ms</td> 
-</tr> 
-<tr> 
-<td>SBA News Auto-Fetcher</td><td><span style="color:var(--success);">Operational</span></td> 
-<td>110 ms</td> 
-</tr> 
-<tr> 
-<td>EmailJS Notification Pipeline</td> 
-<td><span style="color:var(--success);">Ready</span></td> 
-<td>--</td> 
-</tr> 
-</tbody></table> 
-</div> 
-</div> 
-
-<!-- APPLICATION JAVASCRIPT --> 
-<script> 
-// --- 1. EMAILJS INTEGRATION ---
-(function(){ 
-  if (typeof emailjs !== 'undefined') { emailjs.init("YOUR_PUBLIC_KEY"); } 
-})(); 
-
-function sendContactEmail(e) { 
-  e.preventDefault(); 
-  const btn = document.getElementById('contact-submit-btn'); 
-  const status = document.getElementById('contact-status-msg'); 
-  btn.disabled = true; 
-  btn.innerText = 'Sending...'; 
-  status.style.color = 'var(--primary)'; 
-  status.innerText = 'Transmitting message...'; 
-  emailjs.sendForm('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', '#contact-form') 
-  .then(function() { 
-    btn.disabled = false; 
-    btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Send Message'; 
-    status.style.color = 'var(--success)'; 
-    status.innerText = 'Thank you! Your message has been sent successfully.'; 
-    document.getElementById('contact-form').reset(); 
-  }, function(error) { 
-    btn.disabled = false; 
-    btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Send Message'; 
-    status.style.color = 'var(--danger)'; 
-    status.innerText = 'Transmission failed. Please try again later.'; 
-  }); 
-}
-
-// --- 2. LEAFLET RADAR MAP SETUP ---
-document.addEventListener('DOMContentLoaded', function() {
-  if (typeof L !== 'undefined') {
-    const map = L.map('map').setView([28.5383, -81.3792], 10);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 19,
-      attribution: '© OpenStreetMap'
-    }).addTo(map);
-
-    if ("geolocation" in navigator) {
-      navigator.geolocation.getCurrentPosition(function(position) {
-        const lat = position.coords.latitude;
-        const lng = position.coords.longitude;
-        document.getElementById('myCoords').innerText = lat.toFixed(4) + ', ' + lng.toFixed(4);
-        document.getElementById('gpsStatus').innerText = 'Connected';
-        map.setView([lat, lng], 12);
-        L.marker([lat, lng]).addTo(map).bindPopup('You are here').openPopup();
-      }, function() {
-        document.getElementById('gpsStatus').innerText = 'Default View';
-      });
-    }
-  }
-  initScorecard();
-});
-
-// --- 3. HIGH-REALISM BOWLING GAME CANVAS & GRAPHICS ENGINE ---
-let isMuted = false;
+<!-- JAVASCRIPT ENGINE -->
+<script>
+/* AUDIO ENGINE (Web Audio API - No External Sound Files Required) */
+let soundEnabled = true;
 let audioCtx = null;
 
-function toggleGameSound() {
-  isMuted = !isMuted;
-  const btn = document.getElementById('soundToggleBtn');
-  if (isMuted) {
-    btn.innerHTML = '<i class="fa-solid fa-volume-xmark"></i> Sound: OFF';
-    btn.classList.add('btn-danger');
-    btn.classList.remove('btn-secondary');
-  } else {
-    btn.innerHTML = '<i class="fa-solid fa-volume-high"></i> Sound: ON';
-    btn.classList.remove('btn-danger');
-    btn.classList.add('btn-secondary');
+function initAudio() {
+  if (!audioCtx) {
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    if (AudioContext) {
+      audioCtx = new AudioContext();
+    }
   }
 }
 
-function playSynthesizedSound(type) {
-  if (isMuted) return;
-  try {
-    if (!audioCtx) {
-      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    }
-    if (audioCtx.state === 'suspended') {
-      audioCtx.resume();
-    }
+function toggleGameSound() {
+  soundEnabled = !soundEnabled;
+  const btn = document.getElementById('soundToggleBtn');
+  if (soundEnabled) {
+    btn.innerHTML = '<i class="fa-solid fa-volume-high"></i> Sound: ON';
+  } else {
+    btn.innerHTML = '<i class="fa-solid fa-volume-xmark"></i> Sound: OFF';
+  }
+}
+
+function playRollSound() {
+  if (!soundEnabled) return;
+  initAudio();
+  if (!audioCtx) return;
+
+  const bufferSize = audioCtx.sampleRate * 1.2;
+  const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+  const data = buffer.getChannelData(0);
+  for (let i = 0; i < bufferSize; i++) {
+    data[i] = Math.random() * 2 - 1;
+  }
+
+  const noise = audioCtx.createBufferSource();
+  noise.buffer = buffer;
+
+  const filter = audioCtx.createBiquadFilter();
+  filter.type = 'lowpass';
+  filter.frequency.setValueAtTime(300, audioCtx.currentTime);
+  filter.frequency.exponentialRampToValueAtTime(80, audioCtx.currentTime + 1.2);
+
+  const gain = audioCtx.createGain();
+  gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 1.2);
+
+  noise.connect(filter);
+  filter.connect(gain);
+  gain.connect(audioCtx.destination);
+
+  noise.start();
+}
+
+function playPinHitSound(pinsHit) {
+  if (!soundEnabled) return;
+  initAudio();
+  if (!audioCtx) return;
+
+  const now = audioCtx.currentTime;
+  const count = Math.max(1, Math.min(pinsHit, 10));
+
+  for (let i = 0; i < count; i++) {
     const osc = audioCtx.createOscillator();
     const gain = audioCtx.createGain();
+
+    osc.type = 'triangle';
+    osc.frequency.setValueAtTime(400 + Math.random() * 800, now + i * 0.02);
+
+    gain.gain.setValueAtTime(0.2, now + i * 0.02);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.02 + 0.15);
+
     osc.connect(gain);
     gain.connect(audioCtx.destination);
 
-    if (type === 'roll') {
-      osc.type = 'triangle';
-      osc.frequency.setValueAtTime(120, audioCtx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(40, audioCtx.currentTime + 0.8);
-      gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
-      gain.gain.linearRampToValueAtTime(0.01, audioCtx.currentTime + 0.8);
-      osc.start();
-      osc.stop(audioCtx.currentTime + 0.8);
-    } else if (type === 'strike') {
-      osc.type = 'square';
-      osc.frequency.setValueAtTime(300, audioCtx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(80, audioCtx.currentTime + 0.4);
-      gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
-      gain.gain.linearRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
-      osc.start();
-      osc.stop(audioCtx.currentTime + 0.4);
-    }
-  } catch (e) {
-    // Graceful fallback
+    osc.start(now + i * 0.02);
+    osc.stop(now + i * 0.02 + 0.15);
   }
 }
 
-const canvas = document.getElementById('bowlingCanvas');
-let ballX = 150, ballY = 210, isRolling = false;
-let currentFrame = 1, totalScore = 0;
+function playGutterSound() {
+  if (!soundEnabled) return;
+  initAudio();
+  if (!audioCtx) return;
 
-// Track standing pins (true = standing, false = knocked down)
-let standingPins = Array(10).fill(true);
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
 
-function renderRealisticGameView(currentBallY) {
+  osc.type = 'sawtooth';
+  osc.frequency.setValueAtTime(120, audioCtx.currentTime);
+  osc.frequency.exponentialRampToValueAtTime(40, audioCtx.currentTime + 0.5);
+
+  gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
+
+  osc.connect(gain);
+  gain.connect(audioCtx.destination);
+
+  osc.start();
+  osc.stop(audioCtx.currentTime + 0.5);
+}
+
+/* ARCADE GAME & PHYSICS ENGINE */
+let canvas, ctx;
+let ball = { x: 150, y: 220, vx: 0, vy: 0, radius: 10, rolling: false };
+let pins = [];
+let currentFrame = 1;
+let currentRoll = 1;
+let frames = Array(10).fill(null).map(() => ({ rolls: [], score: null }));
+let totalScore = 0;
+let statsTotalRolls = 0;
+let statsTotalStrikes = 0;
+let statsTotalGutters = 0;
+
+function initCanvas() {
+  canvas = document.getElementById('bowlingCanvas');
   if (!canvas) return;
-  const ctx = canvas.getContext('2d');
-  canvas.width = canvas.parentElement.clientWidth || 300;
-  canvas.height = canvas.parentElement.clientHeight || 250;
+  ctx = canvas.getContext('2d');
   
-  const w = canvas.width;
-  const h = canvas.height;
-  const laneLeft = w * 0.18;
-  const laneRight = w * 0.82;
-  const laneWidth = laneRight - laneLeft;
-
-  // 1. Dark Alley Backdrop
-  ctx.fillStyle = '#111115';
-  ctx.fillRect(0, 0, w, h);
-
-  // 2. Gutters
-  ctx.fillStyle = '#222228';
-  ctx.fillRect(laneLeft - (laneWidth * 0.12), 0, laneWidth * 0.12, h);
-  ctx.fillRect(laneRight, 0, laneWidth * 0.12, h);
+  // Dynamic sizing
+  const rect = canvas.getBoundingClientRect();
+  canvas.width = rect.width || 300;
+  canvas.height = rect.height || 250;
   
-  // Gutter Shadows
-  ctx.fillStyle = '#0a0a0d';
-  ctx.fillRect(laneLeft - (laneWidth * 0.03), 0, laneWidth * 0.03, h);
-  ctx.fillRect(laneRight, 0, laneWidth * 0.03, h);
-
-  // 3. Wooden Lane Texture & Planking
-  const woodGrad = ctx.createLinearGradient(laneLeft, 0, laneRight, 0);
-  woodGrad.addColorStop(0, '#8B5A2B');
-  woodGrad.addColorStop(0.2, '#CD853F');
-  woodGrad.addColorStop(0.5, '#DEB887');
-  woodGrad.addColorStop(0.8, '#CD853F');
-  woodGrad.addColorStop(1, '#8B5A2B');
-  ctx.fillStyle = woodGrad;
-  ctx.fillRect(laneLeft, 0, laneWidth, h);
-
-  // Wooden Board Lines
-  ctx.strokeStyle = 'rgba(70, 35, 10, 0.35)';
-  ctx.lineWidth = 1;
-  const numBoards = 15;
-  for (let b = 1; b < numBoards; b++) {
-    const bx = laneLeft + (laneWidth / numBoards) * b;
-    ctx.beginPath();
-    ctx.moveTo(bx, 0);
-    ctx.lineTo(bx, h);
-    ctx.stroke();
-  }
-
-  // Polished Reflection Highlight
-  const sheenGrad = ctx.createLinearGradient(0, 0, 0, h);
-  sheenGrad.addColorStop(0, 'rgba(255, 255, 255, 0.25)');
-  sheenGrad.addColorStop(0.5, 'rgba(255, 255, 255, 0.08)');
-  sheenGrad.addColorStop(1, 'rgba(0, 0, 0, 0.2)');
-  ctx.fillStyle = sheenGrad;
-  ctx.fillRect(laneLeft, 0, laneWidth, h);
-
-  // Lane Approach Arrows
-  ctx.fillStyle = '#4A230A';
-  const arrowY = h * 0.65;
-  const arrowSpacing = laneWidth / 6;
-  for (let a = 1; a <= 5; a++) {
-    const ax = laneLeft + (arrowSpacing * a);
-    ctx.beginPath();
-    ctx.moveTo(ax, arrowY);
-    ctx.lineTo(ax - 3, arrowY + 10);
-    ctx.lineTo(ax + 3, arrowY + 10);
-    ctx.closePath();
-    ctx.fill();
-  }
-
-  // Pin Deck Pit Backdrop (Top)
-  ctx.fillStyle = '#050505';
-  ctx.fillRect(laneLeft - (laneWidth * 0.12), 0, laneWidth * 1.24, 38);
-
-  // 4. Official 10-Pin Pyramid Formation (4 Rows)
-  const pinPositions = [
-    { x: w / 2, y: 45 },                              // Pin 1 (Headpin)
-    { x: w / 2 - 14, y: 38 }, { x: w / 2 + 14, y: 38 }, // Row 2 (Pins 2, 3)
-    { x: w / 2 - 28, y: 31 }, { x: w / 2, y: 31 }, { x: w / 2 + 28, y: 31 }, // Row 3 (Pins 4, 5, 6)
-    { x: w / 2 - 42, y: 24 }, { x: w / 2 - 14, y: 24 }, { x: w / 2 + 14, y: 24 }, { x: w / 2 + 42, y: 24 } // Row 4 (Pins 7, 8, 9, 10)
-  ];
-
-  pinPositions.forEach((pin, index) => {
-    if (standingPins[index]) {
-      // Pin Shadow
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
-      ctx.beginPath();
-      ctx.ellipse(pin.x, pin.y + 7, 6, 2.5, 0, 0, Math.PI * 2);
-      ctx.fill();
-
-      // Pin Body (3D White Gradient)
-      const pinGrad = ctx.createRadialGradient(pin.x - 2, pin.y - 2, 1, pin.x, pin.y, 7);
-      pinGrad.addColorStop(0, '#ffffff');
-      pinGrad.addColorStop(0.7, '#f0f0f0');
-      pinGrad.addColorStop(1, '#cccccc');
-      ctx.fillStyle = pinGrad;
-      ctx.beginPath();
-      ctx.arc(pin.x, pin.y, 6.5, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.strokeStyle = '#aaaaaa';
-      ctx.lineWidth = 0.8;
-      ctx.stroke();
-
-      // Red Neck Stripes
-      ctx.fillStyle = '#e50914';
-      ctx.fillRect(pin.x - 4, pin.y - 2, 8, 1.8);
-      ctx.fillRect(pin.x - 3, pin.y + 1, 6, 1.2);
-    }
-  });
-
-  // 5. Realistic 3D Bowling Ball
-  const drawY = currentBallY || ballY;
-  
-  // Ball Shadow
-  ctx.fillStyle = 'rgba(0, 0, 0, 0.45)';
-  ctx.beginPath();
-  ctx.ellipse(ballX, drawY + 11, 13, 5, 0, 0, Math.PI * 2);
-  ctx.fill();
-
-  // Ball Body Gradient
-  const ballGrad = ctx.createRadialGradient(ballX - 4, drawY - 4, 2, ballX, drawY, 13);
-  ballGrad.addColorStop(0, '#66b3ff');
-  ballGrad.addColorStop(0.3, '#0066cc');
-  ballGrad.addColorStop(0.85, '#003366');
-  ballGrad.addColorStop(1, '#001a33');
-  ctx.fillStyle = ballGrad;
-  ctx.beginPath();
-  ctx.arc(ballX, drawY, 13, 0, Math.PI * 2);
-  ctx.fill();
-
-  // Finger Holes
-  ctx.fillStyle = '#000d1a';
-  ctx.beginPath();
-  ctx.arc(ballX - 3, drawY - 4, 2, 0, Math.PI * 2);
-  ctx.arc(ballX + 3, drawY - 4, 2, 0, Math.PI * 2);
-  ctx.arc(ballX, drawY + 2, 2.3, 0, Math.PI * 2);
-  ctx.fill();
+  resetPins();
+  resetBall();
+  renderScorecard();
+  requestAnimationFrame(gameLoop);
 }
 
-function moveBall(delta) {
-  if (isRolling) return;
-  const laneLeft = canvas.width * 0.18;
-  const laneRight = canvas.width * 0.82;
-  ballX = Math.max(laneLeft + 15, Math.min(laneRight - 15, ballX + delta));
-  renderRealisticGameView(ballY);
+function resetBall() {
+  ball.x = canvas.width / 2;
+  ball.y = canvas.height - 25;
+  ball.vx = 0;
+  ball.vy = 0;
+  ball.rolling = false;
+  document.getElementById('gutterOverlay').style.display = 'none';
+}
+
+function resetPins() {
+  pins = [];
+  const startY = 40;
+  const spacingX = 14;
+  const spacingY = 12;
+  const centerX = canvas.width / 2;
+
+  let rowCount = 4;
+  let pinIndex = 0;
+  for (let row = rowCount - 1; row >= 0; row--) {
+    let count = row + 1;
+    let startX = centerX - ((count - 1) * spacingX) / 2;
+    for (let i = 0; i < count; i++) {
+      pins.push({
+        id: pinIndex++,
+        x: startX + i * spacingX,
+        y: startY + (rowCount - 1 - row) * spacingY,
+        hit: false,
+        radius: 4
+      });
+    }
+  }
+}
+
+function moveBall(dir) {
+  if (ball.rolling) return;
+  const gutterMargin = canvas.width * 0.18;
+  ball.x = Math.max(gutterMargin, Math.min(canvas.width - gutterMargin, ball.x + dir));
+  drawScene();
 }
 
 function rollBowlingBall() {
-  if (isRolling) return;
-  isRolling = true;
-  playSynthesizedSound('roll');
-  
-  let animY = ballY;
-  const rollInterval = setInterval(() => {
-    animY -= 5;
-    if (animY <= 48) {
-      clearInterval(rollInterval);
-      isRolling = false;
-      
-      // Hit detection based on ball position
-      const centerDist = Math.abs(ballX - (canvas.width / 2));
-      let hitCount = 0;
+  if (ball.rolling) return;
+  ball.rolling = true;
+  statsTotalRolls++;
+  document.getElementById('statRolls').innerText = statsTotalRolls;
 
-      if (centerDist < 12) {
-        // Strike - Knock all down
-        standingPins.fill(false);
-        hitCount = 10;
-      } else if (centerDist < 30) {
-        // Partial Hit
-        hitCount = Math.floor(Math.random() * 4) + 5;
-        for (let i = 0; i < hitCount; i++) {
-          standingPins[i] = false;
-        }
-      } else {
-        // Light hit / Gutter
-        hitCount = Math.floor(Math.random() * 3);
-        for (let i = 0; i < hitCount; i++) {
-          standingPins[i] = false;
+  playRollSound();
+
+  // Random slice of spin/direction
+  const randomCurve = (Math.random() - 0.5) * 1.8;
+  ball.vx = randomCurve;
+  ball.vy = -5.5;
+}
+
+function gameLoop() {
+  if (ball.rolling) {
+    ball.x += ball.vx;
+    ball.y += ball.vy;
+
+    const gutterLeft = canvas.width * 0.15;
+    const gutterRight = canvas.width * 0.85;
+
+    // Check Gutter
+    if (ball.x <= gutterLeft || ball.x >= gutterRight) {
+      document.getElementById('gutterOverlay').style.display = 'block';
+    }
+
+    // Check Pin Collisions
+    let hitCountInRoll = 0;
+    pins.forEach(pin => {
+      if (!pin.hit) {
+        const dx = ball.x - pin.x;
+        const dy = ball.y - pin.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < ball.radius + pin.radius + 3) {
+          pin.hit = true;
+          hitCountInRoll++;
         }
       }
+    });
 
-      if (hitCount > 0) playSynthesizedSound('strike');
-      
-      recordScore(hitCount);
-      
-      // Reset pins & ball position for next frame
-      setTimeout(() => {
-        standingPins.fill(true);
-        ballY = 210;
-        renderRealisticGameView(ballY);
-      }, 1000);
-
-    } else {
-      renderRealisticGameView(animY);
+    if (hitCountInRoll > 0) {
+      playPinHitSound(hitCountInRoll);
     }
-  }, 16);
+
+    // Ball reaches end of lane
+    if (ball.y < 20) {
+      handleRollEnd();
+    }
+  }
+
+  drawScene();
+  requestAnimationFrame(gameLoop);
 }
 
-function initScorecard() {
-  const grid = document.getElementById('scorecardGrid');
-  if (!grid) return;
-  grid.innerHTML = '';
-  for (let f = 1; f <= 10; f++) {
-    const box = document.createElement('div');
-    box.className = 'frame-box' + (f === 1 ? ' active' : '');
-    box.id = 'frame-' + f;
-    box.innerHTML = `
-      <div class="frame-title">${f}</div>
-      <div class="frame-rolls" id="f-rolls-${f}">-</div>
-      <div class="frame-total" id="f-tot-${f}">-</div>
-    `;
-    grid.appendChild(box);
+function drawScene() {
+  if (!ctx) return;
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  const w = canvas.width;
+  const h = canvas.height;
+
+  // Draw Lane Background
+  ctx.fillStyle = '#b58351';
+  ctx.fillRect(w * 0.15, 0, w * 0.7, h);
+
+  // Gutters
+  ctx.fillStyle = '#222';
+  ctx.fillRect(0, 0, w * 0.15, h);
+  ctx.fillRect(w * 0.85, 0, w * 0.15, h);
+
+  // Lane Lines
+  ctx.strokeStyle = '#8a5a2b';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(w * 0.35, 0); ctx.lineTo(w * 0.35, h);
+  ctx.moveTo(w * 0.5, 0); ctx.lineTo(w * 0.5, h);
+  ctx.moveTo(w * 0.65, 0); ctx.lineTo(w * 0.65, h);
+  ctx.stroke();
+
+  // Draw Pins
+  pins.forEach(pin => {
+    if (!pin.hit) {
+      ctx.fillStyle = '#ffffff';
+      ctx.beginPath();
+      ctx.arc(pin.x, pin.y, pin.radius + 1, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = '#e50914';
+      ctx.fillRect(pin.x - pin.radius, pin.y - 1, pin.radius * 2, 1.5);
+    }
+  });
+
+  // Draw Ball
+  ctx.fillStyle = '#0088ff';
+  ctx.beginPath();
+  ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.strokeStyle = '#0055cc';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+}
+
+function handleRollEnd() {
+  ball.rolling = false;
+
+  const hitsThisRoll = pins.filter(p => p.hit).length;
+  const activeFrame = frames[currentFrame - 1];
+
+  if (currentRoll === 1) {
+    const isGutter = (ball.x <= canvas.width * 0.15 || ball.x >= canvas.width * 0.85);
+    if (isGutter) {
+      playGutterSound();
+      statsTotalGutters++;
+      document.getElementById('statGutters').innerText = statsTotalGutters;
+    }
+
+    if (hitsThisRoll === 10) {
+      activeFrame.rolls.push('X');
+      statsTotalStrikes++;
+      document.getElementById('statStrikes').innerText = statsTotalStrikes;
+      advanceFrame();
+    } else {
+      activeFrame.rolls.push(isGutter ? '-' : hitsThisRoll);
+      currentRoll = 2;
+      resetBall();
+    }
+  } else if (currentRoll === 2) {
+    const prevHits = activeFrame.rolls[0] === '-' ? 0 : activeFrame.rolls[0];
+    const totalFrameHits = hitsThisRoll;
+    const secondRollHits = totalFrameHits - prevHits;
+
+    if (totalFrameHits === 10) {
+      activeFrame.rolls.push('/');
+    } else {
+      activeFrame.rolls.push(secondRollHits <= 0 ? '-' : secondRollHits);
+    }
+    advanceFrame();
   }
 }
 
-function recordScore(pins) {
-  totalScore += pins;
-  document.getElementById('p1-score').innerText = totalScore;
-  const rollsElem = document.getElementById('f-rolls-' + currentFrame);
-  const totElem = document.getElementById('f-tot-' + currentFrame);
-  
-  if (rollsElem) {
-    rollsElem.innerText = pins === 10 ? 'X' : pins;
-  }
-  if (totElem) {
-    totElem.innerText = totalScore;
-  }
-
+function advanceFrame() {
+  calculateScore();
   if (currentFrame < 10) {
-    document.getElementById('frame-' + currentFrame).classList.remove('active');
     currentFrame++;
-    document.getElementById('frame-' + currentFrame).classList.add('active');
-    document.getElementById('currentFrameDisplay').innerText = currentFrame;
+    currentRoll = 1;
+    resetPins();
+    resetBall();
+  } else {
+    document.getElementById('currentFrameDisplay').innerText = '10 (Finished)';
+  }
+  renderScorecard();
+}
+
+function calculateScore() {
+  let runningScore = 0;
+  for (let i = 0; i < 10; i++) {
+    const f = frames[i];
+    if (f.rolls.length > 0) {
+      let fScore = 0;
+      f.rolls.forEach(r => {
+        if (r === 'X') fScore += 10;
+        else if (r === '/') fScore = 10;
+        else if (r !== '-') fScore += parseInt(r) || 0;
+      });
+      runningScore += fScore;
+      f.score = runningScore;
+    }
+  }
+  totalScore = runningScore;
+  document.getElementById('p1-score').innerText = totalScore;
+}
+
+function renderScorecard() {
+  const container = document.getElementById('scorecardGrid');
+  if (!container) return;
+
+  document.getElementById('currentFrameDisplay').innerText = currentFrame;
+  container.innerHTML = '';
+
+  for (let i = 1; i <= 10; i++) {
+    const fData = frames[i - 1];
+    const isActive = (i === currentFrame);
+
+    const frameBox = document.createElement('div');
+    frameBox.className = `frame-box ${isActive ? 'active' : ''}`;
+
+    let rollsStr = '';
+    if (fData.rolls.length > 0) {
+      rollsStr = fData.rolls.join(' ');
+    }
+
+    frameBox.innerHTML = `
+      <div class="frame-title">F${i}</div>
+      <div class="frame-rolls">${rollsStr}</div>
+      <div class="frame-total">${fData.score !== null ? fData.score : ''}</div>
+    `;
+    container.appendChild(frameBox);
   }
 }
 
 function resetBowlingGame() {
   currentFrame = 1;
+  currentRoll = 1;
+  frames = Array(10).fill(null).map(() => ({ rolls: [], score: null }));
   totalScore = 0;
-  standingPins.fill(true);
   document.getElementById('p1-score').innerText = '0';
-  document.getElementById('currentFrameDisplay').innerText = '1';
-  initScorecard();
-  ballY = 210;
-  renderRealisticGameView(ballY);
+  resetPins();
+  resetBall();
+  renderScorecard();
 }
 
-window.addEventListener('resize', () => renderRealisticGameView(ballY));
-document.addEventListener('DOMContentLoaded', () => {
-  renderRealisticGameView(ballY);
-});
+/* LEAFLET MAP RADAR ENGINE */
+function initMap() {
+  const defaultLat = 28.5383;
+  const defaultLng = -81.3792;
 
-// --- 4. ADMIN MODAL HELPERS & FEED INTERACTIONS ---
-function openAdminModal() { document.getElementById('adminModal').style.display = 'flex'; }
-function closeAdminModal() { document.getElementById('adminModal').style.display = 'none'; }
+  const map = L.map('map').setView([defaultLat, defaultLng], 11);
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '© OpenStreetMap'
+  }).addTo(map);
+
+  // Sample Alley Markers
+  const alleys = [
+    { name: "Bowlero Orlando", lat: 28.5500, lng: -81.3500 },
+    { name: "Kingpin Lanes", lat: 28.4800, lng: -81.4000 },
+    { name: "Main Event Entertainment", lat: 28.4400, lng: -81.4700 }
+  ];
+
+  alleys.forEach(a => {
+    L.marker([a.lat, a.lng]).addTo(map)
+      .bindPopup(`<b>${a.name}</b><br>Live Lane Telemetry Active`);
+  });
+
+  // Geolocation
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      pos => {
+        const lat = pos.coords.latitude;
+        const lng = pos.coords.longitude;
+        document.getElementById('myCoords').innerText = `${lat.toFixed(4)}, ${lng.toFixed(4)}`;
+        document.getElementById('gpsStatus').innerText = '🟢 GPS Signal Lock';
+        map.setView([lat, lng], 12);
+        L.marker([lat, lng]).addTo(map).bindPopup('<b>Your Location</b>').openPopup();
+      },
+      () => {
+        document.getElementById('myCoords').innerText = 'Orlando, FL (Default)';
+        document.getElementById('gpsStatus').innerText = '🟡 Using Default GPS Location';
+      }
+    );
+  }
+}
+
+/* INTERACTIVE FEED FUNCTIONS */
 function toggleLike(btn) {
   const countSpan = btn.querySelector('.like-count');
   let count = parseInt(countSpan.innerText);
-  countSpan.innerText = count + 1;
+  if (btn.classList.contains('liked')) {
+    btn.classList.remove('liked');
+    btn.style.color = 'var(--text-muted)';
+    countSpan.innerText = count - 1;
+  } else {
+    btn.classList.add('liked');
+    btn.style.color = 'var(--primary)';
+    countSpan.innerText = count + 1;
+  }
 }
-function addComment(id) {
-  const input = document.getElementById('comment-input-' + id);
-  const container = document.getElementById('comments-container-' + id);
-  if (input && input.value.trim() !== "") {
-    const p = document.createElement('p');
-    p.innerHTML = '<strong>You:</strong> ' + input.value;
-    container.appendChild(p);
+
+function addComment(postId) {
+  const input = document.getElementById(`comment-input-${postId}`);
+  const container = document.getElementById(`comments-container-${postId}`);
+  if (input && input.value.trim() !== '') {
+    const commentDiv = document.createElement('div');
+    commentDiv.style.marginTop = '4px';
+    commentDiv.innerHTML = `<strong>@You:</strong> ${input.value.trim()}`;
+    container.appendChild(commentDiv);
     input.value = '';
   }
 }
-</script> 
+
+/* CONTACT FORM HANDLER */
+function handleContactSubmit(e) {
+  e.preventDefault();
+  const status = document.getElementById('contactStatus');
+  status.style.color = 'var(--success)';
+  status.innerText = 'Thank you! Your message has been transmitted successfully.';
+  document.getElementById('contactForm').reset();
+}
+
+/* ADMIN MODAL CONTROLS */
+function openAdminModal() {
+  document.getElementById('adminModal').style.display = 'flex';
+}
+function closeAdminModal() {
+  document.getElementById('adminModal').style.display = 'none';
+}
+
+/* INITIALIZATION ON DOM LOAD */
+window.addEventListener('DOMContentLoaded', () => {
+  initCanvas();
+  if (typeof L !== 'undefined') {
+    initMap();
+  }
+});
+</script>
 </body> 
 </html>

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
+<meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 <title>BowlStrike.com - National Tenpin Social Network & Live Radar</title>
 
@@ -461,13 +461,6 @@
             <canvas id="bowlingCanvas"></canvas>
           </div>
 
-          <!-- Centered Sound Toggle Button -->
-          <div style="width:100%; text-align:center; margin-top:6px;">
-            <button id="soundToggleBtn" onclick="toggleSound()" style="padding: 4px 14px; font-size: 0.75rem; border-radius: 12px; background: #1c1c24; color: #ffb300; border: 1px solid #444; cursor: pointer; font-weight: bold;">
-              <i class="fa-solid fa-volume-xmark"></i> Sound Off
-            </button>
-          </div>
-
           <div class="game-controls">
             <!-- Position Aim Controls -->
             <div style="display:flex; gap:4px; align-items:center;">
@@ -675,434 +668,382 @@
         <form class="contact-form" id="contact-form" onsubmit="sendContactEmail(event)">
           <input type="text" name="name" id="contact-name" placeholder="Your Name" required />
           <input type="email" name="email" id="contact-email" placeholder="Your Email Address" required />
-          <textarea name="message" id="contact-message" placeholder="Your Message or Inquiry..." required></textarea>
-          <button type="submit" class="btn"><i class="fa-solid fa-paper-plane"></i> Send Message</button>
+          <input type="text" name="subject" id="contact-subject" placeholder="Subject" required />
+          <textarea name="message" id="contact-message" placeholder="Type your message here..." required></textarea>
+          <button type="submit" class="btn" id="contact-submit-btn"><i class="fa-solid fa-paper-plane"></i> Send Message</button>
+          <div id="contact-status-msg" style="font-size:0.85rem; margin-top:0.5rem;"></div>
         </form>
       </div>
     </section>
 
   </div>
 
-  <!-- Footer Navigation -->
+  <!-- Footer Section & Legal Disclaimers -->
   <footer>
     <div class="footer-legal-container">
-      <h4><i class="fa-solid fa-shield-halved"></i> BowlStrike.com Network Notice</h4>
-      <p>BowlStrike.com is an independent national social network and location directory for tenpin bowling enthusiasts. All trademarked organization names, tournament references, and brand logos remain properties of their respective owners.</p>
+      <h4><i class="fa-solid fa-scale-balanced" style="color:var(--accent);"></i> Terms & Legal Disclaimer</h4>
+      <p>BowlStrike.com is an independent digital media platform, interactive bowling simulation, and live networking utility for tenpin enthusiasts. News, tournament highlights, and organizational rankings featured on this platform are provided for informational and promotional purposes to support the growth of tenpin bowling nationwide.</p>
+      <p>PBA, USBC, and all associated league marks are registered trademarks of their respective governing organizations. BowlStrike.com claims no direct ownership or official affiliation with third-party bowling centers, manufacturers, or sanctioning bodies unless explicitly stated.</p>
     </div>
-    <div style="text-align:center;">
-      <p>&copy; 2026 BowlStrike.com — All Rights Reserved.</p>
-      <span class="hidden-admin-link" onclick="openAdminModal()">Admin Panel</span>
+
+    <div style="text-align:center; margin-top:1rem;">
+      <p>&copy; 2026 BowlStrike.com. All rights reserved. Built for tenpin players nationwide.</p>
+      <a onclick="openAdminModal()" class="hidden-admin-link">Portal Login / System Status</a>
     </div>
   </footer>
 
-  <!-- Admin Modal -->
+  <!-- Admin Analytics Modal -->
   <div id="adminModal" class="modal">
     <div class="modal-content">
       <span class="close-btn" onclick="closeAdminModal()">&times;</span>
-      <h2 style="color:var(--accent); margin-bottom:1rem;"><i class="fa-solid fa-gauge-high"></i> BowlStrike Platform Dashboard</h2>
+      <h2 style="font-size:1.3rem; margin-bottom:1rem; border-bottom:1px solid #333; padding-bottom:0.5rem;"><i class="fa-solid fa-chart-line" style="color:var(--accent);"></i> BowlStrike System Dashboard</h2>
+      
       <div class="admin-stats-grid">
-        <div class="stat-card"><div class="val">1,248</div><div class="lbl">Active Bowlers</div></div>
-        <div class="stat-card"><div class="val">842</div><div class="lbl">Radar Centers Tracked</div></div>
-        <div class="stat-card"><div class="val">99.9%</div><div class="lbl">Uptime</div></div>
+        <div class="stat-card">
+          <div class="val" id="admin-active-users">1,429</div>
+          <div class="lbl">Active Network Bowlers</div>
+        </div>
+        <div class="stat-card">
+          <div class="val" id="admin-active-radar">382</div>
+          <div class="lbl">Live Alley GPS Nodes</div>
+        </div>
+        <div class="stat-card">
+          <div class="val" id="admin-games-played">8,912</div>
+          <div class="lbl">Arcade Games Completed</div>
+        </div>
       </div>
+
+      <h3 style="font-size:1rem; margin-top:1.5rem; color:var(--accent);">System Health</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Module</th>
+            <th>Status</th>
+            <th>Latency</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>GPS Radar Feed</td>
+            <td><span style="color:var(--success);">Operational</span></td>
+            <td>24 ms</td>
+          </tr>
+          <tr>
+            <td>SBA News Auto-Fetcher</td>
+            <td><span style="color:var(--success);">Operational</span></td>
+            <td>110 ms</td>
+          </tr>
+          <tr>
+            <td>EmailJS Notification Pipeline</td>
+            <td><span style="color:var(--success);">Ready</span></td>
+            <td>--</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
 
-  <!-- JavaScript logic: Audio, Game Engine (Wood Texture Lane Restored + Sound Toggle + Easy Strikes), Radar, Feed -->
+  <!-- APPLICATION JAVASCRIPT -->
   <script>
-    // --- Audio System ---
-    let audioCtx = null;
-    let isMuted = false;
-
-    function getAudioContext() {
-      if (!audioCtx) {
-        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    // --- 1. EMAILJS INTEGRATION ---
+    (function(){
+      if (typeof emailjs !== 'undefined') {
+        emailjs.init("YOUR_PUBLIC_KEY"); // Replace with your EmailJS Public Key
       }
-      return audioCtx;
-    }
+    })();
 
-    function playTone(freq, type, duration) {
-      if (isMuted) return;
-      try {
-        const ctx = getAudioContext();
-        if (ctx.state === 'suspended') ctx.resume();
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.type = type;
-        osc.frequency.setValueAtTime(freq, ctx.currentTime);
-        gain.gain.setValueAtTime(0.1, ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-        osc.start();
-        osc.stop(ctx.currentTime + duration);
-      } catch (e) { console.log(e); }
-    }
-
-    function toggleSound() {
-      isMuted = !isMuted;
-      const btn = document.getElementById('soundToggleBtn');
-      if (isMuted) {
-        btn.innerHTML = '<i class="fa-solid fa-volume-high"></i> Sound On';
-        if (audioCtx && audioCtx.suspend) audioCtx.suspend();
-      } else {
-        btn.innerHTML = '<i class="fa-solid fa-volume-xmark"></i> Sound Off';
-        if (audioCtx && audioCtx.resume) audioCtx.resume();
-      }
-    }
-
-    // --- Bowling Game Engine ---
-    const canvas = document.getElementById('bowlingCanvas');
-    const ctx = canvas.getContext('2d');
-    
-    function resizeCanvas() {
-      if (!canvas) return;
-      canvas.width = canvas.parentElement.clientWidth;
-      canvas.height = canvas.parentElement.clientHeight;
-    }
-    window.addEventListener('resize', resizeCanvas);
-
-    let ball = { x: 0, y: 0, radius: 14, dx: 0, dy: 0, isRolling: false };
-    let pins = [];
-    let currentFrame = 1;
-    let rollInFrame = 1;
-    let totalScore = 0;
-    let rollsHistory = Array(10).fill(null).map(() => []);
-
-    function initPins() {
-      pins = [];
-      const startY = 40;
-      const startX = canvas ? canvas.width / 2 : 150;
-      const spacingX = 16;
-      const spacingY = 14;
+    function sendContactEmail(e) {
+      e.preventDefault();
+      const btn = document.getElementById('contact-submit-btn');
+      const status = document.getElementById('contact-status-msg');
       
-      let rows = 4;
-      let count = 0;
-      for (let r = 0; r < rows; r++) {
-        let rowPins = r + 1;
-        let xOffset = startX - (rowPins - 1) * (spacingX / 2);
-        for (let p = 0; p < rowPins; p++) {
-          pins.push({
-            id: count++,
-            x: xOffset + p * spacingX,
-            y: startY - r * spacingY,
-            radius: 6,
-            standing: true,
-            vx: 0,
-            vy: 0
-          });
-        }
-      }
+      btn.disabled = true;
+      btn.innerText = 'Sending...';
+      status.style.color = 'var(--accent)';
+      status.innerText = 'Transmitting message...';
+
+      // Replace YOUR_SERVICE_ID and YOUR_TEMPLATE_ID with your actual EmailJS credentials
+      emailjs.sendForm('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', '#contact-form')
+        .then(function() {
+          btn.disabled = false;
+          btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Send Message';
+          status.style.color = 'var(--success)';
+          status.innerText = 'Thank you! Your message has been sent successfully.';
+          document.getElementById('contact-form').reset();
+        }, function(error) {
+          btn.disabled = false;
+          btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Send Message';
+          status.style.color = 'var(--danger)';
+          status.innerText = 'Failed to send message. Please check setup or try again later.';
+          console.error('EmailJS Error:', error);
+        });
     }
 
-    function resetBall() {
-      if (!canvas) return;
-      ball.x = canvas.width / 2;
-      ball.y = canvas.height - 25;
-      ball.radius = 14; // Larger ball size for high strike frequency
-      ball.dx = (Math.random() - 0.5) * 0.4;
-      ball.dy = 0;
-      ball.isRolling = false;
-      document.getElementById('gutterOverlay').style.display = 'none';
-    }
-
-    function moveBall(dir) {
-      if (ball.isRolling) return;
-      ball.x = Math.max(25, Math.min(canvas.width - 25, ball.x + dir));
-    }
-
-    function rollBowlingBall() {
-      if (ball.isRolling) return;
-      ball.isRolling = true;
-      ball.dy = -7.5;
-      playTone(180, 'sine', 0.4);
-    }
-
-    function updatePhysics() {
-      if (!ball.isRolling) return;
-
-      ball.x += ball.dx;
-      ball.y += ball.dy;
-
-      // Check ball-to-pin collisions
-      pins.forEach(pin => {
-        if (pin.standing) {
-          let dist = Math.hypot(ball.x - pin.x, ball.y - pin.y);
-          if (dist < ball.radius + pin.radius + 12) {
-            pin.standing = false;
-            pin.vx = (pin.x - ball.x) * 0.8 + (Math.random() - 0.5) * 4;
-            pin.vy = -3;
-            playTone(320, 'square', 0.15);
-          }
-        }
-      });
-
-      // Easy Strike Headpin Magnifier: Smooth pocket pull
-      const headpin = pins[0];
-      if (headpin && headpin.standing && ball.y < headpin.y + 35 && ball.y > headpin.y) {
-        const offset = headpin.x - ball.x;
-        if (Math.abs(offset) < 28) {
-          ball.x += offset * 0.15;
-        }
-      }
-
-      // Check pin-to-pin collisions
-      pins.forEach(p1 => {
-        if (!p1.standing) {
-          p1.x += p1.vx;
-          p1.y += p1.vy;
-          pins.forEach(p2 => {
-            if (p2.standing) {
-              let d = Math.hypot(p1.x - p2.x, p1.y - p2.y);
-              if (d < 22) {
-                p2.standing = false;
-                p2.vx = p1.vx * 0.9;
-                p2.vy = p1.vy * 0.9;
-              }
-            }
-          });
-        }
-      });
-
-      // End of roll check
-      if (ball.y < 10) {
-        ball.isRolling = false;
-        evaluateRollResult();
-      }
-    }
-
-    function evaluateRollResult() {
-      let downCount = pins.filter(p => !p.standing).length;
-      let frameRolls = rollsHistory[currentFrame - 1];
-      
-      let knockedThisRoll = downCount - frameRolls.reduce((a, b) => a + b, 0);
-
-      frameRolls.push(knockedThisRoll);
-      
-      if (downCount === 10 || frameRolls.length === 2) {
-        totalScore += downCount;
-        document.getElementById('p1-score').textContent = totalScore;
-        
-        setTimeout(() => {
-          if (currentFrame < 10) {
-            currentFrame++;
-            document.getElementById('currentFrameDisplay').textContent = currentFrame;
-            initPins();
-            resetBall();
-            updateScorecardDisplay();
-          }
-        }, 1200);
-      } else {
-        resetBall();
-        updateScorecardDisplay();
-      }
-    }
-
-    // DRAW CLASSIC WOOD LANE GRAPHICS
-    function drawGame() {
-      if (!canvas || !ctx) return;
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      const laneWidth = canvas.width * 0.7;
-      const laneLeft = canvas.width * 0.15;
-      const laneRight = laneLeft + laneWidth;
-
-      // 1. Dark Alley Floor / Surroundings
-      ctx.fillStyle = '#050508';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-      // 2. Left & Right Gutters (Metallic Dark)
-      ctx.fillStyle = '#111116';
-      ctx.fillRect(0, 0, laneLeft, canvas.height);
-      ctx.fillRect(laneRight, 0, canvas.width * 0.15, canvas.height);
-      
-      ctx.strokeStyle = '#22222a';
-      ctx.lineWidth = 2;
-      ctx.beginPath();
-      ctx.moveTo(laneLeft, 0); ctx.lineTo(laneLeft, canvas.height);
-      ctx.moveTo(laneRight, 0); ctx.lineTo(laneRight, canvas.height);
-      ctx.stroke();
-
-      // 3. Classic Wood Grain Wooden Lane Body
-      let woodGrad = ctx.createLinearGradient(laneLeft, 0, laneRight, 0);
-      woodGrad.addColorStop(0, '#a86f32');
-      woodGrad.addColorStop(0.15, '#c68a4c');
-      woodGrad.addColorStop(0.5, '#da9d5b');
-      woodGrad.addColorStop(0.85, '#c68a4c');
-      woodGrad.addColorStop(1, '#a86f32');
-      ctx.fillStyle = woodGrad;
-      ctx.fillRect(laneLeft, 0, laneWidth, canvas.height);
-
-      // 4. Longitudinal Wood Planks Details
-      ctx.strokeStyle = 'rgba(80, 45, 10, 0.18)';
-      ctx.lineWidth = 1;
-      const totalPlanks = 12;
-      for (let i = 1; i < totalPlanks; i++) {
-        let px = laneLeft + (laneWidth / totalPlanks) * i;
-        ctx.beginPath();
-        ctx.moveTo(px, 0);
-        ctx.lineTo(px, canvas.height);
-        ctx.stroke();
-      }
-
-      // 5. Pin Deck Base (Lighter Maple Wood at top)
-      ctx.fillStyle = 'rgba(255, 230, 180, 0.15)';
-      ctx.fillRect(laneLeft, 0, laneWidth, 60);
-
-      // 6. Traditional Target Arrows / Dots on Wood
-      ctx.fillStyle = '#42240c';
-      for (let d = 1; d <= 5; d++) {
-        let dotX = laneLeft + (laneWidth / 6) * d;
-        ctx.beginPath();
-        ctx.arc(dotX, canvas.height - 70, 2.5, 0, Math.PI * 2);
-        ctx.fill();
-      }
-
-      // 7. Foul Line Accent
-      ctx.fillStyle = '#d32f2f';
-      ctx.fillRect(laneLeft, canvas.height - 12, laneWidth, 3);
-
-      // 8. Draw Pins (With 3D White/Red Bowling Pin Styling)
-      pins.forEach(pin => {
-        if (pin.standing) {
-          ctx.beginPath();
-          ctx.arc(pin.x, pin.y, pin.radius, 0, Math.PI * 2);
-          ctx.fillStyle = '#ffffff';
-          ctx.fill();
-          ctx.strokeStyle = '#ff3c3c';
-          ctx.lineWidth = 2;
-          ctx.stroke();
-
-          // Pin Top Crown Highlight
-          ctx.beginPath();
-          ctx.arc(pin.x, pin.y - 1, 2, 0, Math.PI * 2);
-          ctx.fillStyle = '#ff3c3c';
-          ctx.fill();
-        }
-      });
-
-      // 9. Draw Bowling Ball
-      ctx.beginPath();
-      ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
-      let ballGrad = ctx.createRadialGradient(ball.x - 3, ball.y - 3, 2, ball.x, ball.y, ball.radius);
-      ballGrad.addColorStop(0, '#66ccff');
-      ballGrad.addColorStop(0.7, '#0077ff');
-      ballGrad.addColorStop(1, '#0033aa');
-      ctx.fillStyle = ballGrad;
-      ctx.fill();
-      ctx.strokeStyle = '#ffffff';
-      ctx.lineWidth = 1.5;
-      ctx.stroke();
-
-      updatePhysics();
-      requestAnimationFrame(drawGame);
-    }
-
-    function updateScorecardDisplay() {
-      const grid = document.getElementById('scorecardGrid');
-      if (!grid) return;
-      grid.innerHTML = '';
-      for (let i = 1; i <= 10; i++) {
-        let rolls = rollsHistory[i - 1] || [];
-        let rollText = rolls.join(' ');
-        if (rolls[0] === 10) rollText = 'X';
-        grid.innerHTML += `
-          <div class="frame-box ${i === currentFrame ? 'active' : ''}">
-            <div class="frame-title">${i}</div>
-            <div class="frame-rolls">${rollText}</div>
-          </div>
-        `;
-      }
-    }
-
-    function resetBowlingGame() {
-      currentFrame = 1;
-      totalScore = 0;
-      rollsHistory = Array(10).fill(null).map(() => []);
-      document.getElementById('currentFrameDisplay').textContent = 1;
-      document.getElementById('p1-score').textContent = 0;
-      initPins();
-      resetBall();
-      updateScorecardDisplay();
-    }
-
-    // --- Interactive Map Radar ---
+    // --- 2. LEAFLET GPS RADAR MAP ---
+    let map, userMarker;
     function initMap() {
-      if (typeof L === 'undefined') return;
-      const map = L.map('map').setView([28.5383, -81.3792], 10);
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 18,
-        attribution: '&copy; OpenStreetMap'
+      const defaultLoc = [28.5383, -81.3792]; // Default: Orlando, FL
+      map = L.map('map').setView(defaultLoc, 11);
+
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+        attribution: '&copy; OpenStreetMap &copy; CARTO',
+        maxZoom: 19
       }).addTo(map);
 
-      if (navigator.geolocation) {
+      // Sample local bowling alley radar nodes
+      const alleys = [
+        { name: "Bowlero Orlando", lat: 28.545, lng: -81.370 },
+        { name: "Kissimmee Lanes", lat: 28.300, lng: -81.410 },
+        { name: "Aloma Bowl", lat: 28.600, lng: -81.310 }
+      ];
+
+      alleys.forEach(a => {
+        L.marker([a.lat, a.lng]).addTo(map)
+         .bindPopup(`<b>${a.name}</b><br>Live Bowlers: ${Math.floor(Math.random() * 20) + 5}`);
+      });
+
+      if ("geolocation" in navigator) {
         navigator.geolocation.getCurrentPosition(
-          pos => {
+          (pos) => {
             const lat = pos.coords.latitude;
             const lng = pos.coords.longitude;
             map.setView([lat, lng], 12);
-            L.marker([lat, lng]).addTo(map).bindPopup("You are here").openPopup();
-            document.getElementById('myCoords').textContent = `${lat.toFixed(3)}°, ${lng.toFixed(3)}°`;
-            document.getElementById('gpsStatus').textContent = "GPS Active";
+            userMarker = L.marker([lat, lng]).addTo(map).bindPopup("<b>Your Location</b>").openPopup();
+            document.getElementById('myCoords').innerText = `${lat.toFixed(4)}, ${lng.toFixed(4)}`;
+            document.getElementById('gpsStatus').innerText = "🟢 GPS Locked";
           },
           () => {
-            document.getElementById('myCoords').textContent = "Orlando, FL";
-            document.getElementById('gpsStatus').textContent = "Default Radar Center";
+            document.getElementById('myCoords').innerText = "28.5383, -81.3792 (Default)";
+            document.getElementById('gpsStatus').innerText = "🟡 Using Default Radar";
           }
         );
       }
     }
 
-    // --- Social Interactions & Modals ---
+    // --- 3. TENPIN BOWLING CANVAS GAME CODE ---
+    const canvas = document.getElementById('bowlingCanvas');
+    const ctx = canvas.getContext('2d');
+
+    let currentFrame = 1;
+    let rollNumber = 1;
+    let currentScore = 0;
+    let ballX = 150, ballY = 190;
+    let isRolling = false;
+    let ballVX = 0, ballVY = 0;
+    let framesData = Array.from({ length: 10 }, () => ({ rolls: [], score: 0 }));
+
+    let pins = [
+      { x: 150, y: 30, hit: false },
+      { x: 138, y: 22, hit: false }, { x: 162, y: 22, hit: false },
+      { x: 126, y: 15, hit: false }, { x: 150, y: 15, hit: false }, { x: 174, y: 15, hit: false },
+      { x: 114, y: 8,  hit: false }, { x: 138, y: 8,  hit: false }, { x: 162, y: 8,  hit: false }, { x: 186, y: 8, hit: false }
+    ];
+
+    function resizeCanvas() {
+      if (canvas.parentElement) {
+        canvas.width = canvas.parentElement.clientWidth;
+        canvas.height = canvas.parentElement.clientHeight;
+        if (!isRolling) ballX = canvas.width / 2;
+      }
+    }
+
+    function initScorecardUI() {
+      const grid = document.getElementById('scorecardGrid');
+      grid.innerHTML = '';
+      for (let i = 1; i <= 10; i++) {
+        grid.innerHTML += `
+          <div class="frame-box ${i === currentFrame ? 'active' : ''}" id="frame-box-${i}">
+            <div class="frame-title">${i}</div>
+            <div class="frame-rolls" id="frame-rolls-${i}"></div>
+            <div class="frame-total" id="frame-score-${i}"></div>
+          </div>
+        `;
+      }
+    }
+
+    function drawLane() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const w = canvas.width, h = canvas.height;
+      const laneLeft = w * 0.25, laneRight = w * 0.75;
+
+      // Gutters
+      ctx.fillStyle = '#08080a';
+      ctx.fillRect(0, 0, laneLeft, h);
+      ctx.fillRect(laneRight, 0, w - laneRight, h);
+
+      // Lane surface
+      ctx.fillStyle = '#1e140a';
+      ctx.fillRect(laneLeft, 0, laneRight - laneLeft, h);
+
+      // Pins
+      pins.forEach(p => {
+        if (!p.hit) {
+          const px = laneLeft + (p.x / 300) * (laneRight - laneLeft);
+          const py = (p.y / 220) * h;
+          ctx.beginPath();
+          ctx.arc(px, py, 5, 0, Math.PI * 2);
+          ctx.fillStyle = '#ffffff';
+          ctx.fill();
+          ctx.fillStyle = '#ff0000';
+          ctx.fillRect(px - 3, py - 1, 6, 2);
+        }
+      });
+
+      // Ball
+      const bx = laneLeft + (ballX / 300) * (laneRight - laneLeft);
+      const by = (ballY / 220) * h;
+      ctx.beginPath();
+      ctx.arc(bx, by, 8, 0, Math.PI * 2);
+      ctx.fillStyle = '#00aaff';
+      ctx.fill();
+    }
+
+    function moveBall(dir) {
+      if (isRolling) return;
+      ballX = Math.max(20, Math.min(280, ballX + dir));
+      drawLane();
+    }
+
+    function rollBowlingBall() {
+      if (isRolling) return;
+      isRolling = true;
+      document.getElementById('gutterOverlay').style.display = 'none';
+
+      const targetX = 130 + Math.random() * 40;
+      ballVX = (targetX - ballX) / 35;
+      ballVY = -4.5;
+
+      const anim = setInterval(() => {
+        ballX += ballVX;
+        ballY += ballVY;
+
+        if (ballX < 35 || ballX > 265) {
+          document.getElementById('gutterOverlay').style.display = 'block';
+        }
+
+        // Collision Check
+        pins.forEach(p => {
+          if (!p.hit && Math.hypot(p.x - ballX, p.y - ballY) < 12) {
+            p.hit = true;
+          }
+        });
+
+        drawLane();
+
+        if (ballY <= 10) {
+          clearInterval(anim);
+          finishRoll();
+        }
+      }, 30);
+    }
+
+    function finishRoll() {
+      const hitCount = pins.filter(p => p.hit).length;
+      let frameData = framesData[currentFrame - 1];
+      let rollScore = hitCount - frameData.rolls.reduce((a, b) => a + b, 0);
+
+      frameData.rolls.push(rollScore);
+      currentScore += rollScore;
+
+      document.getElementById('p1-score').innerText = currentScore;
+      
+      let rollText = rollScore.toString();
+      if (rollScore === 10 && rollNumber === 1) rollText = 'X';
+      else if (frameData.rolls.reduce((a,b)=>a+b, 0) === 10 && rollNumber === 2) rollText = '/';
+      
+      const rollsDisplay = document.getElementById(`frame-rolls-${currentFrame}`);
+      if (rollsDisplay) rollsDisplay.innerText += ' ' + rollText;
+
+      if (rollScore === 10 || rollNumber === 2 || currentFrame === 10) {
+        document.getElementById(`frame-score-${currentFrame}`).innerText = currentScore;
+        currentFrame = Math.min(10, currentFrame + 1);
+        rollNumber = 1;
+        resetPins();
+      } else {
+        rollNumber = 2;
+      }
+
+      document.getElementById('currentFrameDisplay').innerText = currentFrame;
+      initScorecardUIHighlight();
+
+      ballX = 150; ballY = 190;
+      isRolling = false;
+      drawLane();
+    }
+
+    function resetPins() {
+      pins.forEach(p => p.hit = false);
+    }
+
+    function resetBowlingGame() {
+      currentFrame = 1;
+      rollNumber = 1;
+      currentScore = 0;
+      ballX = 150; ballY = 190;
+      isRolling = false;
+      framesData = Array.from({ length: 10 }, () => ({ rolls: [], score: 0 }));
+      document.getElementById('p1-score').innerText = '0';
+      document.getElementById('currentFrameDisplay').innerText = '1';
+      document.getElementById('gutterOverlay').style.display = 'none';
+      resetPins();
+      initScorecardUI();
+      drawLane();
+    }
+
+    function initScorecardUIHighlight() {
+      for (let i = 1; i <= 10; i++) {
+        const el = document.getElementById(`frame-box-${i}`);
+        if (el) el.classList.toggle('active', i === currentFrame);
+      }
+    }
+
+    // --- 4. COMMUNITY FEED INTERACTION ---
     function toggleLike(btn) {
-      const span = btn.querySelector('.like-count');
-      let count = parseInt(span.textContent);
+      const countEl = btn.querySelector('.like-count');
+      let count = parseInt(countEl.innerText);
       if (btn.classList.contains('liked')) {
+        count--;
         btn.classList.remove('liked');
         btn.style.color = 'var(--text-muted)';
-        span.textContent = count - 1;
       } else {
+        count++;
         btn.classList.add('liked');
-        btn.style.color = '#ff3c3c';
-        span.textContent = count + 1;
+        btn.style.color = 'var(--neon-red)';
       }
+      countEl.innerText = count;
     }
 
     function addComment(id) {
       const input = document.getElementById(`comment-input-${id}`);
       const container = document.getElementById(`comments-container-${id}`);
-      if (input && input.value.trim() !== '') {
-        const p = document.createElement('p');
-        p.style.marginTop = '4px';
-        p.innerHTML = `<strong style="color:#fff;">You:</strong> ${input.value}`;
-        container.appendChild(p);
+      if (input.value.trim() !== '') {
+        const comment = document.createElement('div');
+        comment.style.marginTop = '0.3rem';
+        comment.innerHTML = `<strong style="color:#fff;">You:</strong> ${input.value}`;
+        container.appendChild(comment);
         input.value = '';
       }
     }
 
-    function sendContactEmail(e) {
-      e.preventDefault();
-      alert('Thank you for contacting BowlStrike.com! Your message has been sent.');
-      document.getElementById('contact-form').reset();
-    }
-
+    // --- 5. ADMIN MODAL LOGIC ---
     function openAdminModal() {
       document.getElementById('adminModal').style.display = 'flex';
     }
-
     function closeAdminModal() {
       document.getElementById('adminModal').style.display = 'none';
     }
 
-    // Window Load Initialization
-    window.onload = function() {
-      resizeCanvas();
-      initPins();
-      resetBall();
-      updateScorecardDisplay();
-      drawGame();
+    // INITIALIZATION ON LOAD
+    window.addEventListener('DOMContentLoaded', () => {
       initMap();
-    };
+      resizeCanvas();
+      initScorecardUI();
+      drawLane();
+      window.addEventListener('resize', () => {
+        resizeCanvas();
+        drawLane();
+      });
+    });
   </script>
 </body>
 </html>

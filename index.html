@@ -1,1041 +1,712 @@
-<!DOCTYPE html> 
-<html lang="en"> 
-<head> 
-<meta charset="UTF-8" /> 
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" /> 
-<title>BowlStrike.com - National Tenpin Social Network & Live Radar</title> 
-<!-- Primary Search Engine Meta Tags --> 
-<meta name="title" content="BowlStrike.com - National Tenpin Social Network & Live Radar" /> 
-<meta name="description" content="Connect with tenpin bowlers nationwide on BowlStrike.com. Features live GPS alley radar, SBA news updates, bowler profiles, Pro Shop directory, and community feeds." /> 
-<meta name="keywords" content="bowling network, tenpin bowling, bowling alley radar, PBA news, USBC, bowler profiles, bowling pro shop, bowling balls, local bowling lanes" /> 
-<meta name="robots" content="index, follow" /> 
-<meta name="author" content="BowlStrike Team" /> 
-<!-- Open Graph / Facebook / WhatsApp Preview --> 
-<meta property="og:type" content="website" /> 
-<meta property="og:url" content="https://bowlstrike.com/" /> 
-<meta property="og:title" content="BowlStrike.com - National Tenpin Social Network" /> 
-<meta property="og:description" content="Live GPS bowling radar, national tournament news, player community feed, and Pro Shop directory." /> 
-<meta property="og:image" content="https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=1200&q=80" /> 
-<!-- Twitter Card Preview --> 
-<meta property="twitter:card" content="summary_large_image" /> 
-<meta property="twitter:url" content="https://bowlstrike.com/" /> 
-<meta property="twitter:title" content="BowlStrike.com - National Tenpin Social Network" /> 
-<meta property="twitter:description" content="Live GPS bowling radar, national tournament news, and player community feed." /> 
-<meta property="twitter:image" content="https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=1200&q=80" /> 
-<!-- Canonical URL --> 
-<link rel="canonical" href="https://bowlstrike.com/" /> 
-<!-- Leaflet CSS & JS for Interactive Map --> 
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" /> 
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="" defer></script> 
-<!-- FontAwesome for Icons --> 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" /> 
-<!-- EmailJS SDK --> 
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js" defer></script> 
-<!-- Firebase SDKs (Compatibility Build) --> 
-<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js" defer></script> 
-<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js" defer></script> 
-<style>
-:root { 
-  --primary: #e50914; 
-  --primary-dark: #b20710; 
-  --accent: #ffb300; 
-  --neon-red: #ff3c3c; 
-  --dark-bg: #f4f6f8; 
-  --card-bg: #ffffff; 
-  --text: #222222; 
-  --text-muted: #555555; 
-  --danger: #d32f2f; 
-  --success: #388e3c; 
-} 
-* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; } 
-body { background-color: var(--dark-bg); color: var(--text); line-height: 1.6; overflow-x: hidden; } 
-/* Header Navigation */ 
-header { background-color: #ffffff; border-bottom: 3px solid var(--primary); position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 5px rgba(0,0,0,0.1); } 
-.nav-container { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0.8rem 1rem; } 
-.logo-wrapper { display: inline-flex; align-items: center; border: 2px solid var(--primary); border-radius: 25px; padding: 0.3rem 1rem; background: #ffffff; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); text-decoration: none; transition: border-color 0.3s; } 
-.logo-wrapper:hover { border-color: var(--primary-dark); } 
-.logo { font-size: 1.6rem; font-weight: 900; color: #222222; letter-spacing: 1px; line-height: 1; } 
-.logo span { color: var(--primary); } 
-/* Hero Banner Logo Variation */ 
-.hero-logo-wrapper { display: inline-flex; align-items: center; border: 3px solid var(--primary); border-radius: 35px; padding: 0.5rem 1.8rem; background: #ffffff; box-shadow: 0 4px 15px rgba(0,0,0,0.15); text-decoration: none; margin-bottom: 1.2rem; }
-.hero-logo { font-size: 2.5rem; font-weight: 900; color: #222222; letter-spacing: 1.5px; line-height: 1; } 
-.hero-logo span { color: var(--primary); } 
-nav { display: flex; gap: 1rem; flex-wrap: wrap; }
-nav a { color: var(--text-muted); text-decoration: none; font-weight: 600; font-size: 0.95rem; } 
-nav a:hover { color: var(--primary); } 
-/* Hero Banner */ 
-.hero-banner { background: linear-gradient(180deg, #ffffff 0%, #eef2f5 100%); padding: 3.5rem 1rem; text-align: center; border-bottom: 4px solid var(--primary); } 
-.hero-banner p { font-size: 1.15rem; color: #333; margin-bottom: 0.5rem; } 
-/* Utility */ 
-.container { max-width: 1200px; margin: 2rem auto; padding: 0 1rem; } 
-.section-title { font-size: 1.5rem; margin-bottom: 1.2rem; border-left: 5px solid var(--primary); padding-left: 0.8rem; font-weight: 800; display: flex; justify-content: space-between; align-items: center; } 
-.card { background: var(--card-bg); border-radius: 8px; padding: 1.2rem; border: 1px solid #ddd; box-shadow: 0 2px 4px rgba(0,0,0,0.05); } 
-.btn { padding: 0.6rem 1.2rem; background: var(--primary); color: #fff; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; } 
-.btn:hover { background: var(--primary-dark); } 
-.btn-secondary { background: #e0e0e0; color: #333; } 
-.btn-secondary:hover { background: #d0d0d0; }
-.btn-danger { background: var(--danger); color: #fff; } 
-.btn-danger:hover { background: #b71c1c; } 
-/* LIVE NEWS GRID */ 
-.news-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.2rem; margin-bottom: 2rem; } 
-.news-card h3 { font-size: 1.1rem; margin-bottom: 0.5rem; } 
-.news-card h3 a { color: var(--primary); text-decoration: none; } 
-.news-card h3 a:hover { text-decoration: underline; color: var(--primary-dark); } 
-.news-card p { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.8rem; } 
-.news-card .news-meta { display: flex; justify-content: space-between; font-size: 0.75rem; color: #757575; border-top: 1px solid #eee; padding-top: 0.5rem; } 
-/* RED DIVIDER LINE */ 
-.red-divider { height: 3px; background: linear-gradient(90deg, var(--primary) 0%, var(--neon-red) 50%, var(--primary) 100%); margin: 2.5rem 0; border-radius: 2px; }
-/* RADAR & BOWLING GAME LAYOUT */ 
-.interactive-duo-container { display: flex; gap: 1.2rem; margin-bottom: 2.5rem; align-items: stretch; } 
-.duo-block { flex: 1; min-width: 0; display: flex; flex-direction: column; } 
-/* MAP SECTION */ 
-.map-wrapper { position: relative; border-radius: 8px; overflow: hidden; border: 1px solid #ccc; flex: 1; display: flex; flex-direction: column; min-height: 260px; } 
-#map { height: 260px; width: 100%; background: #e5e3df; flex: 1; } 
-.my-location-panel { position: absolute; top: 10px; left: 10px; z-index: 500; background: rgba(255,255,255,0.95); border: 1px solid #ccc; border-radius: 6px; padding: 6px 10px; } 
-.ml-coords { font-size: 0.78rem; color: #0055cc; font-weight: 600; } 
-/* BOWLING GAME STYLING */ 
-.game-wrapper { background: #fdfdfd; border-radius: 8px; border: 1px solid #ccc; padding: 0.8rem; display: flex; flex-direction: column; justify-content: space-between; align-items: center; position: relative; } 
-.game-canvas-container { width: 100%; height: 250px; background: #1a1a1a; border-radius: 6px; position: relative; overflow: hidden; border: 2px solid #333; box-shadow: inset 0 0 15px rgba(0,0,0,0.8); } 
-#bowlingCanvas { width: 100%; height: 100%; display: block; } 
-.gutter-overlay { position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%); font-size: 1.5rem; font-weight: 900; color: #ff3c3c; text-shadow: 0 0 5px #fff; background: rgba(255,255,255,0.9); padding: 6px 16px; border-radius: 6px; border: 2px solid #ff3c3c; display: none; z-index: 10; pointer-events: none; letter-spacing: 1.5px; }
-/* SCOREBOARD SHEET */ 
-.bowling-scorecard { width: 100%; background: #ffffff; border: 1px solid #ccc; border-radius: 6px; margin-bottom: 0.5rem; padding: 0.3rem; overflow-x: auto; } 
-.scorecard-grid { display: flex; justify-content: space-between; gap: 2px; } 
-.frame-box { flex: 1; min-width: 28px; background: #f9f9f9; border: 1px solid #ddd; border-radius: 3px; text-align: center; padding: 2px; } 
-.frame-box.active { border-color: var(--primary); background: #fff0f0; } 
-.frame-title { font-size: 0.62rem; color: var(--text-muted); font-weight: bold; border-bottom: 1px solid #eee; } 
-.frame-rolls { font-size: 0.7rem; color: #222; font-weight: bold; height: 16px; line-height: 16px; letter-spacing: 1px; } 
-.frame-total { font-size: 0.72rem; color: var(--primary); font-weight: 900; height: 16px; line-height: 16px; } 
-.game-controls { display: flex; gap: 0.4rem; width: 100%; margin-top: 0.4rem; justify-content: space-between; align-items: center; flex-wrap: wrap; } 
-/* PROFILE PHOTO STYLING */ 
-.network-layout { display: flex; gap: 1.5rem; flex-wrap: wrap; align-items: flex-start; } 
-.main-profiles-container { flex: 1; min-width: 300px; display: flex; flex-direction: column; gap: 1rem; } 
-.profile-card { display: flex; gap: 1rem; align-items: flex-start; } 
-.profile-photo-container { width: 90px; height: 115px; border-radius: 6px; border: 2px solid var(--primary); overflow: hidden; flex-shrink: 0; background: #e0e0e0; display: flex; justify-content: center; align-items: center; } 
-.profile-photo-container img { width: 100%; height: 100%; object-fit: cover; } 
-.profile-details { flex: 1; } 
-.profile-name { font-size: 1.3rem; font-weight: 800; color: #222; } 
-/* TEAM DIRECTORY */ 
-.team-directory { width: 340px; flex-shrink: 0; } 
-.team-player-card { display: flex; gap: 0.8rem; align-items: center; margin-bottom: 0.8rem; background: #f9f9f9; padding: 0.5rem; border-radius: 6px; border: 1px solid #e0e0e0; } 
-.profile-thumb { width: 42px; height: 54px; border-radius: 4px; border: 1px solid var(--primary); object-fit: cover; flex-shrink: 0; } 
-
-/* 50/50 SPLIT GRID LAYOUT FOR DESKTOP (COMMUNITY FEED LEFT, PRO SHOP & CONTACT RIGHT) */
-.split-50-layout { display: grid; grid-template-columns: 1fr; gap: 1.5rem; margin-top: 1rem; }
-@media (min-width: 800px) {
-  .split-50-layout { grid-template-columns: 1fr 1fr; align-items: start; }
-}
-
-/* COMMUNITY FEED STYLING */
-.community-feed { display: flex; flex-direction: column; gap: 1.2rem; } 
-.feed-post-card { padding: 0; overflow: hidden; } 
-.post-header { padding: 0.7rem 0.9rem; display: flex; gap: 10px; align-items: center; border-bottom: 1px solid #eee; background: #fcfcfc; } 
-.feed-author-thumb { width: 38px; height: 48px; border-radius: 4px; border: 1px solid var(--primary); object-fit: cover; flex-shrink: 0; } 
-.post-media-container { width: 100%; background: #f0f0f0; text-align: center; } 
-.post-media-container img { max-width: 100%; max-height: 220px; object-fit: contain; display: block; margin: 0 auto; } 
-.post-actions-panel { padding: 0.5rem 0.8rem; display: flex; gap: 1rem; border-bottom: 1px solid #eee; } 
-.action-btn { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 0.82rem; } 
-.comment-input-section { padding: 0.6rem 0.8rem; display: flex; gap: 0.5rem; align-items: center; background: #f9f9f9; } 
-.comment-input { flex: 1; padding: 0.4rem 0.6rem; border-radius: 4px; border: 1px solid #ccc; background: #fff; color: #222; font-size: 0.82rem; } 
-
-/* PRO SHOP SECTION STYLING */
-.pro-shop-container { display: flex; flex-direction: column; gap: 0.8rem; }
-.pro-shop-card { background: #ffffff; border: 1px solid #ddd; border-radius: 8px; padding: 1rem; transition: transform 0.2s, box-shadow 0.2s; }
-.pro-shop-card:hover { transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.08); }
-.pro-shop-item { display: flex; gap: 0.8rem; align-items: center; }
-.pro-shop-icon { width: 45px; height: 45px; background: #fff0f0; border-radius: 50%; color: var(--primary); display: flex; justify-content: center; align-items: center; font-size: 1.2rem; flex-shrink: 0; border: 1px solid #ffd0d0; }
-.pro-shop-details { flex: 1; }
-.pro-shop-details h4 { font-size: 0.95rem; color: #222; margin-bottom: 0.2rem; }
-.pro-shop-details p { font-size: 0.78rem; color: var(--text-muted); line-height: 1.3; }
-.pro-shop-link { font-size: 0.78rem; font-weight: bold; color: var(--primary); text-decoration: none; display: inline-flex; align-items: center; gap: 4px; margin-top: 0.3rem; }
-.pro-shop-link:hover { text-decoration: underline; color: var(--primary-dark); }
-.compliance-note { font-size: 0.72rem; color: #777; background: #f0f0f0; padding: 0.5rem 0.8rem; border-radius: 4px; border-left: 3px solid var(--primary); margin-top: 0.5rem; }
-
-/* CONTACT US FORM STYLING */ 
-.contact-form { display: flex; flex-direction: column; gap: 0.8rem; } 
-.contact-form input, .contact-form textarea { width: 100%; padding: 0.6rem 0.8rem; border-radius: 4px; border: 1px solid #ccc; background: #fff; color: #222; font-size: 0.85rem; } 
-.contact-form textarea { resize: vertical; min-height: 90px; } 
-
-/* Footer & Legal Disclaimers */ 
-footer { background: #ffffff; padding: 2.5rem 1rem 1.5rem 1rem; border-top: 1px solid #ddd; font-size: 0.85rem; color: var(--text-muted); position: relative; } 
-.footer-legal-container { max-width: 1000px; margin: 0 auto 1.5rem auto; text-align: left; background: #f9f9f9; border: 1px solid #e0e0e0; border-radius: 6px; padding: 1.2rem; line-height: 1.5; font-size: 0.78rem; color: #666; } 
-.footer-legal-container h4 { color: #333; font-size: 0.85rem; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 6px; } 
-.footer-legal-container p { margin-bottom: 0.8rem; } 
-.footer-legal-container p:last-child { margin-bottom: 0; } 
-.hidden-admin-link { color: #888; text-decoration: none; font-size: 0.75rem; margin-top: 1rem; display: inline-block; cursor: pointer; } 
-.hidden-admin-link:hover { color: #333; } 
-/* Admin Modal & Analytics Dashboard */
-.modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; justify-content: center; align-items: center; } 
-.modal-content { background: var(--card-bg); padding: 1.5rem; border-radius: 8px; width: 95%; max-width: 850px; max-height: 85vh; overflow-y: auto; border: 1px solid #ccc; } 
-.close-btn { font-size: 1.5rem; cursor: pointer; color: var(--text-muted); float: right; } 
-.admin-stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin: 1rem 0; } 
-.stat-card { background: #f9f9f9; border: 1px solid #ddd; border-radius: 6px; padding: 0.8rem; text-align: center; } 
-.stat-card .val { font-size: 1.5rem; font-weight: 900; color: var(--primary); } 
-.stat-card .lbl { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; } 
-table { width: 100%; border-collapse: collapse; margin-top: 1rem; } 
-th, td { border: 1px solid #ddd; padding: 0.6rem; text-align: left; font-size: 0.8rem; } 
-th { background: #f0f0f0; color: #333; } 
-
-/* MOBILE RESPONSIVE BREAKPOINT */ 
-@media (max-width: 800px) {
-  .interactive-duo-container { flex-direction: column !important; gap: 1.5rem !important; } 
-  .duo-block { width: 100%!important; min-height: 300px !important; } 
-  .map-wrapper { min-height: 300px !important; height: 300px !important; }
-  #map { min-height: 300px !important; height: 100% !important; width: 100% !important; } 
-  .game-wrapper { width: 100% !important; min-height: 360px !important; } 
-  .game-canvas-container { height: 250px !important; width: 100%!important; } 
-  .network-layout { flex-direction: column; } 
-  .team-directory { width: 100%; } 
-} 
-</style> 
-</head> 
-<body>
-<!-- Header Navigation --> 
-<header> 
-<div class="nav-container"> 
-<a href="#" class="logo-wrapper"> 
-<span class="logo">Bowl<span>Strike</span>.com</span> 
-</a> 
-<nav> 
-<a href="#news">News</a> 
-<a href="#locator">Radar & Game</a> 
-<a href="#network">Network</a> 
-<a href="#community">Highlights Feed</a> 
-<a href="#proshop">Pro Shop</a> 
-<a href="#contact">Contact</a> 
-</nav> 
-</div> 
-</header> 
-
-<!-- Hero Banner --> 
-<section class="hero-banner"> 
-<div><div class="hero-logo-wrapper"> 
-<span class="hero-logo">Bowl<span>Strike</span>.com</span> 
-</div> 
-</div><p>National Tenpin Social Network — SBA News, Bowler Profiles & Equipment Radar</p> 
-</section> 
-
-<div class="container"> 
-<!-- LIVE NATIONAL NEWS FEED --> 
-<section id="news"> 
-<div class="section-title"> 
-<span><i class="fa-solid fa-newspaper" style="color:var(--primary);"></i> Live National SBA News</span> 
-<span style="font-size:0.75rem; color:var(--success); font-weight:normal;" id="news-status"><i class="fa-solid fa-arrows-rotate"></i> Auto-Updating Live</span> 
-</div> 
-<div class="news-grid" id="news-grid-container"> 
-<div class="card news-card"> 
-<h3><a href="https://www.pba.com/news" target="_blank" rel="noopener noreferrer">PBA Tour Title Matches & Championship Bracket Live Coverage</a></h3> 
-<p>Real-time tournament updates, oil pattern breakdown analysis, and national PBA tour points updates.</p> 
-<div class="news-meta"><span>PBA.com</span><span>Auto-Updated</span></div> 
-</div> 
-<div class="card news-card"> 
-<h3><a href="https://bowl.com/news" target="_blank" rel="noopener noreferrer">USBC Championship Update: New Equipment Hardness Guidelines</a></h3> 
-<p>USBC technical specifications and bowling ball hardness regulations for all sanctioned national events.</p> 
-<div class="news-meta"><span>USBC</span><span>Auto-Updated</span></div> 
-</div> 
-<div class="card news-card"> 
-<h3><a href="https://www.bowlingdigital.com/" target="_blank" rel="noopener noreferrer">World Bowling Rankings: Global Tenpin Tour Leaders Announced</a></h3> 
-<p>International tenpin news covering global ranking shifts and upcoming major open events.</p> 
-<div class="news-meta"><span>BowlingDigital</span><span>Auto-Updated</span></div> 
-</div></div> 
-</section> 
-
-<div class="red-divider"></div> 
-
-<!-- SIDE-BY-SIDE: Live GPS Map Radar & Bowling Game Block --> 
-<section id="locator"> 
-<h2 class="section-title"><span>Live GPS Alley Radar & Official Tenpin Challenge</span></h2> 
-<div class="interactive-duo-container"> 
-<!-- BLOCK 1: Radar Display --> 
-<div class="duo-block"> 
-<div class="map-wrapper"> 
-<div class="my-location-panel card"> 
-<div style="font-size:0.68rem; color:var(--text-muted); text-transform:uppercase;">📍 Live Stream</div> 
-<div class="ml-coords" id="myCoords">Acquiring...</div> 
-<div style="font-size:0.72rem; color:var(--success);" id="gpsStatus">Connecting...</div> 
-</div> 
-<div id="map"></div> 
-</div> 
-</div> 
-
-<!-- BLOCK 2: Professional Single-Player Bowling Game Block --> 
-<div class="duo-block card game-wrapper"> 
-<div style="width:100%; display:flex; justify-content:space-between; align-items:center; margin-bottom:0.3rem;"> 
-<span style="font-weight:bold; font-size:0.88rem; color:#222;"><i class="fa-solid fa-bowling-ball" style="color:#0088ff;"></i> Solo Bowler - Frame <span id="currentFrameDisplay">1</span>/10</span> 
-<div style="font-size:0.85rem; font-weight:bold; color:var(--primary);"> 
-Total Score: <strong id="p1-score" style="color:#222; font-size:1.1rem;">0</strong> 
-</div> 
-</div> 
-<!-- Official 10-Frame Scorecard Header --> 
-<div class="bowling-scorecard"> 
-<div class="scorecard-grid" id="scorecardGrid"> 
-<!-- Dynamically populated 10 frame blocks --> 
-</div></div> 
-<div class="game-canvas-container"> 
-<div id="gutterOverlay" class="gutter-overlay">GUTTER BALL!</div><canvas id="bowlingCanvas"></canvas> 
-</div> 
-
-<!-- GAME CONTROLS & SOUND TOGGLE BUTTON --> 
-<div class="game-controls"> 
-<!-- Position Aim Controls --> 
-<div style="display:flex; gap:4px; align-items:center;"> 
-<span style="font-size:0.72rem; color:var(--text-muted); font-weight:bold;">Aim:</span> 
-<button class="btn btn-secondary" style="font-size:0.75rem; padding:0.3rem 0.5rem;" onclick="moveBall(-12)"><i class="fa-solid fa-chevron-left"></i> Left</button> 
-<button class="btn btn-secondary" style="font-size:0.75rem; padding:0.3rem 0.5rem;" onclick="moveBall(12)">Right <i class="fa-solid fa-chevron-right"></i></button> 
-</div> 
-<div style="display:flex; gap:4px; align-items:center;"> 
-<!-- Audio Mute Toggle Button -->
-<button class="btn btn-secondary" id="soundToggleBtn" style="font-size:0.72rem; padding:0.3rem 0.5rem;" onclick="toggleGameSound()" title="Turn sound effects on or off"><i class="fa-solid fa-volume-high"></i> Sound: ON</button>
-<button class="btn btn-secondary" style="font-size:0.72rem; padding:0.3rem 0.5rem;" onclick="resetBowlingGame()"><i class="fa-solid fa-rotate-left"></i> Reset</button> 
-<button class="btn" style="font-size:0.75rem; padding:0.4rem 0.8rem; background:linear-gradient(180deg, #0088ff 0%, #0055cc 100%);" id="rollBtn" onclick="rollBowlingBall()"><i class="fa-solid fa-play"></i> ROLL BALL</button> 
-</div> 
-</div> 
-</div> 
-</div> 
-</section> 
-
-<!-- SECTION: BOWLER NETWORK PROFILES & YOUR TEAM --> 
-<section id="network"> 
-<h2 class="section-title"><span>Network Profiles & Your Team</span></h2> 
-<div class="network-layout"> 
-<div class="main-profiles-container"> 
-<div class="card profile-card"> 
-<div class="profile-photo-container"> 
-<img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80" alt="PinSmasher99 Profile" loading="lazy" /> 
-</div> 
-<div class="profile-details"> 
-<div class="profile-name">PinSmasher99</div> 
-<div style="font-size:0.85rem; color:var(--primary); margin-bottom:0.4rem;"><i class="fa-solid fa-circle-check"></i> Verified Member</div> 
-<p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:0.6rem;">Striking in Orlando area. High game 279, league average 215. Storm Nova arsenal.</p> 
-<button class="btn btn-secondary" style="font-size:0.75rem; padding:0.3rem 0.6rem;">Upload Photo</button> 
-</div> 
-</div> 
-<div class="card profile-card"> 
-<div class="profile-photo-container"> 
-<img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80" alt="ApexSpinner Profile" loading="lazy" /> 
-</div> 
-<div class="profile-details"> 
-<div class="profile-name">ApexSpinner</div> 
-<div style="font-size:0.85rem; color:var(--primary); margin-bottom:0.4rem;"><i class="fa-solid fa-circle-check"></i> Verified Member</div> 
-<p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:0.6rem;">Sanctioned USBC bowler. High game 300 (x2), average 228. Roto Grip fan.</p> 
-<button class="btn btn-secondary" style="font-size:0.75rem; padding:0.3rem 0.6rem;">Connect</button> 
-</div> 
-</div> 
-<div class="card profile-card"> 
-<div class="profile-photo-container"> 
-<img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=300&q=80" alt="StrikeQueen_FL Profile" loading="lazy" /> 
-</div> 
-<div class="profile-details"> 
-<div class="profile-name">StrikeQueen_FL</div> 
-<div style="font-size:0.85rem; color:var(--primary); margin-bottom:0.4rem;"><i class="fa-solid fa-circle-check"></i> Verified Member</div> 
-<p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:0.6rem;">Thursday Night Scratch League captain. High game 268, average 202. Brunswick defender.</p> 
-<button class="btn btn-secondary" style="font-size:0.75rem; padding:0.3rem 0.6rem;">Connect</button> 
-</div></div> 
-</div> 
-<div class="card team-directory"> 
-<h3 style="font-size:1.1rem; margin-bottom:0.8rem;"><i class="fa-solid fa-people-group" style="color:var(--primary)"></i> Your Team</h3> 
-<div class="team-player-card"> 
-<img src="https://i.pravatar.cc/150?u=mike" class="profile-thumb" alt="Mike" loading="lazy"> 
-<div style="flex:1;"><strong style="font-size:0.88rem;">Mike Strikes</strong><br> 
-<span style="font-size:0.75rem; color:var(--success);">🟢 Live on Lane 14</span> 
-</div> 
-<button class="btn btn-secondary" style="font-size:0.7rem; padding:0.2rem 0.4rem;">Chat</button> 
-</div> 
-<div class="team-player-card"> 
-<img src="https://i.pravatar.cc/150?u=dad" class="profile-thumb" alt="Dad" loading="lazy"> 
-<div style="flex:1;"> 
-<strong style="font-size:0.88rem;">Dad (PinCrusher)</strong><br> 
-<span style="font-size:0.75rem; color:var(--success);">🟢 Live on Lane 2</span> 
-</div> 
-<button class="btn btn-secondary" style="font-size:0.7rem; padding:0.2rem 0.4rem;">Chat</button> 
-</div> 
-<div class="team-player-card"> 
-<img src="https://i.pravatar.cc/150?u=sarah" class="profile-thumb" alt="Sarah" loading="lazy"> 
-<div style="flex:1;"> 
-<strong style="font-size:0.88rem;">Sarah Jones</strong><br> 
-<span style="font-size:0.75rem; color:var(--text-muted);">⚪ Offline (Bowlero Kissimmee)</span> 
-</div> 
-<button class="btn btn-secondary" style="font-size:0.7rem; padding:0.2rem 0.4rem;">Profile</button></div> 
-<div class="team-player-card"> 
-<img src="https://i.pravatar.cc/150?u=dave" class="profile-thumb" alt="Dave" loading="lazy"> 
-<div style="flex:1;"> 
-<strong style="font-size:0.88rem;">Dave "Hook" Miller</strong><br> 
-<span style="font-size:0.75rem; color:var(--success);">🟢 Practicing (Lane 22)</span> 
-</div> 
-<button class="btn btn-secondary" style="font-size:0.7rem; padding:0.2rem 0.4rem;">Chat</button> 
-</div> 
-</div> 
-</div> 
-</section> 
-
-<div class="red-divider"></div> 
-
-<!-- 50/50 SPLIT CONTAINER: HIGHLIGHT COMMUNITY FEED (LEFT) vs PRO SHOP & CONTACT (RIGHT) -->
-<div class="split-50-layout">
-  
-  <!-- LEFT COLUMN: HIGHLIGHT COMMUNITY FEED (COMPACT 50% FORMAT) -->
-  <section id="community"> 
-    <h2 class="section-title"><span><i class="fa-solid fa-photo-film" style="color:var(--primary);"></i> Highlight Feed</span></h2> 
-    <div class="community-feed"> 
-      <!-- Post 1 -->
-      <div class="card feed-post-card"> 
-        <div class="post-header"> 
-          <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80" class="feed-author-thumb" alt="PinSmasher99" loading="lazy"> 
-          <div> 
-            <strong style="font-size:0.88rem; color:#222;">@PinSmasher99</strong> 
-            <div style="font-size:0.72rem; color:var(--text-muted);">Bowlero Orlando — 10th Frame Double</div> 
-          </div> 
-        </div> 
-        <div class="post-media-container"> 
-          <img src="https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=600&q=80" alt="Bowling Alley Lanes Highlight" loading="lazy"> 
-        </div> 
-        <div class="post-actions-panel"> 
-          <button class="action-btn" onclick="toggleLike(this)"><i class="fa-solid fa-heart"></i> <span class="like-count">34</span></button>
-          <button class="action-btn"><i class="fa-solid fa-comment"></i> Comments</button> 
-        </div> 
-        <div class="comment-input-section"> 
-          <input type="text" class="comment-input" id="comment-input-1" placeholder="Write a comment..." />
-          <button class="btn" style="padding:0.4rem 0.7rem; font-size:0.75rem;" onclick="addComment(1)"><i class="fa-solid fa-paper-plane"></i></button> 
-        </div> 
-        <div id="comments-container-1" style="padding:0.4rem 0.8rem; font-size:0.8rem; color:var(--text-muted);"></div> 
-      </div>
-
-      <!-- Post 2 -->
-      <div class="card feed-post-card"> 
-        <div class="post-header"> 
-          <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80" class="feed-author-thumb" alt="ApexSpinner" loading="lazy"> 
-          <div> 
-            <strong style="font-size:0.88rem; color:#222;">@ApexSpinner</strong> 
-            <div style="font-size:0.72rem; color:var(--text-muted);">Roto Grip Hook Motion on Heavy Oil</div> 
-          </div> 
-        </div>
-        <div class="post-media-container"> 
-          <img src="https://images.unsplash.com/photo-1538388149542-5e24932d11a8?auto=format&fit=crop&w=600&q=80" alt="Bowling Ball Hook Motion" loading="lazy"> 
-        </div> 
-        <div class="post-actions-panel"> 
-          <button class="action-btn" onclick="toggleLike(this)"><i class="fa-solid fa-heart"></i> <span class="like-count">48</span></button> 
-          <button class="action-btn"><i class="fa-solid fa-comment"></i> Comments</button> 
-        </div> 
-        <div class="comment-input-section"> 
-          <input type="text" class="comment-input" id="comment-input-2" placeholder="Write a comment..." /> 
-          <button class="btn" style="padding:0.4rem 0.7rem; font-size:0.75rem;" onclick="addComment(2)"><i class="fa-solid fa-paper-plane"></i></button> 
-        </div> 
-        <div id="comments-container-2" style="padding:0.4rem 0.8rem; font-size:0.8rem; color:var(--text-muted);"></div> 
-      </div> 
-
-      <!-- Post 3 -->
-      <div class="card feed-post-card"> 
-        <div class="post-header"> 
-          <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=300&q=80" class="feed-author-thumb" alt="StrikeQueen_FL" loading="lazy"> 
-          <div>
-            <strong style="font-size:0.88rem; color:#222;">@StrikeQueen_FL</strong> 
-            <div style="font-size:0.72rem; color:var(--text-muted);">Clutch Pin Action & 10-Pin Carry</div> 
-          </div> 
-        </div> 
-        <div class="post-media-container"> 
-          <img src="https://images.unsplash.com/photo-1561047029-3000c68339ca?auto=format&fit=crop&w=600&q=80" alt="Bowling Pins Strike Action" loading="lazy"> 
-        </div> 
-        <div class="post-actions-panel"> 
-          <button class="action-btn" onclick="toggleLike(this)"><i class="fa-solid fa-heart"></i> <span class="like-count">62</span></button> 
-          <button class="action-btn"><i class="fa-solid fa-comment"></i> Comments</button> 
-        </div> 
-        <div class="comment-input-section"> 
-          <input type="text" class="comment-input" id="comment-input-3" placeholder="Write a comment..." /> 
-          <button class="btn" style="padding:0.4rem 0.7rem; font-size:0.75rem;" onclick="addComment(3)"><i class="fa-solid fa-paper-plane"></i></button> 
-        </div> 
-        <div id="comments-container-3" style="padding:0.4rem 0.8rem; font-size:0.8rem; color:var(--text-muted);"></div> 
-      </div> 
-    </div> 
-  </section> 
-
-  <!-- RIGHT COLUMN: THE PRO SHOP & CONTACT FORM -->
-  <div style="display:flex; flex-direction:column; gap:1.5rem;">
-    
-    <!-- THE PRO SHOP DIRECTORY -->
-    <section id="proshop">
-      <h2 class="section-title"><span><i class="fa-solid fa-store" style="color:var(--primary);"></i> The Pro Shop</span></h2>
-      <div class="pro-shop-container">
-        
-        <!-- Retailer 1 -->
-        <div class="pro-shop-card">
-          <div class="pro-shop-item">
-            <div class="pro-shop-icon"><i class="fa-solid fa-bowling-ball"></i></div>
-            <div class="pro-shop-details">
-              <h4>BowlingBall.com</h4>
-              <p>Top online retailer for bowling balls, bags, shoes, and accessories with free shipping options.</p>
-              <a href="https://www.bowlingball.com" target="_blank" rel="noopener noreferrer" class="pro-shop-link">
-                Visit BowlingBall.com <i class="fa-solid fa-arrow-up-right-from-square"></i>
-              </a>
-            </div>
-          </div>
-        </div>
-
-        <!-- Retailer 2 -->
-        <div class="pro-shop-card">
-          <div class="pro-shop-item">
-            <div class="pro-shop-icon"><i class="fa-solid fa-bag-shopping"></i></div>
-            <div class="pro-shop-details">
-              <h4>Bowling.com</h4>
-              <p>Extensive catalog of performance equipment, closeouts, customized drilling layouts, and gear.</p>
-              <a href="https://www.bowling.com" target="_blank" rel="noopener noreferrer" class="pro-shop-link">
-                Visit Bowling.com <i class="fa-solid fa-arrow-up-right-from-square"></i>
-              </a>
-            </div>
-          </div>
-        </div>
-
-        <!-- Retailer 3 -->
-        <div class="pro-shop-card">
-          <div class="pro-shop-item">
-            <div class="pro-shop-icon"><i class="fa-solid fa-shirt"></i></div>
-            <div class="pro-shop-details">
-              <h4>BowlerX.com</h4>
-              <p>Authorized distributor of top pro shop brands, jersey customization, and tournament supplies.</p>
-              <a href="https://www.bowlerx.com" target="_blank" rel="noopener noreferrer" class="pro-shop-link">
-                Visit BowlerX.com <i class="fa-solid fa-arrow-up-right-from-square"></i>
-              </a>
-            </div>
-          </div>
-        </div>
-
-        <div class="compliance-note">
-          <i class="fa-solid fa-circle-info"></i> Direct links provided for bowler convenience. BowlStrike.com maintains independent listings for preferred national pro shops.
-        </div>
-      </div>
-    </section>
-
-    <!-- CONTACT FORM -->
-    <section id="contact">
-      <h2 class="section-title"><span><i class="fa-solid fa-envelope" style="color:var(--primary);"></i> Contact Us</span></h2>
-      <div class="card">
-        <form class="contact-form" id="contactForm" onsubmit="handleContactSubmit(event)">
-          <input type="text" id="contactName" placeholder="Your Name" required />
-          <input type="email" id="contactEmail" placeholder="Your Email" required />
-          <textarea id="contactMessage" placeholder="Your Message or Inquiry..." required></textarea>
-          <button type="submit" class="btn"><i class="fa-solid fa-paper-plane"></i> Send Message</button>
-        </form>
-        <div id="contactStatus" style="margin-top:0.5rem; font-size:0.82rem;"></div>
-      </div>
-    </section>
-
-  </div>
-</div>
-
-</div> <!-- /container -->
-
-<!-- FOOTER & LEGAL -->
-<footer>
-  <div class="footer-legal-container">
-    <h4><i class="fa-solid fa-shield-halved"></i> Legal & Platform Information</h4>
-    <p>BowlStrike.com is an independent social platform providing bowling news, interactive map routing, and bowler network features. All trademarks, brand names, and logos referenced belong to their respective owners.</p>
-    <p>© 2026 BowlStrike.com. All Rights Reserved.</p>
-  </div>
-  <div style="text-align:center;">
-    <span class="hidden-admin-link" onclick="openAdminModal()"><i class="fa-solid fa-lock"></i> Admin Portal</span>
-  </div>
-</footer>
-
-<!-- ADMIN ANALYTICS MODAL -->
-<div id="adminModal" class="modal">
-  <div class="modal-content">
-    <span class="close-btn" onclick="closeAdminModal()">&times;</span>
-    <h3 style="margin-bottom:1rem;"><i class="fa-solid fa-chart-line" style="color:var(--primary);"></i> Admin Portal & System Stats</h3>
-    <div class="admin-stats-grid">
-      <div class="stat-card"><div class="val" id="statVisits">1,248</div><div class="lbl">Total Visits</div></div>
-      <div class="stat-card"><div class="val" id="statRolls">4,892</div><div class="lbl">Total Rolls</div></div>
-      <div class="stat-card"><div class="val" id="statStrikes">1,105</div><div class="lbl">Total Strikes</div></div>
-      <div class="stat-card"><div class="val" id="statGutters">312</div><div class="lbl">Gutter Balls</div></div>
-    </div>
-    <table>
-      <thead>
-        <tr><th>Metric</th><th>Status</th><th>Details</th></tr>
-      </thead>
-      <tbody>
-        <tr><td>GPS Location Radar</td><td><span style="color:var(--success);">Active</span></td><td>Leaflet Map Loaded</td></tr>
-        <tr><td>Audio Engine</td><td><span style="color:var(--success);">Synthesized</span></td><td>Web Audio API Ready</td></tr>
-        <tr><td>Game Physics</td><td><span style="color:var(--success);">Operational</span></td><td>HTML5 2D Canvas Engine</td></tr>
-      </tbody>
-    </table>
-  </div>
-</div>
-
-<!-- JAVASCRIPT ENGINE -->
-<script>
-/* AUDIO ENGINE (Web Audio API - No External Sound Files Required) */
-let soundEnabled = true;
-let audioCtx = null;
-
-function initAudio() {
-  if (!audioCtx) {
-    const AudioContext = window.AudioContext || window.webkitAudioContext;
-    if (AudioContext) {
-      audioCtx = new AudioContext();
-    }
-  }
-}
-
-function toggleGameSound() {
-  soundEnabled = !soundEnabled;
-  const btn = document.getElementById('soundToggleBtn');
-  if (soundEnabled) {
-    btn.innerHTML = '<i class="fa-solid fa-volume-high"></i> Sound: ON';
-  } else {
-    btn.innerHTML = '<i class="fa-solid fa-volume-xmark"></i> Sound: OFF';
-  }
-}
-
-function playRollSound() {
-  if (!soundEnabled) return;
-  initAudio();
-  if (!audioCtx) return;
-
-  const bufferSize = audioCtx.sampleRate * 1.2;
-  const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
-  const data = buffer.getChannelData(0);
-  for (let i = 0; i < bufferSize; i++) {
-    data[i] = Math.random() * 2 - 1;
-  }
-
-  const noise = audioCtx.createBufferSource();
-  noise.buffer = buffer;
-
-  const filter = audioCtx.createBiquadFilter();
-  filter.type = 'lowpass';
-  filter.frequency.setValueAtTime(300, audioCtx.currentTime);
-  filter.frequency.exponentialRampToValueAtTime(80, audioCtx.currentTime + 1.2);
-
-  const gain = audioCtx.createGain();
-  gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
-  gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 1.2);
-
-  noise.connect(filter);
-  filter.connect(gain);
-  gain.connect(audioCtx.destination);
-
-  noise.start();
-}
-
-function playPinHitSound(pinsHit) {
-  if (!soundEnabled) return;
-  initAudio();
-  if (!audioCtx) return;
-
-  const now = audioCtx.currentTime;
-  const count = Math.max(1, Math.min(pinsHit, 10));
-
-  for (let i = 0; i < count; i++) {
-    const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
-
-    osc.type = 'triangle';
-    osc.frequency.setValueAtTime(400 + Math.random() * 800, now + i * 0.02);
-
-    gain.gain.setValueAtTime(0.2, now + i * 0.02);
-    gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.02 + 0.15);
-
-    osc.connect(gain);
-    gain.connect(audioCtx.destination);
-
-    osc.start(now + i * 0.02);
-    osc.stop(now + i * 0.02 + 0.15);
-  }
-}
-
-function playGutterSound() {
-  if (!soundEnabled) return;
-  initAudio();
-  if (!audioCtx) return;
-
-  const osc = audioCtx.createOscillator();
-  const gain = audioCtx.createGain();
-
-  osc.type = 'sawtooth';
-  osc.frequency.setValueAtTime(120, audioCtx.currentTime);
-  osc.frequency.exponentialRampToValueAtTime(40, audioCtx.currentTime + 0.5);
-
-  gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
-  gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
-
-  osc.connect(gain);
-  gain.connect(audioCtx.destination);
-
-  osc.start();
-  osc.stop(audioCtx.currentTime + 0.5);
-}
-
-/* ARCADE GAME & PHYSICS ENGINE */
-let canvas, ctx;
-let ball = { x: 150, y: 220, vx: 0, vy: 0, radius: 10, rolling: false };
-let pins = [];
-let currentFrame = 1;
-let currentRoll = 1;
-let frames = Array(10).fill(null).map(() => ({ rolls: [], score: null }));
-let totalScore = 0;
-let statsTotalRolls = 0;
-let statsTotalStrikes = 0;
-let statsTotalGutters = 0;
-
-function initCanvas() {
-  canvas = document.getElementById('bowlingCanvas');
-  if (!canvas) return;
-  ctx = canvas.getContext('2d');
-  
-  // Dynamic sizing
-  const rect = canvas.getBoundingClientRect();
-  canvas.width = rect.width || 300;
-  canvas.height = rect.height || 250;
-  
-  resetPins();
-  resetBall();
-  renderScorecard();
-  requestAnimationFrame(gameLoop);
-}
-
-function resetBall() {
-  ball.x = canvas.width / 2;
-  ball.y = canvas.height - 25;
-  ball.vx = 0;
-  ball.vy = 0;
-  ball.rolling = false;
-  document.getElementById('gutterOverlay').style.display = 'none';
-}
-
-function resetPins() {
-  pins = [];
-  const startY = 40;
-  const spacingX = 14;
-  const spacingY = 12;
-  const centerX = canvas.width / 2;
-
-  let rowCount = 4;
-  let pinIndex = 0;
-  for (let row = rowCount - 1; row >= 0; row--) {
-    let count = row + 1;
-    let startX = centerX - ((count - 1) * spacingX) / 2;
-    for (let i = 0; i < count; i++) {
-      pins.push({
-        id: pinIndex++,
-        x: startX + i * spacingX,
-        y: startY + (rowCount - 1 - row) * spacingY,
-        hit: false,
-        radius: 4
-      });
-    }
-  }
-}
-
-function moveBall(dir) {
-  if (ball.rolling) return;
-  const gutterMargin = canvas.width * 0.18;
-  ball.x = Math.max(gutterMargin, Math.min(canvas.width - gutterMargin, ball.x + dir));
-  drawScene();
-}
-
-function rollBowlingBall() {
-  if (ball.rolling) return;
-  ball.rolling = true;
-  statsTotalRolls++;
-  document.getElementById('statRolls').innerText = statsTotalRolls;
-
-  playRollSound();
-
-  // Random slice of spin/direction
-  const randomCurve = (Math.random() - 0.5) * 1.8;
-  ball.vx = randomCurve;
-  ball.vy = -5.5;
-}
-
-function gameLoop() {
-  if (ball.rolling) {
-    ball.x += ball.vx;
-    ball.y += ball.vy;
-
-    const gutterLeft = canvas.width * 0.15;
-    const gutterRight = canvas.width * 0.85;
-
-    // Check Gutter
-    if (ball.x <= gutterLeft || ball.x >= gutterRight) {
-      document.getElementById('gutterOverlay').style.display = 'block';
-    }
-
-    // Check Pin Collisions
-    let hitCountInRoll = 0;
-    pins.forEach(pin => {
-      if (!pin.hit) {
-        const dx = ball.x - pin.x;
-        const dy = ball.y - pin.y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        if (dist < ball.radius + pin.radius + 3) {
-          pin.hit = true;
-          hitCountInRoll++;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arcade Bowling & Pro Shop</title>
+    <style>
+        * {
+            box-sizing: border-box;
         }
-      }
-    });
 
-    if (hitCountInRoll > 0) {
-      playPinHitSound(hitCountInRoll);
-    }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #121212;
+            color: #ffffff;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
 
-    // Ball reaches end of lane
-    if (ball.y < 20) {
-      handleRollEnd();
-    }
-  }
+        h1 {
+            color: #ff9800;
+            margin-bottom: 20px;
+            text-align: center;
+        }
 
-  drawScene();
-  requestAnimationFrame(gameLoop);
-}
+        h2 {
+            color: #ff9800;
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
 
-function drawScene() {
-  if (!ctx) return;
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+        .container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            max-width: 1100px;
+            width: 100%;
+        }
 
-  const w = canvas.width;
-  const h = canvas.height;
+        /* Scoreboard Styling */
+        .scoreboard-container {
+            width: 100%;
+            overflow-x: auto;
+            background: #222;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        }
 
-  // Draw Lane Background
-  ctx.fillStyle = '#b58351';
-  ctx.fillRect(w * 0.15, 0, w * 0.7, h);
+        table.scoreboard {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: center;
+            background-color: #333;
+            min-width: 600px;
+        }
 
-  // Gutters
-  ctx.fillStyle = '#222';
-  ctx.fillRect(0, 0, w * 0.15, h);
-  ctx.fillRect(w * 0.85, 0, w * 0.15, h);
+        table.scoreboard th, table.scoreboard td {
+            border: 1px solid #555;
+            padding: 8px;
+        }
 
-  // Lane Lines
-  ctx.strokeStyle = '#8a5a2b';
-  ctx.lineWidth = 1;
-  ctx.beginPath();
-  ctx.moveTo(w * 0.35, 0); ctx.lineTo(w * 0.35, h);
-  ctx.moveTo(w * 0.5, 0); ctx.lineTo(w * 0.5, h);
-  ctx.moveTo(w * 0.65, 0); ctx.lineTo(w * 0.65, h);
-  ctx.stroke();
+        table.scoreboard th {
+            background-color: #ff9800;
+            color: #000;
+        }
 
-  // Draw Pins
-  pins.forEach(pin => {
-    if (!pin.hit) {
-      ctx.fillStyle = '#ffffff';
-      ctx.beginPath();
-      ctx.arc(pin.x, pin.y, pin.radius + 1, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.fillStyle = '#e50914';
-      ctx.fillRect(pin.x - pin.radius, pin.y - 1, pin.radius * 2, 1.5);
-    }
-  });
+        .frame-rolls {
+            display: flex;
+            justify-content: space-around;
+            font-size: 0.9em;
+            height: 20px;
+            font-weight: bold;
+        }
 
-  // Draw Ball
-  ctx.fillStyle = '#0088ff';
-  ctx.beginPath();
-  ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.strokeStyle = '#0055cc';
-  ctx.lineWidth = 2;
-  ctx.stroke();
-}
+        .frame-score {
+            font-weight: bold;
+            font-size: 1.1em;
+            color: #4caf50;
+            margin-top: 5px;
+        }
 
-function handleRollEnd() {
-  ball.rolling = false;
+        /* Main Section Layout */
+        .main-content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            width: 100%;
+        }
 
-  const hitsThisRoll = pins.filter(p => p.hit).length;
-  const activeFrame = frames[currentFrame - 1];
+        /* Game Canvas & Controls Area */
+        .game-section {
+            flex: 1;
+            min-width: 340px;
+            max-width: 420px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: #1e1e1e;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        }
 
-  if (currentRoll === 1) {
-    const isGutter = (ball.x <= canvas.width * 0.15 || ball.x >= canvas.width * 0.85);
-    if (isGutter) {
-      playGutterSound();
-      statsTotalGutters++;
-      document.getElementById('statGutters').innerText = statsTotalGutters;
-    }
+        canvas {
+            background: #000;
+            border: 3px solid #ff9800;
+            border-radius: 4px;
+        }
 
-    if (hitsThisRoll === 10) {
-      activeFrame.rolls.push('X');
-      statsTotalStrikes++;
-      document.getElementById('statStrikes').innerText = statsTotalStrikes;
-      advanceFrame();
-    } else {
-      activeFrame.rolls.push(isGutter ? '-' : hitsThisRoll);
-      currentRoll = 2;
-      resetBall();
-    }
-  } else if (currentRoll === 2) {
-    const prevHits = activeFrame.rolls[0] === '-' ? 0 : activeFrame.rolls[0];
-    const totalFrameHits = hitsThisRoll;
-    const secondRollHits = totalFrameHits - prevHits;
+        .controls {
+            margin-top: 15px;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
 
-    if (totalFrameHits === 10) {
-      activeFrame.rolls.push('/');
-    } else {
-      activeFrame.rolls.push(secondRollHits <= 0 ? '-' : secondRollHits);
-    }
-    advanceFrame();
-  }
-}
+        button {
+            background-color: #ff9800;
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            font-weight: bold;
+            font-size: 1em;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
 
-function advanceFrame() {
-  calculateScore();
-  if (currentFrame < 10) {
-    currentFrame++;
-    currentRoll = 1;
-    resetPins();
-    resetBall();
-  } else {
-    document.getElementById('currentFrameDisplay').innerText = '10 (Finished)';
-  }
-  renderScorecard();
-}
+        button:hover {
+            background-color: #e68a00;
+        }
 
-function calculateScore() {
-  let runningScore = 0;
-  for (let i = 0; i < 10; i++) {
-    const f = frames[i];
-    if (f.rolls.length > 0) {
-      let fScore = 0;
-      f.rolls.forEach(r => {
-        if (r === 'X') fScore += 10;
-        else if (r === '/') fScore = 10;
-        else if (r !== '-') fScore += parseInt(r) || 0;
-      });
-      runningScore += fScore;
-      f.score = runningScore;
-    }
-  }
-  totalScore = runningScore;
-  document.getElementById('p1-score').innerText = totalScore;
-}
+        button:disabled {
+            background-color: #555;
+            color: #888;
+            cursor: not-allowed;
+        }
 
-function renderScorecard() {
-  const container = document.getElementById('scorecardGrid');
-  if (!container) return;
+        /* Pro Shop Styling */
+        .pro-shop {
+            flex: 1;
+            min-width: 300px;
+            background: #1e1e1e;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        }
 
-  document.getElementById('currentFrameDisplay').innerText = currentFrame;
-  container.innerHTML = '';
+        .shop-item {
+            background: #2a2a2a;
+            padding: 15px;
+            margin-bottom: 12px;
+            border-radius: 6px;
+            border-left: 4px solid #ff9800;
+        }
 
-  for (let i = 1; i <= 10; i++) {
-    const fData = frames[i - 1];
-    const isActive = (i === currentFrame);
+        .shop-item h3 {
+            margin: 0 0 5px 0;
+            color: #fff;
+        }
 
-    const frameBox = document.createElement('div');
-    frameBox.className = `frame-box ${isActive ? 'active' : ''}`;
+        .shop-item p {
+            margin: 0 0 10px 0;
+            font-size: 0.9em;
+            color: #ccc;
+        }
 
-    let rollsStr = '';
-    if (fData.rolls.length > 0) {
-      rollsStr = fData.rolls.join(' ');
-    }
+        .shop-item a {
+            display: inline-block;
+            color: #ff9800;
+            text-decoration: none;
+            font-weight: bold;
+        }
 
-    frameBox.innerHTML = `
-      <div class="frame-title">F${i}</div>
-      <div class="frame-rolls">${rollsStr}</div>
-      <div class="frame-total">${fData.score !== null ? fData.score : ''}</div>
-    `;
-    container.appendChild(frameBox);
-  }
-}
+        .shop-item a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
 
-function resetBowlingGame() {
-  currentFrame = 1;
-  currentRoll = 1;
-  frames = Array(10).fill(null).map(() => ({ rolls: [], score: null }));
-  totalScore = 0;
-  document.getElementById('p1-score').innerText = '0';
-  resetPins();
-  resetBall();
-  renderScorecard();
-}
+    <h1>Arcade Bowling Alley</h1>
 
-/* LEAFLET MAP RADAR ENGINE */
-function initMap() {
-  const defaultLat = 28.5383;
-  const defaultLng = -81.3792;
+    <div class="container">
+        <!-- Scoreboard -->
+        <div class="scoreboard-container">
+            <table class="scoreboard">
+                <thead>
+                    <tr>
+                        <th>1</th><th>2</th><th>3</th><th>4</th><th>5</th>
+                        <th>6</th><th>7</th><th>8</th><th>9</th><th>10</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr id="scoreboard-rolls">
+                        <!-- Populated by JavaScript -->
+                    </tr>
+                    <tr id="scoreboard-totals">
+                        <!-- Populated by JavaScript -->
+                    </tr>
+                </tbody>
+            </table>
+        </div>
 
-  const map = L.map('map').setView([defaultLat, defaultLng], 11);
+        <div class="main-content">
+            <!-- Bowling Game Canvas -->
+            <div class="game-section">
+                <canvas id="bowlingCanvas" width="360" height="600"></canvas>
+                <div class="controls">
+                    <button id="actionBtn" onclick="handleActionButton()">Set Aim</button>
+                    <button onclick="resetGame()">Reset Game</button>
+                </div>
+                <p id="gameInstructions" style="color: #aaa; margin-top: 10px; text-align: center;">
+                    Step 1: Click "Set Aim" when the ball aligns with your target path.
+                </p>
+            </div>
 
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 19,
-    attribution: '© OpenStreetMap'
-  }).addTo(map);
+            <!-- Pro Shop Links -->
+            <div class="pro-shop">
+                <h2>The Pro Shop</h2>
 
-  // Sample Alley Markers
-  const alleys = [
-    { name: "Bowlero Orlando", lat: 28.5500, lng: -81.3500 },
-    { name: "Kingpin Lanes", lat: 28.4800, lng: -81.4000 },
-    { name: "Main Event Entertainment", lat: 28.4400, lng: -81.4700 }
-  ];
+                <div class="shop-item">
+                    <h3>BowlingBall.com</h3>
+                    <p>Top online retailer for bowling balls, bags, shoes, and accessories with free shipping options.</p>
+                    <a href="https://www.bowlingball.com" target="_blank" rel="noopener">Visit BowlingBall.com &rarr;</a>
+                </div>
 
-  alleys.forEach(a => {
-    L.marker([a.lat, a.lng]).addTo(map)
-      .bindPopup(`<b>${a.name}</b><br>Live Lane Telemetry Active`);
-  });
+                <div class="shop-item">
+                    <h3>Bowling.com</h3>
+                    <p>Extensive catalog of performance equipment, bowling shoes, drilling tools, and apparel.</p>
+                    <a href="https://www.bowling.com" target="_blank" rel="noopener">Visit Bowling.com &rarr;</a>
+                </div>
 
-  // Geolocation
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(
-      pos => {
-        const lat = pos.coords.latitude;
-        const lng = pos.coords.longitude;
-        document.getElementById('myCoords').innerText = `${lat.toFixed(4)}, ${lng.toFixed(4)}`;
-        document.getElementById('gpsStatus').innerText = '🟢 GPS Signal Lock';
-        map.setView([lat, lng], 12);
-        L.marker([lat, lng]).addTo(map).bindPopup('<b>Your Location</b>').openPopup();
-      },
-      () => {
-        document.getElementById('myCoords').innerText = 'Orlando, FL (Default)';
-        document.getElementById('gpsStatus').innerText = '🟡 Using Default GPS Location';
-      }
-    );
-  }
-}
+                <div class="shop-item">
+                    <h3>BowlersMart</h3>
+                    <p>Nationwide pro shop operator offering high-performance bowling gear and expert reviews.</p>
+                    <a href="https://www.bowlersmart.com" target="_blank" rel="noopener">Visit BowlersMart.com &rarr;</a>
+                </div>
 
-/* INTERACTIVE FEED FUNCTIONS */
-function toggleLike(btn) {
-  const countSpan = btn.querySelector('.like-count');
-  let count = parseInt(countSpan.innerText);
-  if (btn.classList.contains('liked')) {
-    btn.classList.remove('liked');
-    btn.style.color = 'var(--text-muted)';
-    countSpan.innerText = count - 1;
-  } else {
-    btn.classList.add('liked');
-    btn.style.color = 'var(--primary)';
-    countSpan.innerText = count + 1;
-  }
-}
+                <div class="shop-item">
+                    <h3>Buddies Pro Shop</h3>
+                    <p>Specialized equipment retailer providing custom drilling services, wrist supports, and grips.</p>
+                    <a href="https://www.buddiesproshop.com" target="_blank" rel="noopener">Visit BuddiesProShop.com &rarr;</a>
+                </div>
+            </div>
+        </div>
+    </div>
 
-function addComment(postId) {
-  const input = document.getElementById(`comment-input-${postId}`);
-  const container = document.getElementById(`comments-container-${postId}`);
-  if (input && input.value.trim() !== '') {
-    const commentDiv = document.createElement('div');
-    commentDiv.style.marginTop = '4px';
-    commentDiv.innerHTML = `<strong>@You:</strong> ${input.value.trim()}`;
-    container.appendChild(commentDiv);
-    input.value = '';
-  }
-}
+    <script>
+        const canvas = document.getElementById('bowlingCanvas');
+        const ctx = canvas.getContext('2d');
 
-/* CONTACT FORM HANDLER */
-function handleContactSubmit(e) {
-  e.preventDefault();
-  const status = document.getElementById('contactStatus');
-  status.style.color = 'var(--success)';
-  status.innerText = 'Thank you! Your message has been transmitted successfully.';
-  document.getElementById('contactForm').reset();
-}
+        // Audio Context Synthesizer setup
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        let audioCtx;
 
-/* ADMIN MODAL CONTROLS */
-function openAdminModal() {
-  document.getElementById('adminModal').style.display = 'flex';
-}
-function closeAdminModal() {
-  document.getElementById('adminModal').style.display = 'none';
-}
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new AudioContext();
+            }
+        }
 
-/* INITIALIZATION ON DOM LOAD */
-window.addEventListener('DOMContentLoaded', () => {
-  initCanvas();
-  if (typeof L !== 'undefined') {
-    initMap();
-  }
-});
-</script>
-</body> 
+        function playCheeringSound() {
+            initAudio();
+            const bufferSize = audioCtx.sampleRate * 2.5;
+            const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+            const output = buffer.getChannelData(0);
+            for (let i = 0; i < bufferSize; i++) {
+                output[i] = Math.random() * 2 - 1;
+            }
+
+            const whiteNoise = audioCtx.createBufferSource();
+            whiteNoise.buffer = buffer;
+
+            const filter = audioCtx.createBiquadFilter();
+            filter.type = 'bandpass';
+            filter.frequency.setValueAtTime(1000, audioCtx.currentTime);
+            filter.Q.setValueAtTime(1.0, audioCtx.currentTime);
+
+            const gainNode = audioCtx.createGain();
+            gainNode.gain.setValueAtTime(0, audioCtx.currentTime);
+            gainNode.gain.linearRampToValueAtTime(0.5, audioCtx.currentTime + 0.3);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 2.5);
+
+            whiteNoise.connect(filter);
+            filter.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+
+            whiteNoise.start();
+        }
+
+        function playPinSound() {
+            initAudio();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(300, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(120, audioCtx.currentTime + 0.1);
+            gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.1);
+        }
+
+        // Game State Variables
+        let gameState = 'AIMING_POSITION'; // AIMING_POSITION, AIMING_ANGLE, ROLLING, FRAME_OVER, GAME_OVER
+        let currentFrame = 1;
+        let currentRoll = 1;
+        let rolls = Array.from({ length: 10 }, () => []);
+        let overlayText = '';
+        let overlayTimer = 0;
+
+        // Ball State
+        const ball = {
+            x: canvas.width / 2,
+            y: 530,
+            radius: 12,
+            vx: 0,
+            vy: 0,
+            speed: 7
+        };
+
+        // Aiming Guides
+        let aimPositionDir = 1;
+        let aimAngle = 0;
+        let aimAngleDir = 1;
+
+        // Pins Configuration
+        const pinPositions = [
+            { x: 180, y: 100 }, // Pin 1
+            { x: 165, y: 85 }, { x: 195, y: 85 }, // Pins 2, 3
+            { x: 150, y: 70 }, { x: 180, y: 70 }, { x: 210, y: 70 }, // Pins 4, 5, 6
+            { x: 135, y: 55 }, { x: 165, y: 55 }, { x: 195, y: 55 }, { x: 225, y: 55 } // Pins 7, 8, 9, 10
+        ];
+
+        let pins = [];
+
+        function resetPins() {
+            pins = pinPositions.map(pos => ({
+                x: pos.x,
+                y: pos.y,
+                radius: 6,
+                isHit: false
+            }));
+        }
+
+        // --- Render Loop ---
+        function update() {
+            if (gameState === 'AIMING_POSITION') {
+                ball.x += aimPositionDir * 1.5;
+                if (ball.x < 110 || ball.x > 250) aimPositionDir *= -1;
+            } else if (gameState === 'AIMING_ANGLE') {
+                aimAngle += aimAngleDir * 0.02;
+                if (aimAngle < -0.6 || aimAngle > 0.6) aimAngleDir *= -1;
+            } else if (gameState === 'ROLLING') {
+                ball.x += ball.vx;
+                ball.y += ball.vy;
+
+                // Gutter detection
+                if (ball.x < 100 || ball.x > 260) {
+                    if (ball.x < 100) ball.x = 90;
+                    if (ball.x > 260) ball.x = 270;
+                }
+
+                // Collision Detection with Pins
+                let hitPinThisFrame = false;
+                pins.forEach(pin => {
+                    if (!pin.isHit) {
+                        const dist = Math.hypot(ball.x - pin.x, ball.y - pin.y);
+                        if (dist < ball.radius + pin.radius) {
+                            pin.isHit = true;
+                            hitPinThisFrame = true;
+                            knockAdjacentPins(pin);
+                        }
+                    }
+                });
+
+                if (hitPinThisFrame) {
+                    playPinSound();
+                }
+
+                if (ball.y < 40) {
+                    completeRoll();
+                }
+            }
+
+            if (overlayTimer > 0) {
+                overlayTimer--;
+            }
+        }
+
+        function knockAdjacentPins(hitPin) {
+            pins.forEach(otherPin => {
+                if (!otherPin.isHit) {
+                    const dist = Math.hypot(hitPin.x - otherPin.x, hitPin.y - otherPin.y);
+                    if (dist < 32 && Math.random() < 0.75) {
+                        otherPin.isHit = true;
+                    }
+                }
+            });
+        }
+
+        function drawAlley() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Gutters
+            ctx.fillStyle = '#1a1a1a';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Lane surface
+            ctx.fillStyle = '#d2b48c';
+            ctx.fillRect(100, 0, 160, canvas.height);
+
+            // Lane Markings
+            ctx.fillStyle = '#8b4513';
+            for (let i = 0; i < 5; i++) {
+                ctx.beginPath();
+                ctx.moveTo(120 + i * 30, 350);
+                ctx.lineTo(125 + i * 30, 365);
+                ctx.lineTo(115 + i * 30, 365);
+                ctx.fill();
+            }
+
+            // Foul Line
+            ctx.strokeStyle = '#ff0000';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(100, 500);
+            ctx.lineTo(260, 500);
+            ctx.stroke();
+
+            // Draw Pins
+            pins.forEach(pin => {
+                if (!pin.isHit) {
+                    ctx.fillStyle = '#ffffff';
+                    ctx.beginPath();
+                    ctx.arc(pin.x, pin.y, pin.radius, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    ctx.fillStyle = '#ff0000';
+                    ctx.fillRect(pin.x - pin.radius, pin.y - 1, pin.radius * 2, 2);
+                }
+            });
+
+            // Draw Ball
+            ctx.fillStyle = '#3f51b5';
+            ctx.beginPath();
+            ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Ball finger holes
+            ctx.fillStyle = '#000000';
+            ctx.beginPath();
+            ctx.arc(ball.x - 3, ball.y - 3, 2, 0, Math.PI * 2);
+            ctx.arc(ball.x + 3, ball.y - 3, 2, 0, Math.PI * 2);
+            ctx.arc(ball.x, ball.y + 3, 2, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Draw Aiming Guide Line
+            if (gameState === 'AIMING_ANGLE') {
+                ctx.strokeStyle = '#ff9800';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(ball.x, ball.y);
+                ctx.lineTo(ball.x + Math.sin(aimAngle) * 80, ball.y - Math.cos(aimAngle) * 80);
+                ctx.stroke();
+            }
+
+            // Draw Overlay Message
+            if (overlayTimer > 0 && overlayText !== '') {
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.75)';
+                ctx.fillRect(20, 250, canvas.width - 40, 80);
+
+                ctx.fillStyle = overlayText === 'STRIKE!' ? '#4caf50' : (overlayText === 'Gutter Ball' ? '#f44336' : '#ff9800');
+                ctx.font = 'bold 30px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText(overlayText, canvas.width / 2, 300);
+            }
+        }
+
+        function loop() {
+            update();
+            drawAlley();
+            requestAnimationFrame(loop);
+        }
+
+        // --- Controls Logic ---
+        function handleActionButton() {
+            const btn = document.getElementById('actionBtn');
+            const instructions = document.getElementById('gameInstructions');
+
+            if (gameState === 'AIMING_POSITION') {
+                gameState = 'AIMING_ANGLE';
+                btn.innerText = 'Bowl!';
+                instructions.innerText = 'Step 2: Click "Bowl!" to launch in target direction.';
+            } else if (gameState === 'AIMING_ANGLE') {
+                gameState = 'ROLLING';
+                btn.disabled = true;
+                instructions.innerText = 'Rolling...';
+
+                ball.vx = Math.sin(aimAngle) * ball.speed;
+                ball.vy = -Math.cos(aimAngle) * ball.speed;
+            }
+        }
+
+        function completeRoll() {
+            const hitCount = pins.filter(p => p.isHit).length;
+            const previousKnocked = rolls[currentFrame - 1].reduce((a, b) => a + b, 0);
+            const knockedThisRoll = hitCount - previousKnocked;
+
+            rolls[currentFrame - 1].push(knockedThisRoll);
+
+            if (knockedThisRoll === 0) {
+                overlayText = 'Gutter Ball';
+                overlayTimer = 90;
+            } else if (currentRoll === 1 && knockedThisRoll === 10) {
+                overlayText = 'STRIKE!';
+                overlayTimer = 90;
+                playCheeringSound();
+            } else if (currentRoll === 2 && hitCount === 10) {
+                overlayText = 'SPARE!';
+                overlayTimer = 90;
+            } else {
+                overlayText = knockedThisRoll + ' Pin(s)';
+                overlayTimer = 60;
+            }
+
+            // Frame logic
+            if (currentFrame < 10) {
+                if (knockedThisRoll === 10 || currentRoll === 2) {
+                    advanceFrame();
+                } else {
+                    currentRoll = 2;
+                    resetBallPosition();
+                }
+            } else {
+                // Frame 10 rules
+                const frame10Rolls = rolls[9];
+                if (frame10Rolls.length === 1 && frame10Rolls[0] === 10) {
+                    resetPins();
+                    currentRoll = 2;
+                    resetBallPosition();
+                } else if (frame10Rolls.length === 2 && (frame10Rolls[0] + frame10Rolls[1] >= 10)) {
+                    if (frame10Rolls[0] + frame10Rolls[1] === 10) resetPins();
+                    currentRoll = 3;
+                    resetBallPosition();
+                } else if (frame10Rolls.length >= 2 && frame10Rolls[0] + frame10Rolls[1] < 10) {
+                    endGame();
+                } else if (frame10Rolls.length === 3) {
+                    endGame();
+                } else {
+                    currentRoll++;
+                    resetBallPosition();
+                }
+            }
+
+            renderScoreboard();
+        }
+
+        function resetBallPosition() {
+            ball.x = canvas.width / 2;
+            ball.y = 530;
+            ball.vx = 0;
+            ball.vy = 0;
+            aimAngle = 0;
+            gameState = 'AIMING_POSITION';
+
+            const btn = document.getElementById('actionBtn');
+            btn.disabled = false;
+            btn.innerText = 'Set Aim';
+            document.getElementById('gameInstructions').innerText = 'Step 1: Position your ball.';
+        }
+
+        function advanceFrame() {
+            currentFrame++;
+            currentRoll = 1;
+            resetPins();
+            resetBallPosition();
+        }
+
+        function endGame() {
+            gameState = 'GAME_OVER';
+            overlayText = 'Game Over!';
+            overlayTimer = 180;
+            document.getElementById('actionBtn').disabled = true;
+            document.getElementById('gameInstructions').innerText = 'Game finished! Click Reset Game to start over.';
+        }
+
+        function resetGame() {
+            currentFrame = 1;
+            currentRoll = 1;
+            rolls = Array.from({ length: 10 }, () => []);
+            resetPins();
+            resetBallPosition();
+            renderScoreboard();
+        }
+
+        // --- Standard Scoring Engine ---
+        function renderScoreboard() {
+            const rollsRow = document.getElementById('scoreboard-rolls');
+            const totalsRow = document.getElementById('scoreboard-totals');
+
+            rollsRow.innerHTML = '';
+            totalsRow.innerHTML = '';
+
+            let runningTotal = 0;
+            const frameScores = calculateScores();
+
+            for (let i = 0; i < 10; i++) {
+                const frameRolls = rolls[i] || [];
+                let displayRolls = '';
+
+                if (i < 9) {
+                    if (frameRolls[0] === 10) {
+                        displayRolls = '&nbsp; X';
+                    } else {
+                        const r1 = frameRolls[0] !== undefined ? frameRolls[0] : '';
+                        let r2 = '';
+                        if (frameRolls[1] !== undefined) {
+                            r2 = (frameRolls[0] + frameRolls[1] === 10) ? '/' : frameRolls[1];
+                        }
+                        displayRolls = `${r1} ${r2}`;
+                    }
+                } else {
+                    const r1 = frameRolls[0] === 10 ? 'X' : frameRolls[0];
+                    let r2 = frameRolls[1];
+                    if (frameRolls[0] !== 10 && frameRolls[0] + frameRolls[1] === 10) {
+                        r2 = '/';
+                    } else if (frameRolls[1] === 10) {
+                        r2 = 'X';
+                    }
+
+                    let r3 = frameRolls[2];
+                    if (frameRolls[2] === 10) r3 = 'X';
+
+                    displayRolls = `${r1 !== undefined ? r1 : ''} ${r2 !== undefined ? r2 : ''} ${r3 !== undefined ? r3 : ''}`;
+                }
+
+                const rollTd = document.createElement('td');
+                rollTd.innerHTML = `<div class="frame-rolls">${displayRolls}</div>`;
+                rollsRow.appendChild(rollTd);
+
+                const totalTd = document.createElement('td');
+                if (frameScores[i] !== null) {
+                    runningTotal += frameScores[i];
+                    totalTd.innerHTML = `<div class="frame-score">${runningTotal}</div>`;
+                } else {
+                    totalTd.innerHTML = `<div class="frame-score"></div>`;
+                }
+                totalsRow.appendChild(totalTd);
+            }
+
+            const grandTotalTd = document.createElement('td');
+            grandTotalTd.innerHTML = `<div class="frame-score">${runningTotal}</div>`;
+            totalsRow.appendChild(grandTotalTd);
+
+            const totalHeaderTd = document.createElement('td');
+            totalHeaderTd.innerHTML = `<strong>Total</strong>`;
+            rollsRow.appendChild(totalHeaderTd);
+        }
+
+        function calculateScores() {
+            const scores = Array(10).fill(null);
+            let flatRolls = [];
+
+            rolls.forEach(f => flatRolls.push(...f));
+
+            let rollIndex = 0;
+            for (let f = 0; f < 10; f++) {
+                if (f < 9) {
+                    if (flatRolls[rollIndex] === 10) {
+                        if (flatRolls[rollIndex + 1] !== undefined && flatRolls[rollIndex + 2] !== undefined) {
+                            scores[f] = 10 + flatRolls[rollIndex + 1] + flatRolls[rollIndex + 2];
+                        }
+                        rollIndex += 1;
+                    } else if (flatRolls[rollIndex] + flatRolls[rollIndex + 1] === 10) {
+                        if (flatRolls[rollIndex + 2] !== undefined) {
+                            scores[f] = 10 + flatRolls[rollIndex + 2];
+                        }
+                        rollIndex += 2;
+                    } else if (flatRolls[rollIndex] !== undefined && flatRolls[rollIndex + 1] !== undefined) {
+                        scores[f] = flatRolls[rollIndex] + flatRolls[rollIndex + 1];
+                        rollIndex += 2;
+                    }
+                } else {
+                    const f10 = rolls[9];
+                    const sum = f10.reduce((a, b) => a + b, 0);
+                    if (f10.length >= 2 && f10[0] + f10[1] < 10) {
+                        scores[f] = sum;
+                    } else if (f10.length === 3) {
+                        scores[f] = sum;
+                    }
+                }
+            }
+            return scores;
+        }
+
+        // Initialize Game
+        resetPins();
+        renderScoreboard();
+        loop();
+    </script>
+</body>
 </html>

@@ -1,597 +1,269 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>4BF.com - For Best Friends | Dating, Playdates & Pet Community</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Website</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f9f9f9;
+      color: #333;
+    }
 
-    <!-- Firebase Compatibility SDKs -->
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    .main-content {
+      padding: 40px 20px;
+      min-height: 60vh;
+    }
 
-    <style>
-        :root {
-            --primary-teal: #008080;
-            --accent-orange: #ff7f50;
-            --bg-light: #f4f9f9;
-            --card-bg: #ffffff;
-            --text-dark: #2c3e50;
-            --border-color: #e0e0e0;
-        }
+    /* Visitor Tracker Styles */
+    .tracker-card {
+      max-width: 900px;
+      margin: 0 auto 50px auto;
+      border: 1px solid #dcdcdc;
+      border-radius: 8px;
+      padding: 24px;
+      background: #ffffff;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
+    .tracker-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid #eee;
+      padding-bottom: 12px;
+      margin-bottom: 16px;
+    }
 
-        body {
-            background-color: var(--bg-light);
-            color: var(--text-dark);
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
+    .status-badge {
+      color: #2e7d32;
+      font-weight: bold;
+      font-size: 0.85rem;
+      background: #e8f5e9;
+      padding: 4px 10px;
+      border-radius: 12px;
+    }
 
-        /* Navigation */
-        nav {
-            background: var(--card-bg);
-            border-bottom: 2px solid var(--border-color);
-            padding: 15px 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
+    .login-box {
+      text-align: center;
+      padding: 20px 10px;
+    }
 
-        .logo { font-size: 1.8rem; font-weight: 900; color: var(--primary-teal); text-decoration: none; }
-        .logo span { color: var(--accent-orange); }
+    .login-box input[type="password"] {
+      padding: 10px 14px;
+      font-size: 0.95rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      margin-right: 8px;
+      width: 220px;
+    }
 
-        .nav-links { display: flex; gap: 15px; list-style: none; }
-        .nav-link {
-            text-decoration: none;
-            color: var(--text-dark);
-            font-weight: bold;
-            font-size: 0.95rem;
-            padding: 8px 14px;
-            border-radius: 20px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .nav-link.active, .nav-link:hover { background-color: var(--primary-teal); color: white; }
+    .login-box button {
+      padding: 10px 18px;
+      font-size: 0.95rem;
+      background-color: #0066cc;
+      color: #ffffff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
 
-        .btn-cta {
-            background-color: var(--accent-orange);
-            color: white;
-            border: none;
-            padding: 10px 18px;
-            border-radius: 20px;
-            font-weight: bold;
-            cursor: pointer;
-        }
+    .login-box button:hover {
+      background-color: #0052a3;
+    }
 
-        .btn-google {
-            background-color: #ffffff;
-            color: #757575;
-            border: 1px solid var(--border-color);
-            padding: 10px 18px;
-            border-radius: 6px;
-            font-weight: bold;
-            cursor: pointer;
-            width: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            margin-bottom: 15px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-        }
-        .btn-google:hover { background-color: #f8f9fa; }
+    .error-msg {
+      color: #d32f2f;
+      display: none;
+      margin-top: 12px;
+      font-size: 0.9rem;
+    }
 
-        .divider {
-            text-align: center;
-            margin: 15px 0;
-            position: relative;
-        }
-        .divider::before {
-            content: "";
-            position: absolute;
-            top: 50%; left: 0; right: 0;
-            height: 1px;
-            background: var(--border-color);
-            z-index: 1;
-        }
-        .divider span {
-            background: white;
-            padding: 0 10px;
-            position: relative;
-            z-index: 2;
-            font-size: 0.8rem;
-            color: #888;
-        }
+    .tracker-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.9rem;
+    }
 
-        /* Hero Header */
-        .hero {
-            background: linear-gradient(135deg, rgba(0,128,128,0.9), rgba(255,127,80,0.85)), url('https://images.unsplash.com/photo-1543466835-00a7907e9de1?q=80&w=1600') center/cover;
-            color: white;
-            text-align: center;
-            padding: 40px 20px;
-        }
+    .tracker-table th {
+      background-color: #f2f2f2;
+      padding: 12px;
+      border-bottom: 2px solid #ddd;
+    }
 
-        .hero h1 { font-size: 2.2rem; margin-bottom: 10px; }
-        .hero p { font-size: 1.05rem; max-width: 650px; margin: 0 auto 15px; }
+    .tracker-table td {
+      padding: 12px;
+      border-bottom: 1px solid #eee;
+    }
 
-        /* Main Container */
-        .main-container {
-            max-width: 1200px;
-            margin: 25px auto;
-            padding: 0 20px;
-            width: 100%;
-            flex: 1;
-        }
+    .ip-code {
+      font-family: monospace;
+      color: #555;
+    }
 
-        /* Top Hub Buttons Row */
-        .category-row-wrapper {
-            width: 100%;
-            overflow-x: auto;
-            margin-bottom: 30px;
-            padding-bottom: 5px;
-        }
+    /* Footer / Disclaimer Styles */
+    .site-footer {
+      background-color: #f1f1f1;
+      border-top: 1px solid #e0e0e0;
+      padding: 30px 20px;
+      text-align: center;
+      font-size: 0.85rem;
+      color: #666666;
+      line-height: 1.6;
+    }
 
-        .category-grid {
-            display: flex;
-            flex-direction: row;
-            flex-wrap: nowrap;
-            justify-content: space-between;
-            gap: 15px;
-            width: 100%;
-            min-width: 750px;
-        }
-
-        .category-card {
-            flex: 1 1 0px;
-            background: var(--card-bg);
-            border-radius: 10px;
-            padding: 14px 10px;
-            text-align: center;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-            border-top: 4px solid var(--primary-teal);
-            cursor: pointer;
-        }
-
-        .category-card.dating { border-top-color: #e74c3c; }
-        .category-card.playdates { border-top-color: var(--accent-orange); }
-        .category-card.care { border-top-color: #27ae60; }
-        .category-card.directory { border-top-color: #8e44ad; }
-        .category-card h3 { font-size: 0.9rem; margin-bottom: 4px; white-space: nowrap; }
-        .category-card p { font-size: 0.78rem; color: #666; }
-        .icon-box { font-size: 1.6rem; margin-bottom: 4px; }
-
-        /* HORIZONTAL CATEGORIES ROW */
-        .section-header {
-            font-size: 1.3rem;
-            margin-bottom: 18px;
-            color: var(--primary-teal);
-            border-bottom: 2px solid var(--border-color);
-            padding-bottom: 8px;
-        }
-
-        .horizontal-categories-row {
-            display: flex;
-            flex-direction: row;
-            flex-wrap: nowrap;
-            gap: 20px;
-            width: 100%;
-            overflow-x: auto;
-            padding-bottom: 15px;
-            margin-bottom: 30px;
-        }
-
-        .category-item-card {
-            flex: 1 1 300px;
-            min-width: 280px;
-            background: var(--card-bg);
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.06);
-            border: 1px solid var(--border-color);
-            display: flex;
-            flex-direction: column;
-        }
-
-        .category-header-title {
-            background: var(--bg-light);
-            padding: 10px 14px;
-            font-size: 0.95rem;
-            font-weight: bold;
-            color: var(--primary-teal);
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .profile-img {
-            height: 180px;
-            width: 100%;
-            object-fit: cover;
-            object-position: center;
-            display: block;
-        }
-
-        .profile-body {
-            padding: 16px;
-            display: flex;
-            flex-direction: column;
-            flex: 1;
-        }
-
-        .profile-title { font-size: 1.1rem; margin-bottom: 4px; color: var(--text-dark); }
-        .profile-badge {
-            display: inline-block;
-            align-self: flex-start;
-            background: var(--bg-light);
-            color: var(--primary-teal);
-            padding: 3px 8px;
-            border-radius: 10px;
-            font-size: 0.75rem;
-            font-weight: bold;
-            margin-bottom: 8px;
-        }
-
-        .profile-desc { font-size: 0.88rem; color: #555; line-height: 1.4; margin-bottom: 14px; flex: 1; }
-
-        .btn-connect {
-            width: 100%;
-            background: var(--primary-teal);
-            color: white;
-            border: none;
-            padding: 9px;
-            border-radius: 6px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        /* Modal Styling */
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.6);
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-
-        .modal-content {
-            background: white;
-            padding: 25px;
-            border-radius: 10px;
-            max-width: 500px;
-            width: 90%;
-            max-height: 85vh;
-            overflow-y: auto;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
-        }
-
-        .form-group { margin-bottom: 14px; }
-        .form-group label { display: block; font-weight: bold; margin-bottom: 4px; font-size: 0.88rem; }
-        .form-control {
-            width: 100%;
-            padding: 9px;
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-        }
-
-        /* Footer */
-        footer {
-            background: var(--text-dark);
-            color: white;
-            text-align: center;
-            padding: 20px;
-            margin-top: auto;
-            font-size: 0.82rem;
-        }
-    </style>
+    .footer-content {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+  </style>
 </head>
 <body>
 
-    <!-- Navigation Bar -->
-    <nav>
-        <a href="#" class="logo">4BF<span>.com</span></a>
-        <ul class="nav-links">
-            <li><span class="nav-link active" onclick="switchTab('all')">All Hubs</span></li>
-            <li><span class="nav-link" onclick="switchTab('dating')">Dating</span></li>
-            <li><span class="nav-link" onclick="switchTab('playdates')">Playdates</span></li>
-            <li><span class="nav-link" onclick="switchTab('care')">Community Care</span></li>
-            <li><span class="nav-link" onclick="switchTab('directory')">Directory</span></li>
-        </ul>
-        <button class="btn-cta" id="authBtn" onclick="openModal('userModal')">+ Join 4BF</button>
-    </nav>
+  <!-- Main Content Container -->
+  <div class="main-content">
+    
+    <!-- Real-Time Visitor Counter Section -->
+    <div class="tracker-card">
+      
+      <!-- Password Lock Screen -->
+      <div id="login-overlay" class="login-box">
+        <h3 style="margin-top: 0;">Protected Visitor Analytics</h3>
+        <p style="color: #666; margin-bottom: 20px;">Enter administrative password to access live tracking logs:</p>
+        <form onsubmit="event.preventDefault(); authenticateTracker();">
+          <input type="password" id="admin-pass" placeholder="Enter password" autocomplete="off" />
+          <button type="submit">Access Logs</button>
+        </form>
+        <p id="auth-error" class="error-msg">Incorrect password. Please try again.</p>
+      </div>
 
-    <!-- Hero Header -->
-    <header class="hero">
-        <h1>Connect Through Your Best Friend</h1>
-        <p>Whether you're looking for love, local playdates for your dog or cat, or pet-friendly places, 4BF brings pet lovers together.</p>
-    </header>
-
-    <div class="main-container">
-
-        <!-- Top Hub Navigation Cards -->
-        <div class="category-row-wrapper">
-            <div class="category-grid">
-                <div class="category-card dating" onclick="switchTab('dating')">
-                    <div class="icon-box">❤️</div>
-                    <h3>Pet Lovers Dating</h3>
-                    <p>Single pet lovers matching through pet bios.</p>
-                </div>
-                <div class="category-card playdates" onclick="switchTab('playdates')">
-                    <div class="icon-box">🐕</div>
-                    <h3>Pack Playdates</h3>
-                    <p>Local walk groups and dog park runs.</p>
-                </div>
-                <div class="category-card care" onclick="switchTab('care')">
-                    <div class="icon-box">🤝</div>
-                    <h3>Community Care</h3>
-                    <p>Neighbor pet-sitting swaps and advice.</p>
-                </div>
-                <div class="category-card directory" onclick="switchTab('directory')">
-                    <div class="icon-box">☕</div>
-                    <h3>Pet Life Directory</h3>
-                    <p>Dog-friendly patios, cafes, and hotels.</p>
-                </div>
-            </div>
+      <!-- Real-Time Tracker Dashboard (Hidden until password entered) -->
+      <div id="tracker-dashboard" style="display: none;">
+        <div class="tracker-header">
+          <h2 style="margin: 0; font-size: 1.25rem;">
+            Live Visitor Log (<span id="daily-count">0</span> today)
+          </h2>
+          <span class="status-badge">● Live Updates Active</span>
         </div>
 
-        <h2 class="section-header">🐾 Explore Community Categories</h2>
-
-        <!-- SINGLE HORIZONTAL ROW OF CATEGORIES -->
-        <div class="horizontal-categories-row" id="all-listings-container">
-            
-            <!-- Category 1: Singles/Dating -->
-            <div class="category-item-card cat-dating">
-                <div class="category-header-title">❤️ Pet Lovers Dating</div>
-                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=600" class="profile-img" alt="Sarah and Dog">
-                <div class="profile-body">
-                    <div class="profile-badge">Single • Dog Owner</div>
-                    <h3 class="profile-title">Sarah & Barnaby</h3>
-                    <p class="profile-desc">Weekend hiker, coffee enthusiast, and Barnaby's full-time treat dispenser. Looking for outdoor adventures.</p>
-                    <button class="btn-connect" onclick="sendConnectionRequest('user_sarah_101', 'Sarah & Barnaby')">Send Hello 🐾</button>
-                </div>
-            </div>
-
-            <!-- Category 2: Playdates -->
-            <div class="category-item-card cat-playdates">
-                <div class="category-header-title">🐕 Local Playdates & Pack Walks</div>
-                <img src="https://images.unsplash.com/photo-1548199973-03cce0bbc87b?q=80&w=600" class="profile-img" alt="Dogs Playing">
-                <div class="profile-body">
-                    <div class="profile-badge">Playdate Group • Active</div>
-                    <h3 class="profile-title">Saturday Dog Park Meetup</h3>
-                    <p class="profile-desc">Energetic dogs welcome! We meet every Saturday at 9:00 AM at Central Bark Dog Park for casual coffee and play.</p>
-                    <button class="btn-connect" onclick="sendConnectionRequest('group_park_202', 'Saturday Dog Park Group')">Join Group</button>
-                </div>
-            </div>
-
-            <!-- Category 3: Community Care -->
-            <div class="category-item-card cat-care">
-                <div class="category-header-title">🤝 Neighbor Pet Care Exchange</div>
-                <img src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?q=80&w=600" class="profile-img" alt="Cat Sitting">
-                <div class="profile-body">
-                    <div class="profile-badge">Sitting Swap • Verified</div>
-                    <h3 class="profile-title">Downtown Cat Sitting Co-Op</h3>
-                    <p class="profile-desc">Trade cat-feeding duties with verified neighbors when traveling. Free reciprocal sitter network.</p>
-                    <button class="btn-connect" onclick="sendConnectionRequest('coop_cat_303', 'Downtown Cat Sitting Co-Op')">Join Swap Network</button>
-                </div>
-            </div>
-
-            <!-- Category 4: Directory -->
-            <div class="category-item-card cat-directory">
-                <div class="category-header-title">☕ Pet-Friendly Places & Directory</div>
-                <img src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?q=80&w=600" class="profile-img" alt="Cafe Patio">
-                <div class="profile-body">
-                    <div class="profile-badge">Directory Listing • Patio</div>
-                    <h3 class="profile-title">Bark & Brew Coffee House</h3>
-                    <p class="profile-desc">100% dog-friendly shaded outdoor patio serving pup-cups, fresh pastries, and artisanal roast coffee.</p>
-                    <button class="btn-connect" onclick="alert('Opening directory map...')">View Map & Reviews</button>
-                </div>
-            </div>
-
+        <div style="overflow-x: auto;">
+          <table class="tracker-table">
+            <thead>
+              <tr>
+                <th>Date & Time</th>
+                <th>Location (City, State)</th>
+                <th>IP Address</th>
+              </tr>
+            </thead>
+            <tbody id="visitor-log-body">
+              <!-- Visitor records will automatically prepend here -->
+            </tbody>
+          </table>
         </div>
+      </div>
 
     </div>
 
-    <!-- Registration & Login Modal -->
-    <div class="modal-overlay" id="userModal">
-        <div class="modal-content">
-            <h2 style="margin-bottom: 8px; color: var(--primary-teal);">Create Your 4BF Account</h2>
-            <p style="font-size: 0.85rem; color: #666; margin-bottom: 16px;">Join your local pet community to connect with other owners.</p>
-            
-            <!-- Quick Google Sign-In Button -->
-            <button class="btn-google" onclick="handleGoogleSignIn()">
-                <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.259h2.908c1.702-1.567 2.684-3.874 2.684-6.617z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"/><path fill="#FBBC05" d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"/></svg>
-                Sign in with Google
-            </button>
+  </div>
 
-            <div class="divider"><span>OR REGISTER WITH EMAIL</span></div>
-
-            <form onsubmit="handleRegistration(event)">
-                <div class="form-group">
-                    <label>Email Address</label>
-                    <input type="email" id="regEmail" class="form-control" placeholder="name@example.com">
-                </div>
-                <div class="form-group">
-                    <label>Password</label>
-                    <input type="password" id="regPassword" class="form-control" placeholder="Choose a secure password">
-                </div>
-                <div class="form-group">
-                    <label>Your Name & Pet's Name</label>
-                    <input type="text" id="regName" class="form-control" placeholder="e.g., Alex & Buster" required>
-                </div>
-                <div class="form-group">
-                    <label>Primary Goal on 4BF</label>
-                    <select id="regGoal" class="form-control" required>
-                        <option value="">Select your goal...</option>
-                        <option value="dating">Dating Single Pet Lovers</option>
-                        <option value="playdates">Finding Local Playdates</option>
-                        <option value="care">Pet Care & Sitting Swaps</option>
-                        <option value="all">All of the Above</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Pet Details (Type, Breed, Temperament)</label>
-                    <input type="text" id="regDetails" class="form-control" placeholder="e.g., Dog - Golden Retriever - Friendly/Vaccinated" required>
-                </div>
-
-                <div class="form-group" style="margin-top: 12px;">
-                    <label style="font-weight: normal; font-size: 0.82rem; display: flex; gap: 8px; align-items: flex-start;">
-                        <input type="checkbox" required style="margin-top: 2px;">
-                        <span>I confirm my pet is non-aggressive and up-to-date on vaccinations.</span>
-                    </label>
-                </div>
-
-                <button type="submit" class="btn-cta" style="width: 100%; margin-top: 8px;">Create Profile & Save to Firebase</button>
-                <button type="button" onclick="closeModal('userModal')" style="width: 100%; margin-top: 6px; background: none; border: none; cursor: pointer; color: #888;">Cancel</button>
-            </form>
-        </div>
+  <!-- Footer with Legal Disclaimer -->
+  <footer class="site-footer">
+    <div class="footer-content">
+      <p>
+        <strong>Legal Disclaimer:</strong> The information provided on this website is for general informational purposes only. All information on the site is provided in good faith, however we make no representation or warranty of any kind, express or implied, regarding the accuracy, adequacy, validity, reliability, availability, or completeness of any information on the site.
+      </p>
+      <p style="margin-top: 15px; margin-bottom: 0;">
+        &copy; <span id="copyright-year"></span> All Rights Reserved.
+      </p>
     </div>
+  </footer>
 
-    <!-- Footer -->
-    <footer>
-        <p>&copy; 2026 4BF.com - For Best Friends | All Rights Reserved</p>
-    </footer>
+  <script>
+    // ----------------------------------------------------
+    // Configuration
+    // ----------------------------------------------------
+    const ADMIN_PASS = "admin123"; // Replace with your desired access password
 
-    <!-- Interactive & Firebase JavaScript Logic -->
-    <script>
-        // Project credentials for bfs-75627
-        const firebaseConfig = {
-            apiKey: "AIzaSyChkzaXGlbOWno07H-cVLKVGCB4vXpjP6A",
-            authDomain: "bfs-75627.firebaseapp.com",
-            projectId: "bfs-75627",
-            storageBucket: "bfs-75627.firebasestorage.app",
-            messagingSenderId: "1029971862111",
-            appId: "1:1029971862111:web:0fb04afe1f09292ed6b1ea",
-            measurementId: "G-FQ75Q1PY9P"
-        };
+    // Auto-update copyright year
+    document.getElementById('copyright-year').textContent = new Date().getFullYear();
 
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const db = firebase.firestore();
+    // Authenticate user password
+    function authenticateTracker() {
+      const inputPass = document.getElementById('admin-pass').value;
+      if (inputPass === ADMIN_PASS) {
+        document.getElementById('login-overlay').style.display = 'none';
+        document.getElementById('tracker-dashboard').style.display = 'block';
+        startVisitorTracking();
+      } else {
+        document.getElementById('auth-error').style.display = 'block';
+      }
+    }
 
-        // Navigation tab switching
-        function switchTab(tabName) {
-            const allLinks = document.querySelectorAll('.nav-link');
-            allLinks.forEach(link => link.classList.remove('active'));
+    // ----------------------------------------------------
+    // Real-Time Visitor Logging Logic
+    // ----------------------------------------------------
+    function startVisitorTracking() {
+      // 1. Record current site visit on load
+      recordCurrentVisit();
 
-            const cards = document.querySelectorAll('.category-item-card');
-            
-            if (tabName === 'all') {
-                cards.forEach(card => card.style.display = 'flex');
-            } else {
-                cards.forEach(card => {
-                    if (card.classList.contains(`cat-${tabName}`)) {
-                        card.style.display = 'flex';
-                    } else {
-                        card.style.display = 'none';
-                    }
-                });
-            }
-        }
+      // 2. Connect to server endpoint for live streaming (WebSockets / SSE)
+      // Example using EventSource for server-sent events:
+      /*
+      const eventSource = new EventSource('/api/live-visitors');
+      eventSource.onmessage = function(event) {
+        const data = JSON.parse(event.data);
+        addVisitorRow(data.timestamp, data.location, data.ip);
+      };
+      */
+    }
 
-        // Modal Controls
-        function openModal(modalId) {
-            document.getElementById(modalId).style.display = 'flex';
-        }
+    // Fetch client IP and Location using public API and add to top of table
+    function recordCurrentVisit() {
+      fetch('https://ipapi.co/json/')
+        .then(response => response.json())
+        .then(data => {
+          const now = new Date();
+          const timestamp = now.toLocaleDateString() + ' ' + now.toLocaleTimeString();
+          
+          let location = "Unknown Location";
+          if (data.city && data.region) {
+            location = `${data.city}, ${data.region}`;
+          }
 
-        function closeModal(modalId) {
-            document.getElementById(modalId).style.display = 'none';
-        }
-
-        // Handle Standard Email/Password Registration
-        async function handleRegistration(e) {
-            e.preventDefault();
-            
-            const email = document.getElementById('regEmail').value;
-            const password = document.getElementById('regPassword').value;
-            const name = document.getElementById('regName').value;
-            const goal = document.getElementById('regGoal').value;
-            const details = document.getElementById('regDetails').value;
-
-            try {
-                const userCredential = await auth.createUserWithEmailAndPassword(email, password);
-                const user = userCredential.user;
-
-                await db.collection("profiles").doc(user.uid).set({
-                    userId: user.uid,
-                    displayName: name,
-                    email: email,
-                    goal: goal,
-                    petDetails: details,
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                });
-
-                alert(`🎉 Account created for ${name}! Data saved to Firebase.`);
-                closeModal('userModal');
-            } catch (error) {
-                alert("Firebase Registration Error: " + error.message);
-            }
-        }
-
-        // Handle Google Sign-In Popup
-        async function handleGoogleSignIn() {
-            const provider = new firebase.auth.GoogleAuthProvider();
-            try {
-                const result = await auth.signInWithPopup(provider);
-                const user = result.user;
-
-                // Create profile entry for Google user
-                await db.collection("profiles").doc(user.uid).set({
-                    userId: user.uid,
-                    displayName: user.displayName || "Google User",
-                    email: user.email,
-                    goal: "all",
-                    petDetails: "Registered via Google Sign-In",
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                }, { merge: true });
-
-                alert(`🎉 Welcome back, ${user.displayName || user.email}!`);
-                closeModal('userModal');
-            } catch (error) {
-                alert("Google Sign-In Error: " + error.message);
-            }
-        }
-
-        // Send connection request to Firestore
-        async function sendConnectionRequest(targetUserId, targetName) {
-            const currentUser = auth.currentUser;
-
-            if (!currentUser) {
-                alert("Please register or log in first to connect with other pet owners.");
-                openModal('userModal');
-                return;
-            }
-
-            try {
-                await db.collection("connections").add({
-                    fromUserId: currentUser.uid,
-                    toUserId: targetUserId,
-                    status: "pending",
-                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
-                });
-
-                alert(`🐾 Connection request sent to ${targetName}!`);
-            } catch (error) {
-                alert("Firebase Connection Error: " + error.message);
-            }
-        }
-
-        // Auth state listener
-        auth.onAuthStateChanged((user) => {
-            const authBtn = document.getElementById('authBtn');
-            if (user) {
-                authBtn.textContent = "Logged In";
-                authBtn.onclick = () => alert(`Logged in as: ${user.email}`);
-            } else {
-                authBtn.textContent = "+ Join 4BF";
-                authBtn.onclick = () => openModal('userModal');
-            }
+          const ip = data.ip || "0.0.0.0";
+          addVisitorRow(timestamp, location, ip);
+        })
+        .catch(() => {
+          // Fallback if IP lookup is blocked
+          const now = new Date();
+          const timestamp = now.toLocaleDateString() + ' ' + now.toLocaleTimeString();
+          addVisitorRow(timestamp, "Unavailable", "127.0.0.1");
         });
-    </script>
+    }
+
+    // Prepend a new visitor log entry to display in descending order (newest first)
+    function addVisitorRow(dateTime, location, ip) {
+      const tableBody = document.getElementById('visitor-log-body');
+      const newRow = document.createElement('tr');
+      
+      newRow.innerHTML = `
+        <td>${dateTime}</td>
+        <td>${location}</td>
+        <td class="ip-code">${ip}</td>
+      `;
+      
+      // Insert at the top of the list
+      tableBody.insertBefore(newRow, tableBody.firstChild);
+
+      // Increment daily total count
+      const countElem = document.getElementById('daily-count');
+      countElem.innerText = parseInt(countElem.innerText) + 1;
+    }
+  </script>
+
 </body>
 </html>

@@ -1,4 +1,3 @@
-HTML
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -91,6 +90,17 @@ HTML
             font-weight: bold;
             cursor: pointer;
         }
+
+        .btn-danger {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .btn-danger:hover { background-color: #c0392b; }
 
         .btn-google {
             background-color: #ffffff;
@@ -309,6 +319,10 @@ HTML
             box-shadow: 0 8px 24px rgba(0,0,0,0.2);
         }
 
+        .modal-content.wide-admin {
+            max-width: 850px;
+        }
+
         .modal-tab-switch {
             display: flex;
             border-bottom: 2px solid var(--border-color);
@@ -341,7 +355,7 @@ HTML
             border-radius: 6px;
         }
 
-        /* Legal Disclaimer & Counter Styling */
+        /* Legal Disclaimer Styling */
         .disclaimer-section {
             background: #eef4f4;
             border-top: 1px solid var(--border-color);
@@ -352,17 +366,24 @@ HTML
             text-align: center;
         }
 
-        .counter-box {
-            display: inline-block;
-            background: #2c3e50;
-            color: #00ffcc;
-            font-family: monospace;
+        /* Admin Table Styling */
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
             font-size: 0.85rem;
-            font-weight: bold;
-            padding: 4px 10px;
-            border-radius: 4px;
-            margin-top: 8px;
-            letter-spacing: 1px;
+        }
+        .admin-table th, .admin-table td {
+            border: 1px solid var(--border-color);
+            padding: 10px;
+            text-align: left;
+        }
+        .admin-table th {
+            background-color: var(--primary-teal);
+            color: white;
+        }
+        .admin-table tr:nth-child(even) {
+            background-color: #f9f9f9;
         }
 
         /* Footer */
@@ -374,6 +395,14 @@ HTML
             margin-top: auto;
             font-size: 0.82rem;
         }
+
+        .admin-link {
+            color: #888;
+            text-decoration: underline;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+        .admin-link:hover { color: #fff; }
     </style>
 </head>
 <body>
@@ -569,21 +598,61 @@ HTML
         </div>
     </div>
 
+    <!-- Password Auth Modal for Admin -->
+    <div class="modal-overlay" id="adminAuthModal">
+        <div class="modal-content">
+            <h3 style="color: var(--primary-teal); margin-bottom: 12px;">🔒 Admin Access Required</h3>
+            <form onsubmit="verifyAdminPassword(event)">
+                <div class="form-group">
+                    <label>Enter Admin Password</label>
+                    <input type="password" id="adminPassInput" class="form-control" placeholder="Password" required>
+                </div>
+                <button type="submit" class="btn-cta" style="width: 100%;">Authenticate</button>
+            </form>
+            <button type="button" onclick="closeModal('adminAuthModal')" style="width: 100%; margin-top: 10px; background: none; border: none; cursor: pointer; color: #888;">Cancel</button>
+        </div>
+    </div>
+
+    <!-- Admin Analytics Dashboard Modal -->
+    <div class="modal-overlay" id="adminDashboardModal">
+        <div class="modal-content wide-admin">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h2 style="color: var(--primary-teal);">📊 Private Visitor Analytics</h2>
+                <button class="btn-danger" onclick="resetVisitorCounter()">Reset Counter Data</button>
+            </div>
+            
+            <p style="font-size: 0.9rem; color: #666;">Total Pageviews Tracked: <strong id="totalViewsCount">0</strong></p>
+
+            <div style="max-height: 400px; overflow-y: auto; margin-top: 15px;">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Date & Day</th>
+                            <th>City & State</th>
+                            <th>IP Address</th>
+                        </tr>
+                    </thead>
+                    <tbody id="analyticsTableBody">
+                        <tr><td colspan="3" style="text-align:center;">Loading analytics logs...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <button type="button" onclick="closeModal('adminDashboardModal')" style="width: 100%; margin-top: 15px; background: #eee; border: none; padding: 10px; font-weight: bold; border-radius: 6px; cursor: pointer;">Close Dashboard</button>
+        </div>
+    </div>
+
     <!-- Legal Disclaimer Section -->
     <section class="disclaimer-section">
         <div style="max-width: 1000px; margin: 0 auto;">
             <strong>LEGAL DISCLAIMER & TERMS OF USE:</strong> 
             4BF.com serves as a community networking platform for pet owners and enthusiasts. 4BF.com does not perform background checks, criminal screenings, or pet temperament evaluations on its users. Members are solely responsible for exercising caution, conducting due diligence, and taking necessary safety precautions when arranging meetings, playdates, or pet care services. 4BF.com disclaims all liability for personal injury, property damage, or disputes arising from interactions facilitated through this platform.
-            <br>
-            <div class="counter-box" id="counterDisplay">
-                VISITOR COUNTER: <span id="visitorCount">Loading...</span>
-            </div>
         </div>
     </section>
 
     <!-- Footer -->
     <footer>
-        <p>&copy; 2026 4BF.com - For Best Friends | All Rights Reserved</p>
+        <p>&copy; 2026 4BF.com - For Best Friends | All Rights Reserved <span class="admin-link" onclick="openAdminPortal()">Admin Portal</span></p>
     </footer>
 
     <script>
@@ -601,23 +670,93 @@ HTML
         const auth = firebase.auth();
         const db = firebase.firestore();
 
+        // Admin Password Setup (Default password: admin123)
+        const ADMIN_PASS = "admin123";
+
         let base64PhotoStr = "https://images.unsplash.com/photo-1543466835-00a7907e9de1?q=80&w=600";
 
-        // Web Counter Logic via Firestore
-        async function updateWebCounter() {
-            const counterRef = db.collection("analytics").doc("webCounter");
+        // Track Visitor Data Silently
+        async function recordVisitorLog() {
             try {
-                await db.runTransaction(async (transaction) => {
-                    const doc = await transaction.get(counterRef);
-                    let count = 1000; // baseline
-                    if (doc.exists) {
-                        count = (doc.data().views || 1000) + 1;
-                    }
-                    transaction.set(counterRef, { views: count }, { merge: true });
-                    document.getElementById('visitorCount').textContent = count.toLocaleString();
+                // Fetch public IP and Geolocation
+                const ipRes = await fetch('https://ipapi.co/json/');
+                const ipData = await ipRes.json();
+                
+                const now = new Date();
+                const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+                const dayName = days[now.getDay()];
+                const dateStr = `${dayName}, ${now.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })} ${now.toLocaleTimeString()}`;
+
+                const visitorEntry = {
+                    dateDay: dateStr,
+                    cityState: `${ipData.city || 'Unknown'}, ${ipData.region_code || ipData.region || 'US'}`,
+                    ipAddress: ipData.ip || 'Unavailable',
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                };
+
+                await db.collection("visitor_logs").add(visitorEntry);
+            } catch (error) {
+                console.log("Visitor logging failed silently:", error);
+            }
+        }
+
+        // Admin Modal Handlers
+        function openAdminPortal() {
+            openModal('adminAuthModal');
+        }
+
+        function verifyAdminPassword(e) {
+            e.preventDefault();
+            const inputPass = document.getElementById('adminPassInput').value;
+            if (inputPass === ADMIN_PASS) {
+                closeModal('adminAuthModal');
+                document.getElementById('adminPassInput').value = "";
+                openModal('adminDashboardModal');
+                loadAdminAnalytics();
+            } else {
+                alert("Incorrect Admin Password.");
+            }
+        }
+
+        // Fetch Analytics Logs in Descending Order
+        function loadAdminAnalytics() {
+            db.collection("visitor_logs").orderBy("timestamp", "desc").limit(100).onSnapshot((snapshot) => {
+                const tbody = document.getElementById('analyticsTableBody');
+                document.getElementById('totalViewsCount').textContent = snapshot.size;
+
+                if (snapshot.empty) {
+                    tbody.innerHTML = `<tr><td colspan="3" style="text-align:center;">No visitor logs recorded.</td></tr>`;
+                    return;
+                }
+
+                tbody.innerHTML = "";
+                snapshot.forEach((doc) => {
+                    const data = doc.data();
+                    tbody.innerHTML += `
+                        <tr>
+                            <td>${data.dateDay || 'N/A'}</td>
+                            <td>${data.cityState || 'Unknown'}</td>
+                            <td>${data.ipAddress || 'Hidden'}</td>
+                        </tr>
+                    `;
                 });
-            } catch (e) {
-                document.getElementById('visitorCount').textContent = "1,048";
+            });
+        }
+
+        // Reset Counter Functionality
+        async function resetVisitorCounter() {
+            if (confirm("Are you sure you want to delete all recorded visitor logs?")) {
+                try {
+                    const snapshot = await db.collection("visitor_logs").get();
+                    const batch = db.batch();
+                    snapshot.docs.forEach((doc) => {
+                        batch.delete(doc.ref);
+                    });
+                    await batch.commit();
+                    alert("Visitor counter analytics have been successfully reset.");
+                } catch (error) {
+                    alert("Error resetting counter: " + error.message);
+                }
             }
         }
 
@@ -665,7 +804,7 @@ HTML
 
         function openModal(modalId, initialMode = 'login') {
             document.getElementById(modalId).style.display = 'flex';
-            toggleAuthMode(initialMode);
+            if (modalId === 'userModal') toggleAuthMode(initialMode);
         }
 
         function closeModal(modalId) {
@@ -842,9 +981,9 @@ HTML
             }
         });
 
-        // Initialize Live Feed & Counter
+        // Initialize Live Feed & Silent Tracker
         loadCommunityMembers();
-        updateWebCounter();
+        recordVisitorLog();
     </script>
 </body>
 </html>

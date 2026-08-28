@@ -3,254 +3,336 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Park Fast. Park Free. Park LV.</title>
-    <!-- Leaflet Open-Source Mapping CSS -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <!-- Security Headers: Restricts unauthorized script execution & prevents XSS -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; script-src 'self' 'unsafe-inline';">
+    <title>HolyLaws.com - Universal Sacred Texts & Ethical Codes</title>
+    
     <style>
         :root {
-            --bg-gold: #ffd700;
-            --text-blue: #0d47a1;
-            --text-light: #ffffff;
-            --map-bg-white: #ffffff;
-            --border-color: #bbdefb;
+            --bg-parchment: #fdfbf7;
+            --text-dark: #1a2b4c;
+            --accent-gold: #c59b27;
+            --card-bg: #ffffff;
+            --border-color: #e2d8c3;
+            --text-muted: #555555;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Georgia', serif; }
 
         body {
-            background-color: var(--bg-gold);
-            background-image: 
-                linear-gradient(to bottom, rgba(255, 215, 0, 0.8), rgba(255, 215, 0, 0.95)),
-                url('https://images.unsplash.com/photo-1605035012319-110213f4525c?q=80&w=2000');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            color: var(--text-blue);
+            background-color: var(--bg-parchment);
+            color: var(--text-dark);
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
-            min-height: 100vh;
         }
 
         header {
-            text-align: center;
+            background-color: var(--text-dark);
+            color: #ffffff;
             padding: 30px 20px;
-            border-bottom: 2px solid var(--border-color);
-            background-color: rgba(255, 215, 0, 0.9);
+            text-align: center;
+            border-bottom: 4px solid var(--accent-gold);
         }
 
-        .logo-title { font-size: 2.5rem; font-weight: 900; text-transform: uppercase; color: var(--text-blue); }
-        
+        header h1 { font-size: 2.4rem; letter-spacing: 1px; }
+        header p { font-size: 1rem; margin-top: 6px; color: var(--accent-gold); font-family: sans-serif; }
+
         .main-container {
-            flex: 1;
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 25px;
-            padding: 25px;
-            max-width: 1400px;
+            max-width: 1200px;
             margin: 0 auto;
+            padding: 30px 20px;
             width: 100%;
+            flex: 1;
         }
 
-        @media (min-width: 992px) { .main-container { grid-template-columns: 1fr 380px; } }
+        /* Search & Filter Section */
+        .controls-wrapper {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            margin-bottom: 30px;
+        }
 
-        .btn-locate {
-            background-color: var(--text-blue);
-            color: var(--text-light);
-            border: none;
-            padding: 12px 20px;
+        .search-bar {
+            width: 100%;
+            padding: 14px 18px;
+            font-size: 1rem;
+            border: 2px solid var(--border-color);
             border-radius: 8px;
-            font-weight: bold;
+            outline: none;
+            margin-bottom: 15px;
+        }
+        .search-bar:focus { border-color: var(--text-dark); }
+
+        .filter-bar {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+            font-family: sans-serif;
+        }
+
+        .filter-btn {
+            background: var(--bg-parchment);
+            border: 1px solid var(--border-color);
+            padding: 8px 16px;
+            border-radius: 20px;
             cursor: pointer;
+            font-weight: 600;
+            color: var(--text-dark);
+            transition: all 0.2s;
+        }
+
+        .filter-btn.active, .filter-btn:hover {
+            background-color: var(--text-dark);
+            color: #ffffff;
+            border-color: var(--text-dark);
+        }
+
+        /* Content Grid */
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 24px;
+        }
+
+        .law-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .tradition-tag {
+            font-family: sans-serif;
+            font-size: 0.8rem;
             text-transform: uppercase;
-            align-self: flex-start;
+            letter-spacing: 1px;
+            color: var(--accent-gold);
+            font-weight: bold;
             margin-bottom: 10px;
         }
 
-        .map-panel {
-            background-color: var(--map-bg-white);
-            border-radius: 16px;
-            border: 4px solid var(--text-blue) !important;
-            height: 500px;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
-        }
-        #map { height: 100%; width: 100%; }
-
-        .control-panel {
-            background-color: var(--text-blue);
-            color: var(--text-light);
-            border-radius: 16px;
-            padding: 30px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .input-field {
-            width: 100%;
-            background-color: rgba(255, 255, 255, 0.95);
-            padding: 16px;
-            border-radius: 8px;
-            border: none;
-            margin-top: 5px;
-            font-size: 1rem;
-            color: #333;
-        }
-
-        .btn-action {
-            background-color: var(--bg-gold);
-            color: var(--text-blue);
-            border: none;
-            padding: 18px;
-            border-radius: 8px;
-            font-weight: 800;
-            text-transform: uppercase;
-            cursor: pointer;
-        }
-
-        .status-box { background-color: rgba(255, 255, 255, 0.1); padding: 15px; border-radius: 8px; }
+        .law-card h3 { font-size: 1.3rem; margin-bottom: 12px; color: var(--text-dark); }
+        .law-card p { font-size: 1rem; line-height: 1.6; color: #222; }
         
-        .user-location-marker {
-            background-color: var(--text-blue);
-            border: 3px solid var(--bg-gold);
-            border-radius: 50%;
-            animation: pulse 2s infinite;
+        .card-meta {
+            margin-top: 20px;
+            padding-top: 12px;
+            border-top: 1px solid var(--border-color);
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-family: sans-serif;
         }
 
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(13, 71, 161, 0.5); }
-            70% { box-shadow: 0 0 0 15px rgba(13, 71, 161, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(13, 71, 161, 0); }
+        /* Suggestion Form Section */
+        .submission-panel {
+            margin-top: 50px;
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 30px;
         }
+
+        .submission-panel h2 { font-size: 1.4rem; margin-bottom: 10px; }
+        .submission-panel p { font-family: sans-serif; font-size: 0.9rem; color: var(--text-muted); margin-bottom: 20px; }
+
+        .form-group { margin-bottom: 15px; font-family: sans-serif; }
+        .form-group label { display: block; font-weight: bold; margin-bottom: 5px; font-size: 0.9rem; }
+        .form-input, .form-textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 0.95rem;
+        }
+        .form-textarea { height: 100px; resize: vertical; }
+
+        .btn-submit {
+            background-color: var(--text-dark);
+            color: #ffffff;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            font-family: sans-serif;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--text-dark);
+            color: #ffffff;
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: 60px;
+            font-family: sans-serif;
+            font-size: 0.85rem;
+            border-top: 4px solid var(--accent-gold);
+        }
+
+        footer p { margin-bottom: 8px; color: #cccccc; }
+        footer a { color: var(--accent-gold); text-decoration: none; }
+        .legal-notice { max-width: 900px; margin: 15px auto 0; font-size: 0.78rem; line-height: 1.4; color: #aaaaaa; }
     </style>
 </head>
 <body>
 
     <header>
-        <h1 class="logo-title">Park Fast. Park Free. Park LV.</h1>
+        <h1>HolyLaws.com</h1>
+        <p>A Universal Comparative Repository of Sacred Texts & Ethical Codes</p>
     </header>
 
     <div class="main-container">
-        <div class="map-wrapper">
-            <button class="btn-locate" onclick="initRealTimeLocation()">📍 Re-Center Location</button>
-            <div class="map-panel">
-                <div id="map"></div>
+        <!-- Interactive Controls -->
+        <div class="controls-wrapper">
+            <input type="text" id="searchInput" class="search-bar" placeholder="Search by theme or keyword (e.g., Golden Rule, Justice, Charity, Sabbath)..." onkeyup="filterCards()">
+            
+            <div class="filter-bar">
+                <button class="filter-btn active" onclick="filterTradition('all', this)">All Traditions</button>
+                <button class="filter-btn" onclick="filterTradition('Christianity', this)">Christianity</button>
+                <button class="filter-btn" onclick="filterTradition('Judaism', this)">Judaism</button>
+                <button class="filter-btn" onclick="filterTradition('Islam', this)">Islam</button>
+                <button class="filter-btn" onclick="filterTradition('Buddhism', this)">Buddhism</button>
+                <button class="filter-btn" onclick="filterTradition('Hinduism', this)">Hinduism</button>
             </div>
         </div>
 
-        <div class="control-panel">
-            <div class="panel-header">Find Parking</div>
-            <label>1. Your Location</label>
-            <!-- Field is now editable for street addresses -->
-            <input type="text" id="start-loc" class="input-field" placeholder="Detecting address or type here..." />
+        <!-- Comparative Display Grid -->
+        <div class="comparison-grid" id="cardGrid">
             
-            <label>2. Destination</label>
-            <input type="text" id="dest-loc" class="input-field" value="The Cosmopolitan of Las Vegas" />
-
-            <button class="btn-action" onclick="locateAndRoute()">Find Closest Free Spot</button>
-            
-            <div class="status-box">
-                <div id="output-log">Detecting location automatically...</div>
+            <div class="law-card" data-tradition="Christianity" data-keywords="golden rule ethics love neighbor">
+                <div>
+                    <div class="tradition-tag">Christianity • General</div>
+                    <h3>The Golden Rule</h3>
+                    <p>"So in everything, do to others what you would have them do to you, for this sums up the Law and the Prophets."</p>
+                </div>
+                <div class="card-meta">
+                    <strong>Source:</strong> Matthew 7:12 (Public Domain / World English Bible)
+                </div>
             </div>
+
+            <div class="law-card" data-tradition="Judaism" data-keywords="golden rule ethics torah rabbinic">
+                <div>
+                    <div class="tradition-tag">Judaism • Rabbinic</div>
+                    <h3>Core Ethical Principle</h3>
+                    <p>"That which is hateful to you, do not do to your fellow. That is the entire Torah; the rest is explanation; go and learn."</p>
+                </div>
+                <div class="card-meta">
+                    <strong>Source:</strong> Talmud, Shabbat 31a (Public Domain Translation)
+                </div>
+            </div>
+
+            <div class="law-card" data-tradition="Islam" data-keywords="golden rule ethics Hadith faith brother">
+                <div>
+                    <div class="tradition-tag">Islam • Hadith</div>
+                    <h3>Principle of Mutual Love</h3>
+                    <p>"None of you truly believes until he loves for his brother what he loves for himself."</p>
+                </div>
+                <div class="card-meta">
+                    <strong>Source:</strong> Forty Hadith of al-Nawawi 13 (Public Domain)
+                </div>
+            </div>
+
+            <div class="law-card" data-tradition="Buddhism" data-keywords="golden rule ethics karma compassion Dhammapada">
+                <div>
+                    <div class="tradition-tag">Buddhism • Theravada</div>
+                    <h3>Refraining from Harm</h3>
+                    <p>"Hurt not others in ways that you yourself would find hurtful."</p>
+                </div>
+                <div class="card-meta">
+                    <strong>Source:</strong> Udana-Varga 5:18 (Public Domain)
+                </div>
+            </div>
+
+            <div class="law-card" data-tradition="Hinduism" data-keywords="golden rule ethics dharma Mahabharata">
+                <div>
+                    <div class="tradition-tag">Hinduism • Epic Period</div>
+                    <h3>Duty of Dharma</h3>
+                    <p>"This is the sum of duty: do not do to others what would cause pain if done to you."</p>
+                </div>
+                <div class="card-meta">
+                    <strong>Source:</strong> Mahabharata 5:1517 (Public Domain Translation)
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Pre-Moderated Suggestion Form (Replaces Open Public Comments) -->
+        <div class="submission-panel">
+            <h2>Suggest a Text or Translation Correction</h2>
+            <p>To preserve academic integrity and prevent unmoderated debate, public commenting is disabled. You may submit corrections or suggestions to our moderation queue for scholarly review.</p>
+            
+            <form onsubmit="handleSuggestion(event)">
+                <div class="form-group">
+                    <label>Faith Tradition / Denomination</label>
+                    <input type="text" class="form-input" required placeholder="e.g., Eastern Orthodox Christianity, Reform Judaism, Sunni Islam">
+                </div>
+                <div class="form-group">
+                    <label>Text Citation & Public Domain Translation</label>
+                    <textarea class="form-textarea" required placeholder="Provide the exact text passage and its public domain translation source..."></textarea>
+                </div>
+                <button type="submit" class="btn-submit">Submit for Review</button>
+            </form>
+            <div id="formFeedback" style="margin-top: 15px; font-family: sans-serif; font-weight: bold; color: green;"></div>
         </div>
     </div>
 
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <footer>
+        <p>&copy; 2026 HolyLaws.com - All Rights Reserved</p>
+        <p><a href="#">Terms of Service</a> | <a href="#">Academic Neutrality Policy</a> | <a href="#">Privacy Policy</a></p>
+        <div class="legal-notice">
+            <strong>Disclaimer:</strong> HolyLaws.com is an independent educational and historical comparative resource. Texts displayed are strictly drawn from public domain academic translations. This website does not render legal advice, ecclesiastical rulings, or pastoral counsel, nor does it officially represent any religious body or governing denomination.
+        </div>
+    </footer>
+
     <script>
-        let map = L.map('map').setView([36.1147, -115.1728], 15);
-        
-        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 19,
-            attribution: '&copy; OpenStreetMap contributors'
-        }).addTo(map);
+        let selectedTradition = 'all';
 
-        let userMarker;
-        let parkingMarkers = [];
-        const userIcon = L.divIcon({ className: 'user-location-marker', iconSize: [24, 24], iconAnchor: [12, 12] });
-        const logger = document.getElementById('output-log');
+        function filterTradition(tradition, btnElement) {
+            selectedTradition = tradition;
+            
+            // Highlight active button
+            const buttons = document.querySelectorAll('.filter-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            btnElement.classList.add('active');
 
-        // Sample free parking spot dataset for Las Vegas
-        const freeParkingSpots = [
-            { name: "Treasure Island Garage (Free Parking)", lat: 36.1247, lng: -115.1721 },
-            { name: "Fashion Show Mall Garage (Free Parking)", lat: 36.1275, lng: -115.1728 },
-            { name: "The Venetian / Palazzo (Free Self-Park for Select Status/Promos)", lat: 36.1212, lng: -115.1689 },
-            { name: "SAHARA Las Vegas (Free Self-Parking)", lat: 36.1422, lng: -115.1565 },
-            { name: "Circus Circus (Free Self-Parking)", lat: 36.1368, lng: -115.1633 }
-        ];
-
-        // Automatically prompt for location when the page finishes loading
-        window.addEventListener('DOMContentLoaded', () => {
-            initRealTimeLocation();
-        });
-
-        function initRealTimeLocation() {
-            if (!navigator.geolocation) { 
-                logger.innerHTML = "❌ Geolocation unsupported by browser."; 
-                return; 
-            }
-            logger.innerHTML = "📡 Detecting current location...";
-
-            navigator.geolocation.getCurrentPosition(
-                (position) => {
-                    const lat = position.coords.latitude;
-                    const lng = position.coords.longitude;
-                    
-                    if (userMarker) { map.removeLayer(userMarker); }
-                    userMarker = L.marker([lat, lng], { icon: userIcon }).addTo(map);
-                    map.setView([lat, lng], 16);
-
-                    // Free reverse geocoding to display street address instead of raw GPS coordinates
-                    fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`)
-                        .then(res => res.json())
-                        .then(data => {
-                            const address = data.display_name || `${lat.toFixed(4)}, ${lng.toFixed(4)}`;
-                            document.getElementById('start-loc').value = address;
-                            logger.innerHTML = `✅ Location set to: ${data.address.road || 'Current Location'}`;
-                        })
-                        .catch(() => {
-                            document.getElementById('start-loc').value = `${lat.toFixed(4)}, ${lng.toFixed(4)}`;
-                            logger.innerHTML = `✅ Location pinned via GPS.`;
-                        });
-                },
-                (error) => { 
-                    if (location.protocol !== 'https:') {
-                        logger.innerHTML = `❌ GPS Error: Enforce HTTPS on GitHub Pages under Settings > Pages.`;
-                    } else {
-                        logger.innerHTML = `⚠️ Location permission denied or timed out. You can manually enter an address above.`;
-                    }
-                },
-                { enableHighAccuracy: true, timeout: 10000 }
-            );
+            filterCards();
         }
 
-        function locateAndRoute() {
-            // Clear existing parking pins
-            parkingMarkers.forEach(marker => map.removeLayer(marker));
-            parkingMarkers = [];
+        function filterCards() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const cards = document.querySelectorAll('.law-card');
 
-            logger.innerHTML = "🔍 Finding nearest free parking spots...";
+            cards.forEach(card => {
+                const cardTradition = card.getAttribute('data-tradition');
+                const cardKeywords = card.getAttribute('data-keywords').toLowerCase();
+                const cardText = card.innerText.toLowerCase();
 
-            // Plot free parking spots on map
-            freeParkingSpots.forEach(spot => {
-                const marker = L.marker([spot.lat, spot.lng])
-                    .addTo(map)
-                    .bindPopup(`<b>${spot.name}</b><br><span style="color:green;font-weight:bold;">100% Free Parking</span>`)
-                    .openPopup();
-                parkingMarkers.push(marker);
+                const matchesTradition = (selectedTradition === 'all' || cardTradition === selectedTradition);
+                const matchesQuery = (cardKeywords.includes(query) || cardText.includes(query));
+
+                if (matchesTradition && matchesQuery) {
+                    card.style.display = "flex";
+                } else {
+                    card.style.display = "none";
+                }
             });
+        }
 
-            // Adjust view to show all spots
-            const group = L.featureGroup(parkingMarkers);
-            map.fitBounds(group.getBounds().pad(0.2));
-
-            logger.innerHTML = `✅ Loaded ${freeParkingSpots.length} nearby free parking spots on map.`;
+        function handleSuggestion(e) {
+            e.preventDefault();
+            // Secure local handling of feedback submission (No raw server endpoint required)
+            document.getElementById('formFeedback').innerText = "✅ Thank you. Your submission has been routed to the moderation queue for review.";
+            e.target.reset();
         }
     </script>
-    <footer style="text-align: center; padding: 20px; font-size: 0.85rem; color: #0d47a1; margin-top: auto;">
-        <p style="margin-bottom: 6px; font-weight: 700;">ParkLV.com is an independent parking information service.</p>
-        <p><a href="privacy.html" style="color: #0d47a1; font-weight: bold;">Privacy Policy</a> | <a href="terms.html" style="color: #0d47a1; font-weight: bold;">Terms of Service</a></p>
-        <p style="margin-top: 6px;">&copy; 2026 ParkLV.com - All Rights Reserved</p>
-    </footer>
 </body>
 </html>

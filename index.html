@@ -3,335 +3,399 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Security Headers: Restricts unauthorized script execution & prevents XSS -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; script-src 'self' 'unsafe-inline';">
-    <title>HolyLaws.com - Universal Sacred Texts & Ethical Codes</title>
-    
+    <title>4BF.com - For Best Friends | Dating, Playdates & Pet Community</title>
     <style>
         :root {
-            --bg-parchment: #fdfbf7;
-            --text-dark: #1a2b4c;
-            --accent-gold: #c59b27;
+            --primary-teal: #008080;
+            --accent-orange: #ff7f50;
+            --bg-light: #f4f9f9;
             --card-bg: #ffffff;
-            --border-color: #e2d8c3;
-            --text-muted: #555555;
+            --text-dark: #2c3e50;
+            --border-color: #e0e0e0;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Georgia', serif; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
 
         body {
-            background-color: var(--bg-parchment);
+            background-color: var(--bg-light);
             color: var(--text-dark);
-            min-height: 100vh;
             display: flex;
             flex-direction: column;
+            min-height: 100vh;
         }
 
-        header {
-            background-color: var(--text-dark);
-            color: #ffffff;
-            padding: 30px 20px;
+        /* Navigation */
+        nav {
+            background: var(--card-bg);
+            border-bottom: 2px solid var(--border-color);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo { font-size: 1.8rem; font-weight: 900; color: var(--primary-teal); text-decoration: none; }
+        .logo span { color: var(--accent-orange); }
+
+        .nav-links { display: flex; gap: 15px; list-style: none; }
+        .nav-link {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: bold;
+            font-size: 0.95rem;
+            padding: 8px 14px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .nav-link.active, .nav-link:hover { background-color: var(--primary-teal); color: white; }
+
+        .btn-cta {
+            background-color: var(--accent-orange);
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 20px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* Hero Header */
+        .hero {
+            background: linear-gradient(135deg, rgba(0,128,128,0.9), rgba(255,127,80,0.85)), url('https://images.unsplash.com/photo-1543466835-00a7907e9de1?q=80&w=1600') center/cover;
+            color: white;
             text-align: center;
-            border-bottom: 4px solid var(--accent-gold);
+            padding: 60px 20px;
         }
 
-        header h1 { font-size: 2.4rem; letter-spacing: 1px; }
-        header p { font-size: 1rem; margin-top: 6px; color: var(--accent-gold); font-family: sans-serif; }
+        .hero h1 { font-size: 2.5rem; margin-bottom: 12px; }
+        .hero p { font-size: 1.1rem; max-width: 650px; margin: 0 auto 25px; }
 
+        /* Main Container */
         .main-container {
             max-width: 1200px;
-            margin: 0 auto;
-            padding: 30px 20px;
+            margin: 30px auto;
+            padding: 0 20px;
             width: 100%;
             flex: 1;
         }
 
-        /* Search & Filter Section */
-        .controls-wrapper {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
-            margin-bottom: 30px;
-        }
+        /* Category Section Cards */
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
 
-        .search-bar {
-            width: 100%;
-            padding: 14px 18px;
-            font-size: 1rem;
-            border: 2px solid var(--border-color);
-            border-radius: 8px;
-            outline: none;
-            margin-bottom: 15px;
-        }
-        .search-bar:focus { border-color: var(--text-dark); }
-
-        .filter-bar {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            flex-wrap: wrap;
-            font-family: sans-serif;
-        }
-
-        .filter-btn {
-            background: var(--bg-parchment);
-            border: 1px solid var(--border-color);
-            padding: 8px 16px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-weight: 600;
-            color: var(--text-dark);
-            transition: all 0.2s;
-        }
-
-        .filter-btn.active, .filter-btn:hover {
-            background-color: var(--text-dark);
-            color: #ffffff;
-            border-color: var(--text-dark);
-        }
-
-        /* Content Grid */
-        .comparison-grid {
+        .category-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 24px;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
         }
 
-        .law-card {
-            background-color: var(--card-bg);
+        .category-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 25px 20px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            border-top: 5px solid var(--primary-teal);
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .category-card:hover { transform: translateY(-4px); }
+        .category-card.dating { border-top-color: #e74c3c; }
+        .category-card.playdates { border-top-color: var(--accent-orange); }
+        .category-card.care { border-top-color: #27ae60; }
+        .category-card.directory { border-top-color: #8e44ad; }
+
+        .icon-box { font-size: 2.2rem; margin-bottom: 10px; }
+
+        /* Listing Cards */
+        .listings-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+
+        .profile-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
             border: 1px solid var(--border-color);
-            border-radius: 10px;
-            padding: 25px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
         }
 
-        .tradition-tag {
-            font-family: sans-serif;
+        .profile-img {
+            height: 200px;
+            width: 100%;
+            object-fit: cover;
+        }
+
+        .profile-body { padding: 20px; }
+        .profile-title { font-size: 1.2rem; margin-bottom: 6px; color: var(--text-dark); }
+        .profile-badge {
+            display: inline-block;
+            background: var(--bg-light);
+            color: var(--primary-teal);
+            padding: 4px 10px;
+            border-radius: 12px;
             font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: var(--accent-gold);
             font-weight: bold;
             margin-bottom: 10px;
         }
 
-        .law-card h3 { font-size: 1.3rem; margin-bottom: 12px; color: var(--text-dark); }
-        .law-card p { font-size: 1rem; line-height: 1.6; color: #222; }
-        
-        .card-meta {
-            margin-top: 20px;
-            padding-top: 12px;
-            border-top: 1px solid var(--border-color);
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            font-family: sans-serif;
-        }
+        .profile-desc { font-size: 0.9rem; color: #555; line-height: 1.4; margin-bottom: 15px; }
 
-        /* Suggestion Form Section */
-        .submission-panel {
-            margin-top: 50px;
-            background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 30px;
-        }
-
-        .submission-panel h2 { font-size: 1.4rem; margin-bottom: 10px; }
-        .submission-panel p { font-family: sans-serif; font-size: 0.9rem; color: var(--text-muted); margin-bottom: 20px; }
-
-        .form-group { margin-bottom: 15px; font-family: sans-serif; }
-        .form-group label { display: block; font-weight: bold; margin-bottom: 5px; font-size: 0.9rem; }
-        .form-input, .form-textarea {
+        .btn-connect {
             width: 100%;
-            padding: 12px;
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            font-size: 0.95rem;
-        }
-        .form-textarea { height: 100px; resize: vertical; }
-
-        .btn-submit {
-            background-color: var(--text-dark);
-            color: #ffffff;
+            background: var(--primary-teal);
+            color: white;
             border: none;
-            padding: 12px 24px;
+            padding: 10px;
             border-radius: 6px;
             font-weight: bold;
             cursor: pointer;
-            font-family: sans-serif;
+        }
+
+        /* Modal Popup for Profile Creation */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+        }
+
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; font-weight: bold; margin-bottom: 5px; font-size: 0.9rem; }
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
         }
 
         /* Footer */
         footer {
-            background-color: var(--text-dark);
-            color: #ffffff;
+            background: var(--text-dark);
+            color: white;
             text-align: center;
-            padding: 30px 20px;
-            margin-top: 60px;
-            font-family: sans-serif;
+            padding: 25px 20px;
+            margin-top: auto;
             font-size: 0.85rem;
-            border-top: 4px solid var(--accent-gold);
         }
-
-        footer p { margin-bottom: 8px; color: #cccccc; }
-        footer a { color: var(--accent-gold); text-decoration: none; }
-        .legal-notice { max-width: 900px; margin: 15px auto 0; font-size: 0.78rem; line-height: 1.4; color: #aaaaaa; }
+        footer a { color: var(--accent-orange); text-decoration: none; }
     </style>
 </head>
 <body>
 
-    <header>
-        <h1>HolyLaws.com</h1>
-        <p>A Universal Comparative Repository of Sacred Texts & Ethical Codes</p>
+    <!-- Sticky Navigation Bar -->
+    <nav>
+        <a href="#" class="logo">4BF<span>.com</span></a>
+        <ul class="nav-links">
+            <li><span class="nav-link active" onclick="switchTab('all')">All Hubs</span></li>
+            <li><span class="nav-link" onclick="switchTab('dating')">Dating</span></li>
+            <li><span class="nav-link" onclick="switchTab('playdates')">Playdates</span></li>
+            <li><span class="nav-link" onclick="switchTab('care')">Community Care</span></li>
+            <li><span class="nav-link" onclick="switchTab('directory')">Directory</span></li>
+        </ul>
+        <button class="btn-cta" onclick="openModal()">+ Join 4BF</button>
+    </nav>
+
+    <!-- Hero Header -->
+    <header class="hero">
+        <h1>Connect Through Your Best Friend</h1>
+        <p>Whether you're looking for love, local playdates for your dog or cat, or pet-friendly places, 4BF brings pet lovers together.</p>
     </header>
 
     <div class="main-container">
-        <!-- Interactive Controls -->
-        <div class="controls-wrapper">
-            <input type="text" id="searchInput" class="search-bar" placeholder="Search by theme or keyword (e.g., Golden Rule, Justice, Charity, Sabbath)..." onkeyup="filterCards()">
-            
-            <div class="filter-bar">
-                <button class="filter-btn active" onclick="filterTradition('all', this)">All Traditions</button>
-                <button class="filter-btn" onclick="filterTradition('Christianity', this)">Christianity</button>
-                <button class="filter-btn" onclick="filterTradition('Judaism', this)">Judaism</button>
-                <button class="filter-btn" onclick="filterTradition('Islam', this)">Islam</button>
-                <button class="filter-btn" onclick="filterTradition('Buddhism', this)">Buddhism</button>
-                <button class="filter-btn" onclick="filterTradition('Hinduism', this)">Hinduism</button>
+
+        <!-- Category Overview Grid -->
+        <div class="category-grid">
+            <div class="category-card dating" onclick="switchTab('dating')">
+                <div class="icon-box">❤️</div>
+                <h3>Pet Lovers Dating</h3>
+                <p>Single dog & cat owners matching through shared pet bios.</p>
+            </div>
+            <div class="category-card playdates" onclick="switchTab('playdates')">
+                <div class="icon-box">🐕</div>
+                <h3>Pack Playdates</h3>
+                <p>Local walk groups, dog park runs, and feline play sessions.</p>
+            </div>
+            <div class="category-card care" onclick="switchTab('care')">
+                <div class="icon-box">🤝</div>
+                <h3>Community Care</h3>
+                <p>Neighbor pet-sitting swaps, advice, and emergency help.</p>
+            </div>
+            <div class="category-card directory" onclick="switchTab('directory')">
+                <div class="icon-box">☕</div>
+                <h3>Pet Life Directory</h3>
+                <p>Dog-friendly patios, cat cafes, hotels, and veterinarian reviews.</p>
             </div>
         </div>
 
-        <!-- Comparative Display Grid -->
-        <div class="comparison-grid" id="cardGrid">
-            
-            <div class="law-card" data-tradition="Christianity" data-keywords="golden rule ethics love neighbor">
-                <div>
-                    <div class="tradition-tag">Christianity • General</div>
-                    <h3>The Golden Rule</h3>
-                    <p>"So in everything, do to others what you would have them do to you, for this sums up the Law and the Prophets."</p>
+        <hr style="border: none; border-top: 1px solid var(--border-color); margin-bottom: 30px;">
+
+        <!-- Dynamic Content Sections -->
+        
+        <!-- DATING SECTION -->
+        <div id="tab-dating" class="tab-content active">
+            <h2>❤️ Featured Singles & Their Best Friends</h2>
+            <div class="listings-grid">
+                <div class="profile-card">
+                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=600" class="profile-img" alt="Sarah and Golden Retriever">
+                    <div class="profile-body">
+                        <div class="profile-badge">Single • Dog Owner</div>
+                        <h3 class="profile-title">Sarah & Barnaby (Golden Retriever)</h3>
+                        <p class="profile-desc">Weekend hiker, coffee enthusiast, and Barnaby's full-time treat dispenser. Looking for someone who loves outdoor adventures.</p>
+                        <button class="btn-connect" onclick="alert('Connect feature active!')">Send Hello 🐾</button>
+                    </div>
                 </div>
-                <div class="card-meta">
-                    <strong>Source:</strong> Matthew 7:12 (Public Domain / World English Bible)
+                <div class="profile-card">
+                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=600" class="profile-img" alt="Mark and Cat">
+                    <div class="profile-body">
+                        <div class="profile-badge">Single • Cat Owner</div>
+                        <h3 class="profile-title">Mark & Luna (Tabby Cat)</h3>
+                        <p class="profile-desc">Software engineer by day, cat dad by night. Luna rules the apartment, but she's willing to share space with the right person.</p>
+                        <button class="btn-connect" onclick="alert('Connect feature active!')">Send Hello 🐾</button>
+                    </div>
                 </div>
             </div>
-
-            <div class="law-card" data-tradition="Judaism" data-keywords="golden rule ethics torah rabbinic">
-                <div>
-                    <div class="tradition-tag">Judaism • Rabbinic</div>
-                    <h3>Core Ethical Principle</h3>
-                    <p>"That which is hateful to you, do not do to your fellow. That is the entire Torah; the rest is explanation; go and learn."</p>
-                </div>
-                <div class="card-meta">
-                    <strong>Source:</strong> Talmud, Shabbat 31a (Public Domain Translation)
-                </div>
-            </div>
-
-            <div class="law-card" data-tradition="Islam" data-keywords="golden rule ethics Hadith faith brother">
-                <div>
-                    <div class="tradition-tag">Islam • Hadith</div>
-                    <h3>Principle of Mutual Love</h3>
-                    <p>"None of you truly believes until he loves for his brother what he loves for himself."</p>
-                </div>
-                <div class="card-meta">
-                    <strong>Source:</strong> Forty Hadith of al-Nawawi 13 (Public Domain)
-                </div>
-            </div>
-
-            <div class="law-card" data-tradition="Buddhism" data-keywords="golden rule ethics karma compassion Dhammapada">
-                <div>
-                    <div class="tradition-tag">Buddhism • Theravada</div>
-                    <h3>Refraining from Harm</h3>
-                    <p>"Hurt not others in ways that you yourself would find hurtful."</p>
-                </div>
-                <div class="card-meta">
-                    <strong>Source:</strong> Udana-Varga 5:18 (Public Domain)
-                </div>
-            </div>
-
-            <div class="law-card" data-tradition="Hinduism" data-keywords="golden rule ethics dharma Mahabharata">
-                <div>
-                    <div class="tradition-tag">Hinduism • Epic Period</div>
-                    <h3>Duty of Dharma</h3>
-                    <p>"This is the sum of duty: do not do to others what would cause pain if done to you."</p>
-                </div>
-                <div class="card-meta">
-                    <strong>Source:</strong> Mahabharata 5:1517 (Public Domain Translation)
-                </div>
-            </div>
-
         </div>
 
-        <!-- Pre-Moderated Suggestion Form (Replaces Open Public Comments) -->
-        <div class="submission-panel">
-            <h2>Suggest a Text or Translation Correction</h2>
-            <p>To preserve academic integrity and prevent unmoderated debate, public commenting is disabled. You may submit corrections or suggestions to our moderation queue for scholarly review.</p>
+        <!-- PLAYDATES SECTION -->
+        <div id="tab-playdates" class="tab-content active">
+            <h2 style="margin-top: 40px;">🐕 Local Playdates & Pack Walks</h2>
+            <div class="listings-grid">
+                <div class="profile-card">
+                    <img src="https://images.unsplash.com/photo-1548199973-03cce0bbc87b?q=80&w=600" class="profile-img" alt="Dogs Playing">
+                    <div class="profile-body">
+                        <div class="profile-badge">Playdate Group • Active</div>
+                        <h3 class="profile-title">Saturday Morning Dog Park Meetup</h3>
+                        <p class="profile-desc">Energetic dogs welcome! We meet every Saturday at 9:00 AM at Central Bark Dog Park for casual coffee and play.</p>
+                        <button class="btn-connect" onclick="alert('Joined group!')">Join Group</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- COMMUNITY CARE SECTION -->
+        <div id="tab-care" class="tab-content active">
+            <h2 style="margin-top: 40px;">🤝 Neighbor Pet Care Exchange</h2>
+            <div class="listings-grid">
+                <div class="profile-card">
+                    <img src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?q=80&w=600" class="profile-img" alt="Cat Sitting">
+                    <div class="profile-body">
+                        <div class="profile-badge">Sitting Swap • Verified</div>
+                        <h3 class="profile-title">Downtown Cat Sitting Co-Op</h3>
+                        <p class="profile-desc">Trade cat-feeding duties with verified neighbors when traveling. Free reciprocal sitter network.</p>
+                        <button class="btn-connect" onclick="alert('Request sent!')">Join Swap Network</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DIRECTORY SECTION -->
+        <div id="tab-directory" class="tab-content active">
+            <h2 style="margin-top: 40px;">☕ Pet-Friendly Places & Directory</h2>
+            <div class="listings-grid">
+                <div class="profile-card">
+                    <img src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?q=80&w=600" class="profile-img" alt="Cafe Patio">
+                    <div class="profile-body">
+                        <div class="profile-badge">Directory Listing • Patio</div>
+                        <h3 class="profile-title">Bark & Brew Coffee House</h3>
+                        <p class="profile-desc">100% dog-friendly shaded outdoor patio serving pup-cups, fresh pastries, and artisanal roast coffee.</p>
+                        <button class="btn-connect" onclick="alert('Opening directory map...')">View Map & Reviews</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Onboarding / Registration Modal -->
+    <div class="modal-overlay" id="userModal">
+        <div class="modal-content">
+            <h2 style="margin-bottom: 10px; color: var(--primary-teal);">Create Your 4BF Profile</h2>
+            <p style="font-size: 0.9rem; color: #666; margin-bottom: 20px;">Join your local pet community for dating, playdates, or care swaps.</p>
             
-            <form onsubmit="handleSuggestion(event)">
+            <form onsubmit="handleRegistration(event)">
                 <div class="form-group">
-                    <label>Faith Tradition / Denomination</label>
-                    <input type="text" class="form-input" required placeholder="e.g., Eastern Orthodox Christianity, Reform Judaism, Sunni Islam">
+                    <label>Your Name & Pet's Name</label>
+                    <input type="text" class="form-control" placeholder="e.g., Alex & Buster" required>
                 </div>
                 <div class="form-group">
-                    <label>Text Citation & Public Domain Translation</label>
-                    <textarea class="form-textarea" required placeholder="Provide the exact text passage and its public domain translation source..."></textarea>
+                    <label>Primary Goal on 4BF</label>
+                    <select class="form-control" required>
+                        <option value="">Select your goal...</option>
+                        <option value="dating">Dating Single Pet Lovers</option>
+                        <option value="playdates">Finding Local Playdates</option>
+                        <option value="care">Pet Care & Sitting Swaps</option>
+                        <option value="all">All of the Above</option>
+                    </select>
                 </div>
-                <button type="submit" class="btn-submit">Submit for Review</button>
+                <div class="form-group">
+                    <label>Pet Details (Type, Breed, Energy Level)</label>
+                    <input type="text" class="form-control" placeholder="e.g., Dog - Golden Retriever - High Energy" required>
+                </div>
+                <button type="submit" class="btn-cta" style="width: 100%; margin-top: 10px;">Create Profile</button>
+                <button type="button" onclick="closeModal()" style="width: 100%; margin-top: 8px; background: none; border: none; cursor: pointer; color: #888;">Cancel</button>
             </form>
-            <div id="formFeedback" style="margin-top: 15px; font-family: sans-serif; font-weight: bold; color: green;"></div>
         </div>
     </div>
 
+    <!-- Footer -->
     <footer>
-        <p>&copy; 2026 HolyLaws.com - All Rights Reserved</p>
-        <p><a href="#">Terms of Service</a> | <a href="#">Academic Neutrality Policy</a> | <a href="#">Privacy Policy</a></p>
-        <div class="legal-notice">
-            <strong>Disclaimer:</strong> HolyLaws.com is an independent educational and historical comparative resource. Texts displayed are strictly drawn from public domain academic translations. This website does not render legal advice, ecclesiastical rulings, or pastoral counsel, nor does it officially represent any religious body or governing denomination.
-        </div>
+        <p>&copy; 2026 4BF.com - For Best Friends | All Rights Reserved</p>
+        <p style="margin-top: 6px;"><a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a> | <a href="#">Safety & Guidelines</a></p>
     </footer>
 
+    <!-- Interactive JavaScript -->
     <script>
-        let selectedTradition = 'all';
+        function switchTab(tabName) {
+            const allLinks = document.querySelectorAll('.nav-link');
+            allLinks.forEach(link => link.classList.remove('active'));
 
-        function filterTradition(tradition, btnElement) {
-            selectedTradition = tradition;
+            const tabIds = ['dating', 'playdates', 'care', 'directory'];
             
-            // Highlight active button
-            const buttons = document.querySelectorAll('.filter-btn');
-            buttons.forEach(btn => btn.classList.remove('active'));
-            btnElement.classList.add('active');
-
-            filterCards();
+            if (tabName === 'all') {
+                tabIds.forEach(id => {
+                    document.getElementById(`tab-${id}`).style.display = 'block';
+                });
+            } else {
+                tabIds.forEach(id => {
+                    document.getElementById(`tab-${id}`).style.display = (id === tabName) ? 'block' : 'none';
+                });
+            }
         }
 
-        function filterCards() {
-            const query = document.getElementById('searchInput').value.toLowerCase();
-            const cards = document.querySelectorAll('.law-card');
-
-            cards.forEach(card => {
-                const cardTradition = card.getAttribute('data-tradition');
-                const cardKeywords = card.getAttribute('data-keywords').toLowerCase();
-                const cardText = card.innerText.toLowerCase();
-
-                const matchesTradition = (selectedTradition === 'all' || cardTradition === selectedTradition);
-                const matchesQuery = (cardKeywords.includes(query) || cardText.includes(query));
-
-                if (matchesTradition && matchesQuery) {
-                    card.style.display = "flex";
-                } else {
-                    card.style.display = "none";
-                }
-            });
+        function openModal() {
+            document.getElementById('userModal').style.display = 'flex';
         }
 
-        function handleSuggestion(e) {
+        function closeModal() {
+            document.getElementById('userModal').style.display = 'none';
+        }
+
+        function handleRegistration(e) {
             e.preventDefault();
-            // Secure local handling of feedback submission (No raw server endpoint required)
-            document.getElementById('formFeedback').innerText = "✅ Thank you. Your submission has been routed to the moderation queue for review.";
-            e.target.reset();
+            alert('🎉 Profile created successfully! Welcome to 4BF.com');
+            closeModal();
         }
     </script>
 </body>

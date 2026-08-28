@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>4BF.com - For Best Friends | Dating, Playdates & Pet Community</title>
+
+    <!-- Firebase Compatibility SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
     <style>
         :root {
             --primary-teal: #008080;
@@ -68,104 +74,141 @@
             background: linear-gradient(135deg, rgba(0,128,128,0.9), rgba(255,127,80,0.85)), url('https://images.unsplash.com/photo-1543466835-00a7907e9de1?q=80&w=1600') center/cover;
             color: white;
             text-align: center;
-            padding: 60px 20px;
+            padding: 40px 20px;
         }
 
-        .hero h1 { font-size: 2.5rem; margin-bottom: 12px; }
-        .hero p { font-size: 1.1rem; max-width: 650px; margin: 0 auto 25px; }
+        .hero h1 { font-size: 2.2rem; margin-bottom: 10px; }
+        .hero p { font-size: 1.05rem; max-width: 650px; margin: 0 auto 15px; }
 
         /* Main Container */
         .main-container {
             max-width: 1200px;
-            margin: 30px auto;
+            margin: 25px auto;
             padding: 0 20px;
             width: 100%;
             flex: 1;
         }
 
-        /* Horizontal Category Layout */
+        /* Top Hub Buttons Row */
+        .category-row-wrapper {
+            width: 100%;
+            overflow-x: auto;
+            margin-bottom: 30px;
+            padding-bottom: 5px;
+        }
+
         .category-grid {
             display: flex;
             flex-direction: row;
-            gap: 20px;
-            margin-bottom: 30px;
-            overflow-x: auto;
-            padding-bottom: 10px;
+            flex-wrap: nowrap;
+            justify-content: space-between;
+            gap: 15px;
+            width: 100%;
+            min-width: 750px;
         }
 
         .category-card {
-            flex: 1;
-            min-width: 220px;
+            flex: 1 1 0px;
             background: var(--card-bg);
-            border-radius: 12px;
-            padding: 25px 20px;
+            border-radius: 10px;
+            padding: 14px 10px;
             text-align: center;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-            border-top: 5px solid var(--primary-teal);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            border-top: 4px solid var(--primary-teal);
             cursor: pointer;
-            transition: transform 0.2s;
         }
 
-        .category-card:hover { transform: translateY(-4px); }
         .category-card.dating { border-top-color: #e74c3c; }
         .category-card.playdates { border-top-color: var(--accent-orange); }
         .category-card.care { border-top-color: #27ae60; }
         .category-card.directory { border-top-color: #8e44ad; }
+        .category-card h3 { font-size: 0.9rem; margin-bottom: 4px; white-space: nowrap; }
+        .category-card p { font-size: 0.78rem; color: #666; }
+        .icon-box { font-size: 1.6rem; margin-bottom: 4px; }
 
-        .icon-box { font-size: 2.2rem; margin-bottom: 10px; }
-
-        /* Listing Cards */
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
-
-        .listings-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 25px;
-            margin-top: 20px;
+        /* HORIZONTAL CATEGORIES ROW */
+        .section-header {
+            font-size: 1.3rem;
+            margin-bottom: 18px;
+            color: var(--primary-teal);
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 8px;
         }
 
-        .profile-card {
+        .horizontal-categories-row {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            gap: 20px;
+            width: 100%;
+            overflow-x: auto;
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+        }
+
+        .category-item-card {
+            flex: 1 1 300px;
+            min-width: 280px;
             background: var(--card-bg);
-            border-radius: 12px;
+            border-radius: 10px;
             overflow: hidden;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.06);
             border: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .category-header-title {
+            background: var(--bg-light);
+            padding: 10px 14px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: var(--primary-teal);
+            border-bottom: 1px solid var(--border-color);
         }
 
         .profile-img {
-            height: 200px;
+            height: 180px;
             width: 100%;
             object-fit: cover;
+            object-position: center;
+            display: block;
         }
 
-        .profile-body { padding: 20px; }
-        .profile-title { font-size: 1.2rem; margin-bottom: 6px; color: var(--text-dark); }
+        .profile-body {
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+
+        .profile-title { font-size: 1.1rem; margin-bottom: 4px; color: var(--text-dark); }
         .profile-badge {
             display: inline-block;
+            align-self: flex-start;
             background: var(--bg-light);
             color: var(--primary-teal);
-            padding: 4px 10px;
-            border-radius: 12px;
-            font-size: 0.8rem;
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-size: 0.75rem;
             font-weight: bold;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
 
-        .profile-desc { font-size: 0.9rem; color: #555; line-height: 1.4; margin-bottom: 15px; }
+        .profile-desc { font-size: 0.88rem; color: #555; line-height: 1.4; margin-bottom: 14px; flex: 1; }
 
         .btn-connect {
             width: 100%;
             background: var(--primary-teal);
             color: white;
             border: none;
-            padding: 10px;
+            padding: 9px;
             border-radius: 6px;
             font-weight: bold;
             cursor: pointer;
         }
 
-        /* Modal Popup for Profile Creation */
+        /* Modal Styling */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -178,18 +221,20 @@
 
         .modal-content {
             background: white;
-            padding: 30px;
-            border-radius: 12px;
+            padding: 25px;
+            border-radius: 10px;
             max-width: 500px;
             width: 90%;
+            max-height: 85vh;
+            overflow-y: auto;
             box-shadow: 0 8px 24px rgba(0,0,0,0.2);
         }
 
-        .form-group { margin-bottom: 15px; }
-        .form-group label { display: block; font-weight: bold; margin-bottom: 5px; font-size: 0.9rem; }
+        .form-group { margin-bottom: 14px; }
+        .form-group label { display: block; font-weight: bold; margin-bottom: 4px; font-size: 0.88rem; }
         .form-control {
             width: 100%;
-            padding: 10px;
+            padding: 9px;
             border: 1px solid var(--border-color);
             border-radius: 6px;
         }
@@ -199,11 +244,10 @@
             background: var(--text-dark);
             color: white;
             text-align: center;
-            padding: 25px 20px;
+            padding: 20px;
             margin-top: auto;
-            font-size: 0.85rem;
+            font-size: 0.82rem;
         }
-        footer a { color: var(--accent-orange); text-decoration: none; }
     </style>
 </head>
 <body>
@@ -218,7 +262,7 @@
             <li><span class="nav-link" onclick="switchTab('care')">Community Care</span></li>
             <li><span class="nav-link" onclick="switchTab('directory')">Directory</span></li>
         </ul>
-        <button class="btn-cta" onclick="openModal()">+ Join 4BF</button>
+        <button class="btn-cta" id="authBtn" onclick="openModal('userModal')">+ Join 4BF</button>
     </nav>
 
     <!-- Hero Header -->
@@ -229,123 +273,111 @@
 
     <div class="main-container">
 
-        <!-- Horizontal Category Row -->
-        <div class="category-grid">
-            <div class="category-card dating" onclick="switchTab('dating')">
-                <div class="icon-box">❤️</div>
-                <h3>Pet Lovers Dating</h3>
-                <p>Single dog & cat owners matching through shared pet bios.</p>
-            </div>
-            <div class="category-card playdates" onclick="switchTab('playdates')">
-                <div class="icon-box">🐕</div>
-                <h3>Pack Playdates</h3>
-                <p>Local walk groups, dog park runs, and feline play sessions.</p>
-            </div>
-            <div class="category-card care" onclick="switchTab('care')">
-                <div class="icon-box">🤝</div>
-                <h3>Community Care</h3>
-                <p>Neighbor pet-sitting swaps, advice, and emergency help.</p>
-            </div>
-            <div class="category-card directory" onclick="switchTab('directory')">
-                <div class="icon-box">☕</div>
-                <h3>Pet Life Directory</h3>
-                <p>Dog-friendly patios, cat cafes, hotels, and veterinarian reviews.</p>
-            </div>
-        </div>
-
-        <hr style="border: none; border-top: 1px solid var(--border-color); margin-bottom: 30px;">
-
-        <!-- Dynamic Content Sections -->
-        
-        <!-- DATING SECTION -->
-        <div id="tab-dating" class="tab-content active">
-            <h2>❤️ Featured Singles & Their Best Friends</h2>
-            <div class="listings-grid">
-                <div class="profile-card">
-                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=600" class="profile-img" alt="Sarah and Golden Retriever">
-                    <div class="profile-body">
-                        <div class="profile-badge">Single • Dog Owner</div>
-                        <h3 class="profile-title">Sarah & Barnaby (Golden Retriever)</h3>
-                        <p class="profile-desc">Weekend hiker, coffee enthusiast, and Barnaby's full-time treat dispenser. Looking for someone who loves outdoor adventures.</p>
-                        <button class="btn-connect" onclick="alert('Connect feature active!')">Send Hello 🐾</button>
-                    </div>
+        <!-- Top Hub Navigation Cards -->
+        <div class="category-row-wrapper">
+            <div class="category-grid">
+                <div class="category-card dating" onclick="switchTab('dating')">
+                    <div class="icon-box">❤️</div>
+                    <h3>Pet Lovers Dating</h3>
+                    <p>Single pet lovers matching through pet bios.</p>
                 </div>
-                <div class="profile-card">
-                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=600" class="profile-img" alt="Mark and Cat">
-                    <div class="profile-body">
-                        <div class="profile-badge">Single • Cat Owner</div>
-                        <h3 class="profile-title">Mark & Luna (Tabby Cat)</h3>
-                        <p class="profile-desc">Software engineer by day, cat dad by night. Luna rules the apartment, but she's willing to share space with the right person.</p>
-                        <button class="btn-connect" onclick="alert('Connect feature active!')">Send Hello 🐾</button>
-                    </div>
+                <div class="category-card playdates" onclick="switchTab('playdates')">
+                    <div class="icon-box">🐕</div>
+                    <h3>Pack Playdates</h3>
+                    <p>Local walk groups and dog park runs.</p>
+                </div>
+                <div class="category-card care" onclick="switchTab('care')">
+                    <div class="icon-box">🤝</div>
+                    <h3>Community Care</h3>
+                    <p>Neighbor pet-sitting swaps and advice.</p>
+                </div>
+                <div class="category-card directory" onclick="switchTab('directory')">
+                    <div class="icon-box">☕</div>
+                    <h3>Pet Life Directory</h3>
+                    <p>Dog-friendly patios, cafes, and hotels.</p>
                 </div>
             </div>
         </div>
 
-        <!-- PLAYDATES SECTION -->
-        <div id="tab-playdates" class="tab-content active">
-            <h2 style="margin-top: 40px;">🐕 Local Playdates & Pack Walks</h2>
-            <div class="listings-grid">
-                <div class="profile-card">
-                    <img src="https://images.unsplash.com/photo-1548199973-03cce0bbc87b?q=80&w=600" class="profile-img" alt="Dogs Playing">
-                    <div class="profile-body">
-                        <div class="profile-badge">Playdate Group • Active</div>
-                        <h3 class="profile-title">Saturday Morning Dog Park Meetup</h3>
-                        <p class="profile-desc">Energetic dogs welcome! We meet every Saturday at 9:00 AM at Central Bark Dog Park for casual coffee and play.</p>
-                        <button class="btn-connect" onclick="alert('Joined group!')">Join Group</button>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <h2 class="section-header">🐾 Explore Community Categories</h2>
 
-        <!-- COMMUNITY CARE SECTION -->
-        <div id="tab-care" class="tab-content active">
-            <h2 style="margin-top: 40px;">🤝 Neighbor Pet Care Exchange</h2>
-            <div class="listings-grid">
-                <div class="profile-card">
-                    <img src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?q=80&w=600" class="profile-img" alt="Cat Sitting">
-                    <div class="profile-body">
-                        <div class="profile-badge">Sitting Swap • Verified</div>
-                        <h3 class="profile-title">Downtown Cat Sitting Co-Op</h3>
-                        <p class="profile-desc">Trade cat-feeding duties with verified neighbors when traveling. Free reciprocal sitter network.</p>
-                        <button class="btn-connect" onclick="alert('Request sent!')">Join Swap Network</button>
-                    </div>
+        <!-- SINGLE HORIZONTAL ROW OF CATEGORIES -->
+        <div class="horizontal-categories-row" id="all-listings-container">
+            
+            <!-- Category 1: Singles/Dating -->
+            <div class="category-item-card cat-dating">
+                <div class="category-header-title">❤️ Pet Lovers Dating</div>
+                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=600" class="profile-img" alt="Sarah and Dog">
+                <div class="profile-body">
+                    <div class="profile-badge">Single • Dog Owner</div>
+                    <h3 class="profile-title">Sarah & Barnaby</h3>
+                    <p class="profile-desc">Weekend hiker, coffee enthusiast, and Barnaby's full-time treat dispenser. Looking for outdoor adventures.</p>
+                    <button class="btn-connect" onclick="sendConnectionRequest('user_sarah_101', 'Sarah & Barnaby')">Send Hello 🐾</button>
                 </div>
             </div>
-        </div>
 
-        <!-- DIRECTORY SECTION -->
-        <div id="tab-directory" class="tab-content active">
-            <h2 style="margin-top: 40px;">☕ Pet-Friendly Places & Directory</h2>
-            <div class="listings-grid">
-                <div class="profile-card">
-                    <img src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?q=80&w=600" class="profile-img" alt="Cafe Patio">
-                    <div class="profile-body">
-                        <div class="profile-badge">Directory Listing • Patio</div>
-                        <h3 class="profile-title">Bark & Brew Coffee House</h3>
-                        <p class="profile-desc">100% dog-friendly shaded outdoor patio serving pup-cups, fresh pastries, and artisanal roast coffee.</p>
-                        <button class="btn-connect" onclick="alert('Opening directory map...')">View Map & Reviews</button>
-                    </div>
+            <!-- Category 2: Playdates -->
+            <div class="category-item-card cat-playdates">
+                <div class="category-header-title">🐕 Local Playdates & Pack Walks</div>
+                <img src="https://images.unsplash.com/photo-1548199973-03cce0bbc87b?q=80&w=600" class="profile-img" alt="Dogs Playing">
+                <div class="profile-body">
+                    <div class="profile-badge">Playdate Group • Active</div>
+                    <h3 class="profile-title">Saturday Dog Park Meetup</h3>
+                    <p class="profile-desc">Energetic dogs welcome! We meet every Saturday at 9:00 AM at Central Bark Dog Park for casual coffee and play.</p>
+                    <button class="btn-connect" onclick="sendConnectionRequest('group_park_202', 'Saturday Dog Park Group')">Join Group</button>
                 </div>
             </div>
+
+            <!-- Category 3: Community Care -->
+            <div class="category-item-card cat-care">
+                <div class="category-header-title">🤝 Neighbor Pet Care Exchange</div>
+                <img src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?q=80&w=600" class="profile-img" alt="Cat Sitting">
+                <div class="profile-body">
+                    <div class="profile-badge">Sitting Swap • Verified</div>
+                    <h3 class="profile-title">Downtown Cat Sitting Co-Op</h3>
+                    <p class="profile-desc">Trade cat-feeding duties with verified neighbors when traveling. Free reciprocal sitter network.</p>
+                    <button class="btn-connect" onclick="sendConnectionRequest('coop_cat_303', 'Downtown Cat Sitting Co-Op')">Join Swap Network</button>
+                </div>
+            </div>
+
+            <!-- Category 4: Directory -->
+            <div class="category-item-card cat-directory">
+                <div class="category-header-title">☕ Pet-Friendly Places & Directory</div>
+                <img src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?q=80&w=600" class="profile-img" alt="Cafe Patio">
+                <div class="profile-body">
+                    <div class="profile-badge">Directory Listing • Patio</div>
+                    <h3 class="profile-title">Bark & Brew Coffee House</h3>
+                    <p class="profile-desc">100% dog-friendly shaded outdoor patio serving pup-cups, fresh pastries, and artisanal roast coffee.</p>
+                    <button class="btn-connect" onclick="alert('Opening directory map...')">View Map & Reviews</button>
+                </div>
+            </div>
+
         </div>
 
     </div>
 
-    <!-- Onboarding / Registration Modal -->
+    <!-- Registration & Login Modal -->
     <div class="modal-overlay" id="userModal">
         <div class="modal-content">
-            <h2 style="margin-bottom: 10px; color: var(--primary-teal);">Create Your 4BF Profile</h2>
-            <p style="font-size: 0.9rem; color: #666; margin-bottom: 20px;">Join your local pet community for dating, playdates, or care swaps.</p>
+            <h2 style="margin-bottom: 8px; color: var(--primary-teal);">Create Your 4BF Account</h2>
+            <p style="font-size: 0.85rem; color: #666; margin-bottom: 16px;">Join your local pet community to connect with other owners.</p>
             
             <form onsubmit="handleRegistration(event)">
                 <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" id="regEmail" class="form-control" placeholder="name@example.com" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="regPassword" class="form-control" placeholder="Choose a secure password" required>
+                </div>
+                <div class="form-group">
                     <label>Your Name & Pet's Name</label>
-                    <input type="text" class="form-control" placeholder="e.g., Alex & Buster" required>
+                    <input type="text" id="regName" class="form-control" placeholder="e.g., Alex & Buster" required>
                 </div>
                 <div class="form-group">
                     <label>Primary Goal on 4BF</label>
-                    <select class="form-control" required>
+                    <select id="regGoal" class="form-control" required>
                         <option value="">Select your goal...</option>
                         <option value="dating">Dating Single Pet Lovers</option>
                         <option value="playdates">Finding Local Playdates</option>
@@ -354,11 +386,19 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>Pet Details (Type, Breed, Energy Level)</label>
-                    <input type="text" class="form-control" placeholder="e.g., Dog - Golden Retriever - High Energy" required>
+                    <label>Pet Details (Type, Breed, Temperament)</label>
+                    <input type="text" id="regDetails" class="form-control" placeholder="e.g., Dog - Golden Retriever - Friendly/Vaccinated" required>
                 </div>
-                <button type="submit" class="btn-cta" style="width: 100%; margin-top: 10px;">Create Profile</button>
-                <button type="button" onclick="closeModal()" style="width: 100%; margin-top: 8px; background: none; border: none; cursor: pointer; color: #888;">Cancel</button>
+
+                <div class="form-group" style="margin-top: 12px;">
+                    <label style="font-weight: normal; font-size: 0.82rem; display: flex; gap: 8px; align-items: flex-start;">
+                        <input type="checkbox" required style="margin-top: 2px;">
+                        <span>I confirm my pet is non-aggressive and up-to-date on vaccinations.</span>
+                    </label>
+                </div>
+
+                <button type="submit" class="btn-cta" style="width: 100%; margin-top: 8px;">Create Profile & Save to Firebase</button>
+                <button type="button" onclick="closeModal('userModal')" style="width: 100%; margin-top: 6px; background: none; border: none; cursor: pointer; color: #888;">Cancel</button>
             </form>
         </div>
     </div>
@@ -366,41 +406,122 @@
     <!-- Footer -->
     <footer>
         <p>&copy; 2026 4BF.com - For Best Friends | All Rights Reserved</p>
-        <p style="margin-top: 6px;"><a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a> | <a href="#">Safety & Guidelines</a></p>
     </footer>
 
-    <!-- Interactive JavaScript -->
+    <!-- Interactive & Firebase JavaScript Logic -->
     <script>
+        // Project credentials for bfs-75627
+        const firebaseConfig = {
+            apiKey: "AIzaSyChkzaXGlbOWno07H-cVLKVGCB4vXpjP6A",
+            authDomain: "bfs-75627.firebaseapp.com",
+            projectId: "bfs-75627",
+            storageBucket: "bfs-75627.firebasestorage.app",
+            messagingSenderId: "1029971862111",
+            appId: "1:1029971862111:web:0fb04afe1f09292ed6b1ea",
+            measurementId: "G-FQ75Q1PY9P"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        // Navigation tab switching
         function switchTab(tabName) {
             const allLinks = document.querySelectorAll('.nav-link');
             allLinks.forEach(link => link.classList.remove('active'));
 
-            const tabIds = ['dating', 'playdates', 'care', 'directory'];
+            const cards = document.querySelectorAll('.category-item-card');
             
             if (tabName === 'all') {
-                tabIds.forEach(id => {
-                    document.getElementById(`tab-${id}`).style.display = 'block';
-                });
+                cards.forEach(card => card.style.display = 'flex');
             } else {
-                tabIds.forEach(id => {
-                    document.getElementById(`tab-${id}`).style.display = (id === tabName) ? 'block' : 'none';
+                cards.forEach(card => {
+                    if (card.classList.contains(`cat-${tabName}`)) {
+                        card.style.display = 'flex';
+                    } else {
+                        card.style.display = 'none';
+                    }
                 });
             }
         }
 
-        function openModal() {
-            document.getElementById('userModal').style.display = 'flex';
+        // Modal Controls
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = 'flex';
         }
 
-        function closeModal() {
-            document.getElementById('userModal').style.display = 'none';
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
         }
 
-        function handleRegistration(e) {
+        // Handle Registration & Storing Data in Firestore
+        async function handleRegistration(e) {
             e.preventDefault();
-            alert('🎉 Profile created successfully! Welcome to 4BF.com');
-            closeModal();
+            
+            const email = document.getElementById('regEmail').value;
+            const password = document.getElementById('regPassword').value;
+            const name = document.getElementById('regName').value;
+            const goal = document.getElementById('regGoal').value;
+            const details = document.getElementById('regDetails').value;
+
+            try {
+                // 1. Create User in Firebase Auth
+                const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+                const user = userCredential.user;
+
+                // 2. Save profile in Firestore collection 'profiles'
+                await db.collection("profiles").doc(user.uid).set({
+                    userId: user.uid,
+                    displayName: name,
+                    email: email,
+                    goal: goal,
+                    petDetails: details,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
+                alert(`🎉 Account created for ${name}! Data saved in your Firebase project bfs-75627.`);
+                closeModal('userModal');
+            } catch (error) {
+                alert("Firebase Registration Error: " + error.message);
+            }
         }
+
+        // Send connection request to Firestore
+        async function sendConnectionRequest(targetUserId, targetName) {
+            const currentUser = auth.currentUser;
+
+            if (!currentUser) {
+                alert("Please register or log in first to connect with other pet owners.");
+                openModal('userModal');
+                return;
+            }
+
+            try {
+                await db.collection("connections").add({
+                    fromUserId: currentUser.uid,
+                    toUserId: targetUserId,
+                    status: "pending",
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
+                alert(`🐾 Connection request sent to ${targetName}!`);
+            } catch (error) {
+                alert("Firebase Connection Error: " + error.message);
+            }
+        }
+
+        // Auth state listener
+        auth.onAuthStateChanged((user) => {
+            const authBtn = document.getElementById('authBtn');
+            if (user) {
+                authBtn.textContent = "Logged In";
+                authBtn.onclick = () => alert(`Logged in as: ${user.email}`);
+            } else {
+                authBtn.textContent = "+ Join 4BF";
+                authBtn.onclick = () => openModal('userModal');
+            }
+        });
     </script>
 </body>
 </html>

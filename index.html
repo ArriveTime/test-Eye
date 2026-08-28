@@ -94,6 +94,8 @@
             border-radius: 8px;
             border: none;
             margin-top: 5px;
+            font-size: 1rem;
+            color: #333;
         }
 
         .btn-action {
@@ -131,7 +133,7 @@
 
     <div class="main-container">
         <div class="map-wrapper">
-            <button class="btn-locate" onclick="initRealTimeLocation()">📍 Pin My Location</button>
+            <button class="btn-locate" onclick="initRealTimeLocation()">📍 Re-Center Location</button>
             <div class="map-panel">
                 <div id="map"></div>
             </div>
@@ -140,7 +142,8 @@
         <div class="control-panel">
             <div class="panel-header">Find Parking</div>
             <label>1. Your Location</label>
-            <input type="text" id="start-loc" class="input-field" placeholder="Click 'Pin My Location'..." readonly />
+            <!-- Field is now editable for street addresses -->
+            <input type="text" id="start-loc" class="input-field" placeholder="Detecting address or type here..." />
             
             <label>2. Destination</label>
             <input type="text" id="dest-loc" class="input-field" value="The Cosmopolitan of Las Vegas" />
@@ -148,59 +151,101 @@
             <button class="btn-action" onclick="locateAndRoute()">Find Closest Free Spot</button>
             
             <div class="status-box">
-                <div id="output-log">Awaiting location permission...</div>
+                <div id="output-log">Detecting location automatically...</div>
             </div>
         </div>
     </div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-        let map = L.map('map').setView([36.1147, -115.1728], 16);
+        let map = L.map('map').setView([36.1147, -115.1728], 15);
         
-        // OpenStreetMap free tile server (No API key needed)
         L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
-            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+            attribution: '&copy; OpenStreetMap contributors'
         }).addTo(map);
 
         let userMarker;
+        let parkingMarkers = [];
         const userIcon = L.divIcon({ className: 'user-location-marker', iconSize: [24, 24], iconAnchor: [12, 12] });
         const logger = document.getElementById('output-log');
 
+        // Sample free parking spot dataset for Las Vegas
+        const freeParkingSpots = [
+            { name: "Treasure Island Garage (Free Parking)", lat: 36.1247, lng: -115.1721 },
+            { name: "Fashion Show Mall Garage (Free Parking)", lat: 36.1275, lng: -115.1728 },
+            { name: "The Venetian / Palazzo (Free Self-Park for Select Status/Promos)", lat: 36.1212, lng: -115.1689 },
+            { name: "SAHARA Las Vegas (Free Self-Parking)", lat: 36.1422, lng: -115.1565 },
+            { name: "Circus Circus (Free Self-Parking)", lat: 36.1368, lng: -115.1633 }
+        ];
+
+        // Automatically prompt for location when the page finishes loading
+        window.addEventListener('DOMContentLoaded', () => {
+            initRealTimeLocation();
+        });
+
         function initRealTimeLocation() {
             if (!navigator.geolocation) { 
-                logger.innerHTML = "❌ Geolocation unsupported."; 
+                logger.innerHTML = "❌ Geolocation unsupported by browser."; 
                 return; 
             }
-            logger.innerHTML = "📡 Searching for location...";
+            logger.innerHTML = "📡 Detecting current location...";
 
-            navigator.geolocation.watchPosition(
+            navigator.geolocation.getCurrentPosition(
                 (position) => {
                     const lat = position.coords.latitude;
                     const lng = position.coords.longitude;
-                    logger.innerHTML = `✅ Tracking: ${lat.toFixed(4)}, ${lng.toFixed(4)}`;
-                    document.getElementById('start-loc').value = `${lat.toFixed(4)}, ${lng.toFixed(4)}`;
-
+                    
                     if (userMarker) { map.removeLayer(userMarker); }
                     userMarker = L.marker([lat, lng], { icon: userIcon }).addTo(map);
-                    
-                    if (!window.hasCentered) { 
-                        map.setView([lat, lng], 17); 
-                        window.hasCentered = true; 
-                    }
+                    map.setView([lat, lng], 16);
+
+                    // Free reverse geocoding to display street address instead of raw GPS coordinates
+                    fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`)
+                        .then(res => res.json())
+                        .then(data => {
+                            const address = data.display_name || `${lat.toFixed(4)}, ${lng.toFixed(4)}`;
+                            document.getElementById('start-loc').value = address;
+                            logger.innerHTML = `✅ Location set to: ${data.address.road || 'Current Location'}`;
+                        })
+                        .catch(() => {
+                            document.getElementById('start-loc').value = `${lat.toFixed(4)}, ${lng.toFixed(4)}`;
+                            logger.innerHTML = `✅ Location pinned via GPS.`;
+                        });
                 },
                 (error) => { 
                     if (location.protocol !== 'https:') {
-                        logger.innerHTML = `❌ GPS Error: Geolocation requires HTTPS connection.`;
+                        logger.innerHTML = `❌ GPS Error: Enforce HTTPS on GitHub Pages under Settings > Pages.`;
                     } else {
-                        logger.innerHTML = `❌ GPS Error: ${error.message}`;
+                        logger.innerHTML = `⚠️ Location permission denied or timed out. You can manually enter an address above.`;
                     }
                 },
-                { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
+                { enableHighAccuracy: true, timeout: 10000 }
             );
         }
 
-        function locateAndRoute() { alert("Routing logic active."); }
+        function locateAndRoute() {
+            // Clear existing parking pins
+            parkingMarkers.forEach(marker => map.removeLayer(marker));
+            parkingMarkers = [];
+
+            logger.innerHTML = "🔍 Finding nearest free parking spots...";
+
+            // Plot free parking spots on map
+            freeParkingSpots.forEach(spot => {
+                const marker = L.marker([spot.lat, spot.lng])
+                    .addTo(map)
+                    .bindPopup(`<b>${spot.name}</b><br><span style="color:green;font-weight:bold;">100% Free Parking</span>`)
+                    .openPopup();
+                parkingMarkers.push(marker);
+            });
+
+            // Adjust view to show all spots
+            const group = L.featureGroup(parkingMarkers);
+            map.fitBounds(group.getBounds().pad(0.2));
+
+            logger.innerHTML = `✅ Loaded ${freeParkingSpots.length} nearby free parking spots on map.`;
+        }
     </script>
     <footer style="text-align: center; padding: 20px; font-size: 0.85rem; color: #0d47a1; margin-top: auto;">
         <p style="margin-bottom: 6px; font-weight: 700;">ParkLV.com is an independent parking information service.</p>

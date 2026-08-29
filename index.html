@@ -131,6 +131,19 @@
             animation: pulse 2s infinite;
         }
 
+        .lv-hub-marker {
+            background-color: #ffd700;
+            color: #0d47a1;
+            border: 3px solid #0d47a1;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            cursor: pointer;
+            animation: pulse 1.8s infinite;
+        }
+
         @keyframes pulse {
             0% { box-shadow: 0 0 0 0 rgba(13, 71, 161, 0.7); }
             70% { box-shadow: 0 0 0 18px rgba(13, 71, 161, 0); }
@@ -161,17 +174,19 @@
             <label>2. Destination</label>
             <input type="text" id="dest-loc" class="input-field" value="The Cosmopolitan of Las Vegas" />
 
-            <button class="btn-action" onclick="locateAndRoute()">Find Closest Free Spot</button>
+            <button class="btn-action" onclick="loadLasVegasParking()">Explore Las Vegas Spots</button>
+            <button class="btn-action" style="background-color: #ffffff; color: #0d47a1;" onclick="locateAndRoute()">Find Closest Free Spot</button>
             
             <div class="status-box">
-                <div id="output-log">Detecting location automatically...</div>
+                <div id="output-log">Click the Las Vegas icon on the map to show free parking spots!</div>
             </div>
         </div>
     </div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-        let map = L.map('map').setView([36.1147, -115.1728], 15);
+        // Start map showing full US view
+        let map = L.map('map').setView([39.8283, -98.5795], 4);
         
         L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
@@ -182,7 +197,10 @@
         let accuracyCircle;
         let watchId = null;
         let parkingMarkers = [];
+        let lvHubMarker;
+
         const userIcon = L.divIcon({ className: 'user-location-marker', iconSize: [24, 24], iconAnchor: [12, 12] });
+        const lvIcon = L.divIcon({ className: 'lv-hub-marker', html: '<b>🎰</b>', iconSize: [36, 36], iconAnchor: [18, 18] });
         const logger = document.getElementById('output-log');
 
         // Sample free parking spot dataset for Las Vegas
@@ -194,13 +212,39 @@
             { name: "Circus Circus (Free Self-Parking)", lat: 36.1368, lng: -115.1633 }
         ];
 
-        // Automatically prompt for location when the page finishes loading
+        // Add Las Vegas Hub Icon on startup
         window.addEventListener('DOMContentLoaded', () => {
-            initRealTimeLocation();
+            setupLasVegasHub();
         });
 
+        function setupLasVegasHub() {
+            lvHubMarker = L.marker([36.1699, -115.1398], { icon: lvIcon })
+                .addTo(map)
+                .bindPopup(`
+                    <div style="text-align:center;">
+                        <b style="color:#0d47a1;font-size:1.1rem;">🎰 Las Vegas Free Parking</b><br>
+                        <span style="font-size:0.85rem;color:#555;">Click below to zoom into Las Vegas & view live spots</span><br><br>
+                        <button onclick="loadLasVegasParking()" style="background:#0d47a1;color:#fff;border:none;padding:8px 14px;border-radius:6px;font-weight:bold;cursor:pointer;">Show Free Spots</button>
+                    </div>
+                `);
+
+            lvHubMarker.on('click', () => {
+                loadLasVegasParking();
+            });
+        }
+
+        function loadLasVegasParking() {
+            // Smoothly fly map into Las Vegas area
+            map.flyTo([36.1247, -115.1721], 14, { duration: 1.5 });
+            
+            // Plot all free parking spots
+            locateAndRoute();
+
+            // Enable real-time user GPS tracking
+            initRealTimeLocation();
+        }
+
         function updatePositionOnMap(lat, lng, accuracy) {
-            // Update or create user marker
             if (userMarker) {
                 userMarker.setLatLng([lat, lng]);
             } else {
@@ -209,7 +253,6 @@
                     .bindPopup("<b>📍 Your Current Location</b>");
             }
 
-            // Update or create accuracy circle
             if (accuracyCircle) {
                 accuracyCircle.setLatLng([lat, lng]);
                 accuracyCircle.setRadius(accuracy || 0);
@@ -223,16 +266,14 @@
                 }).addTo(map);
             }
 
-            map.setView([lat, lng], 16);
-
-            // Free reverse geocoding to display street address instead of raw GPS coordinates
+            // Free reverse geocoding to display street address
             fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`)
                 .then(res => res.json())
                 .then(data => {
                     const address = data.display_name || `${lat.toFixed(4)}, ${lng.toFixed(4)}`;
                     document.getElementById('start-loc').value = address;
                     const roadName = (data.address && data.address.road) ? data.address.road : 'Current Location';
-                    logger.innerHTML = `✅ Location set to: ${roadName}`;
+                    logger.innerHTML = `✅ Real-time location active: ${roadName}`;
                 })
                 .catch(() => {
                     document.getElementById('start-loc').value = `${lat.toFixed(4)}, ${lng.toFixed(4)}`;
@@ -245,14 +286,11 @@
                 logger.innerHTML = "❌ Geolocation unsupported by browser."; 
                 return; 
             }
-            logger.innerHTML = "📡 Detecting real-time GPS location...";
 
-            // Clear active position watch if re-triggering
             if (watchId !== null) {
                 navigator.geolocation.clearWatch(watchId);
             }
 
-            // Continuous real-time GPS tracking
             watchId = navigator.geolocation.watchPosition(
                 (position) => {
                     const lat = position.coords.latitude;
@@ -264,11 +302,7 @@
                     if (location.protocol !== 'https:' && location.hostname !== 'localhost') {
                         logger.innerHTML = `❌ GPS Error: Enforce HTTPS on GitHub Pages under Settings > Pages.`;
                     } else {
-                        logger.innerHTML = `⚠️ Location permission denied or timed out. You can manually enter an address above.`;
-                    }
-                    // Fallback to default Las Vegas center marker if GPS permission blocked
-                    if (!userMarker) {
-                        updatePositionOnMap(36.1147, -115.1728, 0);
+                        logger.innerHTML = `⚠️ Location permission denied. You can manually enter an address above.`;
                     }
                 },
                 { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
@@ -276,26 +310,17 @@
         }
 
         function locateAndRoute() {
-            // Clear existing parking pins
             parkingMarkers.forEach(marker => map.removeLayer(marker));
             parkingMarkers = [];
 
-            logger.innerHTML = "🔍 Finding nearest free parking spots...";
+            logger.innerHTML = "🔍 Loading free parking spots on map...";
 
-            // Plot free parking spots on map
             freeParkingSpots.forEach(spot => {
                 const marker = L.marker([spot.lat, spot.lng])
                     .addTo(map)
                     .bindPopup(`<b>${spot.name}</b><br><span style="color:green;font-weight:bold;">100% Free Parking</span>`);
                 parkingMarkers.push(marker);
             });
-
-            // Adjust view to show user location and all parking spots
-            const allElements = [...parkingMarkers];
-            if (userMarker) allElements.push(userMarker);
-            
-            const group = L.featureGroup(allElements);
-            map.fitBounds(group.getBounds().pad(0.2));
 
             logger.innerHTML = `✅ Loaded ${freeParkingSpots.length} nearby free parking spots on map.`;
         }

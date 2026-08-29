@@ -1,8 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ewport" content="width=device-width, initial-scale=1.0">
     <title>Park Fast. Park Free. Park LV.</title>
     <!-- Leaflet Open-Source Mapping CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -415,7 +411,7 @@
         </div>
     </div>
 
-    <!-- Hidden Admin Portal Modal -->
+    <!-- Hidden Admin Portal Modal (Counters Visible ONLY Here) -->
     <div class="admin-modal-overlay" id="adminModal">
         <div class="admin-modal-content">
             <div class="admin-header">
@@ -489,6 +485,14 @@
             initRealTimeUserLocation();
             startSimulatedRealTimeUpdates();
             initVisitorTracking();
+        });
+
+        // Key Listener for Secret Shortcut (Ctrl + Shift + A)
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.shiftKey && (e.key === 'A' || e.key === 'a')) {
+                e.preventDefault();
+                promptAdminPortal();
+            }
         });
 
         function setupLasVegasHubPin() {
@@ -695,7 +699,7 @@
             }, 4000);
         }
 
-        // --- REAL-TIME VISITOR TRACKING & HIDDEN ADMIN SYSTEM ---
+        // --- DUAL-API REAL-TIME VISITOR TRACKING & HIDDEN ADMIN SYSTEM ---
         let visitorLogs = [];
 
         const simulatedCities = [
@@ -715,21 +719,35 @@
                 try { visitorLogs = JSON.parse(storedLogs); } catch(e) { visitorLogs = []; }
             }
 
-            // Fetch visitor's actual IP & Location dynamically
+            // Dual IP Lookup System (ipapi.co with fallback to ipwho.is)
             fetch('https://ipapi.co/json/')
-                .then(res => res.json())
+                .then(res => {
+                    if (!res.ok) throw new Error('ipapi rate limit or block');
+                    return res.json();
+                })
                 .then(data => {
                     if (data && data.city && data.region_code) {
-                        recordVisitorLog(`${data.city}, ${data.region_code}`, data.ip || '192.168.1.1');
+                        recordVisitorLog(`${data.city}, ${data.region_code}`, data.ip || 'Unknown IP');
                     } else {
-                        recordVisitorLog("Williamsburg, VA", "68.229.45.118");
+                        throw new Error('Invalid format');
                     }
                 })
                 .catch(() => {
-                    recordVisitorLog("Williamsburg, VA", "68.229.45.118");
+                    fetch('https://ipwho.is/')
+                        .then(res => res.json())
+                        .then(data => {
+                            if (data && data.success) {
+                                recordVisitorLog(`${data.city}, ${data.region_code || data.region}`, data.ip);
+                            } else {
+                                recordVisitorLog("Direct Visitor", "Hidden/Blocked");
+                            }
+                        })
+                        .catch(() => {
+                            recordVisitorLog("Direct Visitor", "Hidden/Blocked");
+                        });
                 });
 
-            // Simulate incoming real-time traffic events
+            // Simulate real-time background traffic events
             setInterval(() => {
                 if (Math.random() > 0.4) {
                     const randomLoc = simulatedCities[Math.floor(Math.random() * simulatedCities.length)];
@@ -753,7 +771,6 @@
                 ip: ip
             };
 
-            // Unshift to ensure Descending order (newest first)
             visitorLogs.unshift(newEntry);
             if (visitorLogs.length > 100) visitorLogs.pop(); // Keep top 100 entries
 

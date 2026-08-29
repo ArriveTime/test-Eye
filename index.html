@@ -97,28 +97,69 @@
         .hero {
             background: linear-gradient(135deg, #1e4267 0%, #2b5c8f 50%, #3d7ab8 100%);
             color: white;
-            padding: 80px 20px;
+            padding: 70px 20px 80px 20px;
             text-align: center;
             position: relative;
         }
 
         .hero-content {
-            max-width: 800px;
+            max-width: 900px;
             margin: 0 auto;
         }
 
         .hero h2 {
             font-size: 2.8rem;
             font-weight: 800;
-            margin-bottom: 16px;
+            margin-bottom: 24px;
             line-height: 1.2;
         }
 
-        .hero p {
-            font-size: 1.25rem;
-            opacity: 0.9;
-            margin-bottom: 32px;
-            font-weight: 300;
+        /* Dynamic 3-Line Highlight Cards */
+        .hero-highlights {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 16px;
+            margin: 32px 0 40px 0;
+        }
+
+        .highlight-card {
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            padding: 20px 18px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            text-align: left;
+            gap: 14px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.2s ease;
+        }
+
+        .highlight-card:hover {
+            transform: translateY(-3px);
+            background: rgba(255, 255, 255, 0.18);
+        }
+
+        .highlight-number {
+            background: var(--accent);
+            color: white;
+            font-weight: 800;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 1.1rem;
+        }
+
+        .highlight-text {
+            font-size: 1.05rem;
+            font-weight: 500;
+            line-height: 1.4;
+            color: #ffffff;
         }
 
         .hero-cta {
@@ -455,11 +496,26 @@
         </div>
     </header>
 
-    <!-- Main Hero Banner -->
+    <!-- Dynamic Hero Banner with 3 Separated Lines -->
     <section class="hero">
         <div class="hero-content">
             <h2>From best friends to boyfriends, we have you covered.</h2>
-            <p>Connect over zero-stress, casual activities. Skip awkward sit-down dinners and meet up through low-pressure, real-life outdoor & fitness dates.</p>
+            
+            <div class="hero-highlights">
+                <div class="highlight-card">
+                    <div class="highlight-number">1</div>
+                    <div class="highlight-text">Connect over zero-stress no cost dates and casual activities.</div>
+                </div>
+                <div class="highlight-card">
+                    <div class="highlight-number">2</div>
+                    <div class="highlight-text">Skip awkward sit-down dinners.</div>
+                </div>
+                <div class="highlight-card">
+                    <div class="highlight-number">3</div>
+                    <div class="highlight-text">Meet up through low-pressure, real-life outdoor & fitness dates.</div>
+                </div>
+            </div>
+
             <div class="hero-cta">
                 <button class="btn-large btn-accent" onclick="openModal('userModal', 'register')">Create Your Free Profile</button>
                 <button class="btn-large btn-outline-hero" onclick="document.getElementById('community-section').scrollIntoView({behavior: 'smooth'})">Explore Community</button>

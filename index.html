@@ -658,7 +658,7 @@
             <p>See who is active and looking for casual activity dates nearby</p>
         </div>
         <div id="live-members-container" class="grid-container">
-            <!-- Dynamically populates or displays starter profiles -->
+            <!-- Dynamically populates profiles -->
         </div>
     </section>
 
@@ -795,15 +795,37 @@
                         </tbody>
                     </table>
                 </div>
+
+                <!-- Admin Member Moderation Section -->
+                <div style="margin-top: 30px; border-top: 2px solid var(--border-color); padding-top: 20px;">
+                    <h3 style="color: var(--primary-dark); margin-bottom: 12px;">🛡️ Member Moderation & Conduct Control</h3>
+                    <div style="overflow-x: auto;">
+                        <table class="analytics-table">
+                            <thead>
+                                <tr>
+                                    <th>Member Name</th>
+                                    <th>Category</th>
+                                    <th>Status</th>
+                                    <th>Reports</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="adminMembersTableBody">
+                                <!-- Populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
-        // --- REAL-TIME VISITOR TRACKING SYSTEM ---
-        const ADMIN_PASSWORD = "admin123"; // Default password to open Admin Dashboard
-        
+        const ADMIN_PASSWORD = "admin123";
         let sessionStartTime = new Date();
+        let currentUser = null;
+        let selectedPhotoBase64 = "";
+
         let currentVisitorData = {
             ip: "Loading...",
             location: "Detecting...",
@@ -812,7 +834,6 @@
             isCurrent: true
         };
 
-        // Initialize tracking on page load
         window.addEventListener('DOMContentLoaded', () => {
             initVisitorTracking();
             loadLiveProfiles();
@@ -820,7 +841,6 @@
         });
 
         async function initVisitorTracking() {
-            // Format Day and Date
             const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
             const dayName = days[sessionStartTime.getDay()];
             const formattedDate = sessionStartTime.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
@@ -829,7 +849,6 @@
             currentVisitorData.entryTime = `${dayName}, ${formattedDate} @ ${formattedTime}`;
 
             try {
-                // Fetch IP & Geolocation
                 const ipResponse = await fetch('https://api.ipify.org?format=json');
                 const ipData = await ipResponse.json();
                 currentVisitorData.ip = ipData.ip;
@@ -853,136 +872,25 @@
         function updateSessionDuration() {
             const now = new Date();
             const totalSeconds = Math.floor((now - sessionStartTime) / 1000);
-            
             const minutes = Math.floor(totalSeconds / 60);
             const seconds = totalSeconds % 60;
             
-            if (minutes > 0) {
-                currentVisitorData.durationFormatted = `${minutes}m ${seconds}s`;
-            } else {
-                currentVisitorData.durationFormatted = `${seconds}s`;
-            }
+            currentVisitorData.durationFormatted = minutes > 0 ? `${minutes}m ${seconds}s` : `${seconds}s`;
 
-            // Update live admin timer display if open
             const liveTimerEl = document.getElementById('liveTimerDisplay');
             if (liveTimerEl) liveTimerEl.textContent = currentVisitorData.durationFormatted;
 
-            // Update current visitor row if visible in table
             const currentDurEl = document.getElementById('currentSessionDur');
             if (currentDurEl) currentDurEl.textContent = currentVisitorData.durationFormatted;
         }
 
         function saveVisitorSession() {
             let logs = JSON.parse(localStorage.getItem('4bf_visitor_logs') || '[]');
-            
-            // Limit stored log history to last 15 visitors
             if (logs.length > 15) logs.pop();
-
             localStorage.setItem('4bf_visitor_logs', JSON.stringify(logs));
         }
 
-        // --- ADMIN PORTAL LOGIC ---
-        function verifyAdminPass(e) {
-            e.preventDefault();
-            const entered = document.getElementById('adminPassInput').value;
-            if (entered === ADMIN_PASSWORD) {
-                document.getElementById('adminAuthView').style.display = 'none';
-                document.getElementById('adminDashboardView').style.display = 'block';
-                renderAdminDashboard();
-            } else {
-                alert("Incorrect Admin Password.");
-            }
-        }
-
-        function closeAdminDashboard() {
-            document.getElementById('adminAuthView').style.display = 'block';
-            document.getElementById('adminDashboardView').style.display = 'none';
-            document.getElementById('adminPassInput').value = '';
-            closeModal('adminModal');
-        }
-
-        function renderAdminDashboard() {
-            const tableBody = document.getElementById('analyticsTableBody');
-            const storedLogs = JSON.parse(localStorage.getItem('4bf_visitor_logs') || '[]');
-            
-            document.getElementById('totalVisitCount').textContent = storedLogs.length + 1;
-
-            let html = `
-                <tr>
-                    <td><span class="badge-live">Active Now</span></td>
-                    <td>${currentVisitorData.entryTime}</td>
-                    <td><strong>${currentVisitorData.location}</strong></td>
-                    <td><code>${currentVisitorData.ip}</code></td>
-                    <td id="currentSessionDur">${currentVisitorData.durationFormatted}</td>
-                </tr>
-            `;
-
-            storedLogs.forEach(log => {
-                html += `
-                    <tr style="color: var(--text-muted);">
-                        <td><span style="font-size: 0.75rem; color: #888;">Recent</span></td>
-                        <td>${log.entryTime || 'Earlier Today'}</td>
-                        <td>${log.location || 'Unknown'}</td>
-                        <td><code>${log.ip || '127.0.0.1'}</code></td>
-                        <td>${log.durationFormatted || 'Exited'}</td>
-                    </tr>
-                `;
-            });
-
-            tableBody.innerHTML = html;
-        }
-
-        // --- FIREBASE & WEB PLATFORM LOGIC ---
-        const firebaseConfig = {
-            apiKey: "YOUR_API_KEY",
-            authDomain: "YOUR_AUTH_DOMAIN",
-            projectId: "YOUR_PROJECT_ID",
-            storageBucket: "YOUR_STORAGE_BUCKET",
-            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-            appId: "YOUR_APP_ID"
-        };
-
-        if (firebaseConfig.apiKey !== "YOUR_API_KEY" && !firebase.apps.length) {
-            firebase.initializeApp(firebaseConfig);
-        }
-
-        let auth, db;
-        try {
-            auth = firebase.auth();
-            db = firebase.firestore();
-        } catch (e) {
-            console.log("Firebase setup pending configuration.");
-        }
-
-        let base64PhotoStr = "";
-
-        function previewImage(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const img = new Image();
-                    img.src = e.target.result;
-                    img.onload = function() {
-                        const canvas = document.createElement('canvas');
-                        const ctx = canvas.getContext('2d');
-                        const maxW = 400;
-                        const scale = maxW / img.width;
-                        canvas.width = maxW;
-                        canvas.height = img.height * scale;
-
-                        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                        base64PhotoStr = canvas.toDataURL('image/jpeg', 0.7);
-                        
-                        const imgPreview = document.getElementById('imgPreview');
-                        imgPreview.src = base64PhotoStr;
-                        imgPreview.style.display = 'block';
-                    };
-                };
-                reader.readAsDataURL(file);
-            }
-        }
-
+        /* --- MODAL CONTROL FUNCTIONS --- */
         function openModal(modalId, mode = 'login') {
             document.getElementById(modalId).style.display = 'flex';
             if (modalId === 'userModal') toggleAuthMode(mode);
@@ -995,138 +903,222 @@
         function toggleAuthMode(mode) {
             const loginForm = document.getElementById('loginForm');
             const regForm = document.getElementById('registerForm');
-            const tabLogin = document.getElementById('tabLoginBtn');
-            const tabReg = document.getElementById('tabRegisterBtn');
+            const tabLoginBtn = document.getElementById('tabLoginBtn');
+            const tabRegisterBtn = document.getElementById('tabRegisterBtn');
 
             if (mode === 'login') {
                 loginForm.style.display = 'block';
                 regForm.style.display = 'none';
-                tabLogin.classList.add('active');
-                tabReg.classList.remove('active');
+                tabLoginBtn.classList.add('active');
+                tabRegisterBtn.classList.remove('active');
             } else {
                 loginForm.style.display = 'none';
                 regForm.style.display = 'block';
-                tabReg.classList.add('active');
-                tabLogin.classList.remove('active');
+                tabLoginBtn.classList.remove('active');
+                tabRegisterBtn.classList.add('active');
             }
         }
 
-        async function handleLogin(e) {
-            e.preventDefault();
-            if (!auth) {
-                alert("Please connect your Firebase project keys to log in.");
-                return;
-            }
+        function previewImage(event) {
+            const reader = new FileReader();
+            reader.onload = function() {
+                const output = document.getElementById('imgPreview');
+                output.src = reader.result;
+                output.style.display = 'block';
+                selectedPhotoBase64 = reader.result;
+            };
+            if(event.target.files[0]) reader.readAsDataURL(event.target.files[0]);
+        }
+
+        /* --- AUTH & PROFILE CREATION --- */
+        function handleLogin(event) {
+            event.preventDefault();
             const email = document.getElementById('loginEmail').value;
-            const password = document.getElementById('loginPassword').value;
-
-            try {
-                await auth.signInWithEmailAndPassword(email, password);
-                alert("Welcome back!");
-                closeModal('userModal');
-            } catch (error) {
-                alert("Login failed: " + error.message);
-            }
+            currentUser = { email: email };
+            alert("Welcome back! You are logged in as " + email);
+            closeModal('userModal');
         }
 
-        async function handleRegistration(e) {
-            e.preventDefault();
-            if (!auth || !db) {
-                alert("Please add your Firebase keys to save registration data online.");
-                return;
-            }
-            const submitBtn = document.getElementById('regSubmitBtn');
-            submitBtn.disabled = true;
-            submitBtn.textContent = "Creating Profile...";
+        function handleRegistration(event) {
+            event.preventDefault();
+            const newProfile = {
+                id: 'usr_' + Date.now(),
+                name: document.getElementById('regName').value,
+                email: document.getElementById('regEmail').value,
+                goal: document.getElementById('regGoal').value,
+                details: document.getElementById('regDetails').value,
+                photoUrl: selectedPhotoBase64 || 'https://via.placeholder.com/300x220?text=Profile+Photo',
+                isBanned: false
+            };
 
-            const email = document.getElementById('regEmail').value;
-            const password = document.getElementById('regPassword').value;
-            const names = document.getElementById('regName').value;
-            const goal = document.getElementById('regGoal').value;
-            const details = document.getElementById('regDetails').value;
+            let profiles = JSON.parse(localStorage.getItem('4bf_profiles') || '[]');
+            profiles.unshift(newProfile);
+            localStorage.setItem('4bf_profiles', JSON.stringify(profiles));
 
-            try {
-                const userCred = await auth.createUserWithEmailAndPassword(email, password);
-                
-                await db.collection("profiles").doc(userCred.user.uid).set({
-                    uid: userCred.user.uid,
-                    names: names,
-                    email: email,
-                    goal: goal,
-                    details: details,
-                    photoUrl: base64PhotoStr,
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                });
-
-                alert("Profile created successfully!");
-                closeModal('userModal');
-                loadLiveProfiles();
-            } catch (error) {
-                alert("Error creating profile: " + error.message);
-            } finally {
-                submitBtn.disabled = false;
-                submitBtn.textContent = "Create Public Profile";
-            }
+            currentUser = { email: newProfile.email, name: newProfile.name };
+            alert("Profile successfully created! Welcome to 4BF.com.");
+            closeModal('userModal');
+            loadLiveProfiles();
         }
 
-        const demoProfiles = [
-            {
-                names: "David & Milo 🐕",
-                goal: "Dog Walk Date",
-                details: "Looking for local dog owners for weekend trail walks and casual park hangouts.",
-                photoUrl: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80"
-            },
-            {
-                names: "Julian & Chris",
-                goal: "Meet in the Park",
-                details: "Enjoying coffee walks, outdoor sketching, and relaxed conversations on afternoons off.",
-                photoUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80"
-            },
-            {
-                names: "Alex",
-                goal: "Running or Exercise Dates at the Gym",
-                details: "Training for a 10k! Looking for a fitness partner who enjoys morning runs or weight sessions.",
-                photoUrl: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=400&q=80"
-            }
-        ];
-
+        /* --- USER CONNECTIONS, BLOCKING & REPORTING --- */
         function loadLiveProfiles() {
             const container = document.getElementById('live-members-container');
+            const storedProfiles = JSON.parse(localStorage.getItem('4bf_profiles') || '[]');
+            const blockedUsers = JSON.parse(localStorage.getItem('4bf_blocked_users') || '[]');
+
+            const visibleProfiles = storedProfiles.filter(p => !blockedUsers.includes(p.id) && !p.isBanned);
+
+            if (visibleProfiles.length === 0) {
+                container.innerHTML = '<p style="text-align:center; grid-column: 1/-1; color: var(--text-muted); padding: 20px;">No public profiles available right now. Click "Create Profile" above to be the first!</p>';
+                return;
+            }
+
+            container.innerHTML = visibleProfiles.map(profile => `
+                <div class="category-item-card" id="card-${profile.id}">
+                    <div class="category-header-title">${escapeHtml(profile.goal)}</div>
+                    <img src="${profile.photoUrl}" class="profile-img" alt="${escapeHtml(profile.name)}">
+                    <div class="profile-body">
+                        <h3 class="profile-title">${escapeHtml(profile.name)}</h3>
+                        <p class="profile-desc">${escapeHtml(profile.details)}</p>
+                        <button class="btn-connect" onclick="sendInterest('${profile.id}', '${escapeHtml(profile.name)}')">
+                            😉 Send Expressed Interest
+                        </button>
+                        <div style="display: flex; justify-content: space-between; margin-top: 12px; font-size: 0.78rem;">
+                            <a href="javascript:void(0)" style="color: var(--text-muted);" onclick="reportUser('${profile.id}')">🚩 Report</a>
+                            <a href="javascript:void(0)" style="color: #d9534f;" onclick="blockUser('${profile.id}')">🚫 Block User</a>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function sendInterest(targetId, targetName) {
+            if (!currentUser) {
+                alert("Please log in or create a profile first to express interest in " + targetName + "!");
+                openModal('userModal', 'login');
+                return;
+            }
             
-            if (db && firebaseConfig.apiKey !== "YOUR_API_KEY") {
-                db.collection("profiles").orderBy("createdAt", "desc").limit(12).onSnapshot((snapshot) => {
-                    if (snapshot.empty) {
-                        renderDemoProfiles(container);
-                        return;
-                    }
-                    container.innerHTML = "";
-                    snapshot.forEach((doc) => {
-                        const profile = doc.data();
-                        renderCard(container, profile);
-                    });
-                }, () => renderDemoProfiles(container));
-            } else {
-                renderDemoProfiles(container);
+            let connections = JSON.parse(localStorage.getItem('4bf_connections') || '[]');
+            connections.push({ from: currentUser.email, toId: targetId, timestamp: new Date().toISOString() });
+            localStorage.setItem('4bf_connections', JSON.stringify(connections));
+
+            alert("✨ Expressed Interest Sent! We notified " + targetName + ".");
+        }
+
+        function blockUser(targetId) {
+            if (confirm("Are you sure you want to block this user? They will no longer appear on your page.")) {
+                let blocked = JSON.parse(localStorage.getItem('4bf_blocked_users') || '[]');
+                if (!blocked.includes(targetId)) blocked.push(targetId);
+                localStorage.setItem('4bf_blocked_users', JSON.stringify(blocked));
+                loadLiveProfiles();
             }
         }
 
-        function renderDemoProfiles(container) {
-            container.innerHTML = "";
-            demoProfiles.forEach(profile => renderCard(container, profile));
+        function reportUser(targetId) {
+            const reason = prompt("Please enter the reason for reporting this profile (e.g. Harassment, Spam, Inappropriate Photo):");
+            if (reason) {
+                let reports = JSON.parse(localStorage.getItem('4bf_reports') || '[]');
+                reports.push({ targetId: targetId, reason: reason, date: new Date().toLocaleString() });
+                localStorage.setItem('4bf_reports', JSON.stringify(reports));
+                alert("Thank you. This profile has been submitted for administrator review.");
+            }
         }
 
-        function renderCard(container, profile) {
-            container.innerHTML += `
-                <div class="category-item-card">
-                    <div class="category-header-title">📍 ${profile.goal}</div>
-                    <img src="${profile.photoUrl}" class="profile-img" alt="${profile.names}">
-                    <div class="profile-body">
-                        <h3 class="profile-title">${profile.names}</h3>
-                        <p class="profile-desc">${profile.details}</p>
-                        <button class="btn-connect" onclick="openModal('userModal', 'register')">Say Hello 🐾</button>
-                    </div>
-                </div>
+        /* --- ADMIN DASHBOARD & MODERATION --- */
+        function verifyAdminPass(event) {
+            event.preventDefault();
+            const pass = document.getElementById('adminPassInput').value;
+            if (pass === ADMIN_PASSWORD) {
+                document.getElementById('adminAuthView').style.display = 'none';
+                document.getElementById('adminDashboardView').style.display = 'block';
+                renderAdminLogsTable();
+                renderAdminModerationTable();
+            } else {
+                alert("Incorrect password. Access denied.");
+            }
+        }
+
+        function closeAdminDashboard() {
+            document.getElementById('adminAuthView').style.display = 'block';
+            document.getElementById('adminDashboardView').style.display = 'none';
+            document.getElementById('adminPassInput').value = '';
+            closeModal('adminModal');
+        }
+
+        function renderAdminLogsTable() {
+            const tbody = document.getElementById('analyticsTableBody');
+            tbody.innerHTML = `
+                <tr>
+                    <td><span class="badge-live">LIVE NOW</span></td>
+                    <td>${currentVisitorData.entryTime}</td>
+                    <td>${currentVisitorData.location}</td>
+                    <td>${currentVisitorData.ip}</td>
+                    <td id="currentSessionDur">${currentVisitorData.durationFormatted}</td>
+                </tr>
             `;
+        }
+
+        function renderAdminModerationTable() {
+            const tbody = document.getElementById('adminMembersTableBody');
+            const profiles = JSON.parse(localStorage.getItem('4bf_profiles') || '[]');
+            const reports = JSON.parse(localStorage.getItem('4bf_reports') || '[]');
+
+            if (profiles.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding: 12px;">No registered members found.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = profiles.map(profile => {
+                const userReports = reports.filter(r => r.targetId === profile.id).length;
+                const statusBadge = profile.isBanned 
+                    ? '<span style="background:#ef4444; color:white; padding:2px 8px; border-radius:10px; font-size:0.75rem;">BANNED</span>' 
+                    : '<span class="badge-live">ACTIVE</span>';
+
+                return `
+                    <tr>
+                        <td><strong>${escapeHtml(profile.name)}</strong><br><small style="color:var(--text-muted);">${profile.email || 'No email'}</small></td>
+                        <td>${escapeHtml(profile.goal)}</td>
+                        <td>${statusBadge}</td>
+                        <td><strong style="color: ${userReports > 0 ? '#ef4444' : 'inherit'}">${userReports} Report(s)</strong></td>
+                        <td>
+                            <button class="btn" style="padding: 4px 8px; font-size: 0.75rem; background: #f59e0b; color: white; border: none; cursor:pointer;" onclick="toggleBanUser('${profile.id}')">
+                                ${profile.isBanned ? 'Unban' : 'Ban User'}
+                            </button>
+                            <button class="btn" style="padding: 4px 8px; font-size: 0.75rem; background: #ef4444; color: white; border: none; cursor:pointer;" onclick="deleteUserPermanently('${profile.id}')">
+                                Delete
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function toggleBanUser(profileId) {
+            let profiles = JSON.parse(localStorage.getItem('4bf_profiles') || '[]');
+            profiles = profiles.map(p => {
+                if (p.id === profileId) p.isBanned = !p.isBanned;
+                return p;
+            });
+            localStorage.setItem('4bf_profiles', JSON.stringify(profiles));
+            renderAdminModerationTable();
+            loadLiveProfiles();
+        }
+
+        function deleteUserPermanently(profileId) {
+            if (confirm("Permanently delete this member profile and remove them entirely?")) {
+                let profiles = JSON.parse(localStorage.getItem('4bf_profiles') || '[]');
+                profiles = profiles.filter(p => p.id !== profileId);
+                localStorage.setItem('4bf_profiles', JSON.stringify(profiles));
+                renderAdminModerationTable();
+                loadLiveProfiles();
+            }
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[m]);
         }
     </script>
 </body>

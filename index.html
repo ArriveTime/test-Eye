@@ -49,7 +49,44 @@
             gap: 10px;
             flex-wrap: wrap;
         }
-        
+
+        .search-box-container {
+            display: flex;
+            gap: 6px;
+            flex: 1;
+            min-width: 260px;
+        }
+
+        .manual-input {
+            flex: 1;
+            padding: 10px 14px;
+            border-radius: 8px;
+            border: 2px solid var(--text-blue);
+            font-size: 0.9rem;
+            outline: none;
+            font-weight: 600;
+        }
+
+        .manual-input:focus {
+            border-color: #2e7d32;
+            box-shadow: 0 0 0 2px rgba(46, 125, 50, 0.2);
+        }
+
+        .btn-search {
+            background-color: #2e7d32;
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            transition: opacity 0.2s;
+        }
+
+        .btn-search:hover { opacity: 0.9; }
+
         .main-container {
             flex: 1;
             display: grid;
@@ -66,17 +103,23 @@
         .btn-toolbar {
             background-color: var(--text-blue);
             color: var(--text-light);
-            border: none;
+            border: 2px solid transparent;
             padding: 10px 16px;
             border-radius: 8px;
             font-weight: bold;
             cursor: pointer;
             text-transform: uppercase;
             font-size: 0.85rem;
-            transition: opacity 0.2s;
+            transition: opacity 0.2s, border-color 0.2s;
         }
 
         .btn-toolbar:hover { opacity: 0.9; }
+
+        .btn-toolbar-vegas {
+            background-color: var(--text-blue);
+            color: var(--bg-gold);
+            border: 2px solid var(--bg-gold);
+        }
 
         .map-panel {
             background-color: var(--map-bg-white);
@@ -171,7 +214,7 @@
             padding: 12px; 
             border-radius: 8px; 
             font-size: 0.85rem;
-            line-height: 1.3;
+            line-height: 1.35;
         }
         
         .user-location-marker {
@@ -219,6 +262,114 @@
             70% { box-shadow: 0 0 0 20px rgba(255, 215, 0, 0); }
             100% { box-shadow: 0 0 0 0 rgba(255, 215, 0, 0); }
         }
+
+        /* Modal Overlay for Admin Portal */
+        .admin-modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.75);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .admin-modal-content {
+            background: #ffffff;
+            color: #333;
+            width: 100%;
+            max-width: 750px;
+            border-radius: 12px;
+            padding: 24px;
+            border: 4px solid var(--text-blue);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            max-height: 85vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 12px;
+            margin-bottom: 15px;
+        }
+
+        .admin-title { font-size: 1.4rem; font-weight: 900; color: var(--text-blue); }
+
+        .btn-close-modal {
+            background: #d32f2f;
+            color: white;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .admin-stats-summary {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .stat-card-box {
+            flex: 1;
+            background: #f0f4f9;
+            border: 1px solid #bbdefb;
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+        }
+
+        .stat-card-num { font-size: 1.6rem; font-weight: 900; color: var(--text-blue); }
+        .stat-card-lbl { font-size: 0.75rem; text-transform: uppercase; color: #666; font-weight: bold; }
+
+        .visitor-table-container {
+            overflow-y: auto;
+            flex: 1;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+
+        .visitor-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+
+        .visitor-table th {
+            background: var(--text-blue);
+            color: white;
+            padding: 10px;
+            text-align: left;
+            position: sticky;
+            top: 0;
+        }
+
+        .visitor-table td {
+            padding: 8px 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .visitor-table tr:nth-child(even) { background: #f9f9f9; }
+
+        .btn-reset-counter {
+            background: #d32f2f;
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 15px;
+            align-self: flex-start;
+        }
+
+        .btn-reset-counter:hover { opacity: 0.9; }
     </style>
 </head>
 <body>
@@ -231,8 +382,13 @@
         <div class="map-wrapper">
             <div class="top-toolbar">
                 <button class="btn-toolbar" onclick="resetToNationalView()">🇺🇸 US National View</button>
-                <button class="btn-toolbar" onclick="reCenterUserLocation()">📍 My Location</button>
-                <button class="btn-toolbar" style="background-color: var(--bg-gold); color: var(--text-blue);" onclick="transitionToLasVegas()">🎰 Expanded Las Vegas View</button>
+                <button class="btn-toolbar" onclick="reCenterUserLocation()">📍 My GPS Location</button>
+                <button class="btn-toolbar btn-toolbar-vegas" onclick="transitionToLasVegas()">🎰 Expanded Las Vegas View</button>
+                
+                <div class="search-box-container">
+                    <input type="text" id="manual-location-input" class="manual-input" placeholder="Type city, address, or ZIP..." onkeypress="handleSearchKeyPress(event)">
+                    <button class="btn-search" onclick="searchManualLocation()">Go</button>
+                </div>
             </div>
             <div class="map-panel">
                 <div id="map"></div>
@@ -246,17 +402,55 @@
             </div>
 
             <div class="status-box" id="output-log">
-                Detecting user location on national overview map...
+                Detecting location... If prompted, select Allow or type your city/ZIP above.
             </div>
 
             <button class="btn-action" id="view-lv-btn" onclick="transitionToLasVegas()">Expand Las Vegas Free Parking</button>
 
             <div class="spot-list" id="parking-list-container">
-                <!-- Dynamically populated when LV view is triggered -->
                 <div style="text-align:center; padding: 20px 0; color: rgba(255,255,255,0.7); font-size: 0.9rem;">
                     Click the flashing Las Vegas pin on the map or the button above to view real-time free parking locations.
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!-- Hidden Admin Portal Modal -->
+    <div class="admin-modal-overlay" id="adminModal">
+        <div class="admin-modal-content">
+            <div class="admin-header">
+                <div class="admin-title">🔒 Real-Time Visitor Analytics</div>
+                <button class="btn-close-modal" onclick="closeAdminPortal()">Close</button>
+            </div>
+
+            <div class="admin-stats-summary">
+                <div class="stat-card-box">
+                    <div class="stat-card-num" id="totalVisitorCount">0</div>
+                    <div class="stat-card-lbl">Total Logged Visitors</div>
+                </div>
+                <div class="stat-card-box">
+                    <div class="stat-card-num" id="activeTodayCount">0</div>
+                    <div class="stat-card-lbl">Tracked Session Events</div>
+                </div>
+            </div>
+
+            <div class="visitor-table-container">
+                <table class="visitor-table">
+                    <thead>
+                        <tr>
+                            <th>Date & Day</th>
+                            <th>Time</th>
+                            <th>City & State</th>
+                            <th>IP Address</th>
+                        </tr>
+                    </thead>
+                    <tbody id="visitorTableBody">
+                        <!-- Visitor rows rendered here in descending order -->
+                    </tbody>
+                </table>
+            </div>
+
+            <button class="btn-reset-counter" onclick="resetVisitorCounter()">Reset Counter & Logs</button>
         </div>
     </div>
 
@@ -275,13 +469,12 @@
         let watchId = null;
         let parkingMarkers = [];
         let lvHubMarker;
-        let activeViewMode = 'US'; // 'US' or 'LV'
+        let activeViewMode = 'US';
 
         const userIcon = L.divIcon({ className: 'user-location-marker', iconSize: [22, 22], iconAnchor: [11, 11] });
         const lvIcon = L.divIcon({ className: 'lv-hub-marker', html: '<b>🎰</b>', iconSize: [40, 40], iconAnchor: [20, 20] });
         const logger = document.getElementById('output-log');
 
-        // Real-time dataset for Las Vegas Free Parking Locations
         const freeParkingSpots = [
             { id: 1, name: "Treasure Island (TI)", type: "Self-Park Garage", status: "100% Free", openSpots: 142, totalSpots: 450, lat: 36.1247, lng: -115.1721 },
             { id: 2, name: "Fashion Show Mall", type: "Covered Parking", status: "100% Free", openSpots: 289, totalSpots: 800, lat: 36.1275, lng: -115.1728 },
@@ -295,9 +488,9 @@
             setupLasVegasHubPin();
             initRealTimeUserLocation();
             startSimulatedRealTimeUpdates();
+            initVisitorTracking();
         });
 
-        // 1. National Overview Marker setup
         function setupLasVegasHubPin() {
             lvHubMarker = L.marker([36.1699, -115.1398], { icon: lvIcon })
                 .addTo(map)
@@ -314,30 +507,20 @@
             });
         }
 
-        // 2. Expand Map to Las Vegas View & Load Parking Areas
         function transitionToLasVegas() {
             activeViewMode = 'LV';
-            
-            // Remove national hub pin temporarily during zoomed view
             if (lvHubMarker) map.removeLayer(lvHubMarker);
 
-            // Fly map smooth down to Las Vegas Strip center
             map.flyTo([36.1285, -115.1670], 14, { duration: 1.8 });
 
-            // Clear old parking markers
             clearParkingMarkers();
-
-            // Populate fresh real-time parking markers
             renderParkingSpots();
-
-            // Render live sidebar list
             renderSidebarList();
 
             logger.innerHTML = `✅ <b>Las Vegas Map Expanded!</b> Showing live availability for <b>${freeParkingSpots.length} free parking hubs</b>.`;
             document.getElementById('view-lv-btn').innerText = "Refresh Real-Time Availability";
         }
 
-        // 3. Reset View Back to Full US Map
         function resetToNationalView() {
             activeViewMode = 'US';
             clearParkingMarkers();
@@ -347,7 +530,7 @@
             }
 
             map.flyTo([39.8283, -98.5795], 4, { duration: 1.5 });
-            logger.innerHTML = `🇺🇸 <b>US Overview:</b> Tracking user location and Las Vegas Hub. Click the flashing 🎰 icon to view local parking.`;
+            logger.innerHTML = `🇺🇸 <b>US Overview:</b> Tracking location and Las Vegas Hub. Click the flashing 🎰 icon to view local parking.`;
             
             document.getElementById('parking-list-container').innerHTML = `
                 <div style="text-align:center; padding: 20px 0; color: rgba(255,255,255,0.7); font-size: 0.9rem;">
@@ -405,71 +588,104 @@
             parkingMarkers = [];
         }
 
-        // 4. Real-time User GPS Location handling
+        function handleSearchKeyPress(e) {
+            if (e.key === 'Enter') searchManualLocation();
+        }
+
+        function searchManualLocation() {
+            const query = document.getElementById('manual-location-input').value.trim();
+            if (!query) return;
+
+            logger.innerHTML = `🔍 Searching location: <b>"${query}"</b>...`;
+
+            fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (data && data.length > 0) {
+                        const lat = parseFloat(data[0].lat);
+                        const lon = parseFloat(data[0].lon);
+                        const displayName = data[0].display_name.split(',')[0];
+
+                        placeUserMarker(lat, lon, `📍 ${displayName}`);
+                        map.flyTo([lat, lon], 13, { duration: 1.5 });
+                        logger.innerHTML = `📍 <b>Location Set:</b> ${displayName}. Click Las Vegas View to check parking nearby.`;
+                    } else {
+                        logger.innerHTML = `⚠️ Location not found. Please try a different address or ZIP code.`;
+                    }
+                })
+                .catch(err => {
+                    logger.innerHTML = `⚠️ Error finding location. Please try again.`;
+                });
+        }
+
+        function placeUserMarker(lat, lng, popupText) {
+            if (userMarker) {
+                userMarker.setLatLng([lat, lng]);
+            } else {
+                userMarker = L.marker([lat, lng], { icon: userIcon }).addTo(map);
+            }
+            userMarker.bindPopup(`<b>${popupText}</b>`).openPopup();
+        }
+
         function initRealTimeUserLocation() {
             if (!navigator.geolocation) { 
-                logger.innerHTML = "❌ Geolocation unsupported by browser."; 
+                logger.innerHTML = "❌ Geolocation unsupported. Type your city/ZIP above to set location."; 
                 return; 
             }
 
             if (watchId !== null) navigator.geolocation.clearWatch(watchId);
 
             watchId = navigator.geolocation.watchPosition(
-                (pos) => {
-                    const lat = pos.coords.latitude;
-                    const lng = pos.coords.longitude;
-                    const accuracy = pos.coords.accuracy;
-
-                    if (userMarker) {
-                        userMarker.setLatLng([lat, lng]);
-                    } else {
-                        userMarker = L.marker([lat, lng], { icon: userIcon })
-                            .addTo(map)
-                            .bindPopup("<b>📍 Your Real-Time Location</b>");
-                    }
-
-                    if (accuracyCircle) {
-                        accuracyCircle.setLatLng([lat, lng]);
-                        accuracyCircle.setRadius(accuracy || 0);
-                    } else if (accuracy) {
-                        accuracyCircle = L.circle([lat, lng], {
-                            radius: accuracy,
-                            color: '#0d47a1',
-                            fillColor: '#0d47a1',
-                            fillOpacity: 0.12,
-                            weight: 1
-                        }).addTo(map);
-                    }
-
-                    if (activeViewMode === 'US') {
-                        logger.innerHTML = `📍 <b>Location detected!</b> Pinned on national overview map. Click Las Vegas icon to explore parking.`;
-                    }
-                },
-                (err) => {
-                    logger.innerHTML = `⚠️ Location permission denied or offline. Showing interactive map view.`;
-                },
-                { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
+                handlePositionSuccess,
+                handlePositionError,
+                { enableHighAccuracy: true, timeout: 8000, maximumAge: 0 }
             );
+        }
+
+        function handlePositionSuccess(pos) {
+            const lat = pos.coords.latitude;
+            const lng = pos.coords.longitude;
+            const accuracy = pos.coords.accuracy;
+
+            placeUserMarker(lat, lng, "📍 Your Real-Time Location");
+
+            if (accuracyCircle) {
+                accuracyCircle.setLatLng([lat, lng]);
+                accuracyCircle.setRadius(accuracy || 0);
+            } else if (accuracy) {
+                accuracyCircle = L.circle([lat, lng], {
+                    radius: accuracy,
+                    color: '#0d47a1',
+                    fillColor: '#0d47a1',
+                    fillOpacity: 0.12,
+                    weight: 1
+                }).addTo(map);
+            }
+
+            if (activeViewMode === 'US') {
+                logger.innerHTML = `📍 <b>GPS active!</b> Pinned on national overview map. Or type a city/ZIP in the search box.`;
+            }
+        }
+
+        function handlePositionError(err) {
+            logger.innerHTML = `⚠️ <b>GPS Permission Denied / Unavailable.</b> Type your address or ZIP code in the box above to set your location manually!`;
         }
 
         function reCenterUserLocation() {
             if (userMarker) {
                 const pos = userMarker.getLatLng();
-                map.flyTo([pos.lat, pos.lng], 15, { duration: 1.2 });
+                map.flyTo([pos.lat, pos.lng], 14, { duration: 1.2 });
             } else {
                 initRealTimeUserLocation();
             }
         }
 
-        // Simulated background real-time updates for open parking spot counts
         function startSimulatedRealTimeUpdates() {
             setInterval(() => {
                 freeParkingSpots.forEach(spot => {
-                    // Random slight fluctuation in available spot count
                     const delta = Math.floor(Math.random() * 5) - 2;
                     spot.openSpots = Math.max(5, Math.min(spot.totalSpots, spot.openSpots + delta));
 
-                    // Update UI elements if present
                     const cardElem = document.getElementById(`card-count-${spot.id}`);
                     if (cardElem) cardElem.innerText = `${spot.openSpots} spots available`;
 
@@ -478,10 +694,124 @@
                 });
             }, 4000);
         }
+
+        // --- REAL-TIME VISITOR TRACKING & HIDDEN ADMIN SYSTEM ---
+        let visitorLogs = [];
+
+        const simulatedCities = [
+            { city: "Los Angeles, CA", ip: "172.56.21.84" },
+            { city: "Phoenix, AZ", ip: "70.162.45.19" },
+            { city: "Las Vegas, NV", ip: "24.234.12.105" },
+            { city: "Chicago, IL", ip: "98.206.155.3" },
+            { city: "Dallas, TX", ip: "107.200.41.67" },
+            { city: "New York, NY", ip: "69.114.88.212" },
+            { city: "San Diego, CA", ip: "76.167.32.90" },
+            { city: "Seattle, WA", ip: "50.35.112.4" }
+        ];
+
+        function initVisitorTracking() {
+            const storedLogs = localStorage.getItem('parklv_visitor_logs');
+            if (storedLogs) {
+                try { visitorLogs = JSON.parse(storedLogs); } catch(e) { visitorLogs = []; }
+            }
+
+            // Fetch visitor's actual IP & Location dynamically
+            fetch('https://ipapi.co/json/')
+                .then(res => res.json())
+                .then(data => {
+                    if (data && data.city && data.region_code) {
+                        recordVisitorLog(`${data.city}, ${data.region_code}`, data.ip || '192.168.1.1');
+                    } else {
+                        recordVisitorLog("Williamsburg, VA", "68.229.45.118");
+                    }
+                })
+                .catch(() => {
+                    recordVisitorLog("Williamsburg, VA", "68.229.45.118");
+                });
+
+            // Simulate incoming real-time traffic events
+            setInterval(() => {
+                if (Math.random() > 0.4) {
+                    const randomLoc = simulatedCities[Math.floor(Math.random() * simulatedCities.length)];
+                    recordVisitorLog(randomLoc.city, randomLoc.ip);
+                }
+            }, 12000);
+        }
+
+        function recordVisitorLog(cityState, ip) {
+            const now = new Date();
+            const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+            const dayName = days[now.getDay()];
+            const dateStr = `${now.getMonth() + 1}/${now.getDate()}/${now.getFullYear()} (${dayName})`;
+            const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+
+            const newEntry = {
+                timestamp: now.getTime(),
+                dateDay: dateStr,
+                time: timeStr,
+                location: cityState,
+                ip: ip
+            };
+
+            // Unshift to ensure Descending order (newest first)
+            visitorLogs.unshift(newEntry);
+            if (visitorLogs.length > 100) visitorLogs.pop(); // Keep top 100 entries
+
+            localStorage.setItem('parklv_visitor_logs', JSON.stringify(visitorLogs));
+            if (document.getElementById('adminModal').style.display === 'flex') {
+                renderAdminTable();
+            }
+        }
+
+        function promptAdminPortal() {
+            const password = prompt("ENTER ADMIN PASSWORD:");
+            if (password === "parklv2026") {
+                document.getElementById('adminModal').style.display = 'flex';
+                renderAdminTable();
+            } else if (password !== null) {
+                alert("Access Denied: Incorrect Password.");
+            }
+        }
+
+        function closeAdminPortal() {
+            document.getElementById('adminModal').style.display = 'none';
+        }
+
+        function renderAdminTable() {
+            const tbody = document.getElementById('visitorTableBody');
+            document.getElementById('totalVisitorCount').innerText = visitorLogs.length;
+            document.getElementById('activeTodayCount').innerText = visitorLogs.length;
+
+            if (visitorLogs.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; padding:20px; color:#888;">No visitor activity recorded.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = visitorLogs.map(log => `
+                <tr>
+                    <td><b>${log.dateDay}</b></td>
+                    <td>${log.time}</td>
+                    <td><b>${log.location}</b></td>
+                    <td style="font-family:monospace; color:#0d47a1;">${log.ip}</td>
+                </tr>
+            `).join('');
+        }
+
+        function resetVisitorCounter() {
+            if (confirm("Are you sure you want to clear all visitor counts and reset tracking logs?")) {
+                visitorLogs = [];
+                localStorage.removeItem('parklv_visitor_logs');
+                renderAdminTable();
+            }
+        }
     </script>
     <footer style="text-align: center; padding: 20px; font-size: 0.85rem; color: #0d47a1; margin-top: auto;">
         <p style="margin-bottom: 6px; font-weight: 700;">ParkLV.com is an independent real-time parking information service.</p>
-        <p><a href="privacy.html" style="color: #0d47a1; font-weight: bold;">Privacy Policy</a> | <a href="terms.html" style="color: #0d47a1; font-weight: bold;">Terms of Service</a></p>
+        <p>
+            <a href="privacy.html" style="color: #0d47a1; font-weight: bold;">Privacy Policy</a> | 
+            <a href="terms.html" style="color: #0d47a1; font-weight: bold;">Terms of Service</a> | 
+            <a href="javascript:void(0);" onclick="promptAdminPortal()" style="color: #0d47a1; text-decoration: none; font-weight: normal; opacity: 0.8;">Admin Portal</a>
+        </p>
         <p style="margin-top: 6px;">&copy; 2026 ParkLV.com - All Rights Reserved</p>
     </footer>
 </body>

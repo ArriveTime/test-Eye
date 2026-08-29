@@ -159,7 +159,7 @@
 
     <div class="main-container">
         <div class="map-wrapper">
-            <button class="btn-locate" onclick="initRealTimeLocation()">📍 Re-Center Location</button>
+            <button class="btn-locate" onclick="reCenterUserLocation()">📍 Re-Center On My Location</button>
             <div class="map-panel">
                 <div id="map"></div>
             </div>
@@ -178,7 +178,7 @@
             <button class="btn-action" style="background-color: #ffffff; color: #0d47a1;" onclick="locateAndRoute()">Find Closest Free Spot</button>
             
             <div class="status-box">
-                <div id="output-log">Click the Las Vegas icon on the map to show free parking spots!</div>
+                <div id="output-log">Detecting your location on the US map...</div>
             </div>
         </div>
     </div>
@@ -198,6 +198,7 @@
         let watchId = null;
         let parkingMarkers = [];
         let lvHubMarker;
+        let isZoomedToLV = false;
 
         const userIcon = L.divIcon({ className: 'user-location-marker', iconSize: [24, 24], iconAnchor: [12, 12] });
         const lvIcon = L.divIcon({ className: 'lv-hub-marker', html: '<b>🎰</b>', iconSize: [36, 36], iconAnchor: [18, 18] });
@@ -212,9 +213,10 @@
             { name: "Circus Circus (Free Self-Parking)", lat: 36.1368, lng: -115.1633 }
         ];
 
-        // Add Las Vegas Hub Icon on startup
+        // Setup page state on launch
         window.addEventListener('DOMContentLoaded', () => {
             setupLasVegasHub();
+            initRealTimeLocation();
         });
 
         function setupLasVegasHub() {
@@ -234,14 +236,21 @@
         }
 
         function loadLasVegasParking() {
+            isZoomedToLV = true;
             // Smoothly fly map into Las Vegas area
             map.flyTo([36.1247, -115.1721], 14, { duration: 1.5 });
             
             // Plot all free parking spots
             locateAndRoute();
+        }
 
-            // Enable real-time user GPS tracking
-            initRealTimeLocation();
+        function reCenterUserLocation() {
+            if (userMarker) {
+                const pos = userMarker.getLatLng();
+                map.flyTo([pos.lat, pos.lng], 15, { duration: 1.2 });
+            } else {
+                initRealTimeLocation();
+            }
         }
 
         function updatePositionOnMap(lat, lng, accuracy) {
@@ -266,18 +275,18 @@
                 }).addTo(map);
             }
 
-            // Free reverse geocoding to display street address
+            // Reverse geocoding to show current street address
             fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`)
                 .then(res => res.json())
                 .then(data => {
                     const address = data.display_name || `${lat.toFixed(4)}, ${lng.toFixed(4)}`;
                     document.getElementById('start-loc').value = address;
-                    const roadName = (data.address && data.address.road) ? data.address.road : 'Current Location';
-                    logger.innerHTML = `✅ Real-time location active: ${roadName}`;
+                    const roadName = (data.address && data.address.road) ? data.address.road : (data.address.city || 'Current Location');
+                    logger.innerHTML = `✅ User location active: ${roadName}. Click the Las Vegas icon to explore parking.`;
                 })
                 .catch(() => {
                     document.getElementById('start-loc').value = `${lat.toFixed(4)}, ${lng.toFixed(4)}`;
-                    logger.innerHTML = `✅ Location pinned via GPS.`;
+                    logger.innerHTML = `✅ User location pinned via GPS. Click Las Vegas icon to explore parking.`;
                 });
         }
 

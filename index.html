@@ -703,19 +703,8 @@
             }, 4000);
         }
 
-        // --- DUAL-API REAL-TIME VISITOR TRACKING & HIDDEN ADMIN SYSTEM ---
+        // --- REAL VISITOR ONLY TRACKING & HIDDEN ADMIN SYSTEM ---
         let visitorLogs = [];
-
-        const simulatedCities = [
-            { city: "Los Angeles, CA", ip: "172.56.21.84" },
-            { city: "Phoenix, AZ", ip: "70.162.45.19" },
-            { city: "Las Vegas, NV", ip: "24.234.12.105" },
-            { city: "Chicago, IL", ip: "98.206.155.3" },
-            { city: "Dallas, TX", ip: "107.200.41.67" },
-            { city: "New York, NY", ip: "69.114.88.212" },
-            { city: "San Diego, CA", ip: "76.167.32.90" },
-            { city: "Seattle, WA", ip: "50.35.112.4" }
-        ];
 
         function initVisitorTracking() {
             const storedLogs = localStorage.getItem('parklv_visitor_logs');
@@ -750,14 +739,6 @@
                             recordVisitorLog("Direct Visitor", "Hidden/Blocked");
                         });
                 });
-
-            // Simulate real-time background traffic events
-            setInterval(() => {
-                if (Math.random() > 0.4) {
-                    const randomLoc = simulatedCities[Math.floor(Math.random() * simulatedCities.length)];
-                    recordVisitorLog(randomLoc.city, randomLoc.ip);
-                }
-            }, 12000);
         }
 
         function recordVisitorLog(cityState, ip) {

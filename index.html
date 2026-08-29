@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>From Best Friends to Boyfriends - Gay Social & Outdoor Dating</title>
+    <title>4BF.com - From Best Friends to Boyfriends</title>
     <!-- Firebase Compatibility SDKs -->
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
@@ -397,6 +397,10 @@
             box-shadow: 0 20px 40px rgba(0,0,0,0.2);
         }
 
+        .modal-large {
+            max-width: 850px;
+        }
+
         .close-btn {
             position: absolute;
             top: 18px; right: 20px;
@@ -472,13 +476,89 @@
             display: none;
         }
 
+        /* Admin Table Styles */
+        .analytics-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            font-size: 0.85rem;
+            text-align: left;
+        }
+
+        .analytics-table th, .analytics-table td {
+            padding: 12px 10px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .analytics-table th {
+            background-color: #f1f5f9;
+            color: var(--primary-dark);
+            font-weight: 700;
+        }
+
+        .analytics-table tr:hover {
+            background-color: #f8fafc;
+        }
+
+        .badge-live {
+            background: #10b981;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+
+        /* Footer & Legal Styling */
         footer {
             background: var(--primary-dark);
             color: rgba(255,255,255,0.8);
-            text-align: center;
-            padding: 30px 20px;
-            font-size: 0.9rem;
+            padding: 40px 20px 30px 20px;
+            font-size: 0.85rem;
             margin-top: 60px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-content {
+            max-width: 1100px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .disclaimer-text {
+            color: rgba(255, 255, 255, 0.65);
+            margin: 16px 0;
+            line-height: 1.5;
+            font-size: 0.78rem;
+            text-align: justify;
+            text-align-last: center;
+        }
+
+        .footer-links {
+            margin-top: 20px;
+            padding-top: 16px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .footer-links a:hover {
+            color: #ffffff;
+            text-decoration: underline;
+        }
+
+        .admin-link {
+            color: rgba(255, 255, 255, 0.4) !important;
+            font-size: 0.75rem;
+            cursor: pointer;
         }
     </style>
 </head>
@@ -487,7 +567,7 @@
     <!-- Top Navigation Header -->
     <header>
         <div class="brand-container">
-            <h1>Best Friends to Boyfriends</h1>
+            <h1>4BF.com</h1>
             <div class="tagline-head">From best friends to boyfriends we have you covered</div>
         </div>
         <div class="nav-buttons">
@@ -582,9 +662,20 @@
         </div>
     </section>
 
-    <!-- Footer -->
+    <!-- Footer & Legal Disclaimer -->
     <footer>
-        <p>&copy; Best Friends to Boyfriends. Building genuine connections through shared activities.</p>
+        <div class="footer-content">
+            <p style="font-weight: bold; color: #ffffff;">&copy; 4BF.com - All Rights Reserved.</p>
+            <div class="disclaimer-text">
+                <strong>LEGAL & PRIVACY DISCLAIMER:</strong> 4BF.com is an open social networking and event-coordination venue designed to facilitate casual activity meetups, outdoor recreation, and social introductions. 4BF.com does not perform background checks, identity verification, or screening on any platform users. Members are solely responsible for exercising standard personal safety precautions when arranging or attending any meetups. 4BF.com welcomes individuals of all backgrounds without discrimination. By accessing or using this website, you agree to our Terms of Service and Privacy Policy.
+            </div>
+            <div class="footer-links">
+                <a href="#" onclick="alert('Terms of Service: Always practice personal safety when meeting new friends in public places.')">Terms of Service</a>
+                <a href="#" onclick="alert('Privacy Policy: Your personal information is kept secure and never sold.')">Privacy Policy</a>
+                <a href="#" onclick="alert('Community Guidelines: Be respectful, kind, and open-minded to all members.')">Community Standards</a>
+                <a class="admin-link" onclick="openModal('adminModal')">Admin Portal</a>
+            </div>
+        </div>
     </footer>
 
     <!-- Auth & Profile Creation Modal -->
@@ -652,8 +743,196 @@
         </div>
     </div>
 
+    <!-- Hidden Admin Portal Modal -->
+    <div id="adminModal" class="modal">
+        <div class="modal-content modal-large">
+            <button class="close-btn" onclick="closeModal('adminModal')">&times;</button>
+            
+            <!-- Login View -->
+            <div id="adminAuthView">
+                <h2 style="color: var(--primary-dark); margin-bottom: 8px; text-align: center;">Admin Security Portal</h2>
+                <p style="text-align: center; color: var(--text-muted); margin-bottom: 20px; font-size: 0.9rem;">Authorized access only. Enter administrative key.</p>
+                <form onsubmit="verifyAdminPass(event)">
+                    <div class="form-group">
+                        <label>Admin Password</label>
+                        <input type="password" id="adminPassInput" placeholder="Enter password..." required>
+                    </div>
+                    <button type="submit" class="btn-connect" style="margin-top: 10px;">Access Analytics Dashboard</button>
+                </form>
+            </div>
+
+            <!-- Dashboard View -->
+            <div id="adminDashboardView" style="display: none;">
+                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--border-color); padding-bottom: 12px; margin-bottom: 20px;">
+                    <h2 style="color: var(--primary-dark); font-size: 1.4rem;">📊 Real-Time Visitor Counter & Logs</h2>
+                    <button class="btn" style="padding: 6px 12px; font-size: 0.8rem;" onclick="closeAdminDashboard()">Lock Dashboard</button>
+                </div>
+
+                <div style="display: flex; gap: 16px; margin-bottom: 20px;">
+                    <div style="flex: 1; background: #eef4fa; padding: 16px; border-radius: 8px; text-align: center;">
+                        <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: bold;">TOTAL VISITS LOGGED</span>
+                        <div id="totalVisitCount" style="font-size: 1.8rem; font-weight: bold; color: var(--primary-dark);">1</div>
+                    </div>
+                    <div style="flex: 1; background: #e6f4ea; padding: 16px; border-radius: 8px; text-align: center;">
+                        <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: bold;">YOUR TIME ON SITE</span>
+                        <div id="liveTimerDisplay" style="font-size: 1.8rem; font-weight: bold; color: #137333;">0s</div>
+                    </div>
+                </div>
+
+                <div style="overflow-x: auto;">
+                    <table class="analytics-table">
+                        <thead>
+                            <tr>
+                                <th>Status</th>
+                                <th>Day & Entry Date</th>
+                                <th>City & State</th>
+                                <th>IP Address</th>
+                                <th>Time Spent</th>
+                            </tr>
+                        </thead>
+                        <tbody id="analyticsTableBody">
+                            <!-- Populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
-        // Firebase Configuration Block
+        // --- REAL-TIME VISITOR TRACKING SYSTEM ---
+        const ADMIN_PASSWORD = "admin123"; // Default password to open Admin Dashboard
+        
+        let sessionStartTime = new Date();
+        let currentVisitorData = {
+            ip: "Loading...",
+            location: "Detecting...",
+            entryTime: "",
+            durationFormatted: "0s",
+            isCurrent: true
+        };
+
+        // Initialize tracking on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            initVisitorTracking();
+            loadLiveProfiles();
+            setInterval(updateSessionDuration, 1000);
+        });
+
+        async function initVisitorTracking() {
+            // Format Day and Date
+            const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+            const dayName = days[sessionStartTime.getDay()];
+            const formattedDate = sessionStartTime.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+            const formattedTime = sessionStartTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+            
+            currentVisitorData.entryTime = `${dayName}, ${formattedDate} @ ${formattedTime}`;
+
+            try {
+                // Fetch IP & Geolocation
+                const ipResponse = await fetch('https://api.ipify.org?format=json');
+                const ipData = await ipResponse.json();
+                currentVisitorData.ip = ipData.ip;
+
+                const geoResponse = await fetch(`https://ipapi.co/${ipData.ip}/json/`);
+                const geoData = await geoResponse.json();
+                
+                if (geoData.city && geoData.region) {
+                    currentVisitorData.location = `${geoData.city}, ${geoData.region}`;
+                } else {
+                    currentVisitorData.location = "United States";
+                }
+            } catch (error) {
+                currentVisitorData.ip = "Hidden / Protected";
+                currentVisitorData.location = "Location Unavailable";
+            }
+
+            saveVisitorSession();
+        }
+
+        function updateSessionDuration() {
+            const now = new Date();
+            const totalSeconds = Math.floor((now - sessionStartTime) / 1000);
+            
+            const minutes = Math.floor(totalSeconds / 60);
+            const seconds = totalSeconds % 60;
+            
+            if (minutes > 0) {
+                currentVisitorData.durationFormatted = `${minutes}m ${seconds}s`;
+            } else {
+                currentVisitorData.durationFormatted = `${seconds}s`;
+            }
+
+            // Update live admin timer display if open
+            const liveTimerEl = document.getElementById('liveTimerDisplay');
+            if (liveTimerEl) liveTimerEl.textContent = currentVisitorData.durationFormatted;
+
+            // Update current visitor row if visible in table
+            const currentDurEl = document.getElementById('currentSessionDur');
+            if (currentDurEl) currentDurEl.textContent = currentVisitorData.durationFormatted;
+        }
+
+        function saveVisitorSession() {
+            let logs = JSON.parse(localStorage.getItem('4bf_visitor_logs') || '[]');
+            
+            // Limit stored log history to last 15 visitors
+            if (logs.length > 15) logs.pop();
+
+            localStorage.setItem('4bf_visitor_logs', JSON.stringify(logs));
+        }
+
+        // --- ADMIN PORTAL LOGIC ---
+        function verifyAdminPass(e) {
+            e.preventDefault();
+            const entered = document.getElementById('adminPassInput').value;
+            if (entered === ADMIN_PASSWORD) {
+                document.getElementById('adminAuthView').style.display = 'none';
+                document.getElementById('adminDashboardView').style.display = 'block';
+                renderAdminDashboard();
+            } else {
+                alert("Incorrect Admin Password.");
+            }
+        }
+
+        function closeAdminDashboard() {
+            document.getElementById('adminAuthView').style.display = 'block';
+            document.getElementById('adminDashboardView').style.display = 'none';
+            document.getElementById('adminPassInput').value = '';
+            closeModal('adminModal');
+        }
+
+        function renderAdminDashboard() {
+            const tableBody = document.getElementById('analyticsTableBody');
+            const storedLogs = JSON.parse(localStorage.getItem('4bf_visitor_logs') || '[]');
+            
+            document.getElementById('totalVisitCount').textContent = storedLogs.length + 1;
+
+            let html = `
+                <tr>
+                    <td><span class="badge-live">Active Now</span></td>
+                    <td>${currentVisitorData.entryTime}</td>
+                    <td><strong>${currentVisitorData.location}</strong></td>
+                    <td><code>${currentVisitorData.ip}</code></td>
+                    <td id="currentSessionDur">${currentVisitorData.durationFormatted}</td>
+                </tr>
+            `;
+
+            storedLogs.forEach(log => {
+                html += `
+                    <tr style="color: var(--text-muted);">
+                        <td><span style="font-size: 0.75rem; color: #888;">Recent</span></td>
+                        <td>${log.entryTime || 'Earlier Today'}</td>
+                        <td>${log.location || 'Unknown'}</td>
+                        <td><code>${log.ip || '127.0.0.1'}</code></td>
+                        <td>${log.durationFormatted || 'Exited'}</td>
+                    </tr>
+                `;
+            });
+
+            tableBody.innerHTML = html;
+        }
+
+        // --- FIREBASE & WEB PLATFORM LOGIC ---
         const firebaseConfig = {
             apiKey: "YOUR_API_KEY",
             authDomain: "YOUR_AUTH_DOMAIN",
@@ -663,7 +942,6 @@
             appId: "YOUR_APP_ID"
         };
 
-        // Initialize Firebase safely
         if (firebaseConfig.apiKey !== "YOUR_API_KEY" && !firebase.apps.length) {
             firebase.initializeApp(firebaseConfig);
         }
@@ -678,7 +956,6 @@
 
         let base64PhotoStr = "";
 
-        // Client-side Image Processing
         function previewImage(event) {
             const file = event.target.files[0];
             if (file) {
@@ -706,7 +983,6 @@
             }
         }
 
-        // Modal Handlers
         function openModal(modalId, mode = 'login') {
             document.getElementById(modalId).style.display = 'flex';
             if (modalId === 'userModal') toggleAuthMode(mode);
@@ -735,7 +1011,6 @@
             }
         }
 
-        // Handle Login
         async function handleLogin(e) {
             e.preventDefault();
             if (!auth) {
@@ -754,7 +1029,6 @@
             }
         }
 
-        // Handle Registration
         async function handleRegistration(e) {
             e.preventDefault();
             if (!auth || !db) {
@@ -795,7 +1069,6 @@
             }
         }
 
-        // Starter Profiles (Fallback display if database connection is pending)
         const demoProfiles = [
             {
                 names: "David & Milo 🐕",
@@ -817,7 +1090,6 @@
             }
         ];
 
-        // Fetch & Render Live Profiles
         function loadLiveProfiles() {
             const container = document.getElementById('live-members-container');
             
@@ -856,10 +1128,6 @@
                 </div>
             `;
         }
-
-        window.onload = function() {
-            loadLiveProfiles();
-        };
     </script>
 </body>
 </html>

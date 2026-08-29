@@ -3,306 +3,144 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>4BF.com - For Best Friends | Dating, Playdates & Pet Community</title>
-
+    <title>From Best Friends to Boyfriends - Community & Profiles</title>
     <!-- Firebase Compatibility SDKs -->
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
     <style>
         :root {
-            --primary-teal: #008080;
-            --accent-orange: #ff7f50;
-            --bg-light: #f4f9f9;
+            --primary: #4a90e2;
+            --primary-dark: #357abd;
+            --bg-color: #f4f7f6;
             --card-bg: #ffffff;
-            --text-dark: #2c3e50;
+            --text-main: #333333;
+            --text-muted: #666666;
             --border-color: #e0e0e0;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
-
         body {
-            background-color: var(--bg-light);
-            color: var(--text-dark);
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
         }
 
-        /* Navigation */
-        nav {
-            background: var(--card-bg);
-            border-bottom: 2px solid var(--border-color);
-            padding: 15px 30px;
+        header {
+            background-color: var(--card-bg);
+            border-bottom: 1px solid var(--border-color);
+            padding: 20px 40px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            position: sticky;
-            top: 0;
-            z-index: 100;
         }
 
-        .logo { font-size: 1.8rem; font-weight: 900; color: var(--primary-teal); text-decoration: none; }
-        .logo span { color: var(--accent-orange); }
+        .brand-container h1 {
+            margin: 0;
+            font-size: 1.6rem;
+            color: var(--primary-dark);
+        }
 
-        .nav-links { display: flex; gap: 15px; list-style: none; }
-        .nav-link {
-            text-decoration: none;
-            color: var(--text-dark);
-            font-weight: bold;
+        .tagline {
+            margin: 4px 0 0 0;
             font-size: 0.95rem;
-            padding: 8px 14px;
-            border-radius: 20px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .nav-link.active, .nav-link:hover { background-color: var(--primary-teal); color: white; }
-
-        /* Auth Nav Actions */
-        .auth-actions {
-            display: flex;
-            align-items: center;
-            gap: 12px;
+            color: var(--text-muted);
+            font-weight: 500;
         }
 
-        .btn-login-nav {
-            background: transparent;
-            border: 1.5px solid var(--primary-teal);
-            color: var(--primary-teal);
+        .nav-buttons .btn {
             padding: 8px 16px;
-            border-radius: 20px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .btn-login-nav:hover {
-            background-color: var(--primary-teal);
-            color: white;
-        }
-
-        .btn-cta {
-            background-color: var(--accent-orange);
-            color: white;
-            border: none;
-            padding: 10px 18px;
-            border-radius: 20px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .btn-danger {
-            background-color: #e74c3c;
-            color: white;
-            border: none;
-            padding: 8px 14px;
+            margin-left: 10px;
             border-radius: 6px;
-            font-weight: bold;
+            border: 1px solid var(--primary);
+            background: transparent;
+            color: var(--primary);
             cursor: pointer;
-        }
-        .btn-danger:hover { background-color: #c0392b; }
-
-        .btn-google {
-            background-color: #ffffff;
-            color: #757575;
-            border: 1px solid var(--border-color);
-            padding: 10px 18px;
-            border-radius: 6px;
-            font-weight: bold;
-            cursor: pointer;
-            width: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            margin-bottom: 15px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-        }
-        .btn-google:hover { background-color: #f8f9fa; }
-
-        .divider {
-            text-align: center;
-            margin: 15px 0;
-            position: relative;
-        }
-        .divider::before {
-            content: "";
-            position: absolute;
-            top: 50%; left: 0; right: 0;
-            height: 1px;
-            background: var(--border-color);
-            z-index: 1;
-        }
-        .divider span {
-            background: white;
-            padding: 0 10px;
-            position: relative;
-            z-index: 2;
-            font-size: 0.8rem;
-            color: #888;
+            font-weight: 600;
         }
 
-        /* Hero Header */
-        .hero {
-            background: linear-gradient(135deg, rgba(0,128,128,0.9), rgba(255,127,80,0.85)), url('https://images.unsplash.com/photo-1543466835-00a7907e9de1?q=80&w=1600') center/cover;
+        .nav-buttons .btn-primary {
+            background: var(--primary);
             color: white;
-            text-align: center;
-            padding: 40px 20px;
         }
 
-        .hero h1 { font-size: 2.2rem; margin-bottom: 10px; }
-        .hero p { font-size: 1.05rem; max-width: 650px; margin: 0 auto 15px; }
-
-        /* Main Container */
-        .main-container {
+        .container {
             max-width: 1200px;
-            margin: 25px auto;
+            margin: 30px auto;
             padding: 0 20px;
-            width: 100%;
-            flex: 1;
         }
 
-        /* Top Hub Buttons Row */
-        .category-row-wrapper {
-            width: 100%;
-            overflow-x: auto;
-            margin-bottom: 30px;
-            padding-bottom: 5px;
-        }
-
-        .category-grid {
-            display: flex;
-            flex-direction: row;
-            flex-wrap: nowrap;
-            justify-content: space-between;
-            gap: 15px;
-            width: 100%;
-            min-width: 750px;
-        }
-
-        .category-card {
-            flex: 1 1 0px;
-            background: var(--card-bg);
-            border-radius: 10px;
-            padding: 14px 10px;
-            text-align: center;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-            border-top: 4px solid var(--primary-teal);
-            cursor: pointer;
-        }
-
-        .category-card.dating { border-top-color: #e74c3c; }
-        .category-card.playdates { border-top-color: var(--accent-orange); }
-        .category-card.care { border-top-color: #27ae60; }
-        .category-card.directory { border-top-color: #8e44ad; }
-        .category-card h3 { font-size: 0.9rem; margin-bottom: 4px; white-space: nowrap; }
-        .category-card p { font-size: 0.78rem; color: #666; }
-        .icon-box { font-size: 1.6rem; margin-bottom: 4px; }
-
-        /* Horizontal Category Items */
-        .section-header {
-            font-size: 1.3rem;
-            margin-bottom: 18px;
-            color: var(--primary-teal);
-            border-bottom: 2px solid var(--border-color);
-            padding-bottom: 8px;
-        }
-
-        .horizontal-categories-row {
-            display: flex;
-            flex-direction: row;
-            flex-wrap: nowrap;
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 20px;
-            width: 100%;
-            overflow-x: auto;
-            padding-bottom: 15px;
-            margin-bottom: 30px;
+            margin-top: 20px;
         }
 
         .category-item-card {
-            flex: 1 1 300px;
-            min-width: 280px;
             background: var(--card-bg);
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.06);
             border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
             display: flex;
             flex-direction: column;
         }
 
         .category-header-title {
-            background: var(--bg-light);
-            padding: 10px 14px;
-            font-size: 0.95rem;
-            font-weight: bold;
-            color: var(--primary-teal);
+            background: #f8f9fa;
+            padding: 10px 15px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--primary-dark);
             border-bottom: 1px solid var(--border-color);
+            text-transform: uppercase;
         }
 
         .profile-img {
-            height: 180px;
             width: 100%;
+            height: 220px;
             object-fit: cover;
-            object-position: center;
-            display: block;
+            background: #eee;
         }
 
         .profile-body {
-            padding: 16px;
+            padding: 15px;
+            flex-grow: 1;
             display: flex;
             flex-direction: column;
-            flex: 1;
         }
 
-        .profile-title { font-size: 1.1rem; margin-bottom: 4px; color: var(--text-dark); }
-        .profile-badge {
-            display: inline-block;
-            align-self: flex-start;
-            background: var(--bg-light);
-            color: var(--primary-teal);
-            padding: 3px 8px;
-            border-radius: 10px;
-            font-size: 0.75rem;
-            font-weight: bold;
-            margin-bottom: 8px;
+        .profile-title {
+            margin: 0 0 8px 0;
+            font-size: 1.2rem;
         }
 
-        .profile-desc { font-size: 0.88rem; color: #555; line-height: 1.4; margin-bottom: 14px; flex: 1; }
+        .profile-desc {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin: 0 0 15px 0;
+            flex-grow: 1;
+        }
 
         .btn-connect {
             width: 100%;
-            background: var(--primary-teal);
-            color: white;
+            padding: 10px;
             border: none;
-            padding: 9px;
+            background: var(--primary);
+            color: white;
             border-radius: 6px;
             font-weight: bold;
             cursor: pointer;
         }
 
-        /* Photo Upload Styling */
-        .photo-preview-container {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 12px;
-        }
-        .photo-preview {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid var(--primary-teal);
-            background: #eee;
-        }
-
-        /* Modal & Tabs Styling */
-        .modal-overlay {
+        /* Modal Styles */
+        .modal {
             display: none;
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.6);
+            background: rgba(0,0,0,0.5);
             justify-content: center;
             align-items: center;
             z-index: 1000;
@@ -310,462 +148,195 @@
 
         .modal-content {
             background: white;
-            padding: 25px;
-            border-radius: 10px;
-            max-width: 500px;
-            width: 90%;
-            max-height: 85vh;
+            padding: 30px;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 480px;
+            max-height: 90vh;
             overflow-y: auto;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+            position: relative;
         }
 
-        .modal-content.wide-admin {
-            max-width: 850px;
+        .close-btn {
+            position: absolute;
+            top: 15px; right: 15px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            border: none;
+            background: none;
         }
 
-        .modal-tab-switch {
+        .tab-buttons {
             display: flex;
+            margin-bottom: 20px;
             border-bottom: 2px solid var(--border-color);
-            margin-bottom: 18px;
         }
 
-        .modal-tab-btn {
+        .tab-btn {
             flex: 1;
             padding: 10px;
             background: none;
             border: none;
-            font-weight: bold;
-            font-size: 0.95rem;
-            color: #888;
+            font-size: 1rem;
             cursor: pointer;
-            border-bottom: 3px solid transparent;
+            font-weight: bold;
+            color: var(--text-muted);
         }
 
-        .modal-tab-btn.active {
-            color: var(--primary-teal);
-            border-bottom-color: var(--primary-teal);
+        .tab-btn.active {
+            color: var(--primary);
+            border-bottom: 2px solid var(--primary);
+            margin-bottom: -2px;
         }
 
-        .form-group { margin-bottom: 14px; }
-        .form-group label { display: block; font-weight: bold; margin-bottom: 4px; font-size: 0.88rem; }
-        .form-control {
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
             width: 100%;
-            padding: 9px;
+            padding: 10px;
             border: 1px solid var(--border-color);
             border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 0.95rem;
         }
 
-        /* Legal Disclaimer Styling */
-        .disclaimer-section {
-            background: #eef4f4;
-            border-top: 1px solid var(--border-color);
-            padding: 15px 20px;
-            font-size: 0.78rem;
-            color: #555;
-            line-height: 1.4;
-            text-align: center;
+        .form-group textarea {
+            resize: vertical;
+            height: 80px;
         }
 
-        /* Admin Table Styling */
-        .admin-table {
+        #imgPreview {
             width: 100%;
-            border-collapse: collapse;
-            margin-top: 15px;
-            font-size: 0.85rem;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 6px;
+            margin-top: 8px;
+            display: none;
         }
-        .admin-table th, .admin-table td {
-            border: 1px solid var(--border-color);
-            padding: 10px;
-            text-align: left;
-        }
-        .admin-table th {
-            background-color: var(--primary-teal);
-            color: white;
-        }
-        .admin-table tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-
-        /* Footer */
-        footer {
-            background: var(--text-dark);
-            color: white;
-            text-align: center;
-            padding: 20px;
-            margin-top: auto;
-            font-size: 0.82rem;
-        }
-
-        .admin-link {
-            color: #888;
-            text-decoration: underline;
-            cursor: pointer;
-            margin-left: 10px;
-        }
-        .admin-link:hover { color: #fff; }
     </style>
 </head>
 <body>
 
-    <!-- Navigation Bar -->
-    <nav>
-        <a href="#" class="logo">4BF<span>.com</span></a>
-        <ul class="nav-links">
-            <li><span class="nav-link active" onclick="switchTab('all')">All Hubs</span></li>
-            <li><span class="nav-link" onclick="switchTab('dating')">Dating</span></li>
-            <li><span class="nav-link" onclick="switchTab('playdates')">Playdates</span></li>
-            <li><span class="nav-link" onclick="switchTab('care')">Community Care</span></li>
-            <li><span class="nav-link" onclick="switchTab('directory')">Directory</span></li>
-        </ul>
-
-        <!-- Auth Navigation Buttons -->
-        <div class="auth-actions" id="authNavActions">
-            <button class="btn-login-nav" onclick="openModal('userModal', 'login')">Log In</button>
-            <button class="btn-cta" onclick="openModal('userModal', 'register')">+ Join 4BF</button>
+    <header>
+        <div class="brand-container">
+            <h1>Best Friends to Boyfriends</h1>
+            <div class="tagline">From best friends to boyfriends we have you covered</div>
         </div>
-    </nav>
-
-    <!-- Hero Header -->
-    <header class="hero">
-        <h1>Connect Through Your Best Friend</h1>
-        <p>Whether you're looking for love, local playdates for your dog or cat, or pet-friendly places, 4BF brings pet lovers together.</p>
+        <div class="nav-buttons">
+            <button class="btn" onclick="openModal('userModal', 'login')">Log In</button>
+            <button class="btn btn-primary" onclick="openModal('userModal', 'register')">Create Profile</button>
+        </div>
     </header>
 
-    <div class="main-container">
-
-        <!-- Top Hub Navigation Cards -->
-        <div class="category-row-wrapper">
-            <div class="category-grid">
-                <div class="category-card dating" onclick="switchTab('dating')">
-                    <div class="icon-box">❤️</div>
-                    <h3>Pet Lovers Dating</h3>
-                    <p>Single pet lovers matching through pet bios.</p>
-                </div>
-                <div class="category-card playdates" onclick="switchTab('playdates')">
-                    <div class="icon-box">🐕</div>
-                    <h3>Pack Playdates</h3>
-                    <p>Local walk groups and dog park runs.</p>
-                </div>
-                <div class="category-card care" onclick="switchTab('care')">
-                    <div class="icon-box">🤝</div>
-                    <h3>Community Care</h3>
-                    <p>Neighbor pet-sitting swaps and advice.</p>
-                </div>
-                <div class="category-card directory" onclick="switchTab('directory')">
-                    <div class="icon-box">☕</div>
-                    <h3>Pet Life Directory</h3>
-                    <p>Dog-friendly patios, cafes, and hotels.</p>
-                </div>
-            </div>
+    <div class="container">
+        <h2>Connect & Meet Up</h2>
+        <div id="live-members-container" class="grid-container">
+            <!-- Profiles dynamically render here -->
         </div>
-
-        <h2 class="section-header">🐾 Featured Community Listings</h2>
-
-        <!-- Featured Listings Row -->
-        <div class="horizontal-categories-row" id="all-listings-container">
-            
-            <div class="category-item-card cat-dating">
-                <div class="category-header-title">❤️ Pet Lovers Dating</div>
-                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=600" class="profile-img" alt="Sarah and Dog">
-                <div class="profile-body">
-                    <div class="profile-badge">Single • Dog Owner</div>
-                    <h3 class="profile-title">Sarah & Barnaby</h3>
-                    <p class="profile-desc">Weekend hiker, coffee enthusiast, and Barnaby's full-time treat dispenser. Looking for outdoor adventures.</p>
-                    <button class="btn-connect" onclick="sendConnectionRequest('user_sarah_101', 'Sarah & Barnaby')">Send Hello 🐾</button>
-                </div>
-            </div>
-
-            <div class="category-item-card cat-playdates">
-                <div class="category-header-title">🐕 Local Playdates & Pack Walks</div>
-                <img src="https://images.unsplash.com/photo-1548199973-03cce0bbc87b?q=80&w=600" class="profile-img" alt="Dogs Playing">
-                <div class="profile-body">
-                    <div class="profile-badge">Playdate Group • Active</div>
-                    <h3 class="profile-title">Saturday Dog Park Meetup</h3>
-                    <p class="profile-desc">Energetic dogs welcome! We meet every Saturday at 9:00 AM at Central Bark Dog Park for casual coffee and play.</p>
-                    <button class="btn-connect" onclick="sendConnectionRequest('group_park_202', 'Saturday Dog Park Group')">Join Group</button>
-                </div>
-            </div>
-
-            <div class="category-item-card cat-care">
-                <div class="category-header-title">🤝 Neighbor Pet Care Exchange</div>
-                <img src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?q=80&w=600" class="profile-img" alt="Cat Sitting">
-                <div class="profile-body">
-                    <div class="profile-badge">Sitting Swap • Verified</div>
-                    <h3 class="profile-title">Downtown Cat Sitting Co-Op</h3>
-                    <p class="profile-desc">Trade cat-feeding duties with verified neighbors when traveling. Free reciprocal sitter network.</p>
-                    <button class="btn-connect" onclick="sendConnectionRequest('coop_cat_303', 'Downtown Cat Sitting Co-Op')">Join Swap Network</button>
-                </div>
-            </div>
-
-            <div class="category-item-card cat-directory">
-                <div class="category-header-title">☕ Pet-Friendly Places & Directory</div>
-                <img src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?q=80&w=600" class="profile-img" alt="Cafe Patio">
-                <div class="profile-body">
-                    <div class="profile-badge">Directory Listing • Patio</div>
-                    <h3 class="profile-title">Bark & Brew Coffee House</h3>
-                    <p class="profile-desc">100% dog-friendly shaded outdoor patio serving pup-cups, fresh pastries, and artisanal roast coffee.</p>
-                    <button class="btn-connect" onclick="alert('Opening directory map...')">View Map & Reviews</button>
-                </div>
-            </div>
-
-        </div>
-
-        <!-- Live Community Profiles -->
-        <h2 class="section-header">⭐ Newly Joined 4BF Profiles</h2>
-        <div class="horizontal-categories-row" id="live-members-container">
-            <p style="color: #666; font-size: 0.9rem; padding: 10px;">Loading community profiles...</p>
-        </div>
-
     </div>
 
-    <!-- Auth Modal (Login / Register) -->
-    <div class="modal-overlay" id="userModal">
+    <!-- Auth & Profile Modal -->
+    <div id="userModal" class="modal">
         <div class="modal-content">
+            <button class="close-btn" onclick="closeModal('userModal')">&times;</button>
             
-            <div class="modal-tab-switch">
-                <button class="modal-tab-btn active" id="tabLoginBtn" onclick="toggleAuthMode('login')">Log In</button>
-                <button class="modal-tab-btn" id="tabRegisterBtn" onclick="toggleAuthMode('register')">Create Account</button>
+            <div class="tab-buttons">
+                <button id="tabLoginBtn" class="tab-btn active" onclick="toggleAuthMode('login')">Log In</button>
+                <button id="tabRegisterBtn" class="tab-btn" onclick="toggleAuthMode('register')">Create Profile</button>
             </div>
 
-            <!-- Quick Google Sign-In -->
-            <button class="btn-google" onclick="handleGoogleSignIn()">
-                <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.259h2.908c1.702-1.567 2.684-3.874 2.684-6.617z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"/><path fill="#FBBC05" d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"/></svg>
-                Continue with Google
-            </button>
-
-            <div class="divider"><span>OR</span></div>
-
-            <!-- LOGIN FORM -->
+            <!-- Login Form -->
             <form id="loginForm" onsubmit="handleLogin(event)">
                 <div class="form-group">
                     <label>Email Address</label>
-                    <input type="email" id="loginEmail" class="form-control" placeholder="name@example.com" required>
+                    <input type="email" id="loginEmail" required>
                 </div>
                 <div class="form-group">
                     <label>Password</label>
-                    <input type="password" id="loginPassword" class="form-control" placeholder="Your password" required>
+                    <input type="password" id="loginPassword" required>
                 </div>
-                <button type="submit" id="loginSubmitBtn" class="btn-cta" style="width: 100%; margin-top: 8px;">Log In to 4BF</button>
+                <button type="submit" class="btn-connect">Log In</button>
             </form>
 
-            <!-- REGISTRATION FORM -->
-            <form id="registerForm" onsubmit="handleRegistration(event)" style="display: none;">
+            <!-- Register / Profile Creation Form -->
+            <form id="registerForm" style="display: none;" onsubmit="handleRegistration(event)">
                 <div class="form-group">
-                    <label>Profile Picture (Upload Photo)</label>
-                    <div class="photo-preview-container">
-                        <img id="imgPreview" class="photo-preview" src="https://images.unsplash.com/photo-1543466835-00a7907e9de1?q=80&w=200" alt="Preview">
-                        <input type="file" id="regPhoto" class="form-control" accept="image/*" onchange="previewImage(event)">
-                    </div>
+                    <label>Your Name & Pet's Name</label>
+                    <input type="text" id="regName" placeholder="e.g., Alex & Buster" required>
                 </div>
-
                 <div class="form-group">
                     <label>Email Address</label>
-                    <input type="email" id="regEmail" class="form-control" placeholder="name@example.com" required>
+                    <input type="email" id="regEmail" required>
                 </div>
                 <div class="form-group">
                     <label>Password</label>
-                    <input type="password" id="regPassword" class="form-control" placeholder="Choose a secure password" required>
+                    <input type="password" id="regPassword" required>
                 </div>
                 <div class="form-group">
-                    <label>Your Name & Pet's Name</label>
-                    <input type="text" id="regName" class="form-control" placeholder="e.g., Alex & Buster" required>
-                </div>
-                <div class="form-group">
-                    <label>Primary Goal on 4BF</label>
-                    <select id="regGoal" class="form-control" required>
-                        <option value="dating">❤️ Dating Single Pet Lovers</option>
-                        <option value="playdates">🐕 Finding Local Playdates</option>
-                        <option value="care">🤝 Pet Care & Sitting Swaps</option>
-                        <option value="all">🐾 All of the Above</option>
+                    <label>Preferred Date Category</label>
+                    <select id="regGoal" required>
+                        <option value="" disabled selected>Select an activity style...</option>
+                        <optgroup label="No Cost Dates">
+                            <option value="Dog Walk Date">Dog Walk Date</option>
+                            <option value="Meet with Friends">Meet with Friends</option>
+                            <option value="Bike Ride Dates">Bike Ride Dates</option>
+                            <option value="Meet in the Park">Meet in the Park</option>
+                            <option value="Picnic Dates">Picnic Dates</option>
+                            <option value="Running / Gym Date">Running or Exercise Dates at the Gym</option>
+                        </optgroup>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>Public Bio / Pet Details</label>
-                    <textarea id="regDetails" class="form-control" rows="3" placeholder="Tell the community about you and your pet..." required></textarea>
+                    <label>Profile Photo</label>
+                    <input type="file" id="regPhoto" accept="image/*" onchange="previewImage(event)" required>
+                    <img id="imgPreview" alt="Profile Preview">
                 </div>
-
-                <div class="form-group" style="margin-top: 12px;">
-                    <label style="font-weight: normal; font-size: 0.82rem; display: flex; gap: 8px; align-items: flex-start;">
-                        <input type="checkbox" required style="margin-top: 2px;">
-                        <span>I confirm my pet is non-aggressive and up-to-date on vaccinations.</span>
-                    </label>
-                </div>
-
-                <button type="submit" id="regSubmitBtn" class="btn-cta" style="width: 100%; margin-top: 8px;">Create Public Profile</button>
-            </form>
-
-            <button type="button" onclick="closeModal('userModal')" style="width: 100%; margin-top: 10px; background: none; border: none; cursor: pointer; color: #888;">Cancel</button>
-        </div>
-    </div>
-
-    <!-- Password Auth Modal for Admin -->
-    <div class="modal-overlay" id="adminAuthModal">
-        <div class="modal-content">
-            <h3 style="color: var(--primary-teal); margin-bottom: 12px;">🔒 Admin Access Required</h3>
-            <form onsubmit="verifyAdminPassword(event)">
                 <div class="form-group">
-                    <label>Enter Admin Password</label>
-                    <input type="password" id="adminPassInput" class="form-control" placeholder="Password" required>
+                    <label>Public Bio / About You</label>
+                    <textarea id="regDetails" placeholder="Share a little about yourself and what you're looking for..." required></textarea>
                 </div>
-                <button type="submit" class="btn-cta" style="width: 100%;">Authenticate</button>
+                <button type="submit" id="regSubmitBtn" class="btn-connect">Create Public Profile</button>
             </form>
-            <button type="button" onclick="closeModal('adminAuthModal')" style="width: 100%; margin-top: 10px; background: none; border: none; cursor: pointer; color: #888;">Cancel</button>
         </div>
     </div>
-
-    <!-- Admin Analytics Dashboard Modal -->
-    <div class="modal-overlay" id="adminDashboardModal">
-        <div class="modal-content wide-admin">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                <h2 style="color: var(--primary-teal);">📊 Private Visitor Analytics</h2>
-                <button class="btn-danger" onclick="resetVisitorCounter()">Reset Counter Data</button>
-            </div>
-            
-            <p style="font-size: 0.9rem; color: #666;">Total Pageviews Tracked: <strong id="totalViewsCount">0</strong></p>
-
-            <div style="max-height: 400px; overflow-y: auto; margin-top: 15px;">
-                <table class="admin-table">
-                    <thead>
-                        <tr>
-                            <th>Date & Day</th>
-                            <th>City & State</th>
-                            <th>IP Address</th>
-                        </tr>
-                    </thead>
-                    <tbody id="analyticsTableBody">
-                        <tr><td colspan="3" style="text-align:center;">Loading analytics logs...</td></tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <button type="button" onclick="closeModal('adminDashboardModal')" style="width: 100%; margin-top: 15px; background: #eee; border: none; padding: 10px; font-weight: bold; border-radius: 6px; cursor: pointer;">Close Dashboard</button>
-        </div>
-    </div>
-
-    <!-- Legal Disclaimer Section -->
-    <section class="disclaimer-section">
-        <div style="max-width: 1000px; margin: 0 auto;">
-            <strong>LEGAL DISCLAIMER & TERMS OF USE:</strong> 
-            4BF.com serves as a community networking platform for pet owners and enthusiasts. 4BF.com does not perform background checks, criminal screenings, or pet temperament evaluations on its users. Members are solely responsible for exercising caution, conducting due diligence, and taking necessary safety precautions when arranging meetings, playdates, or pet care services. 4BF.com disclaims all liability for personal injury, property damage, or disputes arising from interactions facilitated through this platform.
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer>
-        <p>&copy; 2026 4BF.com - For Best Friends | All Rights Reserved <span class="admin-link" onclick="openAdminPortal()">Admin Portal</span></p>
-    </footer>
 
     <script>
+        // Insert your Firebase project configuration here
         const firebaseConfig = {
-            apiKey: "AIzaSyChkzaXGlbOWno07H-cVLKVGCB4vXpjP6A",
-            authDomain: "bfs-75627.firebaseapp.com",
-            projectId: "bfs-75627",
-            storageBucket: "bfs-75627.firebasestorage.app",
-            messagingSenderId: "1029971862111",
-            appId: "1:1029971862111:web:0fb04afe1f09292ed6b1ea",
-            measurementId: "G-FQ75Q1PY9P"
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_AUTH_DOMAIN",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_STORAGE_BUCKET",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID"
         };
 
-        firebase.initializeApp(firebaseConfig);
+        // Initialize Firebase
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
         const auth = firebase.auth();
         const db = firebase.firestore();
 
-        // Admin Password Setup (Default password: admin123)
-        const ADMIN_PASS = "admin123";
+        let base64PhotoStr = "";
 
-        let base64PhotoStr = "https://images.unsplash.com/photo-1543466835-00a7907e9de1?q=80&w=600";
-
-        // Track Visitor Data Silently
-        async function recordVisitorLog() {
-            try {
-                // Fetch public IP and Geolocation
-                const ipRes = await fetch('https://ipapi.co/json/');
-                const ipData = await ipRes.json();
-                
-                const now = new Date();
-                const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-                const dayName = days[now.getDay()];
-                const dateStr = `${dayName}, ${now.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })} ${now.toLocaleTimeString()}`;
-
-                const visitorEntry = {
-                    dateDay: dateStr,
-                    cityState: `${ipData.city || 'Unknown'}, ${ipData.region_code || ipData.region || 'US'}`,
-                    ipAddress: ipData.ip || 'Unavailable',
-                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
-                };
-
-                await db.collection("visitor_logs").add(visitorEntry);
-            } catch (error) {
-                console.log("Visitor logging failed silently:", error);
-            }
-        }
-
-        // Admin Modal Handlers
-        function openAdminPortal() {
-            openModal('adminAuthModal');
-        }
-
-        function verifyAdminPassword(e) {
-            e.preventDefault();
-            const inputPass = document.getElementById('adminPassInput').value;
-            if (inputPass === ADMIN_PASS) {
-                closeModal('adminAuthModal');
-                document.getElementById('adminPassInput').value = "";
-                openModal('adminDashboardModal');
-                loadAdminAnalytics();
-            } else {
-                alert("Incorrect Admin Password.");
-            }
-        }
-
-        // Fetch Analytics Logs in Descending Order
-        function loadAdminAnalytics() {
-            db.collection("visitor_logs").orderBy("timestamp", "desc").limit(100).onSnapshot((snapshot) => {
-                const tbody = document.getElementById('analyticsTableBody');
-                document.getElementById('totalViewsCount').textContent = snapshot.size;
-
-                if (snapshot.empty) {
-                    tbody.innerHTML = `<tr><td colspan="3" style="text-align:center;">No visitor logs recorded.</td></tr>`;
-                    return;
-                }
-
-                tbody.innerHTML = "";
-                snapshot.forEach((doc) => {
-                    const data = doc.data();
-                    tbody.innerHTML += `
-                        <tr>
-                            <td>${data.dateDay || 'N/A'}</td>
-                            <td>${data.cityState || 'Unknown'}</td>
-                            <td>${data.ipAddress || 'Hidden'}</td>
-                        </tr>
-                    `;
-                });
-            });
-        }
-
-        // Reset Counter Functionality
-        async function resetVisitorCounter() {
-            if (confirm("Are you sure you want to delete all recorded visitor logs?")) {
-                try {
-                    const snapshot = await db.collection("visitor_logs").get();
-                    const batch = db.batch();
-                    snapshot.docs.forEach((doc) => {
-                        batch.delete(doc.ref);
-                    });
-                    await batch.commit();
-                    alert("Visitor counter analytics have been successfully reset.");
-                } catch (error) {
-                    alert("Error resetting counter: " + error.message);
-                }
-            }
-        }
-
+        // Client-side Image Resizing & Base64 Compression
         function previewImage(event) {
             const file = event.target.files[0];
             if (file) {
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     const img = new Image();
+                    img.src = e.target.result;
                     img.onload = function() {
                         const canvas = document.createElement('canvas');
                         const ctx = canvas.getContext('2d');
@@ -776,35 +347,20 @@
 
                         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
                         base64PhotoStr = canvas.toDataURL('image/jpeg', 0.7);
-                        document.getElementById('imgPreview').src = base64PhotoStr;
+                        
+                        const imgPreview = document.getElementById('imgPreview');
+                        imgPreview.src = base64PhotoStr;
+                        imgPreview.style.display = 'block';
                     };
-                    img.src = e.target.result;
                 };
                 reader.readAsDataURL(file);
             }
         }
 
-        function switchTab(tabName) {
-            const allLinks = document.querySelectorAll('.nav-link');
-            allLinks.forEach(link => link.classList.remove('active'));
-
-            const cards = document.querySelectorAll('.category-item-card');
-            if (tabName === 'all') {
-                cards.forEach(card => card.style.display = 'flex');
-            } else {
-                cards.forEach(card => {
-                    if (card.classList.contains(`cat-${tabName}`)) {
-                        card.style.display = 'flex';
-                    } else {
-                        card.style.display = 'none';
-                    }
-                });
-            }
-        }
-
-        function openModal(modalId, initialMode = 'login') {
+        // Modal Controls
+        function openModal(modalId, mode = 'login') {
             document.getElementById(modalId).style.display = 'flex';
-            if (modalId === 'userModal') toggleAuthMode(initialMode);
+            if (modalId === 'userModal') toggleAuthMode(mode);
         }
 
         function closeModal(modalId) {
@@ -813,177 +369,106 @@
 
         function toggleAuthMode(mode) {
             const loginForm = document.getElementById('loginForm');
-            const registerForm = document.getElementById('registerForm');
-            const tabLoginBtn = document.getElementById('tabLoginBtn');
-            const tabRegisterBtn = document.getElementById('tabRegisterBtn');
+            const regForm = document.getElementById('registerForm');
+            const tabLogin = document.getElementById('tabLoginBtn');
+            const tabReg = document.getElementById('tabRegisterBtn');
 
             if (mode === 'login') {
                 loginForm.style.display = 'block';
-                registerForm.style.display = 'none';
-                tabLoginBtn.classList.add('active');
-                tabRegisterBtn.classList.remove('active');
+                regForm.style.display = 'none';
+                tabLogin.classList.add('active');
+                tabReg.classList.remove('active');
             } else {
                 loginForm.style.display = 'none';
-                registerForm.style.display = 'block';
-                tabRegisterBtn.classList.add('active');
-                tabLoginBtn.classList.remove('active');
+                regForm.style.display = 'block';
+                tabReg.classList.add('active');
+                tabLogin.classList.remove('active');
             }
         }
 
-        // Login Handler
+        // Handle Login
         async function handleLogin(e) {
             e.preventDefault();
             const email = document.getElementById('loginEmail').value;
             const password = document.getElementById('loginPassword').value;
-            const submitBtn = document.getElementById('loginSubmitBtn');
-
-            submitBtn.textContent = "Logging In...";
-            submitBtn.disabled = true;
 
             try {
                 await auth.signInWithEmailAndPassword(email, password);
-                alert("🎉 Welcome back to 4BF!");
+                alert("Successfully logged in!");
                 closeModal('userModal');
             } catch (error) {
-                alert("Login Error: " + error.message);
-            } finally {
-                submitBtn.textContent = "Log In to 4BF";
-                submitBtn.disabled = false;
+                alert("Login failed: " + error.message);
             }
         }
 
-        // Registration Handler
+        // Handle Registration & Save Profile
         async function handleRegistration(e) {
             e.preventDefault();
             const submitBtn = document.getElementById('regSubmitBtn');
-            submitBtn.textContent = "Saving Profile...";
             submitBtn.disabled = true;
+            submitBtn.textContent = "Creating Profile...";
 
             const email = document.getElementById('regEmail').value;
             const password = document.getElementById('regPassword').value;
-            const name = document.getElementById('regName').value;
+            const names = document.getElementById('regName').value;
             const goal = document.getElementById('regGoal').value;
             const details = document.getElementById('regDetails').value;
 
             try {
-                const userCredential = await auth.createUserWithEmailAndPassword(email, password);
-                const user = userCredential.user;
-
-                await db.collection("profiles").doc(user.uid).set({
-                    userId: user.uid,
-                    displayName: name,
+                const userCred = await auth.createUserWithEmailAndPassword(email, password);
+                
+                await db.collection("profiles").doc(userCred.user.uid).set({
+                    uid: userCred.user.uid,
+                    names: names,
                     email: email,
                     goal: goal,
-                    petDetails: details,
+                    details: details,
                     photoUrl: base64PhotoStr,
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
 
-                alert(`🎉 Account created! Welcome ${name}`);
+                alert("Profile created successfully!");
                 closeModal('userModal');
+                loadLiveProfiles();
             } catch (error) {
-                alert("Registration Error: " + error.message);
+                alert("Error creating profile: " + error.message);
             } finally {
-                submitBtn.textContent = "Create Public Profile";
                 submitBtn.disabled = false;
+                submitBtn.textContent = "Create Public Profile";
             }
         }
 
-        // Google Sign-In
-        async function handleGoogleSignIn() {
-            const provider = new firebase.auth.GoogleAuthProvider();
-            try {
-                const result = await auth.signInWithPopup(provider);
-                const user = result.user;
-
-                await db.collection("profiles").doc(user.uid).set({
-                    userId: user.uid,
-                    displayName: user.displayName || "4BF Member",
-                    email: user.email,
-                    goal: "all",
-                    petDetails: "Registered via Google Sign-In",
-                    photoUrl: user.photoURL || base64PhotoStr,
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                }, { merge: true });
-
-                alert(`🎉 Welcome back, ${user.displayName || user.email}!`);
-                closeModal('userModal');
-            } catch (error) {
-                alert("Google Sign-In Error: " + error.message);
-            }
-        }
-
-        // Fetch Live Profiles
-        function loadCommunityMembers() {
-            db.collection("profiles").limit(10).onSnapshot((snapshot) => {
+        // Fetch & Render Live Profiles
+        function loadLiveProfiles() {
+            db.collection("profiles").orderBy("createdAt", "desc").limit(20).onSnapshot((snapshot) => {
                 const container = document.getElementById('live-members-container');
                 if (snapshot.empty) {
-                    container.innerHTML = `<p style="color: #888; padding: 10px;">Be the first to join and create a public profile!</p>`;
+                    container.innerHTML = `<p style="color: #666; padding: 10px;">No profiles available yet. Be the first to post!</p>`;
                     return;
                 }
-
                 container.innerHTML = "";
                 snapshot.forEach((doc) => {
                     const profile = doc.data();
-                    const cardHtml = `
-                        <div class="category-item-card cat-${profile.goal || 'all'}">
-                            <div class="category-header-title">🐾 Member Profile</div>
-                            <img src="${profile.photoUrl || base64PhotoStr}" class="profile-img" alt="${profile.displayName}">
+                    container.innerHTML += `
+                        <div class="category-item-card">
+                            <div class="category-header-title">📍 ${profile.goal}</div>
+                            <img src="${profile.photoUrl || 'https://via.placeholder.com/400x220?text=No+Photo'}" class="profile-img" alt="${profile.names}">
                             <div class="profile-body">
-                                <div class="profile-badge">${profile.goal || 'Community Member'}</div>
-                                <h3 class="profile-title">${profile.displayName}</h3>
-                                <p class="profile-desc">${profile.petDetails}</p>
-                                <button class="btn-connect" onclick="sendConnectionRequest('${profile.userId}', '${profile.displayName}')">Connect 🐾</button>
+                                <h3 class="profile-title">${profile.names}</h3>
+                                <p class="profile-desc">${profile.details}</p>
+                                <button class="btn-connect" onclick="alert('Sending connection request to ${profile.names}...')">Send Hello 🐾</button>
                             </div>
                         </div>
                     `;
-                    container.innerHTML += cardHtml;
                 });
+            }, (error) => {
+                console.log("Firestore fetch notice: Connect Firebase configuration to populate live records.");
             });
         }
 
-        async function sendConnectionRequest(targetUserId, targetName) {
-            const currentUser = auth.currentUser;
-
-            if (!currentUser) {
-                alert("Please log in or register first to connect with other pet owners.");
-                openModal('userModal', 'login');
-                return;
-            }
-
-            try {
-                await db.collection("connections").add({
-                    fromUserId: currentUser.uid,
-                    toUserId: targetUserId,
-                    status: "pending",
-                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
-                });
-
-                alert(`🐾 Connection request sent to ${targetName}!`);
-            } catch (error) {
-                alert("Error sending connection: " + error.message);
-            }
-        }
-
-        // Auth state listener updates top right UI dynamically
-        auth.onAuthStateChanged((user) => {
-            const authNavActions = document.getElementById('authNavActions');
-            if (user) {
-                authNavActions.innerHTML = `
-                    <span style="font-size:0.88rem; font-weight:bold; color:var(--primary-teal);">Logged in as: ${user.email}</span>
-                    <button class="btn-login-nav" onclick="auth.signOut()">Log Out</button>
-                `;
-            } else {
-                authNavActions.innerHTML = `
-                    <button class="btn-login-nav" onclick="openModal('userModal', 'login')">Log In</button>
-                    <button class="btn-cta" onclick="openModal('userModal', 'register')">+ Join 4BF</button>
-                `;
-            }
-        });
-
-        // Initialize Live Feed & Silent Tracker
-        loadCommunityMembers();
-        recordVisitorLog();
+        window.onload = function() {
+            loadLiveProfiles();
+        };
     </script>
 </body>
 </html>

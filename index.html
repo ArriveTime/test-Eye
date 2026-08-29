@@ -3,1063 +3,307 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>4BF.com - From Best Friends to Boyfriends</title>
-    <!-- Firebase Compatibility SDKs -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+    <title>Park Fast. Park Free. Park LV.</title>
+    <!-- Leaflet Open-Source Mapping CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
         :root {
-            --primary: #2b5c8f;
-            --primary-dark: #1e4267;
-            --accent: #e07a5f;
-            --accent-hover: #d06346;
-            --bg-light: #f8f9fa;
-            --card-bg: #ffffff;
-            --text-dark: #2b2d42;
-            --text-muted: #6c757d;
-            --border-color: #e9ecef;
-            --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.05);
-            --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.08);
-            --radius-md: 12px;
-            --radius-lg: 16px;
+            --bg-gold: #ffd700;
+            --text-blue: #0d47a1;
+            --text-light: #ffffff;
+            --map-bg-white: #ffffff;
+            --border-color: #bbdefb;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--bg-light);
-            color: var(--text-dark);
-            line-height: 1.6;
+            background-color: var(--bg-gold);
+            background-image: 
+                linear-gradient(to bottom, rgba(255, 215, 0, 0.8), rgba(255, 215, 0, 0.95)),
+                url('https://images.unsplash.com/photo-1605035012319-110213f4525c?q=80&w=2000');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: var(--text-blue);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
 
-        /* Navigation */
         header {
-            background-color: var(--card-bg);
-            border-bottom: 1px solid var(--border-color);
-            padding: 16px 40px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            box-shadow: var(--shadow-sm);
-        }
-
-        .brand-container h1 {
-            font-size: 1.4rem;
-            color: var(--primary-dark);
-            font-weight: 700;
-            letter-spacing: -0.5px;
-        }
-
-        .brand-container .tagline-head {
-            font-size: 0.82rem;
-            color: var(--text-muted);
-            font-weight: 500;
-        }
-
-        .nav-buttons .btn {
-            padding: 10px 20px;
-            margin-left: 8px;
-            border-radius: 30px;
-            border: 1px solid var(--primary);
-            background: transparent;
-            color: var(--primary);
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 0.9rem;
-            transition: all 0.2s ease;
-        }
-
-        .nav-buttons .btn:hover {
-            background: #f0f4f8;
-        }
-
-        .nav-buttons .btn-primary {
-            background: var(--accent);
-            border-color: var(--accent);
-            color: white;
-        }
-
-        .nav-buttons .btn-primary:hover {
-            background: var(--accent-hover);
-            border-color: var(--accent-hover);
-        }
-
-        .nav-buttons .btn-owner-badge {
-            background: #1e293b;
-            color: #fbbf24;
-            border-color: #fbbf24;
-        }
-
-        /* Hero Section */
-        .hero {
-            background: linear-gradient(135deg, #1e4267 0%, #2b5c8f 50%, #3d7ab8 100%);
-            color: white;
-            padding: 70px 20px 80px 20px;
             text-align: center;
-            position: relative;
-        }
-
-        .hero-content {
-            max-width: 900px;
-            margin: 0 auto;
-        }
-
-        .hero h2 {
-            font-size: 2.8rem;
-            font-weight: 800;
-            margin-bottom: 24px;
-            line-height: 1.2;
-        }
-
-        .hero-highlights {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 16px;
-            margin: 32px 0 40px 0;
-        }
-
-        .highlight-card {
-            background: rgba(255, 255, 255, 0.12);
-            backdrop-filter: blur(8px);
-            border: 1px solid rgba(255, 255, 255, 0.25);
-            padding: 20px 18px;
-            border-radius: var(--radius-md);
-            display: flex;
-            align-items: center;
-            text-align: left;
-            gap: 14px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            transition: transform 0.2s ease;
-        }
-
-        .highlight-card:hover {
-            transform: translateY(-3px);
-            background: rgba(255, 255, 255, 0.18);
-        }
-
-        .highlight-number {
-            background: var(--accent);
-            color: white;
-            font-weight: 800;
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-            font-size: 1.1rem;
-        }
-
-        .highlight-text {
-            font-size: 1.05rem;
-            font-weight: 500;
-            line-height: 1.4;
-            color: #ffffff;
-        }
-
-        .hero-cta {
-            display: flex;
-            gap: 16px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .btn-large {
-            padding: 14px 32px;
-            font-size: 1.05rem;
-            font-weight: 700;
-            border-radius: 30px;
-            cursor: pointer;
-            border: none;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-
-        .btn-large:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(0,0,0,0.2);
-        }
-
-        .btn-accent {
-            background: var(--accent);
-            color: white;
-        }
-
-        .btn-outline-hero {
-            background: rgba(255, 255, 255, 0.15);
-            color: white;
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            backdrop-filter: blur(5px);
-        }
-
-        /* Layout Container */
-        .section-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 60px 20px;
-        }
-
-        .section-header {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-
-        .section-header h2 {
-            font-size: 2rem;
-            color: var(--primary-dark);
-            margin-bottom: 8px;
-        }
-
-        .section-header p {
-            color: var(--text-muted);
-            font-size: 1.05rem;
-        }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 24px;
-        }
-
-        .feature-card {
-            background: var(--card-bg);
-            padding: 30px 24px;
-            border-radius: var(--radius-md);
-            box-shadow: var(--shadow-sm);
-            border: 1px solid var(--border-color);
-            text-align: center;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-
-        .feature-card:hover {
-            transform: translateY(-4px);
-            box-shadow: var(--shadow-md);
-        }
-
-        .feature-icon {
-            font-size: 2.5rem;
-            margin-bottom: 16px;
-            display: inline-block;
-        }
-
-        .feature-card h3 {
-            font-size: 1.2rem;
-            color: var(--primary-dark);
-            margin-bottom: 10px;
-        }
-
-        .feature-card p {
-            font-size: 0.95rem;
-            color: var(--text-muted);
-        }
-
-        /* Profile Cards Grid */
-        .grid-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 24px;
-        }
-
-        .category-item-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-md);
-            overflow: hidden;
-            box-shadow: var(--shadow-sm);
-            display: flex;
-            flex-direction: column;
-            transition: transform 0.2s ease;
-            position: relative;
-        }
-
-        .category-item-card:hover {
-            transform: translateY(-3px);
-            box-shadow: var(--shadow-md);
-        }
-
-        .category-header-title {
-            background: #f1f5f9;
-            padding: 12px 16px;
-            font-size: 0.8rem;
-            font-weight: 700;
-            color: var(--primary-dark);
-            border-bottom: 1px solid var(--border-color);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .profile-img {
-            width: 100%;
-            height: 220px;
-            object-fit: cover;
-            background: #e2e8f0;
-        }
-
-        .profile-body {
-            padding: 18px;
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .profile-title {
-            margin: 0 0 8px 0;
-            font-size: 1.2rem;
-            color: var(--text-dark);
-        }
-
-        .profile-desc {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            margin: 0 0 16px 0;
-            flex-grow: 1;
-        }
-
-        .btn-connect {
-            width: 100%;
-            padding: 12px;
-            border: none;
-            background: var(--primary);
-            color: white;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.2s ease;
-        }
-
-        .btn-connect:hover {
-            background: var(--primary-dark);
-        }
-
-        /* Owner Direct Action Toolbar on Cards */
-        .owner-card-toolbar {
-            background: #1e293b;
-            color: #ffffff;
-            padding: 10px;
-            font-size: 0.8rem;
-            border-top: 1px solid #334155;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-
-        .owner-card-toolbar span {
-            color: #fbbf24;
-            font-weight: bold;
-        }
-
-        .owner-btn-group {
-            display: flex;
-            gap: 6px;
-        }
-
-        .btn-owner-action {
-            flex: 1;
-            padding: 6px;
-            font-size: 0.75rem;
-            font-weight: bold;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        .btn-owner-ban {
-            background: #f59e0b;
-            color: white;
-        }
-
-        .btn-owner-delete {
-            background: #ef4444;
-            color: white;
-        }
-
-        /* Modal Styles */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.6);
-            backdrop-filter: blur(4px);
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-
-        .modal-content {
-            background: white;
-            padding: 36px;
-            border-radius: var(--radius-lg);
-            width: 100%;
-            max-width: 480px;
-            max-height: 90vh;
-            overflow-y: auto;
-            position: relative;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-        }
-
-        .modal-large {
-            max-width: 850px;
-        }
-
-        .close-btn {
-            position: absolute;
-            top: 18px; right: 20px;
-            font-size: 1.6rem;
-            cursor: pointer;
-            border: none;
-            background: none;
-            color: var(--text-muted);
-        }
-
-        .tab-buttons {
-            display: flex;
-            margin-bottom: 24px;
+            padding: 30px 20px;
             border-bottom: 2px solid var(--border-color);
+            background-color: rgba(255, 215, 0, 0.9);
         }
 
-        .tab-btn {
+        .logo-title { font-size: 2.5rem; font-weight: 900; text-transform: uppercase; color: var(--text-blue); }
+        
+        .main-container {
             flex: 1;
-            padding: 12px;
-            background: none;
-            border: none;
-            font-size: 1rem;
-            cursor: pointer;
-            font-weight: bold;
-            color: var(--text-muted);
-        }
-
-        .tab-btn.active {
-            color: var(--primary);
-            border-bottom: 2px solid var(--primary);
-            margin-bottom: -2px;
-        }
-
-        .form-group {
-            margin-bottom: 18px;
-        }
-
-        .form-group label {
-            display: block;
-            font-size: 0.85rem;
-            font-weight: 600;
-            margin-bottom: 6px;
-            color: var(--text-dark);
-        }
-
-        .form-group input, .form-group select, .form-group textarea {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            box-sizing: border-box;
-            font-size: 0.95rem;
-            background: #fafafa;
-        }
-
-        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
-            outline: none;
-            border-color: var(--primary);
-            background: #ffffff;
-        }
-
-        .form-group textarea {
-            resize: vertical;
-            height: 90px;
-        }
-
-        #imgPreview {
-            width: 100%;
-            height: 140px;
-            object-fit: cover;
-            border-radius: 8px;
-            margin-top: 10px;
-            display: none;
-        }
-
-        /* Analytics & Moderation Tables */
-        .analytics-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-            font-size: 0.85rem;
-            text-align: left;
-        }
-
-        .analytics-table th, .analytics-table td {
-            padding: 12px 10px;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .analytics-table th {
-            background-color: #f1f5f9;
-            color: var(--primary-dark);
-            font-weight: 700;
-        }
-
-        .analytics-table tr:hover {
-            background-color: #f8fafc;
-        }
-
-        .badge-live {
-            background: #10b981;
-            color: white;
-            padding: 3px 8px;
-            border-radius: 12px;
-            font-size: 0.75rem;
-            font-weight: bold;
-        }
-
-        /* Footer */
-        footer {
-            background: var(--primary-dark);
-            color: rgba(255,255,255,0.8);
-            padding: 40px 20px 30px 20px;
-            font-size: 0.85rem;
-            margin-top: 60px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .footer-content {
-            max-width: 1100px;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 25px;
+            padding: 25px;
+            max-width: 1400px;
             margin: 0 auto;
-            text-align: center;
+            width: 100%;
         }
 
-        .disclaimer-text {
-            color: rgba(255, 255, 255, 0.65);
-            margin: 16px 0;
-            line-height: 1.5;
-            font-size: 0.78rem;
-            text-align: justify;
-            text-align-last: center;
-        }
+        @media (min-width: 992px) { .main-container { grid-template-columns: 1fr 380px; } }
 
-        .footer-links {
-            margin-top: 20px;
-            padding-top: 16px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            flex-wrap: wrap;
-        }
-
-        .footer-links a {
-            color: rgba(255, 255, 255, 0.7);
-            text-decoration: none;
-            transition: color 0.2s;
-        }
-
-        .footer-links a:hover {
-            color: #ffffff;
-            text-decoration: underline;
-        }
-
-        .admin-link {
-            color: rgba(255, 255, 255, 0.4) !important;
-            font-size: 0.75rem;
+        .btn-locate {
+            background-color: var(--text-blue);
+            color: var(--text-light);
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: bold;
             cursor: pointer;
+            text-transform: uppercase;
+            align-self: flex-start;
+            margin-bottom: 10px;
+            transition: opacity 0.2s;
+        }
+
+        .btn-locate:hover { opacity: 0.9; }
+
+        .map-panel {
+            background-color: var(--map-bg-white);
+            border-radius: 16px;
+            border: 4px solid var(--text-blue) !important;
+            height: 500px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+        }
+        #map { height: 100%; width: 100%; }
+
+        .control-panel {
+            background-color: var(--text-blue);
+            color: var(--text-light);
+            border-radius: 16px;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+        }
+
+        .panel-header {
+            font-size: 1.4rem;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        .input-field {
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 16px;
+            border-radius: 8px;
+            border: none;
+            margin-top: 5px;
+            font-size: 1rem;
+            color: #333;
+        }
+
+        .btn-action {
+            background-color: var(--bg-gold);
+            color: var(--text-blue);
+            border: none;
+            padding: 18px;
+            border-radius: 8px;
+            font-weight: 800;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: transform 0.1s, opacity 0.2s;
+        }
+
+        .btn-action:hover { opacity: 0.95; transform: translateY(-1px); }
+
+        .status-box { background-color: rgba(255, 255, 255, 0.1); padding: 15px; border-radius: 8px; }
+        
+        .user-location-marker {
+            background-color: var(--text-blue);
+            border: 3px solid var(--bg-gold);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(13, 71, 161, 0.7); }
+            70% { box-shadow: 0 0 0 18px rgba(13, 71, 161, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(13, 71, 161, 0); }
         }
     </style>
 </head>
 <body>
 
-    <!-- Header Navigation -->
     <header>
-        <div class="brand-container">
-            <h1>4BF.com</h1>
-            <div class="tagline-head">From best friends to boyfriends we have you covered</div>
-        </div>
-        <div class="nav-buttons">
-            <button class="btn" id="ownerToggleBtn" onclick="toggleOwnerMode()">👑 Owner Mode</button>
-            <button class="btn" onclick="openModal('userModal', 'login')">Log In</button>
-            <button class="btn btn-primary" onclick="openModal('userModal', 'register')">Create Profile</button>
-        </div>
+        <h1 class="logo-title">Park Fast. Park Free. Park LV.</h1>
     </header>
 
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="hero-content">
-            <h2>From best friends to boyfriends, we have you covered.</h2>
+    <div class="main-container">
+        <div class="map-wrapper">
+            <button class="btn-locate" onclick="initRealTimeLocation()">📍 Re-Center Location</button>
+            <div class="map-panel">
+                <div id="map"></div>
+            </div>
+        </div>
+
+        <div class="control-panel">
+            <div class="panel-header">Find Parking</div>
+            <label>1. Your Location</label>
+            <!-- Field is editable for street addresses -->
+            <input type="text" id="start-loc" class="input-field" placeholder="Detecting address or type here..." />
             
-            <div class="hero-highlights">
-                <div class="highlight-card">
-                    <div class="highlight-number">1</div>
-                    <div class="highlight-text">Connect over zero-stress no cost dates and casual activities.</div>
-                </div>
-                <div class="highlight-card">
-                    <div class="highlight-number">2</div>
-                    <div class="highlight-text">Skip awkward sit-down dinners.</div>
-                </div>
-                <div class="highlight-card">
-                    <div class="highlight-number">3</div>
-                    <div class="highlight-text">Meet up through low-pressure, real-life outdoor & fitness dates.</div>
-                </div>
-            </div>
+            <label>2. Destination</label>
+            <input type="text" id="dest-loc" class="input-field" value="The Cosmopolitan of Las Vegas" />
 
-            <div class="hero-cta">
-                <button class="btn-large btn-accent" onclick="openModal('userModal', 'register')">Create Your Free Profile</button>
-                <button class="btn-large btn-outline-hero" onclick="document.getElementById('community-section').scrollIntoView({behavior: 'smooth'})">Explore Community</button>
-            </div>
-        </div>
-    </section>
-
-    <!-- Features Overview -->
-    <section class="section-container">
-        <div class="section-header">
-            <h2>How It Works</h2>
-            <p>Everything you can do inside our social community</p>
-        </div>
-        <div class="features-grid">
-            <div class="feature-card">
-                <span class="feature-icon">🐾</span>
-                <h3>Bring Your Pets Along</h3>
-                <p>Include your furry best friends in your date setup. Host or join dog walk dates in safe local surroundings.</p>
-            </div>
-            <div class="feature-card">
-                <span class="feature-icon">🌿</span>
-                <h3>No-Cost Activity Dates</h3>
-                <p>Focus on real connections rather than expensive bar tabs with park walkouts, picnics, and scenic bike rides.</p>
-            </div>
-            <div class="feature-card">
-                <span class="feature-icon">🏃‍♂️</span>
-                <h3>Active & Gym Partners</h3>
-                <p>Find workout partners for gym sessions, morning runs, or athletic training while expanding your dating pool.</p>
-            </div>
-            <div class="feature-card">
-                <span class="feature-icon">👥</span>
-                <h3>Casual Group Hangouts</h3>
-                <p>Prefer safety in numbers? Meet up with mutual friend groups and ease into genuine relationships comfortably.</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Active Members Section -->
-    <section id="community-section" class="section-container">
-        <div class="section-header">
-            <h2>Recent Members & Local Meetups</h2>
-            <p>See who is active and looking for casual activity dates nearby</p>
-        </div>
-        <div id="live-members-container" class="grid-container">
-            <!-- Dynamically populates profiles -->
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer>
-        <div class="footer-content">
-            <p style="font-weight: bold; color: #ffffff;">&copy; 4BF.com - All Rights Reserved.</p>
-            <div class="disclaimer-text">
-                <strong>LEGAL & PRIVACY DISCLAIMER:</strong> 4BF.com is an open social networking venue designed to facilitate casual activity meetups, outdoor recreation, and social introductions. 4BF.com does not perform background checks or screening on users. Members are solely responsible for exercising personal safety precautions.
-            </div>
-            <div class="footer-links">
-                <a href="#" onclick="alert('Terms of Service: Always practice personal safety when meeting new friends.')">Terms of Service</a>
-                <a href="#" onclick="alert('Privacy Policy: Your personal information is kept secure.')">Privacy Policy</a>
-                <a class="admin-link" onclick="openModal('adminModal')">Owner & Admin Dashboard</a>
-            </div>
-        </div>
-    </footer>
-
-    <!-- User Auth & Registration Modal -->
-    <div id="userModal" class="modal">
-        <div class="modal-content">
-            <button class="close-btn" onclick="closeModal('userModal')">&times;</button>
+            <button class="btn-action" onclick="locateAndRoute()">Find Closest Free Spot</button>
             
-            <div class="tab-buttons">
-                <button id="tabLoginBtn" class="tab-btn active" onclick="toggleAuthMode('login')">Log In</button>
-                <button id="tabRegisterBtn" class="tab-btn" onclick="toggleAuthMode('register')">Create Profile</button>
-            </div>
-
-            <!-- Login Form -->
-            <form id="loginForm" onsubmit="handleLogin(event)">
-                <div class="form-group">
-                    <label>Email Address</label>
-                    <input type="email" id="loginEmail" placeholder="yourname@example.com" required>
-                </div>
-                <div class="form-group">
-                    <label>Password</label>
-                    <input type="password" id="loginPassword" placeholder="••••••••" required>
-                </div>
-                <button type="submit" class="btn-connect" style="margin-top: 10px;">Log In</button>
-            </form>
-
-            <!-- Profile Form -->
-            <form id="registerForm" style="display: none;" onsubmit="handleRegistration(event)">
-                <div class="form-group">
-                    <label>Your Name & Pet's Name</label>
-                    <input type="text" id="regName" placeholder="e.g., Marcus & Buster" required>
-                </div>
-                <div class="form-group">
-                    <label>Email Address</label>
-                    <input type="email" id="regEmail" placeholder="yourname@example.com" required>
-                </div>
-                <div class="form-group">
-                    <label>Password</label>
-                    <input type="password" id="regPassword" placeholder="••••••••" required>
-                </div>
-                <div class="form-group">
-                    <label>Preferred Date Category</label>
-                    <select id="regGoal" required>
-                        <option value="" disabled selected>Select an activity style...</option>
-                        <option value="Dog Walk Date">Dog Walk Date</option>
-                        <option value="Meet with Friends">Meet with Friends</option>
-                        <option value="Bike Ride Dates">Bike Ride Dates</option>
-                        <option value="Meet in the Park">Meet in the Park</option>
-                        <option value="Picnic Dates">Picnic Dates</option>
-                        <option value="Running or Exercise Dates at the Gym">Running or Exercise Dates at the Gym</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Profile Photo</label>
-                    <input type="file" id="regPhoto" accept="image/*" onchange="previewImage(event)" required>
-                    <img id="imgPreview" alt="Profile Preview">
-                </div>
-                <div class="form-group">
-                    <label>Public Bio / About You</label>
-                    <textarea id="regDetails" placeholder="Tell members about yourself..." required></textarea>
-                </div>
-                <button type="submit" class="btn-connect" style="margin-top: 10px;">Create Public Profile</button>
-            </form>
-        </div>
-    </div>
-
-    <!-- Admin & Owner Dashboard Modal -->
-    <div id="adminModal" class="modal">
-        <div class="modal-content modal-large">
-            <button class="close-btn" onclick="closeModal('adminModal')">&times;</button>
-            
-            <div id="adminAuthView">
-                <h2 style="color: var(--primary-dark); margin-bottom: 8px; text-align: center;">Owner & Admin Portal</h2>
-                <p style="text-align: center; color: var(--text-muted); margin-bottom: 20px; font-size: 0.9rem;">Enter owner key to access administrative controls.</p>
-                <form onsubmit="verifyAdminPass(event)">
-                    <div class="form-group">
-                        <label>Admin Password</label>
-                        <input type="password" id="adminPassInput" placeholder="Enter password..." required>
-                    </div>
-                    <button type="submit" class="btn-connect" style="margin-top: 10px;">Access Admin Controls</button>
-                </form>
-            </div>
-
-            <div id="adminDashboardView" style="display: none;">
-                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--border-color); padding-bottom: 12px; margin-bottom: 20px;">
-                    <h2 style="color: var(--primary-dark); font-size: 1.4rem;">📊 Site Analytics & Moderation</h2>
-                    <button class="btn" style="padding: 6px 12px; font-size: 0.8rem;" onclick="closeAdminDashboard()">Lock Portal</button>
-                </div>
-
-                <div style="display: flex; gap: 16px; margin-bottom: 20px;">
-                    <div style="flex: 1; background: #eef4fa; padding: 16px; border-radius: 8px; text-align: center;">
-                        <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: bold;">TOTAL VISITS LOGGED</span>
-                        <div style="font-size: 1.8rem; font-weight: bold; color: var(--primary-dark);">1</div>
-                    </div>
-                    <div style="flex: 1; background: #e6f4ea; padding: 16px; border-radius: 8px; text-align: center;">
-                        <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: bold;">YOUR TIME ON SITE</span>
-                        <div id="liveTimerDisplay" style="font-size: 1.8rem; font-weight: bold; color: #137333;">0s</div>
-                    </div>
-                </div>
-
-                <!-- Admin Moderation Table -->
-                <div style="margin-top: 20px;">
-                    <h3 style="color: var(--primary-dark); margin-bottom: 12px;">🛡️ Registered Member Control Table</h3>
-                    <div style="overflow-x: auto;">
-                        <table class="analytics-table">
-                            <thead>
-                                <tr>
-                                    <th>Member Name</th>
-                                    <th>Category</th>
-                                    <th>Status</th>
-                                    <th>Reports</th>
-                                    <th>Owner Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody id="adminMembersTableBody">
-                                <!-- Populated dynamically -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+            <div class="status-box">
+                <div id="output-log">Detecting location automatically...</div>
             </div>
         </div>
     </div>
 
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-        const ADMIN_PASSWORD = "admin123";
-        let isOwnerMode = false;
-        let currentUser = null;
-        let selectedPhotoBase64 = "";
+        let map = L.map('map').setView([36.1147, -115.1728], 15);
+        
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
 
+        let userMarker;
+        let accuracyCircle;
+        let watchId = null;
+        let parkingMarkers = [];
+        const userIcon = L.divIcon({ className: 'user-location-marker', iconSize: [24, 24], iconAnchor: [12, 12] });
+        const logger = document.getElementById('output-log');
+
+        // Sample free parking spot dataset for Las Vegas
+        const freeParkingSpots = [
+            { name: "Treasure Island Garage (Free Parking)", lat: 36.1247, lng: -115.1721 },
+            { name: "Fashion Show Mall Garage (Free Parking)", lat: 36.1275, lng: -115.1728 },
+            { name: "The Venetian / Palazzo (Free Self-Park for Select Status/Promos)", lat: 36.1212, lng: -115.1689 },
+            { name: "SAHARA Las Vegas (Free Self-Parking)", lat: 36.1422, lng: -115.1565 },
+            { name: "Circus Circus (Free Self-Parking)", lat: 36.1368, lng: -115.1633 }
+        ];
+
+        // Automatically prompt for location when the page finishes loading
         window.addEventListener('DOMContentLoaded', () => {
-            loadLiveProfiles();
+            initRealTimeLocation();
         });
 
-        /* --- OWNER MODE CONTROLS --- */
-        function toggleOwnerMode() {
-            if (!isOwnerMode) {
-                const pass = prompt("Owner Verification Required. Enter Admin Password:");
-                if (pass === ADMIN_PASSWORD) {
-                    isOwnerMode = true;
-                    document.getElementById('ownerToggleBtn').classList.add('btn-owner-badge');
-                    document.getElementById('ownerToggleBtn').textContent = '👑 Owner Mode: ACTIVE';
-                    alert("Owner controls unlocked! You can now ban or delete profiles directly from the card feed.");
-                    loadLiveProfiles();
-                } else if (pass !== null) {
-                    alert("Incorrect password.");
-                }
+        function updatePositionOnMap(lat, lng, accuracy) {
+            // Update or create user marker
+            if (userMarker) {
+                userMarker.setLatLng([lat, lng]);
             } else {
-                isOwnerMode = false;
-                document.getElementById('ownerToggleBtn').classList.remove('btn-owner-badge');
-                document.getElementById('ownerToggleBtn').textContent = '👑 Owner Mode';
-                alert("Owner controls locked.");
-                loadLiveProfiles();
+                userMarker = L.marker([lat, lng], { icon: userIcon })
+                    .addTo(map)
+                    .bindPopup("<b>📍 Your Current Location</b>");
             }
+
+            // Update or create accuracy circle
+            if (accuracyCircle) {
+                accuracyCircle.setLatLng([lat, lng]);
+                accuracyCircle.setRadius(accuracy || 0);
+            } else if (accuracy) {
+                accuracyCircle = L.circle([lat, lng], {
+                    radius: accuracy,
+                    color: '#0d47a1',
+                    fillColor: '#0d47a1',
+                    fillOpacity: 0.15,
+                    weight: 1
+                }).addTo(map);
+            }
+
+            map.setView([lat, lng], 16);
+
+            // Free reverse geocoding to display street address instead of raw GPS coordinates
+            fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`)
+                .then(res => res.json())
+                .then(data => {
+                    const address = data.display_name || `${lat.toFixed(4)}, ${lng.toFixed(4)}`;
+                    document.getElementById('start-loc').value = address;
+                    const roadName = (data.address && data.address.road) ? data.address.road : 'Current Location';
+                    logger.innerHTML = `✅ Location set to: ${roadName}`;
+                })
+                .catch(() => {
+                    document.getElementById('start-loc').value = `${lat.toFixed(4)}, ${lng.toFixed(4)}`;
+                    logger.innerHTML = `✅ Location pinned via GPS.`;
+                });
         }
 
-        /* --- DISPLAYING PROFILES --- */
-        function loadLiveProfiles() {
-            const container = document.getElementById('live-members-container');
-            const storedProfiles = JSON.parse(localStorage.getItem('4bf_profiles') || '[]');
-            const blockedUsers = JSON.parse(localStorage.getItem('4bf_blocked_users') || '[]');
+        function initRealTimeLocation() {
+            if (!navigator.geolocation) { 
+                logger.innerHTML = "❌ Geolocation unsupported by browser."; 
+                return; 
+            }
+            logger.innerHTML = "📡 Detecting real-time GPS location...";
 
-            // Filter banned profiles for general public, but show all to Owner with a banner
-            const profilesToDisplay = storedProfiles.filter(p => {
-                if (isOwnerMode) return true; // Owner sees all, including banned/blocked
-                return !blockedUsers.includes(p.id) && !p.isBanned;
+            // Clear active position watch if re-triggering
+            if (watchId !== null) {
+                navigator.geolocation.clearWatch(watchId);
+            }
+
+            // Continuous real-time GPS tracking
+            watchId = navigator.geolocation.watchPosition(
+                (position) => {
+                    const lat = position.coords.latitude;
+                    const lng = position.coords.longitude;
+                    const accuracy = position.coords.accuracy;
+                    updatePositionOnMap(lat, lng, accuracy);
+                },
+                (error) => { 
+                    if (location.protocol !== 'https:' && location.hostname !== 'localhost') {
+                        logger.innerHTML = `❌ GPS Error: Enforce HTTPS on GitHub Pages under Settings > Pages.`;
+                    } else {
+                        logger.innerHTML = `⚠️ Location permission denied or timed out. You can manually enter an address above.`;
+                    }
+                    // Fallback to default Las Vegas center marker if GPS permission blocked
+                    if (!userMarker) {
+                        updatePositionOnMap(36.1147, -115.1728, 0);
+                    }
+                },
+                { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
+            );
+        }
+
+        function locateAndRoute() {
+            // Clear existing parking pins
+            parkingMarkers.forEach(marker => map.removeLayer(marker));
+            parkingMarkers = [];
+
+            logger.innerHTML = "🔍 Finding nearest free parking spots...";
+
+            // Plot free parking spots on map
+            freeParkingSpots.forEach(spot => {
+                const marker = L.marker([spot.lat, spot.lng])
+                    .addTo(map)
+                    .bindPopup(`<b>${spot.name}</b><br><span style="color:green;font-weight:bold;">100% Free Parking</span>`);
+                parkingMarkers.push(marker);
             });
 
-            if (profilesToDisplay.length === 0) {
-                container.innerHTML = '<p style="text-align:center; grid-column: 1/-1; color: var(--text-muted); padding: 20px;">No public profiles available. Click "Create Profile" to add one!</p>';
-                return;
-            }
+            // Adjust view to show user location and all parking spots
+            const allElements = [...parkingMarkers];
+            if (userMarker) allElements.push(userMarker);
+            
+            const group = L.featureGroup(allElements);
+            map.fitBounds(group.getBounds().pad(0.2));
 
-            container.innerHTML = profilesToDisplay.map(profile => {
-                const isBanned = profile.isBanned;
-                
-                return `
-                    <div class="category-item-card" id="card-${profile.id}" style="${isBanned ? 'opacity: 0.65; border: 2px solid #ef4444;' : ''}">
-                        ${isBanned ? '<div style="background:#ef4444; color:white; font-size:0.75rem; font-weight:bold; text-align:center; padding:4px;">BANNED / SUSPENDED</div>' : ''}
-                        <div class="category-header-title">${escapeHtml(profile.goal)}</div>
-                        <img src="${profile.photoUrl}" class="profile-img" alt="${escapeHtml(profile.name)}">
-                        <div class="profile-body">
-                            <h3 class="profile-title">${escapeHtml(profile.name)}</h3>
-                            <p class="profile-desc">${escapeHtml(profile.details)}</p>
-                            <button class="btn-connect" onclick="sendInterest('${profile.id}', '${escapeHtml(profile.name)}')">
-                                😉 Send Expressed Interest
-                            </button>
-                            <div style="display: flex; justify-content: space-between; margin-top: 12px; font-size: 0.78rem;">
-                                <a href="javascript:void(0)" style="color: var(--text-muted);" onclick="reportUser('${profile.id}')">🚩 Report</a>
-                                <a href="javascript:void(0)" style="color: #d9534f;" onclick="blockUser('${profile.id}')">🚫 Block User</a>
-                            </div>
-                        </div>
-
-                        <!-- Direct On-Card Owner Toolbar -->
-                        ${isOwnerMode ? `
-                            <div class="owner-card-toolbar">
-                                <span>🔑 Owner Quick Action:</span>
-                                <div class="owner-btn-group">
-                                    <button class="btn-owner-action btn-owner-ban" onclick="toggleBanUser('${profile.id}')">
-                                        ${isBanned ? 'Unban User' : 'Ban User'}
-                                    </button>
-                                    <button class="btn-owner-action btn-owner-delete" onclick="deleteUserPermanently('${profile.id}')">
-                                        Delete
-                                    </button>
-                                </div>
-                            </div>
-                        ` : ''}
-                    </div>
-                `;
-            }).join('');
-        }
-
-        /* --- USER ACTIONS --- */
-        function sendInterest(targetId, targetName) {
-            if (!currentUser) {
-                alert("Please log in or create a profile first to express interest in " + targetName + "!");
-                openModal('userModal', 'login');
-                return;
-            }
-            alert("✨ Expressed Interest Sent! We notified " + targetName + ".");
-        }
-
-        function blockUser(targetId) {
-            if (confirm("Block this user? They will no longer appear on your screen.")) {
-                let blocked = JSON.parse(localStorage.getItem('4bf_blocked_users') || '[]');
-                if (!blocked.includes(targetId)) blocked.push(targetId);
-                localStorage.setItem('4bf_blocked_users', JSON.stringify(blocked));
-                loadLiveProfiles();
-            }
-        }
-
-        function reportUser(targetId) {
-            const reason = prompt("Reason for reporting this profile:");
-            if (reason) {
-                let reports = JSON.parse(localStorage.getItem('4bf_reports') || '[]');
-                reports.push({ targetId: targetId, reason: reason, date: new Date().toLocaleString() });
-                localStorage.setItem('4bf_reports', JSON.stringify(reports));
-                alert("Report submitted for administrator review.");
-            }
-        }
-
-        /* --- OWNER MODERATION ACTIONS --- */
-        function toggleBanUser(profileId) {
-            let profiles = JSON.parse(localStorage.getItem('4bf_profiles') || '[]');
-            profiles = profiles.map(p => {
-                if (p.id === profileId) p.isBanned = !p.isBanned;
-                return p;
-            });
-            localStorage.setItem('4bf_profiles', JSON.stringify(profiles));
-            loadLiveProfiles();
-            renderAdminModerationTable();
-        }
-
-        function deleteUserPermanently(profileId) {
-            if (confirm("Owner Confirmation: Permanently delete this profile from 4BF.com?")) {
-                let profiles = JSON.parse(localStorage.getItem('4bf_profiles') || '[]');
-                profiles = profiles.filter(p => p.id !== profileId);
-                localStorage.setItem('4bf_profiles', JSON.stringify(profiles));
-                loadLiveProfiles();
-                renderAdminModerationTable();
-            }
-        }
-
-        /* --- AUTH & PROFILE CREATION --- */
-        function handleLogin(event) {
-            event.preventDefault();
-            const email = document.getElementById('loginEmail').value;
-            currentUser = { email: email };
-            alert("Logged in as " + email);
-            closeModal('userModal');
-        }
-
-        function handleRegistration(event) {
-            event.preventDefault();
-            const newProfile = {
-                id: 'usr_' + Date.now(),
-                name: document.getElementById('regName').value,
-                email: document.getElementById('regEmail').value,
-                goal: document.getElementById('regGoal').value,
-                details: document.getElementById('regDetails').value,
-                photoUrl: selectedPhotoBase64 || 'https://via.placeholder.com/300x220?text=Profile+Photo',
-                isBanned: false
-            };
-
-            let profiles = JSON.parse(localStorage.getItem('4bf_profiles') || '[]');
-            profiles.unshift(newProfile);
-            localStorage.setItem('4bf_profiles', JSON.stringify(profiles));
-
-            currentUser = { email: newProfile.email, name: newProfile.name };
-            alert("Profile created successfully!");
-            closeModal('userModal');
-            loadLiveProfiles();
-        }
-
-        function previewImage(event) {
-            const reader = new FileReader();
-            reader.onload = function() {
-                const output = document.getElementById('imgPreview');
-                output.src = reader.result;
-                output.style.display = 'block';
-                selectedPhotoBase64 = reader.result;
-            };
-            if(event.target.files[0]) reader.readAsDataURL(event.target.files[0]);
-        }
-
-        /* --- MODAL CONTROLS & ADMIN DASHBOARD --- */
-        function openModal(modalId, mode = 'login') {
-            document.getElementById(modalId).style.display = 'flex';
-            if (modalId === 'userModal') toggleAuthMode(mode);
-        }
-
-        function closeModal(modalId) {
-            document.getElementById(modalId).style.display = 'none';
-        }
-
-        function toggleAuthMode(mode) {
-            const loginForm = document.getElementById('loginForm');
-            const regForm = document.getElementById('registerForm');
-            const tabLoginBtn = document.getElementById('tabLoginBtn');
-            const tabRegisterBtn = document.getElementById('tabRegisterBtn');
-
-            if (mode === 'login') {
-                loginForm.style.display = 'block';
-                regForm.style.display = 'none';
-                tabLoginBtn.classList.add('active');
-                tabRegisterBtn.classList.remove('active');
-            } else {
-                loginForm.style.display = 'none';
-                regForm.style.display = 'block';
-                tabLoginBtn.classList.remove('active');
-                tabRegisterBtn.classList.add('active');
-            }
-        }
-
-        function verifyAdminPass(event) {
-            event.preventDefault();
-            const pass = document.getElementById('adminPassInput').value;
-            if (pass === ADMIN_PASSWORD) {
-                document.getElementById('adminAuthView').style.display = 'none';
-                document.getElementById('adminDashboardView').style.display = 'block';
-                renderAdminModerationTable();
-            } else {
-                alert("Incorrect password.");
-            }
-        }
-
-        function closeAdminDashboard() {
-            document.getElementById('adminAuthView').style.display = 'block';
-            document.getElementById('adminDashboardView').style.display = 'none';
-            document.getElementById('adminPassInput').value = '';
-            closeModal('adminModal');
-        }
-
-        function renderAdminModerationTable() {
-            const tbody = document.getElementById('adminMembersTableBody');
-            if (!tbody) return;
-
-            const profiles = JSON.parse(localStorage.getItem('4bf_profiles') || '[]');
-            const reports = JSON.parse(localStorage.getItem('4bf_reports') || '[]');
-
-            if (profiles.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding: 12px;">No registered members found.</td></tr>';
-                return;
-            }
-
-            tbody.innerHTML = profiles.map(profile => {
-                const userReports = reports.filter(r => r.targetId === profile.id).length;
-                const statusBadge = profile.isBanned 
-                    ? '<span style="background:#ef4444; color:white; padding:2px 8px; border-radius:10px; font-size:0.75rem;">BANNED</span>' 
-                    : '<span class="badge-live">ACTIVE</span>';
-
-                return `
-                    <tr>
-                        <td><strong>${escapeHtml(profile.name)}</strong><br><small style="color:var(--text-muted);">${profile.email || 'No email'}</small></td>
-                        <td>${escapeHtml(profile.goal)}</td>
-                        <td>${statusBadge}</td>
-                        <td><strong style="color: ${userReports > 0 ? '#ef4444' : 'inherit'}">${userReports} Report(s)</strong></td>
-                        <td>
-                            <button class="btn" style="padding: 4px 8px; font-size: 0.75rem; background: #f59e0b; color: white; border: none; cursor:pointer;" onclick="toggleBanUser('${profile.id}')">
-                                ${profile.isBanned ? 'Unban' : 'Ban User'}
-                            </button>
-                            <button class="btn" style="padding: 4px 8px; font-size: 0.75rem; background: #ef4444; color: white; border: none; cursor:pointer;" onclick="deleteUserPermanently('${profile.id}')">
-                                Delete
-                            </button>
-                        </td>
-                    </tr>
-                `;
-            }).join('');
-        }
-
-        function escapeHtml(str) {
-            if (!str) return '';
-            return str.replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[m]);
+            logger.innerHTML = `✅ Loaded ${freeParkingSpots.length} nearby free parking spots on map.`;
         }
     </script>
+    <footer style="text-align: center; padding: 20px; font-size: 0.85rem; color: #0d47a1; margin-top: auto;">
+        <p style="margin-bottom: 6px; font-weight: 700;">ParkLV.com is an independent parking information service.</p>
+        <p><a href="privacy.html" style="color: #0d47a1; font-weight: bold;">Privacy Policy</a> | <a href="terms.html" style="color: #0d47a1; font-weight: bold;">Terms of Service</a></p>
+        <p style="margin-top: 6px;">&copy; 2026 ParkLV.com - All Rights Reserved</p>
+    </footer>
 </body>
 </html>

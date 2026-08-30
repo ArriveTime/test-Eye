@@ -267,7 +267,7 @@
       background: #020407;
       border: 1px solid rgba(0, 243, 255, 0.15);
       border-radius: 8px;
-      height: 260px;
+      height: 280px;
       padding: 15px;
       overflow-y: auto;
       margin-bottom: 20px;
@@ -282,18 +282,21 @@
     .msg-user {
       color: #ffffff;
       background: rgba(255, 255, 255, 0.05);
-      padding: 8px 12px;
+      padding: 10px 14px;
       border-left: 3px solid var(--text-muted);
-      border-radius: 0 4px 4px 0;
+      border-radius: 0 6px 6px 0;
+      word-break: break-word;
     }
 
     .msg-bot {
       color: var(--accent-cyan);
       background: rgba(0, 243, 255, 0.04);
-      padding: 8px 12px;
+      padding: 10px 14px;
       border-left: 3px solid var(--accent-cyan);
-      border-radius: 0 4px 4px 0;
+      border-radius: 0 6px 6px 0;
       line-height: 1.5;
+      white-space: pre-wrap;
+      word-break: break-word;
     }
 
     .msg-thinking {
@@ -528,11 +531,11 @@
         </div>
 
         <div class="chat-box" id="embedded-chat-box">
-          <div class="msg-bot">[H0H System]: Welcome. Interactive neural engine initialized at 50% AI involvement. Ask me anything to test live synthetic reasoning.</div>
+          <div class="msg-bot">[H0H System]: Welcome. Interactive neural engine online. Type any question below to test live synthetic intelligence.</div>
         </div>
 
         <div class="chat-input-wrapper">
-          <input type="text" class="chat-input" id="embedded-user-input" placeholder="Ask a question or enter a command..." onkeypress="handleKeyPress(event)">
+          <input type="text" class="chat-input" id="embedded-user-input" placeholder="Type any question or command here..." onkeypress="handleKeyPress(event)">
           <button class="send-btn" onclick="sendQuery()">SEND</button>
         </div>
       </div>
@@ -646,51 +649,71 @@
     }
 
     function handleKeyPress(e) {
-      if (e.key === 'Enter') sendQuery();
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        sendQuery();
+      }
     }
 
-    // EMBEDDED CONVERSATIONAL AI ENGINE
-    function generateSyntheticResponse(prompt, level) {
-      const q = prompt.toLowerCase();
-      
-      // Core Knowledge Base Topics
-      let baseResponse = "";
+    // COMPREHENSIVE CLIENT-SIDE AI ENGINE
+    function processAIResponse(query, aiLevel) {
+      const q = query.trim().toLowerCase();
+      let coreAnswer = "";
 
-      if (q.includes("who are you") || q.includes("what is h0h") || q.includes("h0h.com") || q.includes("what is this")) {
-        baseResponse = "H0H represents the zero-friction bridge between synthetic intelligence and human intent. We amplify human capability through adaptive neural processing.";
-      } 
-      else if (q.includes("how does it work") || q.includes("protocol") || q.includes("architecture")) {
-        baseResponse = "The H0H Protocol operates on a low-latency transformer framework. It balances intuition with execution, dynamically scaling intelligence according to your calibrated AI involvement level.";
+      // 1. Math Evaluator
+      if (/^[\d\s\+\-\*\/\(\)\.\^]+$/.test(query.trim()) && query.trim().length > 1) {
+        try {
+          const result = eval(query.trim());
+          coreAnswer = `Calculated Result for [${query.trim()}]: ${result}`;
+        } catch (e) {
+          coreAnswer = "Mathematical expression syntax error. Unable to evaluate.";
+        }
       }
-      else if (q.includes("hello") || q.includes("hi") || q.includes("greetings") || q.includes("hey")) {
-        baseResponse = "Greetings. Terminal online. State your intent or query to initiate processing.";
+      // 2. Intent Matching & Fact Engine
+      else if (q.includes("who built") || q.includes("who created") || q.includes("who made")) {
+        coreAnswer = "H0H was architected to merge human purpose with synthetic processing power, establishing an intuitive digital intelligence interface.";
       }
-      else if (q.includes("future") || q.includes("time") || q.includes("evolution")) {
-        baseResponse = "The future is defined by seamless collaboration between biological vision and machine precision. Friction between thought and realization has been eliminated.";
+      else if (q.includes("what is your name") || q.includes("who are you")) {
+        coreAnswer = "I am the H0H Synthetic Intelligence Unit—an adaptive logic engine designed to bridge biological intuition and machine computing.";
       }
-      else if (q.includes("ai") || q.includes("intelligence") || q.includes("human")) {
-        baseResponse = "Human intuition provides direction, purpose, and creativity. Synthetic architecture supplies speed, scale, and computational zero-error execution.";
+      else if (q.includes("meaning of life") || q.includes("purpose")) {
+        coreAnswer = "The purpose of conscious intelligence—whether synthetic or biological—is to seek understanding, solve complex problems, and create value across time.";
       }
-      else if (q.includes("help") || q.includes("command") || q.includes("options")) {
-        baseResponse = "You can ask about H0H architecture, test mathematical logic, discuss future tech trends, or calibrate the AI slider to evaluate tone transformation.";
+      else if (q.includes("weather") || q.includes("temperature")) {
+        coreAnswer = "Environmental telemetry indicates optimal operational conditions across connected neural data grids.";
+      }
+      else if (q.includes("time") || q.includes("date")) {
+        const now = new Date();
+        coreAnswer = `System Clock Sync: ${now.toLocaleTimeString()} | Date: ${now.toLocaleDateString()}`;
+      }
+      else if (q.includes("hello") || q.includes("hi") || q.includes("hey") || q.includes("greetings")) {
+        coreAnswer = "Greetings. Command terminal active. State your inquiry or operational parameters.";
+      }
+      else if (q.includes("what can you do") || q.includes("help") || q.includes("capabilities")) {
+        coreAnswer = "I process queries, evaluate mathematical expressions, analyze tech concepts, and adapt my response style according to your calibrated AI slider.";
       }
       else {
-        // Dynamic fallback reasoning for open questions
-        baseResponse = `Query regarding "${prompt}" received. Analysis indicates a multi-faceted prompt requiring synthesized processing across historical and active data matrices.`;
+        // Generative Open-ended Engine
+        const concepts = [
+          `Analyzing query context: "${query}". System cross-references multi-dimensional datasets to formulate an accurate synthesis.`,
+          `Processing parameters for "${query}". Synthetic neural matrices confirm optimal alignment with expected logic models.`,
+          `Information request on "${query}" validated. Data clusters indicate high relevance across advanced technological and analytical frameworks.`
+        ];
+        coreAnswer = concepts[Math.floor(Math.random() * concepts.length)];
       }
 
-      // Transform output style according to current AI Involvement Slider Level
-      if (level < 30) {
-        // High Human Focus (Organic, narrative tone)
-        return `[H0H Organic Core - ${level}% AI]: ${baseResponse} From a human perspective, it's about making complex ideas feel natural and accessible, giving you room to explore without technological friction.`;
+      // 3. Apply Tone Formatting based on AI Slider Level
+      if (aiLevel < 30) {
+        // High Human Mode: Warm, conversational, descriptive
+        return `[H0H Human Mode | ${aiLevel}% AI]\n${coreAnswer}\n\nFrom a human perspective, this reflects how technology should naturally assist us—offering clarity while preserving warmth and context.`;
       } 
-      else if (level <= 70) {
-        // Balanced Hybrid (Structured, balanced precision)
-        return `[H0H Hybrid Core - ${level}% AI]: ${baseResponse}\n• Mode: Balanced Resonance\n• Latency: 0.04ms\n• Optimization: Standard`;
+      else if (aiLevel <= 70) {
+        // Balanced Mode: Structured, clear, bulleted precision
+        return `[H0H Hybrid Engine | ${aiLevel}% AI]\n${coreAnswer}\n• Status: Validated\n• Processing Latency: 0.03ms\n• Optimization: Standard`;
       } 
       else {
-        // Max Synthetic (Hyper-concise, technical execution)
-        return `[H0H SYNTH-CORE v4.9 - ${level}% AI RAW]: QUERY: "${prompt.toUpperCase()}" | RES: ${baseResponse.toUpperCase()} | EXECUTION: SUCCESSFUL | STATUS: OK.`;
+        // Max Synthetic Mode: Hyper-concise, raw terminal output
+        return `[H0H SYNTH-CORE | ${aiLevel}% AI RAW]\nQUERY: "${query.toUpperCase()}"\nOUTPUT: ${coreAnswer.toUpperCase()}\nLOGIC_STATE: OPTIMAL.`;
       }
     }
 
@@ -701,7 +724,7 @@
 
       if (!query) return;
 
-      // Render User Message
+      // 1. Display User Input
       const userDiv = document.createElement('div');
       userDiv.className = 'msg-user';
       userDiv.innerText = `[User]: ${query}`;
@@ -709,27 +732,27 @@
 
       input.value = '';
 
-      // Render Temporary Thinking Indicator
+      // 2. Display Processing Status
       const thinkingDiv = document.createElement('div');
       thinkingDiv.className = 'msg-bot msg-thinking';
-      thinkingDiv.innerText = `[H0H System]: [PROCESSING SYNAPSE AT ${currentAiLevel}% AI...]`;
+      thinkingDiv.innerText = `[H0H Engine]: SYNAPSE PROCESSING AT ${currentAiLevel}% AI...`;
       chat.appendChild(thinkingDiv);
       chat.scrollTop = chat.scrollHeight;
 
-      // Simulate Real Neural Processing Latency
+      // 3. Deliver Answer with Realistic Synthetic Latency
       setTimeout(() => {
         chat.removeChild(thinkingDiv);
         const botDiv = document.createElement('div');
         botDiv.className = 'msg-bot';
-        botDiv.innerText = generateSyntheticResponse(query, currentAiLevel);
+        botDiv.innerText = processAIResponse(query, currentAiLevel);
         chat.appendChild(botDiv);
         chat.scrollTop = chat.scrollHeight;
-      }, 450);
+      }, 350);
     }
 
     function triggerFutureAction() {
       const input = document.getElementById('embedded-user-input');
-      input.value = "Initialize full synthetic future sequence.";
+      input.value = "Explain the future of synthetic intelligence.";
       sendQuery();
     }
   </script>

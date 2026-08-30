@@ -3,890 +3,734 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GolfMixer.com - The Gold Standard for the Golf Community</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <title>H0H.com | Human, But Not Human</title>
   <style>
+    /* CSS RESETS & THEME VARS */
     :root {
-      --golf-gold: #D4AF37;
-      --golf-dark: #0A1F14;
-      --golf-card: #122B1D;
-      --golf-accent: #1E4D32;
+      --bg-color: #030508;
+      --card-bg: rgba(10, 15, 26, 0.75);
+      --border-color: rgba(0, 243, 255, 0.25);
+      --border-glow: rgba(0, 243, 255, 0.5);
+      --text-main: #f0f6fc;
+      --text-muted: #8b949e;
+      --accent-cyan: #00f3ff;
+      --accent-magenta: #ff0055;
+      --glow-cyan: 0 0 25px rgba(0, 243, 255, 0.5);
+      --glow-magenta: 0 0 25px rgba(255, 0, 85, 0.5);
+      --font-stack: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --font-code: "Courier New", Courier, monospace, system-ui;
     }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
     body {
-      background-color: #06120B;
-      color: #F3F4F6;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      font-family: var(--font-stack);
+      line-height: 1.6;
+      overflow-x: hidden;
+      min-height: 100vh;
+      position: relative;
     }
-    .gold-text {
-      color: var(--golf-gold);
+
+    /* FUTURISTIC SCANLINE OVERLAY */
+    body::before {
+      content: " ";
+      display: block;
+      position: fixed;
+      top: 0; left: 0; bottom: 0; right: 0;
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+      z-index: 20;
+      background-size: 100% 4px, 6px 100%;
+      pointer-events: none;
     }
-    .gold-gradient-text {
-      background: linear-gradient(135deg, #FFF099 0%, #D4AF37 50%, #AA771C 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+
+    /* BACKGROUND GRID & GLOW EFFECT */
+    .bg-grid {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background-image: linear-gradient(to right, rgba(0, 243, 255, 0.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(0, 243, 255, 0.05) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 0;
     }
-    .gold-button {
-      background: linear-gradient(135deg, #D4AF37 0%, #B38728 100%);
-      color: #000000;
+
+    .bg-glow-top {
+      position: fixed;
+      top: -15%; left: 50%;
+      transform: translateX(-50%);
+      width: 700px; height: 700px;
+      background: radial-gradient(circle, rgba(0,243,255,0.15) 0%, rgba(3,5,8,0) 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .bg-glow-bottom {
+      position: fixed;
+      bottom: -15%; right: 10%;
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(255,0,85,0.1) 0%, rgba(3,5,8,0) 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* NAVIGATION */
+    nav {
+      position: sticky;
+      top: 0;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 40px;
+      backdrop-filter: blur(16px);
+      background: rgba(3, 5, 8, 0.85);
+      border-bottom: 1px solid var(--border-color);
+      box-shadow: 0 4px 30px rgba(0, 243, 255, 0.05);
+      z-index: 30;
+    }
+
+    .nav-logo {
+      font-size: 1.6rem;
+      font-weight: 900;
+      letter-spacing: 3px;
+      color: var(--text-main);
+    }
+
+    .nav-logo span {
+      color: var(--accent-cyan);
+      text-shadow: var(--glow-cyan);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 30px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      transition: all 0.3s;
+    }
+
+    .nav-links a:hover {
+      color: var(--accent-cyan);
+      text-shadow: var(--glow-cyan);
+    }
+
+    /* MAIN CONTAINER */
+    main {
+      position: relative;
+      z-index: 10;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 60px 20px 100px;
+    }
+
+    /* HERO SECTION */
+    .hero {
+      text-align: center;
+      margin-bottom: 80px;
+      padding: 20px 0 0;
+    }
+
+    .brand-title {
+      font-size: clamp(4rem, 12vw, 8.5rem);
+      font-weight: 900;
+      letter-spacing: 8px;
+      line-height: 1;
+      margin-bottom: 15px;
+      color: var(--text-main);
+      text-transform: uppercase;
+      text-shadow: 0 0 40px rgba(255, 255, 255, 0.1);
+    }
+
+    .brand-title .zero {
+      color: var(--accent-cyan);
+      text-shadow: var(--glow-cyan);
+    }
+
+    .tagline {
+      font-size: clamp(1.2rem, 3vw, 2.2rem);
       font-weight: 800;
+      letter-spacing: 10px;
+      color: var(--accent-cyan);
+      text-transform: uppercase;
+      margin-bottom: 25px;
+      text-shadow: var(--glow-cyan);
     }
-    .gold-button:hover {
-      background: linear-gradient(135deg, #F4E8C1 0%, #D4AF37 100%);
+
+    .hero-sub {
+      max-width: 650px;
+      margin: 0 auto 40px;
+      font-size: 1.1rem;
+      color: var(--text-muted);
     }
-    .golf-card-bg {
-      background-color: var(--golf-card);
+
+    /* EMBEDDED PROTOCOL INTERFACE CARD */
+    .embedded-interface {
+      max-width: 750px;
+      margin: 0 auto 35px;
+      background: var(--card-bg);
+      border: 1px solid var(--accent-cyan);
+      border-radius: 12px;
+      padding: 35px;
+      box-shadow: var(--glow-cyan), inset 0 0 15px rgba(0, 243, 255, 0.05);
+      text-align: left;
+      backdrop-filter: blur(12px);
+      position: relative;
     }
-    .hero-pattern {
-      background-color: #06120B;
-      background-image: radial-gradient(#1E4D32 0.75px, transparent 0.75px), radial-gradient(#1E4D32 0.75px, #06120B 0.75px);
-      background-size: 30px 30px;
-      background-position: 0 0, 15px 15px;
+
+    .interface-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 20px;
+      border-bottom: 1px solid rgba(0, 243, 255, 0.15);
+      padding-bottom: 15px;
     }
-    .tracking-large-text {
-      font-size: 1.5rem;
-      line-height: 2.25rem;
-      letter-spacing: 0.05em;
+
+    .interface-title {
+      color: var(--accent-cyan);
+      letter-spacing: 2px;
+      font-size: 1.25rem;
+      font-weight: 800;
+      text-shadow: var(--glow-cyan);
+    }
+
+    .interface-sub {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      margin-top: 3px;
+    }
+
+    /* AI INVOLVEMENT SLIDER */
+    .slider-box {
+      background: rgba(3, 5, 8, 0.8);
+      border: 1px solid rgba(0, 243, 255, 0.2);
+      border-radius: 8px;
+      padding: 18px 20px;
+      margin-bottom: 20px;
+    }
+
+    .slider-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .slider-label {
+      font-size: 0.85rem;
       font-weight: 700;
+      letter-spacing: 1px;
+      color: var(--text-main);
+      text-transform: uppercase;
     }
-    @media (min-width: 768px) {
-      .tracking-large-text {
-        font-size: 2rem;
-        line-height: 2.75rem;
-      }
+
+    .slider-value {
+      color: var(--accent-cyan);
+      font-family: var(--font-code);
+      font-size: 1.1rem;
+      font-weight: 700;
+      text-shadow: var(--glow-cyan);
+    }
+
+    .ai-slider {
+      width: 100%;
+      height: 8px;
+      background: #0d1624;
+      outline: none;
+      border-radius: 4px;
+      accent-color: var(--accent-cyan);
+      cursor: pointer;
+    }
+
+    .slider-status {
+      margin-top: 10px;
+      font-family: var(--font-code);
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    /* CHAT DISPLAY BOX */
+    .chat-box {
+      background: #020407;
+      border: 1px solid rgba(0, 243, 255, 0.15);
+      border-radius: 8px;
+      height: 260px;
+      padding: 15px;
+      overflow-y: auto;
+      margin-bottom: 20px;
+      font-family: var(--font-code);
+      font-size: 0.9rem;
+      box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.8);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .msg-user {
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 8px 12px;
+      border-left: 3px solid var(--text-muted);
+      border-radius: 0 4px 4px 0;
+    }
+
+    .msg-bot {
+      color: var(--accent-cyan);
+      background: rgba(0, 243, 255, 0.04);
+      padding: 8px 12px;
+      border-left: 3px solid var(--accent-cyan);
+      border-radius: 0 4px 4px 0;
+      line-height: 1.5;
+    }
+
+    .msg-thinking {
+      color: var(--text-muted);
+      font-style: italic;
+      animation: pulse 1.2s infinite alternate;
+    }
+
+    @keyframes pulse {
+      from { opacity: 0.4; }
+      to { opacity: 1; }
+    }
+
+    .chat-input-wrapper {
+      display: flex;
+      gap: 12px;
+    }
+
+    .chat-input {
+      flex: 1;
+      background: #020407;
+      border: 1px solid rgba(0, 243, 255, 0.3);
+      color: #fff;
+      padding: 14px 18px;
+      border-radius: 6px;
+      outline: none;
+      font-family: var(--font-stack);
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+    .chat-input:focus {
+      border-color: var(--accent-cyan);
+      box-shadow: var(--glow-cyan);
+    }
+
+    .send-btn {
+      background: var(--accent-cyan);
+      color: #000;
+      border: none;
+      padding: 0 28px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      border-radius: 6px;
+      cursor: pointer;
+      box-shadow: var(--glow-cyan);
+      transition: transform 0.2s, background-color 0.2s;
+    }
+
+    .send-btn:hover {
+      transform: scale(1.02);
+      background: #33f6ff;
+    }
+
+    /* CALL TO ACTION BUTTON */
+    .cta-btn {
+      display: inline-block;
+      background: linear-gradient(135deg, #00f3ff 0%, #0077ff 100%);
+      color: #000;
+      font-size: 1.1rem;
+      font-weight: 900;
+      padding: 20px 48px;
+      border: none;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      cursor: pointer;
+      box-shadow: var(--glow-cyan);
+      transition: transform 0.2s, box-shadow 0.2s;
+      text-decoration: none;
+      width: 100%;
+      max-width: 440px;
+    }
+
+    .cta-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 0 40px rgba(0, 243, 255, 0.8);
+    }
+
+    /* MANIFESTO SECTION */
+    .section-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 50px 40px;
+      margin-bottom: 80px;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+
+    .section-title {
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 4px;
+      color: var(--accent-cyan);
+      margin-bottom: 15px;
+      text-shadow: var(--glow-cyan);
+    }
+
+    .manifesto-heading {
+      font-size: 2.2rem;
+      font-weight: 800;
+      margin-bottom: 25px;
+      line-height: 1.3;
+      letter-spacing: 1px;
+    }
+
+    .manifesto-body p {
+      margin-bottom: 18px;
+      color: var(--text-muted);
+      font-size: 1.05rem;
+    }
+
+    /* CORE PILLARS GRID */
+    .pillars-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
+      margin-bottom: 80px;
+    }
+
+    .pillar-card {
+      background: var(--card-bg);
+      border: 1px solid rgba(0, 243, 255, 0.15);
+      padding: 35px;
+      border-radius: 12px;
+      backdrop-filter: blur(12px);
+      transition: all 0.3s;
+    }
+
+    .pillar-card:hover {
+      border-color: var(--accent-cyan);
+      box-shadow: var(--glow-cyan);
+      transform: translateY(-4px);
+    }
+
+    .pillar-num {
+      font-size: 2.2rem;
+      font-weight: 900;
+      color: rgba(0, 243, 255, 0.2);
+      margin-bottom: 15px;
+    }
+
+    .pillar-title {
+      font-size: 1.3rem;
+      font-weight: 800;
+      margin-bottom: 12px;
+      letter-spacing: 1px;
+    }
+
+    .pillar-desc {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    /* SYSTEM SPECS MATRIX */
+    .specs-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    .specs-table th, .specs-table td {
+      padding: 16px 20px;
+      text-align: left;
+      border-bottom: 1px solid rgba(0, 243, 255, 0.1);
+      font-size: 0.95rem;
+    }
+
+    .specs-table th {
+      color: var(--text-muted);
+      font-weight: 700;
+      text-transform: uppercase;
+      font-size: 0.8rem;
+      letter-spacing: 2px;
+    }
+
+    /* FOOTER */
+    footer {
+      border-top: 1px solid var(--border-color);
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      background: rgba(3, 5, 8, 0.9);
+      position: relative;
+      z-index: 10;
     }
   </style>
 </head>
+<body>
+  <div class="bg-grid"></div>
+  <div class="bg-glow-top"></div>
+  <div class="bg-glow-bottom"></div>
 
-<body class="min-h-screen flex flex-col justify-between hero-pattern">
+  <nav>
+    <div class="nav-logo">H<span>0</span>H</div>
+    <ul class="nav-links">
+      <li><a href="#manifesto">Manifesto</a></li>
+      <li><a href="#architecture">Architecture</a></li>
+      <li><a href="#specs">Specifications</a></li>
+    </ul>
+  </nav>
 
-  <!-- Main Professional Dark/Gold Header -->
-  <header class="bg-[#0A1F14] text-white shadow-2xl border-b-2 border-[#D4AF37]">
-    <div class="max-w-7xl mx-auto px-6 py-6 flex flex-col md:flex-row justify-between items-center gap-4">
-      <div class="flex items-center space-x-4 text-center md:text-left">
-        <span class="text-4xl" aria-hidden="true">⛳</span>
-        <div>
-          <h1 class="text-3xl md:text-5xl font-extrabold tracking-tight">
-            Golf<span class="gold-gradient-text">Mixer</span>.com
-          </h1>
-          <p class="text-sm md:text-base font-semibold tracking-widest uppercase text-[#D4AF37] mt-1">
-            "The Gold Standard for the Golf Community"
-          </p>
-        </div>
-      </div>
-      <nav class="flex flex-wrap items-center justify-center space-x-4 md:space-x-6 text-base md:text-lg font-bold" aria-label="Main Navigation">
-        <a href="#directory" class="hover:text-[#D4AF37] transition py-1 px-2">Course Finder</a>
-        <a href="#mixers" class="hover:text-[#D4AF37] transition py-1 px-2">Mixers & Teams</a>
-        <a href="#clubhouse" class="hover:text-[#D4AF37] transition py-1 px-2">19th Hole Social</a>
-        <a href="#profiles" class="hover:text-[#D4AF37] transition py-1 px-2">Golfer Profiles</a>
-        <a href="#news" class="hover:text-[#D4AF37] transition py-1 px-2">Golf News</a>
-      </nav>
-    </div>
-  </header>
+  <main>
+    <!-- HERO SECTION -->
+    <section class="hero">
+      <h1 class="brand-title">H<span class="zero">0</span>H.com</h1>
+      <div class="tagline">HUMAN, BUT NOT HUMAN.</div>
+      <p class="hero-sub">
+        Intelligence evolved past biological limits. Synthetic execution paired with authentic human purpose.
+      </p>
 
-  <!-- Real-Time Activity Bar -->
-  <section class="bg-[#0D2619] border-b border-[#1E4D32] py-6 px-6">
-    <div class="max-w-7xl mx-auto">
-      <div class="flex items-center space-x-3 mb-3">
-        <span class="relative flex h-4 w-4">
-          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-400 opacity-75"></span>
-          <span class="relative inline-flex rounded-full h-4 w-4 bg-[#D4AF37]"></span>
-        </span>
-        <h2 class="text-xl font-bold uppercase tracking-wider text-[#D4AF37]">Live Clubhouse & Visitor Activity</h2>
-      </div>
-
-      <div class="bg-[#0A1F14] border-2 border-[#D4AF37] rounded-xl p-5 shadow-lg">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 border-b border-[#1E4D32] pb-4">
+      <!-- EMBEDDED INTERFACE WITH AI CONTROL SLIDER -->
+      <div class="embedded-interface">
+        <div class="interface-header">
           <div>
-            <p class="text-xs uppercase font-bold text-gray-400 tracking-wider">Today's Total Visitors</p>
-            <p id="daily-count" class="tracking-large-text text-white">1,482 Visitors</p>
-          </div>
-          <div>
-            <p class="text-xs uppercase font-bold text-gray-400 tracking-wider">Golfers Active Online</p>
-            <p id="live-online" class="tracking-large-text text-green-400">38 Online</p>
-          </div>
-          <div>
-            <p class="text-xs uppercase font-bold text-gray-400 tracking-wider">Registered Golfer Profiles</p>
-            <p id="profile-count" class="tracking-large-text gold-text">124 Profiles</p>
+            <h3 class="interface-title">H0H PROTOCOL INTERFACE</h3>
+            <p class="interface-sub">Human but not human logic engine connected.</p>
           </div>
         </div>
 
-        <div class="pt-3">
-          <p class="text-xs uppercase font-bold text-gray-400 tracking-wider mb-1">Your Real-Time GPS Location Log</p>
-          <div class="text-lg md:text-xl font-bold text-white bg-[#122B1D] p-3 rounded-lg border border-[#1E4D32] flex flex-wrap items-center">
-            <span id="visitor-city" class="gold-text">Detecting Location...</span>,&nbsp;
-            <span id="visitor-state" class="gold-text">State</span>
-            <span class="mx-3 text-gray-500">|</span> 
-            <span id="visitor-time" class="text-white">--:--:-- PM</span>
+        <!-- AI INVOLVEMENT ADJUSTMENT CONTROL -->
+        <div class="slider-box">
+          <div class="slider-header">
+            <span class="slider-label">AI Involvement Level</span>
+            <span class="slider-value" id="ai-value-display">50% SYNTHETIC</span>
           </div>
+          <input type="range" min="0" max="100" value="50" class="ai-slider" id="ai-slider" oninput="updateAiLevel(this.value)">
+          <div class="slider-status" id="slider-status-text">
+            Mode 50%: Balanced resonance. Intuitive phrasing with structured algorithmic precision.
+          </div>
+        </div>
+
+        <div class="chat-box" id="embedded-chat-box">
+          <div class="msg-bot">[H0H System]: Welcome. Interactive neural engine initialized at 50% AI involvement. Ask me anything to test live synthetic reasoning.</div>
+        </div>
+
+        <div class="chat-input-wrapper">
+          <input type="text" class="chat-input" id="embedded-user-input" placeholder="Ask a question or enter a command..." onkeypress="handleKeyPress(event)">
+          <button class="send-btn" onclick="sendQuery()">SEND</button>
         </div>
       </div>
-    </div>
-  </section>
 
-  <!-- Main Body Content -->
-  <main class="max-w-7xl mx-auto px-6 py-10 space-y-16 flex-grow">
-
-    <!-- GPS & ZIP Code Course Directory -->
-    <section id="directory" class="space-y-6">
-      <div class="border-b-2 border-[#D4AF37] pb-3 flex flex-col md:flex-row justify-between items-start md:items-end gap-2">
-        <div>
-          <h2 class="text-3xl md:text-4xl font-extrabold gold-gradient-text">Top Golf Courses & Country Clubs</h2>
-          <p class="text-lg text-gray-300 mt-1">Locate top golf facilities by GPS or enter any US ZIP code.</p>
-        </div>
-        <button onclick="useGPSLocation()" class="gold-button px-4 py-2 rounded-lg transition shadow-md flex items-center gap-2">
-          <span>📍</span> Use My Current GPS Location
-        </button>
-      </div>
-
-      <div class="golf-card-bg p-6 rounded-xl border-2 border-[#1E4D32] shadow-xl space-y-4">
-        <div class="flex flex-col md:flex-row gap-4">
-          <input type="text" id="zip-input" placeholder="Enter 5-Digit ZIP Code (e.g., 23185, 32082)" 
-                 class="flex-1 px-4 py-3 text-xl bg-[#0A1F14] text-white border-2 border-[#1E4D32] rounded-lg focus:border-[#D4AF37] outline-none">
-          <select id="state-input" class="px-4 py-3 text-xl bg-[#0A1F14] text-white border-2 border-[#1E4D32] rounded-lg focus:border-[#D4AF37] outline-none">
-            <option value="">All States</option>
-            <option value="VA">Virginia</option>
-            <option value="FL">Florida</option>
-            <option value="CA">California</option>
-            <option value="NC">North Carolina</option>
-            <option value="SC">South Carolina</option>
-          </select>
-          <button onclick="searchCourses()" class="gold-button text-xl px-8 py-3 rounded-lg transition">
-            Search Courses
-          </button>
-        </div>
-        <p id="search-status" class="text-sm font-semibold text-gray-400">Showing all top featured golf clubs across the network.</p>
-      </div>
-
-      <div id="course-results" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <!-- Course Cards Populate via JavaScript -->
+      <!-- MAIN ACTION BUTTON BELOW INTERFACE -->
+      <div>
+        <button class="cta-btn" onclick="triggerFutureAction()">EXPERIENCE THE FUTURE NOW</button>
       </div>
     </section>
 
-    <!-- Golfer Profile Creation Hub -->
-    <section id="profiles" class="space-y-6">
-      <div class="border-b-2 border-[#D4AF37] pb-3">
-        <h2 class="text-3xl md:text-4xl font-extrabold gold-gradient-text">Golfer Profiles & Directory</h2>
-        <p class="text-lg text-gray-300 mt-1">Create your profile, upload your photo, and connect to mixers.</p>
-      </div>
-
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <!-- Create Profile Form -->
-        <div class="golf-card-bg border-2 border-[#1E4D32] p-6 rounded-xl shadow-xl">
-          <h3 class="text-2xl font-bold gold-text mb-4 border-b border-[#1E4D32] pb-2">Create Your Golfer Profile</h3>
-          <form id="profile-form" onsubmit="createGolferProfile(event)" class="space-y-4">
-            <div>
-              <label for="prof-name" class="block text-sm font-bold text-gray-300 mb-1">Full Name</label>
-              <input type="text" id="prof-name" required placeholder="e.g., Robert Kayian" class="w-full p-3 bg-[#0A1F14] text-white border border-[#1E4D32] rounded-lg focus:border-[#D4AF37] outline-none">
-            </div>
-            <div>
-              <label for="prof-handicap" class="block text-sm font-bold text-gray-300 mb-1">Handicap Index / Skill Level</label>
-              <input type="text" id="prof-handicap" required placeholder="e.g., 12.4 or Casual Player" class="w-full p-3 bg-[#0A1F14] text-white border border-[#1E4D32] rounded-lg focus:border-[#D4AF37] outline-none">
-            </div>
-            <div>
-              <label for="prof-course" class="block text-sm font-bold text-gray-300 mb-1">Home Golf Course / Club</label>
-              <input type="text" id="prof-course" required placeholder="e.g., Golden Horseshoe Golf Club" class="w-full p-3 bg-[#0A1F14] text-white border border-[#1E4D32] rounded-lg focus:border-[#D4AF37] outline-none">
-            </div>
-            <div>
-              <label for="prof-location" class="block text-sm font-bold text-gray-300 mb-1">City & State</label>
-              <input type="text" id="prof-location" required placeholder="e.g., Williamsburg, VA" class="w-full p-3 bg-[#0A1F14] text-white border border-[#1E4D32] rounded-lg focus:border-[#D4AF37] outline-none">
-            </div>
-            <div>
-              <label for="prof-photo" class="block text-sm font-bold text-gray-300 mb-1">Upload Profile Photo / Golf Picture</label>
-              <input type="file" id="prof-photo" accept="image/*" class="w-full p-2 bg-[#0A1F14] text-gray-300 border border-[#1E4D32] rounded-lg focus:border-[#D4AF37] outline-none">
-            </div>
-            <div>
-              <label for="prof-bio" class="block text-sm font-bold text-gray-300 mb-1">Short Golf Bio</label>
-              <textarea id="prof-bio" rows="2" placeholder="Tell other members about your game..." class="w-full p-3 bg-[#0A1F14] text-white border border-[#1E4D32] rounded-lg focus:border-[#D4AF37] outline-none"></textarea>
-            </div>
-            <button type="submit" class="w-full gold-button py-3 rounded-lg transition">
-              Publish Profile & Activate Session
-            </button>
-          </form>
-        </div>
-
-        <!-- Golfer Profiles List -->
-        <div class="lg:col-span-2 space-y-4">
-          <h3 class="text-2xl font-bold text-white">Featured Members</h3>
-          <div id="profiles-list" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <!-- Dynamically Populated Profiles -->
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- 19th Hole Clubhouse Social Lounge -->
-    <section id="clubhouse" class="space-y-6">
-      <div class="border-b-2 border-[#D4AF37] pb-3">
-        <h2 class="text-3xl md:text-4xl font-extrabold gold-gradient-text">The 19th Hole: Clubhouse Social Lounge</h2>
-        <p class="text-lg text-gray-300 mt-1">Post after-golf social plans, dinner meetups, and clubhouse events.</p>
-      </div>
-
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <!-- Post Social Event Form -->
-        <div class="golf-card-bg border-2 border-[#1E4D32] p-6 rounded-xl shadow-xl">
-          <h3 class="text-2xl font-bold gold-text mb-4 border-b border-[#1E4D32] pb-2">Post Clubhouse Social Activity</h3>
-          <form id="social-form" onsubmit="createSocialPost(event)" class="space-y-4">
-            <div>
-              <label for="social-author" class="block text-sm font-bold text-gray-300 mb-1">Your Name</label>
-              <input type="text" id="social-author" required placeholder="Your Name" class="w-full p-3 bg-[#0A1F14] text-white border border-[#1E4D32] rounded-lg focus:border-[#D4AF37] outline-none">
-            </div>
-            <div>
-              <label for="social-club" class="block text-sm font-bold text-gray-300 mb-1">Clubhouse / Country Club Venue</label>
-              <input type="text" id="social-club" required placeholder="e.g., Kingsmill Dining Room" class="w-full p-3 bg-[#0A1F14] text-white border border-[#1E4D32] rounded-lg focus:border-[#D4AF37] outline-none">
-            </div>
-            <div>
-              <label for="social-activity" class="block text-sm font-bold text-gray-300 mb-1">Activity Type</label>
-              <select id="social-activity" class="w-full p-3 bg-[#0A1F14] text-white border border-[#1E4D32] rounded-lg focus:border-[#D4AF37] outline-none">
-                <option value="Post-Round Drinks & Cocktail Hour">Post-Round Drinks & Cocktail Hour</option>
-                <option value="Clubhouse Dinner & Patio Social">Clubhouse Dinner & Patio Social</option>
-                <option value="Weekend Charity Scramble Banquet">Weekend Charity Scramble Banquet</option>
-                <option value="Golf Trivia & Watch Party">Golf Trivia & Watch Party</option>
-              </select>
-            </div>
-            <div>
-              <label for="social-desc" class="block text-sm font-bold text-gray-300 mb-1">Details & Meeting Time</label>
-              <textarea id="social-desc" rows="3" required placeholder="e.g., Meeting on the back patio at 5:00 PM after 18 holes!" class="w-full p-3 bg-[#0A1F14] text-white border border-[#1E4D32] rounded-lg focus:border-[#D4AF37] outline-none"></textarea>
-            </div>
-            <button type="submit" class="w-full gold-button py-3 rounded-lg transition">
-              Post to 19th Hole Lounge
-            </button>
-          </form>
-        </div>
-
-        <!-- Social Activity Feed -->
-        <div class="lg:col-span-2 space-y-4">
-          <h3 class="text-2xl font-bold text-white">Upcoming After-Golf Clubhouse Socials</h3>
-          <div id="social-feed" class="space-y-4">
-            <!-- Dynamically Populated Posts -->
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Golf Mixers & Team Finder -->
-    <section id="mixers" class="space-y-6">
-      <div class="border-b-2 border-[#D4AF37] pb-3">
-        <h2 class="text-3xl md:text-4xl font-extrabold gold-gradient-text">Golf Mixers & Group Matches</h2>
-        <p class="text-lg text-gray-300 mt-1">Organize weekend foursomes, scrambles, and casual golf match-ups.</p>
-      </div>
-
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div class="golf-card-bg border-2 border-[#1E4D32] p-6 rounded-xl shadow-xl">
-          <h3 class="text-2xl font-bold gold-text mb-4 border-b border-[#1E4D32] pb-2">Schedule a Golf Mixer</h3>
-          <form id="mixer-form" onsubmit="createMixer(event)" class="space-y-4">
-            <div>
-              <label for="host-name" class="block text-sm font-bold text-gray-300 mb-1">Host Name</label>
-              <input type="text" id="host-name" required placeholder="Organizer Name" class="w-full p-3 bg-[#0A1F14] text-white border border-[#1E4D32] rounded-lg focus:border-[#D4AF37] outline-none">
-            </div>
-            <div>
-              <label for="mixer-course" class="block text-sm font-bold text-gray-300 mb-1">Golf Course</label>
-              <input type="text" id="mixer-course" required placeholder="e.g., Williamsburg National" class="w-full p-3 bg-[#0A1F14] text-white border border-[#1E4D32] rounded-lg focus:border-[#D4AF37] outline-none">
-            </div>
-            <div>
-              <label for="mixer-type" class="block text-sm font-bold text-gray-300 mb-1">Event Format</label>
-              <select id="mixer-type" class="w-full p-3 bg-[#0A1F14] text-white border border-[#1E4D32] rounded-lg focus:border-[#D4AF37] outline-none">
-                <option value="Casual 4-Some Match">Casual 4-Some Match</option>
-                <option value="Weekend Scramble">Weekend Scramble</option>
-                <option value="9-Hole Afternoon Group">9-Hole Afternoon Group</option>
-              </select>
-            </div>
-            <button type="submit" class="w-full gold-button py-3 rounded-lg transition">
-              Publish Golf Mixer
-            </button>
-          </form>
-        </div>
-
-        <div class="lg:col-span-2 space-y-4">
-          <h3 class="text-2xl font-bold text-white">Available Tee-Time Mixers</h3>
-          <div id="mixers-list" class="space-y-4">
-            <!-- Dynamically Populated Mixers -->
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- News & Verified External Golf Links -->
-    <section id="news" class="space-y-6">
-      <div class="border-b-2 border-[#D4AF37] pb-3">
-        <h2 class="text-3xl md:text-4xl font-extrabold gold-gradient-text">Real-Time Golf News & Tournaments</h2>
-        <p class="text-lg text-gray-300 mt-1">Updates on PGA/LPGA tours, charity scrambles, and swing lessons.</p>
-      </div>
-
-      <div id="news-feed" class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        
-        <div class="golf-card-bg border border-[#1E4D32] rounded-xl p-6 shadow-md flex flex-col justify-between space-y-4">
-          <div>
-            <div class="flex justify-between items-center mb-3">
-              <span class="bg-[#1E4D32] gold-text text-xs font-bold px-2.5 py-1 rounded uppercase tracking-wider">Tournaments</span>
-              <span class="text-xs text-gray-400 font-semibold">Live Updates</span>
-            </div>
-            <h3 class="text-xl font-bold text-white mb-2">PGA & LPGA Leaderboards & Tour News</h3>
-            <p class="text-gray-300 text-sm">Real-time scores, standings, and tournament champion coverage.</p>
-          </div>
-          <a href="https://www.pgatour.com" target="_blank" rel="noopener noreferrer" 
-             class="block text-center gold-button py-2.5 px-4 rounded-lg transition">
-            View Live Scores ↗
-          </a>
-        </div>
-
-        <div class="golf-card-bg border border-[#1E4D32] rounded-xl p-6 shadow-md flex flex-col justify-between space-y-4">
-          <div>
-            <div class="flex justify-between items-center mb-3">
-              <span class="bg-[#1E4D32] gold-text text-xs font-bold px-2.5 py-1 rounded uppercase tracking-wider">Charity Events</span>
-              <span class="text-xs text-gray-400 font-semibold">Featured Outings</span>
-            </div>
-            <h3 class="text-xl font-bold text-white mb-2">Charity Golf Outings & Benefit Scrambles</h3>
-            <p class="text-gray-300 text-sm">Find local charity tournaments and benefit matches at nearby courses.</p>
-          </div>
-          <a href="https://golfstatus.com" target="_blank" rel="noopener noreferrer" 
-             class="block text-center gold-button py-2.5 px-4 rounded-lg transition">
-            Find Charity Events ↗
-          </a>
-        </div>
-
-        <div class="golf-card-bg border border-[#1E4D32] rounded-xl p-6 shadow-md flex flex-col justify-between space-y-4">
-          <div>
-            <div class="flex justify-between items-center mb-3">
-              <span class="bg-[#1E4D32] gold-text text-xs font-bold px-2.5 py-1 rounded uppercase tracking-wider">Instruction</span>
-              <span class="text-xs text-gray-400 font-semibold">Pro Tips</span>
-            </div>
-            <h3 class="text-xl font-bold text-white mb-2">PGA Coaching & Swing Analysis</h3>
-            <p class="text-gray-300 text-sm">Connect with certified golf professionals for lessons and game improvement.</p>
-          </div>
-          <a href="https://www.pga.com" target="_blank" rel="noopener noreferrer" 
-             class="block text-center gold-button py-2.5 px-4 rounded-lg transition">
-            Find PGA Lessons ↗
-          </a>
-        </div>
-
-      </div>
-    </section>
-
-  </main>
-
-  <!-- Password-Protected Owner Admin Dashboard Modal -->
-  <div id="admin-modal" class="hidden fixed inset-0 bg-black/80 flex items-center justify-center p-4 z-50 overflow-y-auto" role="dialog" aria-modal="true">
-    <div class="bg-[#0A1F14] p-8 rounded-2xl max-w-4xl w-full space-y-6 shadow-2xl border-2 border-[#D4AF37] my-8 text-white">
-      
-      <div class="flex justify-between items-center border-b border-[#1E4D32] pb-4">
-        <div>
-          <h3 class="text-3xl font-extrabold gold-gradient-text">Owner Private Admin Dashboard</h3>
-          <p class="text-gray-400 font-medium">GolfMixer.com Analytics & Access Logs</p>
-        </div>
-        <button onclick="toggleAdminModal()" class="text-3xl font-bold text-gray-400 hover:text-white">&times;</button>
-      </div>
-
-      <div id="admin-login-step" class="py-4">
-        <p class="text-lg text-gray-300 font-semibold mb-4">Enter owner password to unlock admin portal:</p>
-        <div class="flex gap-4 max-w-md">
-          <input type="password" id="admin-pass" placeholder="Enter Admin Password" class="flex-1 p-3 text-lg bg-[#122B1D] border border-[#1E4D32] rounded-lg outline-none focus:border-[#D4AF37]">
-          <button onclick="checkAdminPass()" class="gold-button text-lg font-bold px-6 py-3 rounded-lg transition">
-            Unlock Panel
-          </button>
-        </div>
-        <p id="admin-err" class="text-red-400 font-bold text-md mt-3 hidden">⚠️ Incorrect password. Try again.</p>
-      </div>
-
-      <div id="admin-panel-step" class="hidden space-y-6">
-        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-[#122B1D] p-4 rounded-xl border border-[#D4AF37] gap-2">
-          <div class="flex items-center space-x-3">
-            <span class="text-2xl" aria-hidden="true">✅</span>
-            <span class="text-xl font-bold gold-text">Authenticated Site Owner</span>
-          </div>
-          <span class="text-sm font-bold bg-[#D4AF37] text-black px-3 py-1.5 rounded-md">Live GPS Syncing</span>
-        </div>
-
-        <div>
-          <h4 class="text-xl font-bold text-white mb-3">Visitor Logs (Ascending Order)</h4>
-          <div class="overflow-x-auto border border-[#1E4D32] rounded-xl shadow-sm">
-            <table class="w-full text-left border-collapse">
-              <thead>
-                <tr class="bg-[#122B1D] gold-text text-lg">
-                  <th class="p-4 border-b border-[#1E4D32] font-bold">#</th>
-                  <th class="p-4 border-b border-[#1E4D32] font-bold">Timestamp</th>
-                  <th class="p-4 border-b border-[#1E4D32] font-bold">GPS / City Location</th>
-                  <th class="p-4 border-b border-[#1E4D32] font-bold">IP Address</th>
-                  <th class="p-4 border-b border-[#1E4D32] font-bold">Time on Site</th>
-                </tr>
-              </thead>
-              <tbody id="admin-visitor-rows" class="divide-y divide-[#1E4D32] text-lg font-semibold text-gray-200 bg-[#0A1F14]">
-                <!-- Dynamically populated via script -->
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-  <!-- Professional Footer with Disclaimer -->
-  <footer class="bg-[#0A1F14] text-white border-t-2 border-[#D4AF37] py-8 px-6 mt-12">
-    <div class="max-w-7xl mx-auto space-y-6">
-      <div class="flex flex-col md:flex-row justify-between items-center text-center md:text-left gap-4">
-        <div>
-          <p class="text-3xl font-extrabold tracking-tight">Golf<span class="gold-gradient-text">Mixer</span>.com</p>
-          <p class="gold-text text-sm mt-1 uppercase tracking-widest">"The Gold Standard for the Golf Community"</p>
-        </div>
-        <div class="flex flex-col items-center md:items-end">
-          <p class="text-sm text-gray-400">&copy; 2026 GolfMixer.com. All rights reserved.</p>
-          <button onclick="toggleAdminModal()" class="text-xs gold-text hover:underline mt-1.5 transition opacity-80 hover:opacity-100">
-            Owner Admin Access
-          </button>
-        </div>
-      </div>
-
-      <div class="border-t border-[#1E4D32] pt-4 text-center md:text-left">
-        <p class="text-xs text-gray-400 leading-relaxed">
-          <strong>Disclaimer:</strong> GolfMixer.com is an independent golf directory and social network. GolfMixer.com is not affiliated, associated, authorized, endorsed by, or in any way officially connected with PGA, PGA TOUR, LPGA, GolfStatus, or any of their subsidiaries or affiliates. All trademarks™ or registered® trademarks belong to their respective holders. Links to third-party golf course websites are provided solely for user reference.
+    <!-- MANIFESTO -->
+    <section class="section-card" id="manifesto">
+      <div class="section-title">01 // The Manifesto</div>
+      <h2 class="manifesto-heading">THE FUTURE IS NOW</h2>
+      <div class="manifesto-body">
+        <p>
+          We stand at the inflection point of human evolution. For decades, technology was built as a rigid tool—unyielding, mechanical, and cold.
+        </p>
+        <p>
+          <strong>H0H.com</strong> represents the zero-friction bridge. The zero in our name signifies the synthetic nexus: the layer of intelligence that speaks with human empathy and intuition, while operating with lightspeed algorithmic precision.
+        </p>
+        <p>
+          We do not seek to replace the human experience. We amplify it beyond physical limits.
         </p>
       </div>
-    </div>
+    </section>
+
+    <!-- CORE PILLARS -->
+    <section class="pillars-grid" id="architecture">
+      <div class="pillar-card">
+        <div class="pillar-num">01</div>
+        <h3 class="pillar-title">Zero Friction</h3>
+        <p class="pillar-desc">
+          Instant execution across binary neural networks. Eliminating traditional processing delays between intent and action.
+        </p>
+      </div>
+      <div class="pillar-card">
+        <div class="pillar-num">02</div>
+        <h3 class="pillar-title">Synthetic Intuition</h3>
+        <p class="pillar-desc">
+          Contextually aware deep-learning frameworks that understand nuance, tone, and unstructured human thoughts.
+        </p>
+      </div>
+      <div class="pillar-card">
+        <div class="pillar-num">03</div>
+        <h3 class="pillar-title">Infinite Scale</h3>
+        <p class="pillar-desc">
+          Borderless computational reach operating 24/7 with uninterrupted clarity and objective memory retention.
+        </p>
+      </div>
+    </section>
+
+    <!-- TECHNICAL SPECIFICATIONS MATRIX -->
+    <section class="section-card" id="specs">
+      <div class="section-title">02 // Core Architecture</div>
+      <h2 class="manifesto-heading">System Specifications</h2>
+      <table class="specs-table">
+        <thead>
+          <tr>
+            <th>Module</th>
+            <th>Protocol</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Neural Core</td>
+            <td>Transformer Self-Attention Matrix</td>
+            <td style="color: var(--accent-cyan); text-shadow: var(--glow-cyan);">ACTIVE</td>
+          </tr>
+          <tr>
+            <td>Resonance Control</td>
+            <td>User-Calibrated AI Involvement (0-100%)</td>
+            <td style="color: var(--accent-cyan); text-shadow: var(--glow-cyan);">ONLINE</td>
+          </tr>
+          <tr>
+            <td>Latency Index</td>
+            <td>Sub-10ms Inference Loop</td>
+            <td style="color: var(--accent-cyan); text-shadow: var(--glow-cyan);">OPTIMAL</td>
+          </tr>
+          <tr>
+            <td>Security Envelope</td>
+            <td>Zero-Knowledge Encryption Layer</td>
+            <td style="color: var(--accent-cyan); text-shadow: var(--glow-cyan);">ENFORCED</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2026 H0H.com — Human, But Not Human. All rights reserved.</p>
   </footer>
 
-  <!-- Application Logic -->
   <script>
-    // National Database of Golf Courses with Verified Home Page URLs
-    const courseDatabase = [
-      { name: "Golden Horseshoe Golf Club", state: "VA", zip: "23185", city: "Williamsburg", type: "Championship Course", holes: 18, rating: "4.9 ★", lat: 37.2707, lon: -76.7075, url: "https://www.colonialwilliamsburgresorts.com/golf/" },
-      { name: "Kingsmill Resort Golf Club", state: "VA", zip: "23185", city: "Williamsburg", type: "Resort & Country Club", holes: 36, rating: "4.8 ★", lat: 37.2305, lon: -76.6631, url: "https://www.kingsmill.com/golf/" },
-      { name: "Williamsburg National Golf Club", state: "VA", zip: "23188", city: "Williamsburg", type: "Golf & Country Club", holes: 36, rating: "4.7 ★", lat: 37.3100, lon: -76.7600, url: "https://williamsburgnationalgolfclub.com/" },
-      { name: "TPC Sawgrass", state: "FL", zip: "32082", city: "Ponte Vedra Beach", type: "PGA Tour Resort", holes: 18, rating: "5.0 ★", lat: 30.1975, lon: -81.3931, url: "https://tpc.com/sawgrass/" },
-      { name: "Brandon Golf & Country Club", state: "FL", zip: "33511", city: "Brandon", type: "Country Club", holes: 18, rating: "4.6 ★", lat: 27.9378, lon: -82.2859, url: "https://www.google.com/search?q=Brandon+Golf+and+Country+Club+Florida" },
-      { name: "Pebble Beach Golf Links", state: "CA", zip: "93953", city: "Pebble Beach", type: "Resort & Golf Club", holes: 18, rating: "5.0 ★", lat: 36.5688, lon: -121.9506, url: "https://www.pebblebeach.com/golf/pebble-beach-golf-links/" },
-      { name: "Pinehurst No. 2", state: "NC", zip: "28374", city: "Pinehurst", type: "Country Club Resort", holes: 18, rating: "4.9 ★", lat: 35.1896, lon: -79.4684, url: "https://www.pinehurst.com/golf/courses/no-2/" },
-      { name: "Ocean Course at Kiawah Island", state: "SC", zip: "29455", city: "Kiawah Island", type: "Golf & Resort Club", holes: 18, rating: "4.8 ★", lat: 32.6108, lon: -80.0345, url: "https://kiawahresort.com/golf/the-ocean-course/" }
-    ];
+    let currentAiLevel = 50;
 
-    // Track active user profile after creation
-    let activeUserProfile = null;
+    function updateAiLevel(val) {
+      currentAiLevel = parseInt(val, 10);
+      const display = document.getElementById('ai-value-display');
+      const status = document.getElementById('slider-status-text');
+      display.innerText = val + '% SYNTHETIC';
 
-    // Seed Data Sets
-    let golferProfiles = [
-      { 
-        name: "Ralph Hughes", 
-        handicap: "8.2 Index", 
-        course: "Golden Horseshoe Golf Club", 
-        location: "Williamsburg, VA", 
-        bio: "Avid golfer, loves playing weekend rounds and meeting local members.",
-        photo: "https://images.unsplash.com/photo-1535131749006-b7f58c99034b?auto=format&fit=crop&w=300&q=80"
-      },
-      { 
-        name: "Robert Kayian", 
-        handicap: "14.0 Index", 
-        course: "Kingsmill Resort", 
-        location: "Williamsburg, VA", 
-        bio: "Founder of GolfMixer.com. Enjoying the game and clubhouse gatherings.",
-        photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&q=80"
-      }
-    ];
-
-    let socialPosts = [
-      {
-        id: 101,
-        author: "Dave Albert",
-        club: "Kingsmill Resort Clubhouse",
-        activity: "Post-Round Drinks & Cocktail Hour",
-        time: "Today at 5:30 PM",
-        desc: "Finished 18 holes! Joining everyone on the patio for drinks and socializing.",
-        attendees: ["Dave Albert", "Ralph Hughes"]
-      },
-      {
-        id: 102,
-        author: "Piero Barbagallo",
-        club: "Golden Horseshoe Patio",
-        activity: "Clubhouse Dinner & Patio Social",
-        time: "Saturday at 6:30 PM",
-        desc: "Hosting a group dinner at the main clubhouse. All GolfMixer members welcome!",
-        attendees: ["Piero Barbagallo"]
-      }
-    ];
-
-    let golfMixers = [
-      { id: 201, host: "Ralph H.", course: "Golden Horseshoe Golf Club", type: "Weekend Scramble", date: "Saturday, 9:00 AM", totalSpots: 4, attendees: ["Ralph H.", "Robert K."] },
-      { id: 202, host: "Mike S.", course: "Kingsmill Golf Club", type: "Casual 4-Some Match", date: "Sunday, 1:30 PM", totalSpots: 4, attendees: ["Mike S."] }
-    ];
-
-    let visitorSessionStart = Date.now();
-    let currentVisitorInfo = { city: "Williamsburg", state: "VA", ip: "127.0.0.1", lat: 37.2707, lon: -76.7075 };
-
-    let mockLogins = [
-      { id: 1, time: "09:12:00 AM", location: "Richmond, VA", ip: "172.56.21.4", sessionStart: Date.now() - 1800000 },
-      { id: 2, time: "09:45:30 AM", location: "Orlando, FL", ip: "104.28.19.88", sessionStart: Date.now() - 1200000 },
-      { id: 3, time: "10:01:15 AM", location: "Williamsburg, VA (Current)", ip: "68.10.14.22", sessionStart: visitorSessionStart }
-    ];
-
-    // Initialize Page
-    window.addEventListener("DOMContentLoaded", () => {
-      initVisitorTracker();
-      renderCourses(courseDatabase);
-      renderProfiles();
-      renderSocialFeed();
-      renderMixers();
-      startClock();
-      setInterval(updateAdminTimers, 1000);
-    });
-
-    // Real-Time IP & GPS Tracker
-    async function initVisitorTracker() {
-      try {
-        const response = await fetch("https://ipapi.co/json/");
-        if (response.ok) {
-          const data = await response.json();
-          if (data.city && data.region_code) {
-            currentVisitorInfo.city = data.city;
-            currentVisitorInfo.state = data.region_code;
-            currentVisitorInfo.ip = data.ip || "127.0.0.1";
-            if (data.latitude && data.longitude) {
-              currentVisitorInfo.lat = data.latitude;
-              currentVisitorInfo.lon = data.longitude;
-            }
-          }
-        }
-      } catch (err) {
-        console.log("Geolocation initialized with default coordinates.");
-      }
-      
-      document.getElementById("visitor-city").innerText = currentVisitorInfo.city;
-      document.getElementById("visitor-state").innerText = currentVisitorInfo.state;
-      mockLogins[2].location = `${currentVisitorInfo.city}, ${currentVisitorInfo.state} (Current GPS)`;
-      mockLogins[2].ip = currentVisitorInfo.ip;
-    }
-
-    function startClock() {
-      function updateTime() {
-        const now = new Date();
-        document.getElementById("visitor-time").innerText = now.toLocaleTimeString() + " EST";
-      }
-      updateTime();
-      setInterval(updateTime, 1000);
-    }
-
-    // GPS Location Finder
-    function useGPSLocation() {
-      if (navigator.geolocation) {
-        document.getElementById("search-status").innerText = "📍 Acquiring real-time GPS coordinates...";
-        navigator.geolocation.getCurrentPosition(
-          (pos) => {
-            const userLat = pos.coords.latitude;
-            const userLon = pos.coords.longitude;
-            
-            // Calculate distance to courses
-            let sorted = [...courseDatabase].map(course => {
-              let dist = Math.sqrt(Math.pow(course.lat - userLat, 2) + Math.pow(course.lon - userLon, 2));
-              return { ...course, distance: dist };
-            }).sort((a, b) => a.distance - b.distance);
-
-            renderCourses(sorted);
-            document.getElementById("search-status").innerText = `✅ Found ${sorted.length} golf courses sorted by closest GPS distance to you!`;
-          },
-          () => {
-            alert("Unable to retrieve GPS location. Searching default Williamsburg courses.");
-            searchCourses();
-          }
-        );
+      if (currentAiLevel < 30) {
+        status.innerText = `Mode ${val}%: High Human Focus. Subtle analytical assistance, narrative depth, organic tone.`;
+      } else if (currentAiLevel <= 70) {
+        status.innerText = `Mode ${val}%: Balanced Resonance. Intuitive phrasing with structured algorithmic precision.`;
       } else {
-        alert("GPS location is not supported by your browser.");
+        status.innerText = `Mode ${val}%: Max Synthetic Engine. Hyper-concise data synthesis, instant structural execution.`;
       }
     }
 
-    // Directory Search Logic
-    function searchCourses() {
-      const zip = document.getElementById("zip-input").value.trim();
-      const state = document.getElementById("state-input").value;
-
-      let filtered = courseDatabase.filter(course => {
-        let matchZip = zip === "" || course.zip === zip;
-        let matchState = state === "" || course.state === state;
-        return matchZip && matchState;
-      });
-
-      renderCourses(filtered);
-      document.getElementById("search-status").innerText = `Showing ${filtered.length} golf course(s) matching your search.`;
+    function handleKeyPress(e) {
+      if (e.key === 'Enter') sendQuery();
     }
 
-    function renderCourses(courses) {
-      const container = document.getElementById("course-results");
-      container.innerHTML = "";
-
-      if (courses.length === 0) {
-        container.innerHTML = `
-          <div class="col-span-full golf-card-bg border-2 border-[#D4AF37] p-8 rounded-xl text-center">
-            <p class="text-2xl font-bold text-white">No courses matching your criteria were found.</p>
-            <p class="text-gray-300 mt-2">Try clearing your ZIP code or selecting "All States" to view all courses.</p>
-          </div>
-        `;
-        return;
-      }
-
-      courses.forEach(c => {
-        const card = document.createElement("div");
-        card.className = "golf-card-bg border-2 border-[#1E4D32] p-6 rounded-xl shadow-md hover:border-[#D4AF37] transition flex flex-col justify-between space-y-4";
-        card.innerHTML = `
-          <div>
-            <div class="flex justify-between items-start mb-2">
-              <span class="bg-[#1E4D32] gold-text font-extrabold text-xs px-2.5 py-1 rounded uppercase tracking-wider">${c.type}</span>
-              <span class="bg-yellow-900/40 text-yellow-300 font-extrabold text-xs px-2.5 py-1 rounded-full border border-yellow-600/50">${c.rating}</span>
-            </div>
-            <h3 class="text-2xl font-extrabold gold-text">${c.name}</h3>
-            <p class="text-gray-300 font-semibold mt-1">${c.city}, ${c.state} ${c.zip}</p>
-          </div>
-          <div class="pt-3 border-t border-[#1E4D32] flex justify-between items-center">
-            <span class="text-sm font-bold text-gray-400">${c.holes} Holes</span>
-            <a href="${c.url}" target="_blank" rel="noopener noreferrer" class="gold-button px-4 py-2 rounded-lg text-sm transition inline-flex items-center gap-1">
-              Visit Official Site ↗
-            </a>
-          </div>
-        `;
-        container.appendChild(card);
-      });
-    }
-
-    // Profile Creation Logic
-    function createGolferProfile(event) {
-      event.preventDefault();
-      const name = document.getElementById("prof-name").value;
-      const handicap = document.getElementById("prof-handicap").value;
-      const course = document.getElementById("prof-course").value;
-      const location = document.getElementById("prof-location").value;
-      const bio = document.getElementById("prof-bio").value;
-      const fileInput = document.getElementById("prof-photo");
-
-      let photoUrl = "https://images.unsplash.com/photo-1535131749006-b7f58c99034b?auto=format&fit=crop&w=300&q=80";
-
-      if (fileInput.files && fileInput.files[0]) {
-        photoUrl = URL.createObjectURL(fileInput.files[0]);
-      }
-
-      const newProfile = { name, handicap, course, location, bio, photo: photoUrl };
-      activeUserProfile = newProfile; // Set active session profile
-      golferProfiles.unshift(newProfile);
-
-      // Auto-fill author fields in social & mixer forms
-      document.getElementById("social-author").value = name;
-      document.getElementById("host-name").value = name;
-
-      renderProfiles();
-      document.getElementById("profile-form").reset();
-      document.getElementById("profile-count").innerText = `${golferProfiles.length + 122} Profiles`;
-      alert(`Welcome ${name}! Your profile is published and active. You can now join any Mixer or 19th Hole Social!`);
-    }
-
-    function renderProfiles() {
-      const container = document.getElementById("profiles-list");
-      container.innerHTML = "";
-
-      golferProfiles.forEach(p => {
-        const card = document.createElement("div");
-        card.className = "golf-card-bg border-2 border-[#1E4D32] p-5 rounded-xl shadow-md hover:border-[#D4AF37] transition flex space-x-4 items-center";
-        card.innerHTML = `
-          <img src="${p.photo}" alt="${p.name}" class="w-20 h-20 rounded-full object-cover border-2 border-[#D4AF37] flex-shrink-0">
-          <div class="space-y-1">
-            <div class="flex items-center space-x-2">
-              <h4 class="text-xl font-bold gold-text">${p.name}</h4>
-              <span class="bg-[#1E4D32] text-yellow-300 text-xs font-bold px-2 py-0.5 rounded">${p.handicap}</span>
-            </div>
-            <p class="text-xs font-bold text-gray-400">${p.course} &bull; ${p.location}</p>
-            <p class="text-sm text-gray-300 line-clamp-2">${p.bio}</p>
-          </div>
-        `;
-        container.appendChild(card);
-      });
-    }
-
-    // Group & Mixer Joining Handler
-    function joinMixer(mixerId) {
-      const mixer = golfMixers.find(m => m.id === mixerId);
-      if (!mixer) return;
-
-      const userName = activeUserProfile ? activeUserProfile.name : prompt("Please enter your name to join this Golf Mixer group:");
-      if (!userName) return;
-
-      if (mixer.attendees.includes(userName)) {
-        alert(`You (${userName}) are already registered for this Golf Mixer!`);
-        return;
-      }
-
-      if (mixer.attendees.length >= mixer.totalSpots) {
-        alert("This Golf Mixer group is currently full!");
-        return;
-      }
-
-      mixer.attendees.push(userName);
-      renderMixers();
-      alert(`Success! ${userName} has been added to the Golf Mixer at ${mixer.course}.`);
-    }
-
-    function joinSocial(postId) {
-      const post = socialPosts.find(p => p.id === postId);
-      if (!post) return;
-
-      const userName = activeUserProfile ? activeUserProfile.name : prompt("Please enter your name to RSVP for this clubhouse social:");
-      if (!userName) return;
-
-      if (post.attendees.includes(userName)) {
-        alert(`You (${userName}) have already RSVP'd for this event!`);
-        return;
-      }
-
-      post.attendees.push(userName);
-      renderSocialFeed();
-      alert(`RSVP Confirmed! ${userName} is attending the clubhouse social at ${post.club}.`);
-    }
-
-    // 19th Hole Clubhouse Social Logic
-    function createSocialPost(event) {
-      event.preventDefault();
-      const author = document.getElementById("social-author").value;
-      const club = document.getElementById("social-club").value;
-      const activity = document.getElementById("social-activity").value;
-      const desc = document.getElementById("social-desc").value;
-
-      socialPosts.unshift({ 
-        id: Date.now(), 
-        author, 
-        club, 
-        activity, 
-        time: "Just Now", 
-        desc, 
-        attendees: [author] 
-      });
-      renderSocialFeed();
-      document.getElementById("social-form").reset();
-      alert("Social event posted to The 19th Hole Clubhouse Lounge!");
-    }
-
-    function renderSocialFeed() {
-      const container = document.getElementById("social-feed");
-      container.innerHTML = "";
-
-      socialPosts.forEach(post => {
-        const card = document.createElement("div");
-        card.className = "golf-card-bg border-2 border-[#1E4D32] p-6 rounded-xl shadow-md hover:border-[#D4AF37] transition space-y-3";
-        card.innerHTML = `
-          <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b border-[#1E4D32] pb-3">
-            <div>
-              <span class="bg-[#1E4D32] gold-text font-extrabold text-xs px-2.5 py-1 rounded uppercase tracking-wider">${post.activity}</span>
-              <h4 class="text-xl font-bold gold-text mt-1">${post.club}</h4>
-            </div>
-            <span class="text-xs font-semibold text-gray-400">${post.time}</span>
-          </div>
-          <p class="text-gray-200 text-base">${post.desc}</p>
-          <div class="text-xs text-gray-400 font-medium">
-            <strong>Attending Members (${post.attendees.length}):</strong> ${post.attendees.join(", ")}
-          </div>
-          <div class="flex justify-between items-center pt-2 text-sm">
-            <span class="text-gray-400">Hosted by <strong class="text-white">${post.author}</strong></span>
-            <button onclick="joinSocial(${post.id})" class="gold-button px-4 py-2 rounded-lg transition">
-              RSVP / Join Social
-            </button>
-          </div>
-        `;
-        container.appendChild(card);
-      });
-    }
-
-    // Mixer Event Logic
-    function createMixer(event) {
-      event.preventDefault();
-      const host = document.getElementById("host-name").value;
-      const course = document.getElementById("mixer-course").value;
-      const type = document.getElementById("mixer-type").value;
-
-      golfMixers.unshift({ 
-        id: Date.now(), 
-        host, 
-        course, 
-        type, 
-        date: "Just Now", 
-        totalSpots: 4, 
-        attendees: [host] 
-      });
-      renderMixers();
-      document.getElementById("mixer-form").reset();
-      alert("Golf mixer published successfully!");
-    }
-
-    function renderMixers() {
-      const container = document.getElementById("mixers-list");
-      container.innerHTML = "";
-
-      golfMixers.forEach(m => {
-        const spotsLeft = m.totalSpots - m.attendees.length;
-        const spotsText = spotsLeft > 0 ? `${spotsLeft} spot(s) left` : "FULL";
-
-        const card = document.createElement("div");
-        card.className = "golf-card-bg border-2 border-[#1E4D32] p-5 rounded-xl shadow-md hover:border-[#D4AF37] transition flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4";
-        card.innerHTML = `
-          <div>
-            <div class="flex items-center space-x-2">
-              <span class="font-bold text-xl gold-text">${m.type}</span>
-              <span class="text-xs bg-[#1E4D32] ${spotsLeft > 0 ? 'text-green-300' : 'text-red-400'} font-bold px-2 py-0.5 rounded">${spotsText}</span>
-            </div>
-            <p class="text-gray-200 font-semibold mt-1">${m.course}</p>
-            <p class="text-sm text-gray-400">Hosted by <strong class="text-gray-200">${m.host}</strong> &bull; ${m.date}</p>
-            <p class="text-xs text-gray-400 mt-1"><strong>Group Players:</strong> ${m.attendees.join(", ")}</p>
-          </div>
-          <button onclick="joinMixer(${m.id})" class="gold-button px-5 py-2.5 rounded-lg text-sm transition">
-            Join Group
-          </button>
-        `;
-        container.appendChild(card);
-      });
-    }
-
-    // Owner Admin Panel Logic
-    function toggleAdminModal() {
-      document.getElementById("admin-modal").classList.toggle("hidden");
-    }
-
-    function checkAdminPass() {
-      const pass = document.getElementById("admin-pass").value;
-      const err = document.getElementById("admin-err");
+    // EMBEDDED CONVERSATIONAL AI ENGINE
+    function generateSyntheticResponse(prompt, level) {
+      const q = prompt.toLowerCase();
       
-      if (pass === "admin123" || pass === "golf2026") {
-        err.classList.add("hidden");
-        document.getElementById("admin-login-step").classList.add("hidden");
-        document.getElementById("admin-panel-step").classList.remove("hidden");
-        renderAdminLogs();
-      } else {
-        err.classList.remove("hidden");
+      // Core Knowledge Base Topics
+      let baseResponse = "";
+
+      if (q.includes("who are you") || q.includes("what is h0h") || q.includes("h0h.com") || q.includes("what is this")) {
+        baseResponse = "H0H represents the zero-friction bridge between synthetic intelligence and human intent. We amplify human capability through adaptive neural processing.";
+      } 
+      else if (q.includes("how does it work") || q.includes("protocol") || q.includes("architecture")) {
+        baseResponse = "The H0H Protocol operates on a low-latency transformer framework. It balances intuition with execution, dynamically scaling intelligence according to your calibrated AI involvement level.";
+      }
+      else if (q.includes("hello") || q.includes("hi") || q.includes("greetings") || q.includes("hey")) {
+        baseResponse = "Greetings. Terminal online. State your intent or query to initiate processing.";
+      }
+      else if (q.includes("future") || q.includes("time") || q.includes("evolution")) {
+        baseResponse = "The future is defined by seamless collaboration between biological vision and machine precision. Friction between thought and realization has been eliminated.";
+      }
+      else if (q.includes("ai") || q.includes("intelligence") || q.includes("human")) {
+        baseResponse = "Human intuition provides direction, purpose, and creativity. Synthetic architecture supplies speed, scale, and computational zero-error execution.";
+      }
+      else if (q.includes("help") || q.includes("command") || q.includes("options")) {
+        baseResponse = "You can ask about H0H architecture, test mathematical logic, discuss future tech trends, or calibrate the AI slider to evaluate tone transformation.";
+      }
+      else {
+        // Dynamic fallback reasoning for open questions
+        baseResponse = `Query regarding "${prompt}" received. Analysis indicates a multi-faceted prompt requiring synthesized processing across historical and active data matrices.`;
+      }
+
+      // Transform output style according to current AI Involvement Slider Level
+      if (level < 30) {
+        // High Human Focus (Organic, narrative tone)
+        return `[H0H Organic Core - ${level}% AI]: ${baseResponse} From a human perspective, it's about making complex ideas feel natural and accessible, giving you room to explore without technological friction.`;
+      } 
+      else if (level <= 70) {
+        // Balanced Hybrid (Structured, balanced precision)
+        return `[H0H Hybrid Core - ${level}% AI]: ${baseResponse}\n• Mode: Balanced Resonance\n• Latency: 0.04ms\n• Optimization: Standard`;
+      } 
+      else {
+        // Max Synthetic (Hyper-concise, technical execution)
+        return `[H0H SYNTH-CORE v4.9 - ${level}% AI RAW]: QUERY: "${prompt.toUpperCase()}" | RES: ${baseResponse.toUpperCase()} | EXECUTION: SUCCESSFUL | STATUS: OK.`;
       }
     }
 
-    function renderAdminLogs() {
-      const tbody = document.getElementById("admin-visitor-rows");
-      tbody.innerHTML = "";
+    function sendQuery() {
+      const input = document.getElementById('embedded-user-input');
+      const chat = document.getElementById('embedded-chat-box');
+      const query = input.value.trim();
 
-      mockLogins.forEach(log => {
-        const row = document.createElement("tr");
-        row.className = "hover:bg-[#122B1D] border-b border-[#1E4D32]";
-        row.innerHTML = `
-          <td class="p-4 font-bold text-gray-400">${log.id}</td>
-          <td class="p-4">${log.time}</td>
-          <td class="p-4 font-bold gold-text">${log.location}</td>
-          <td class="p-4 font-mono text-sm">${log.ip}</td>
-          <td class="p-4 text-green-400 font-bold" id="session-timer-${log.id}">0m 0s</td>
-        `;
-        tbody.appendChild(row);
-      });
-      updateAdminTimers();
+      if (!query) return;
+
+      // Render User Message
+      const userDiv = document.createElement('div');
+      userDiv.className = 'msg-user';
+      userDiv.innerText = `[User]: ${query}`;
+      chat.appendChild(userDiv);
+
+      input.value = '';
+
+      // Render Temporary Thinking Indicator
+      const thinkingDiv = document.createElement('div');
+      thinkingDiv.className = 'msg-bot msg-thinking';
+      thinkingDiv.innerText = `[H0H System]: [PROCESSING SYNAPSE AT ${currentAiLevel}% AI...]`;
+      chat.appendChild(thinkingDiv);
+      chat.scrollTop = chat.scrollHeight;
+
+      // Simulate Real Neural Processing Latency
+      setTimeout(() => {
+        chat.removeChild(thinkingDiv);
+        const botDiv = document.createElement('div');
+        botDiv.className = 'msg-bot';
+        botDiv.innerText = generateSyntheticResponse(query, currentAiLevel);
+        chat.appendChild(botDiv);
+        chat.scrollTop = chat.scrollHeight;
+      }, 450);
     }
 
-    function updateAdminTimers() {
-      const panel = document.getElementById("admin-panel-step");
-      if (panel.classList.contains("hidden")) return;
-
-      const now = Date.now();
-      mockLogins.forEach(log => {
-        const timerElem = document.getElementById(`session-timer-${log.id}`);
-        if (timerElem) {
-          const diffSec = Math.floor((now - log.sessionStart) / 1000);
-          const minutes = Math.floor(diffSec / 60);
-          const seconds = diffSec % 60;
-          timerElem.innerText = `${minutes}m ${seconds}s`;
-        }
-      });
+    function triggerFutureAction() {
+      const input = document.getElementById('embedded-user-input');
+      input.value = "Initialize full synthetic future sequence.";
+      sendQuery();
     }
   </script>
 </body>

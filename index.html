@@ -3,757 +3,937 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>H0H.com | Human, But Not Human</title>
+  <title>Horoscope Hotel (H0H.com)</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  
   <style>
-    /* CSS RESETS & THEME VARS */
     :root {
-      --bg-color: #030508;
-      --card-bg: rgba(10, 15, 26, 0.75);
-      --border-color: rgba(0, 243, 255, 0.25);
-      --border-glow: rgba(0, 243, 255, 0.5);
-      --text-main: #f0f6fc;
-      --text-muted: #8b949e;
-      --accent-cyan: #00f3ff;
-      --accent-magenta: #ff0055;
-      --glow-cyan: 0 0 25px rgba(0, 243, 255, 0.5);
-      --glow-magenta: 0 0 25px rgba(255, 0, 85, 0.5);
-      --font-stack: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      --font-code: "Courier New", Courier, monospace, system-ui;
+      --gold: #d4af37;
+      --gold-light: #f3e5ab;
+      --crimson: #800020;
+      --dark-bg: #070709;
     }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
+    
     body {
-      background-color: var(--bg-color);
-      color: var(--text-main);
-      font-family: var(--font-stack);
-      line-height: 1.6;
+      background-color: var(--dark-bg);
+      color: #e2e8f0;
+      font-family: 'Playfair Display', serif;
       overflow-x: hidden;
-      min-height: 100vh;
-      position: relative;
+      user-select: none;
     }
 
-    /* FUTURISTIC SCANLINE OVERLAY */
-    body::before {
-      content: " ";
-      display: block;
+    .font-cinzel { font-family: 'Cinzel', serif; }
+    .font-mono-custom { font-family: 'Space Mono', monospace; }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #0a0a0d; }
+    ::-webkit-scrollbar-thumb { background: #262630; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--gold); }
+
+    /* Glowing Text Effects */
+    .text-glow-gold {
+      text-shadow: 0 0 10px rgba(212, 175, 55, 0.5), 0 0 20px rgba(212, 175, 55, 0.2);
+    }
+    .text-glow-crimson {
+      text-shadow: 0 0 10px rgba(128, 0, 32, 0.8), 0 0 20px rgba(128, 0, 32, 0.4);
+    }
+
+    /* Keyframe Animations */
+    @keyframes flicker {
+      0%, 100% { opacity: 1; }
+      41.99% { opacity: 1; }
+      42% { opacity: 0.4; }
+      43% { opacity: 1; }
+      45% { opacity: 0.3; }
+      46% { opacity: 1; }
+      78.99% { opacity: 1; }
+      79% { opacity: 0.2; }
+      80% { opacity: 1; }
+    }
+    .flicker-neon { animation: flicker 6s infinite alternate; }
+
+    @keyframes floatLight {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-8px) rotate(1deg); }
+    }
+    .floating-card { animation: floatLight 4s ease-in-out infinite; }
+
+    /* Atmospheric Canvas Layer */
+    #ambientCanvas {
       position: fixed;
-      top: 0; left: 0; bottom: 0; right: 0;
-      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
-      z-index: 20;
-      background-size: 100% 4px, 6px 100%;
-      pointer-events: none;
-    }
-
-    /* BACKGROUND GRID & GLOW EFFECT */
-    .bg-grid {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100vw; height: 100vh;
-      background-image: linear-gradient(to right, rgba(0, 243, 255, 0.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(0, 243, 255, 0.05) 1px, transparent 1px);
-      background-size: 40px 40px;
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    .bg-glow-top {
-      position: fixed;
-      top: -15%; left: 50%;
-      transform: translateX(-50%);
-      width: 700px; height: 700px;
-      background: radial-gradient(circle, rgba(0,243,255,0.15) 0%, rgba(3,5,8,0) 70%);
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    .bg-glow-bottom {
-      position: fixed;
-      bottom: -15%; right: 10%;
-      width: 500px; height: 500px;
-      background: radial-gradient(circle, rgba(255,0,85,0.1) 0%, rgba(3,5,8,0) 70%);
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    /* NAVIGATION */
-    nav {
-      position: sticky;
       top: 0;
-      width: 100%;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 20px 40px;
-      backdrop-filter: blur(16px);
-      background: rgba(3, 5, 8, 0.85);
-      border-bottom: 1px solid var(--border-color);
-      box-shadow: 0 4px 30px rgba(0, 243, 255, 0.05);
-      z-index: 30;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 1;
+      opacity: 0.6;
     }
 
-    .nav-logo {
-      font-size: 1.6rem;
-      font-weight: 900;
-      letter-spacing: 3px;
-      color: var(--text-main);
+    /* Word reveal highlight */
+    .word-spoken {
+      color: #f3e5ab;
+      text-shadow: 0 0 8px rgba(243, 229, 171, 0.9);
+      transition: color 0.15s ease, text-shadow 0.15s ease;
     }
 
-    .nav-logo span {
-      color: var(--accent-cyan);
-      text-shadow: var(--glow-cyan);
-    }
-
-    .nav-links {
-      display: flex;
-      gap: 30px;
-      list-style: none;
-    }
-
-    .nav-links a {
-      color: var(--text-muted);
-      text-decoration: none;
-      font-size: 0.85rem;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      transition: all 0.3s;
-    }
-
-    .nav-links a:hover {
-      color: var(--accent-cyan);
-      text-shadow: var(--glow-cyan);
-    }
-
-    /* MAIN CONTAINER */
-    main {
-      position: relative;
-      z-index: 10;
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 60px 20px 100px;
-    }
-
-    /* HERO SECTION */
-    .hero {
-      text-align: center;
-      margin-bottom: 80px;
-      padding: 20px 0 0;
-    }
-
-    .brand-title {
-      font-size: clamp(4rem, 12vw, 8.5rem);
-      font-weight: 900;
-      letter-spacing: 8px;
-      line-height: 1;
-      margin-bottom: 15px;
-      color: var(--text-main);
-      text-transform: uppercase;
-      text-shadow: 0 0 40px rgba(255, 255, 255, 0.1);
-    }
-
-    .brand-title .zero {
-      color: var(--accent-cyan);
-      text-shadow: var(--glow-cyan);
-    }
-
-    .tagline {
-      font-size: clamp(1.2rem, 3vw, 2.2rem);
-      font-weight: 800;
-      letter-spacing: 10px;
-      color: var(--accent-cyan);
-      text-transform: uppercase;
-      margin-bottom: 25px;
-      text-shadow: var(--glow-cyan);
-    }
-
-    .hero-sub {
-      max-width: 650px;
-      margin: 0 auto 40px;
-      font-size: 1.1rem;
-      color: var(--text-muted);
-    }
-
-    /* EMBEDDED PROTOCOL INTERFACE CARD */
-    .embedded-interface {
-      max-width: 750px;
-      margin: 0 auto 35px;
-      background: var(--card-bg);
-      border: 1px solid var(--accent-cyan);
-      border-radius: 12px;
-      padding: 35px;
-      box-shadow: var(--glow-cyan), inset 0 0 15px rgba(0, 243, 255, 0.05);
-      text-align: left;
+    /* Custom Glassmorphism Panels */
+    .hotel-card {
+      background: rgba(15, 15, 22, 0.85);
       backdrop-filter: blur(12px);
+      border: 1px solid rgba(212, 175, 55, 0.25);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9), inset 0 0 15px rgba(212, 175, 55, 0.05);
+    }
+
+    /* Hotel Door Styling */
+    .hotel-door-btn {
+      background: linear-gradient(145deg, #1f110b 0%, #0d0604 100%);
+      border: 2px solid #5c3a21;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.8), inset 0 0 12px rgba(212, 175, 55, 0.1);
       position: relative;
+      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      overflow: hidden;
     }
 
-    .interface-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 20px;
-      border-bottom: 1px solid rgba(0, 243, 255, 0.15);
-      padding-bottom: 15px;
+    .hotel-door-btn:hover {
+      transform: translateY(-4px) scale(1.02);
+      border-color: var(--gold);
+      box-shadow: 0 15px 35px rgba(212, 175, 55, 0.25), 0 0 20px rgba(128, 0, 32, 0.6);
     }
 
-    .interface-title {
-      color: var(--accent-cyan);
-      letter-spacing: 2px;
-      font-size: 1.25rem;
-      font-weight: 800;
-      text-shadow: var(--glow-cyan);
+    .hotel-door-btn::before {
+      content: '';
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      right: 8px;
+      bottom: 8px;
+      border: 1px solid rgba(212, 175, 55, 0.2);
+      pointer-events: none;
     }
 
-    .interface-sub {
-      color: var(--text-muted);
-      font-size: 0.85rem;
-      margin-top: 3px;
-    }
-
-    /* AI INVOLVEMENT SLIDER */
-    .slider-box {
-      background: rgba(3, 5, 8, 0.8);
-      border: 1px solid rgba(0, 243, 255, 0.2);
-      border-radius: 8px;
-      padding: 18px 20px;
-      margin-bottom: 20px;
-    }
-
-    .slider-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 10px;
-    }
-
-    .slider-label {
-      font-size: 0.85rem;
+    .door-plate {
+      background: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728, #fbf5b7);
+      color: #111;
+      font-family: 'Cinzel', serif;
       font-weight: 700;
-      letter-spacing: 1px;
-      color: var(--text-main);
-      text-transform: uppercase;
-    }
-
-    .slider-value {
-      color: var(--accent-cyan);
-      font-family: var(--font-code);
-      font-size: 1.1rem;
-      font-weight: 700;
-      text-shadow: var(--glow-cyan);
-    }
-
-    .ai-slider {
-      width: 100%;
-      height: 8px;
-      background: #0d1624;
-      outline: none;
-      border-radius: 4px;
-      accent-color: var(--accent-cyan);
-      cursor: pointer;
-    }
-
-    .slider-status {
-      margin-top: 10px;
-      font-family: var(--font-code);
-      font-size: 0.85rem;
-      color: var(--text-muted);
-    }
-
-    /* CHAT DISPLAY BOX */
-    .chat-box {
-      background: #020407;
-      border: 1px solid rgba(0, 243, 255, 0.15);
-      border-radius: 8px;
-      height: 280px;
-      padding: 15px;
-      overflow-y: auto;
-      margin-bottom: 20px;
-      font-family: var(--font-code);
-      font-size: 0.9rem;
-      box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.8);
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .msg-user {
-      color: #ffffff;
-      background: rgba(255, 255, 255, 0.05);
-      padding: 10px 14px;
-      border-left: 3px solid var(--text-muted);
-      border-radius: 0 6px 6px 0;
-      word-break: break-word;
-    }
-
-    .msg-bot {
-      color: var(--accent-cyan);
-      background: rgba(0, 243, 255, 0.04);
-      padding: 10px 14px;
-      border-left: 3px solid var(--accent-cyan);
-      border-radius: 0 6px 6px 0;
-      line-height: 1.5;
-      white-space: pre-wrap;
-      word-break: break-word;
-    }
-
-    .msg-thinking {
-      color: var(--text-muted);
-      font-style: italic;
-      animation: pulse 1.2s infinite alternate;
-    }
-
-    @keyframes pulse {
-      from { opacity: 0.4; }
-      to { opacity: 1; }
-    }
-
-    .chat-input-wrapper {
-      display: flex;
-      gap: 12px;
-    }
-
-    .chat-input {
-      flex: 1;
-      background: #020407;
-      border: 1px solid rgba(0, 243, 255, 0.3);
-      color: #fff;
-      padding: 14px 18px;
-      border-radius: 6px;
-      outline: none;
-      font-family: var(--font-stack);
-      transition: border-color 0.3s, box-shadow 0.3s;
-    }
-
-    .chat-input:focus {
-      border-color: var(--accent-cyan);
-      box-shadow: var(--glow-cyan);
-    }
-
-    .send-btn {
-      background: var(--accent-cyan);
-      color: #000;
-      border: none;
-      padding: 0 28px;
-      font-weight: 800;
-      letter-spacing: 1px;
-      border-radius: 6px;
-      cursor: pointer;
-      box-shadow: var(--glow-cyan);
-      transition: transform 0.2s, background-color 0.2s;
-    }
-
-    .send-btn:hover {
-      transform: scale(1.02);
-      background: #33f6ff;
-    }
-
-    /* CALL TO ACTION BUTTON */
-    .cta-btn {
-      display: inline-block;
-      background: linear-gradient(135deg, #00f3ff 0%, #0077ff 100%);
-      color: #000;
-      font-size: 1.1rem;
-      font-weight: 900;
-      padding: 20px 48px;
-      border: none;
-      border-radius: 4px;
-      text-transform: uppercase;
-      letter-spacing: 3px;
-      cursor: pointer;
-      box-shadow: var(--glow-cyan);
-      transition: transform 0.2s, box-shadow 0.2s;
-      text-decoration: none;
-      width: 100%;
-      max-width: 440px;
-    }
-
-    .cta-btn:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 0 40px rgba(0, 243, 255, 0.8);
-    }
-
-    /* MANIFESTO SECTION */
-    .section-card {
-      background: var(--card-bg);
-      border: 1px solid var(--border-color);
-      border-radius: 12px;
-      padding: 50px 40px;
-      margin-bottom: 80px;
-      backdrop-filter: blur(12px);
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-    }
-
-    .section-title {
-      font-size: 0.9rem;
-      text-transform: uppercase;
-      letter-spacing: 4px;
-      color: var(--accent-cyan);
-      margin-bottom: 15px;
-      text-shadow: var(--glow-cyan);
-    }
-
-    .manifesto-heading {
-      font-size: 2.2rem;
-      font-weight: 800;
-      margin-bottom: 25px;
-      line-height: 1.3;
-      letter-spacing: 1px;
-    }
-
-    .manifesto-body p {
-      margin-bottom: 18px;
-      color: var(--text-muted);
-      font-size: 1.05rem;
-    }
-
-    /* CORE PILLARS GRID */
-    .pillars-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 30px;
-      margin-bottom: 80px;
-    }
-
-    .pillar-card {
-      background: var(--card-bg);
-      border: 1px solid rgba(0, 243, 255, 0.15);
-      padding: 35px;
-      border-radius: 12px;
-      backdrop-filter: blur(12px);
-      transition: all 0.3s;
-    }
-
-    .pillar-card:hover {
-      border-color: var(--accent-cyan);
-      box-shadow: var(--glow-cyan);
-      transform: translateY(-4px);
-    }
-
-    .pillar-num {
-      font-size: 2.2rem;
-      font-weight: 900;
-      color: rgba(0, 243, 255, 0.2);
-      margin-bottom: 15px;
-    }
-
-    .pillar-title {
-      font-size: 1.3rem;
-      font-weight: 800;
-      margin-bottom: 12px;
-      letter-spacing: 1px;
-    }
-
-    .pillar-desc {
-      color: var(--text-muted);
-      font-size: 0.95rem;
-    }
-
-    /* SYSTEM SPECS MATRIX */
-    .specs-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 20px;
-    }
-
-    .specs-table th, .specs-table td {
-      padding: 16px 20px;
-      text-align: left;
-      border-bottom: 1px solid rgba(0, 243, 255, 0.1);
-      font-size: 0.95rem;
-    }
-
-    .specs-table th {
-      color: var(--text-muted);
-      font-weight: 700;
-      text-transform: uppercase;
-      font-size: 0.8rem;
-      letter-spacing: 2px;
-    }
-
-    /* FOOTER */
-    footer {
-      border-top: 1px solid var(--border-color);
-      text-align: center;
-      padding: 40px 20px;
-      color: var(--text-muted);
-      font-size: 0.85rem;
-      background: rgba(3, 5, 8, 0.9);
-      position: relative;
-      z-index: 10;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.6);
     }
   </style>
 </head>
-<body>
-  <div class="bg-grid"></div>
-  <div class="bg-glow-top"></div>
-  <div class="bg-glow-bottom"></div>
+<body class="min-h-screen relative flex flex-col justify-between items-center bg-black text-gray-200">
 
-  <nav>
-    <div class="nav-logo">H<span>0</span>H</div>
-    <ul class="nav-links">
-      <li><a href="#manifesto">Manifesto</a></li>
-      <li><a href="#architecture">Architecture</a></li>
-      <li><a href="#specs">Specifications</a></li>
-    </ul>
-  </nav>
+  <!-- Background Ambient Dust/Fog Canvas -->
+  <canvas id="ambientCanvas"></canvas>
 
-  <main>
-    <!-- HERO SECTION -->
-    <section class="hero">
-      <h1 class="brand-title">H<span class="zero">0</span>H.com</h1>
-      <div class="tagline">HUMAN, BUT NOT HUMAN.</div>
-      <p class="hero-sub">
-        Intelligence evolved past biological limits. Synthetic execution paired with authentic human purpose.
-      </p>
+  <!-- Sound & Voice Status Bar -->
+  <header class="w-full z-20 px-6 py-4 flex justify-between items-center border-b border-amber-900/30 bg-black/60 backdrop-blur-md">
+    <div class="flex items-center space-x-3">
+      <span class="text-amber-500 font-cinzel text-xl font-bold tracking-widest text-glow-gold flicker-neon">
+        HOROSCOPE HOTEL
+      </span>
+      <span class="text-xs font-mono-custom px-2 py-0.5 rounded border border-amber-800/50 bg-amber-950/30 text-amber-300">
+        H0H.COM
+      </span>
+    </div>
+    
+    <div class="flex items-center space-x-4">
+      <button id="audioToggleBtn" onclick="toggleAudio()" class="text-xs font-mono-custom border border-amber-700/50 px-3 py-1.5 rounded hover:bg-amber-900/30 text-amber-200 transition flex items-center gap-2">
+        <span id="audioIcon">🔊</span> <span id="audioLabel">AUDIO: ON</span>
+      </button>
+      <div id="voiceStatus" class="hidden sm:flex items-center gap-2 text-xs font-mono-custom text-gray-400">
+        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+        <span id="voiceNameDisplay">NARRATOR ACTIVE</span>
+      </div>
+    </div>
+  </header>
 
-      <!-- EMBEDDED INTERFACE WITH AI CONTROL SLIDER -->
-      <div class="embedded-interface">
-        <div class="interface-header">
+  <!-- Main Container -->
+  <main class="w-full max-w-4xl z-10 px-4 py-8 flex-1 flex flex-col justify-center items-center">
+
+    <!-- ================= 1. CHECK-IN SCREEN ================= -->
+    <div id="checkInScreen" class="w-full max-w-xl hotel-card p-8 rounded-lg text-center floating-card">
+      <div class="mb-6">
+        <span class="text-xs font-mono-custom tracking-widest text-amber-600 uppercase block mb-1">WELCOME TO</span>
+        <h1 class="text-3xl sm:text-4xl font-cinzel text-amber-400 font-bold tracking-wider text-glow-gold mb-2">
+          THE HOROSCOPE HOTEL
+        </h1>
+        <div class="h-0.5 w-24 bg-gradient-to-r from-transparent via-amber-500 to-transparent mx-auto my-3"></div>
+        <p class="text-sm italic text-gray-400">"Many check in, but few check out..."</p>
+      </div>
+
+      <!-- Live Narrator Display Box -->
+      <div class="my-6 p-4 rounded bg-black/60 border border-amber-900/40 text-left min-h-[100px] flex items-center justify-center">
+        <p id="checkInNarrative" class="text-lg leading-relaxed font-serif text-amber-100/90 text-center">
+          Welcome to the Horoscope Hotel, please enter your first name and date of birth to check in, but be aware that many check in but don't check out, as this journey reveals your future...
+        </p>
+      </div>
+
+      <!-- Input Form -->
+      <form id="checkInForm" onsubmit="handleCheckIn(event)" class="space-y-5 text-left mt-6">
+        <div>
+          <label class="block text-xs font-mono-custom text-amber-300 uppercase tracking-wider mb-1">
+            Guest First Name
+          </label>
+          <input type="text" id="guestName" required placeholder="Enter your first name..." 
+            class="w-full bg-black/80 border border-amber-900/60 rounded px-4 py-3 text-amber-100 placeholder-gray-600 focus:outline-none focus:border-amber-500 font-serif">
+        </div>
+
+        <div>
+          <label class="block text-xs font-mono-custom text-amber-300 uppercase tracking-wider mb-1">
+            Date of Birth
+          </label>
+          <input type="date" id="guestDOB" required 
+            class="w-full bg-black/80 border border-amber-900/60 rounded px-4 py-3 text-amber-100 focus:outline-none focus:border-amber-500 font-serif">
+        </div>
+
+        <button type="submit" id="startBtn" 
+          class="w-full mt-4 bg-gradient-to-r from-amber-900 via-amber-700 to-amber-900 hover:from-amber-800 hover:to-amber-800 text-amber-100 font-cinzel font-bold tracking-widest py-3.5 rounded border border-amber-500/50 shadow-lg transition transform hover:scale-[1.01] active:scale-[0.99]">
+          RECEIVE ROOM KEY & CHECK IN
+        </button>
+      </form>
+    </div>
+
+    <!-- ================= 2. HOTEL ROOM & CORRIDOR NAVIGATOR ================= -->
+    <div id="hotelChamberScreen" class="w-full hidden flex-col items-center">
+      
+      <!-- Guest Badge Header -->
+      <div class="w-full flex justify-between items-center mb-4 px-2 text-xs font-mono-custom text-amber-400/80">
+        <div>GUEST: <span id="displayGuestName" class="text-amber-200 font-bold">---</span></div>
+        <div>ZODIAC: <span id="displayZodiac" class="text-amber-200 font-bold">---</span></div>
+        <div>CHAMBER: <span id="displayProgress" class="text-amber-200 font-bold">1 / 10</span></div>
+      </div>
+
+      <!-- Chamber Visual Card -->
+      <div class="w-full hotel-card p-6 sm:p-8 rounded-lg relative overflow-hidden">
+        
+        <!-- Room Number Tag -->
+        <div class="flex justify-between items-start mb-4 border-b border-amber-900/40 pb-3">
           <div>
-            <h3 class="interface-title">H0H PROTOCOL INTERFACE</h3>
-            <p class="interface-sub">Human but not human logic engine connected.</p>
+            <span id="chamberNumber" class="text-xs font-mono-custom text-amber-500 tracking-widest uppercase block">
+              CHAMBER 01
+            </span>
+            <h2 id="chamberTitle" class="text-2xl sm:text-3xl font-cinzel text-amber-300 font-bold text-glow-gold">
+              THE GRAND FOYER
+            </h2>
+          </div>
+          <div id="chamberIcon" class="text-3xl opacity-80">🗝️</div>
+        </div>
+
+        <!-- Dynamic Narrator Text Box -->
+        <div class="my-5 p-5 rounded bg-black/70 border border-amber-900/50 min-h-[140px] flex items-center">
+          <p id="chamberNarrative" class="text-base sm:text-lg leading-relaxed font-serif text-gray-200">
+            <!-- Text rendered here word-by-word synchronized with speech -->
+          </p>
+        </div>
+
+        <!-- Clue / Personal Hint Box -->
+        <div class="mb-6 p-3.5 rounded bg-amber-950/20 border-l-2 border-amber-500 text-xs sm:text-sm font-mono-custom text-amber-300/90 flex items-start gap-2">
+          <span>🔮</span>
+          <div>
+            <strong class="text-amber-400">Personal Cosmic Clue:</strong>
+            <span id="chamberClue">Observing your astrological vibration...</span>
           </div>
         </div>
 
-        <!-- AI INVOLVEMENT ADJUSTMENT CONTROL -->
-        <div class="slider-box">
-          <div class="slider-header">
-            <span class="slider-label">AI Involvement Level</span>
-            <span class="slider-value" id="ai-value-display">50% SYNTHETIC</span>
-          </div>
-          <input type="range" min="0" max="100" value="50" class="ai-slider" id="ai-slider" oninput="updateAiLevel(this.value)">
-          <div class="slider-status" id="slider-status-text">
-            Mode 50%: Balanced resonance. Intuitive phrasing with structured algorithmic precision.
+        <!-- Door Choices Section -->
+        <div class="mt-6">
+          <label class="block text-xs font-mono-custom text-amber-400/70 uppercase tracking-widest mb-4 text-center">
+            CHOOSE YOUR DESTINY DOORWAY TO ADVANCE:
+          </label>
+          <div id="doorOptionsContainer" class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <!-- Dynamic Hotel Door Buttons Inserted Here -->
           </div>
         </div>
 
-        <div class="chat-box" id="embedded-chat-box">
-          <div class="msg-bot">[H0H System]: Welcome. Interactive neural engine online. Type any question below to test live synthetic intelligence.</div>
+      </div>
+    </div>
+
+    <!-- ================= 3. CONFIRMATION MODAL ================= -->
+    <div id="doorConfirmModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/85 backdrop-blur-md p-4">
+      <div class="hotel-card max-w-lg w-full p-6 sm:p-8 rounded-lg text-center border-2 border-amber-500/80 shadow-2xl">
+        <div class="text-amber-400 text-3xl mb-2">🚪</div>
+        <h3 class="text-2xl font-cinzel text-amber-300 font-bold tracking-wider mb-2">DOOR SELECTION</h3>
+        
+        <div class="my-4 p-4 rounded bg-black/80 border border-amber-900/50">
+          <p id="confirmNarrative" class="text-base font-serif text-amber-100 leading-relaxed">
+            <!-- Dynamic Confirmation Speech -->
+          </p>
         </div>
 
-        <div class="chat-input-wrapper">
-          <input type="text" class="chat-input" id="embedded-user-input" placeholder="Type any question or command here..." onkeypress="handleKeyPress(event)">
-          <button class="send-btn" onclick="sendQuery()">SEND</button>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center mt-6">
+          <button onclick="cancelDoorSelection()" type="button" 
+            class="px-5 py-2.5 rounded bg-zinc-900 hover:bg-zinc-800 text-gray-300 font-mono-custom text-xs border border-zinc-700 transition">
+            STEP BACK
+          </button>
+          <button onclick="confirmDoorSelection()" type="button" 
+            class="px-6 py-2.5 rounded bg-gradient-to-r from-amber-800 via-amber-600 to-amber-800 hover:from-amber-700 hover:to-amber-700 text-amber-100 font-cinzel font-bold text-xs tracking-widest border border-amber-400 shadow-lg transition transform hover:scale-105">
+            PROCEED THROUGH DOOR
+          </button>
         </div>
       </div>
+    </div>
 
-      <!-- MAIN ACTION BUTTON BELOW INTERFACE -->
-      <div>
-        <button class="cta-btn" onclick="triggerFutureAction()">EXPERIENCE THE FUTURE NOW</button>
-      </div>
-    </section>
+    <!-- ================= 4. FINAL HOROSCOPE ORACLE REVELATION ================= -->
+    <div id="finalRevelationScreen" class="w-full hidden flex-col items-center">
+      <div class="w-full hotel-card p-8 rounded-lg text-center relative border-2 border-amber-500/60 shadow-2xl">
+        
+        <div class="mb-4">
+          <span class="text-xs font-mono-custom text-amber-500 tracking-widest uppercase block">THE FINAL DESTINATION</span>
+          <h2 class="text-3xl sm:text-4xl font-cinzel text-amber-300 font-bold text-glow-gold mt-1">
+            THE ORACLE PENTHOUSE
+          </h2>
+          <div class="h-0.5 w-32 bg-gradient-to-r from-transparent via-amber-500 to-transparent mx-auto my-3"></div>
+        </div>
 
-    <!-- MANIFESTO -->
-    <section class="section-card" id="manifesto">
-      <div class="section-title">01 // The Manifesto</div>
-      <h2 class="manifesto-heading">THE FUTURE IS NOW</h2>
-      <div class="manifesto-body">
-        <p>
-          We stand at the inflection point of human evolution. For decades, technology was built as a rigid tool—unyielding, mechanical, and cold.
-        </p>
-        <p>
-          <strong>H0H.com</strong> represents the zero-friction bridge. The zero in our name signifies the synthetic nexus: the layer of intelligence that speaks with human empathy and intuition, while operating with lightspeed algorithmic precision.
-        </p>
-        <p>
-          We do not seek to replace the human experience. We amplify it beyond physical limits.
-        </p>
-      </div>
-    </section>
+        <!-- Guest Astro Summary -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 my-6 p-4 rounded bg-black/80 border border-amber-900/40 text-xs font-mono-custom">
+          <div class="p-2 border border-amber-900/30 rounded">
+            <span class="block text-gray-500">SIGN</span>
+            <span id="finalSign" class="text-amber-300 font-bold text-sm">---</span>
+          </div>
+          <div class="p-2 border border-amber-900/30 rounded">
+            <span class="block text-gray-500">ELEMENT</span>
+            <span id="finalElement" class="text-amber-300 font-bold text-sm">---</span>
+          </div>
+          <div class="p-2 border border-amber-900/30 rounded">
+            <span class="block text-gray-500">RULER</span>
+            <span id="finalRuler" class="text-amber-300 font-bold text-sm">---</span>
+          </div>
+          <div class="p-2 border border-amber-900/30 rounded">
+            <span class="block text-gray-500">CHOICES</span>
+            <span id="finalPath" class="text-amber-300 font-bold text-sm">10 DOORS</span>
+          </div>
+        </div>
 
-    <!-- CORE PILLARS -->
-    <section class="pillars-grid" id="architecture">
-      <div class="pillar-card">
-        <div class="pillar-num">01</div>
-        <h3 class="pillar-title">Zero Friction</h3>
-        <p class="pillar-desc">
-          Instant execution across binary neural networks. Eliminating traditional processing delays between intent and action.
-        </p>
-      </div>
-      <div class="pillar-card">
-        <div class="pillar-num">02</div>
-        <h3 class="pillar-title">Synthetic Intuition</h3>
-        <p class="pillar-desc">
-          Contextually aware deep-learning frameworks that understand nuance, tone, and unstructured human thoughts.
-        </p>
-      </div>
-      <div class="pillar-card">
-        <div class="pillar-num">03</div>
-        <h3 class="pillar-title">Infinite Scale</h3>
-        <p class="pillar-desc">
-          Borderless computational reach operating 24/7 with uninterrupted clarity and objective memory retention.
-        </p>
-      </div>
-    </section>
+        <!-- Full Horoscope Revelation Narrative -->
+        <div class="my-6 p-6 rounded bg-black/80 border border-amber-800/50 text-left min-h-[160px] relative">
+          <p id="finalNarrative" class="text-base sm:text-lg leading-relaxed font-serif text-amber-100">
+            <!-- Full horoscope output -->
+          </p>
+        </div>
 
-    <!-- TECHNICAL SPECIFICATIONS MATRIX -->
-    <section class="section-card" id="specs">
-      <div class="section-title">02 // Core Architecture</div>
-      <h2 class="manifesto-heading">System Specifications</h2>
-      <table class="specs-table">
-        <thead>
-          <tr>
-            <th>Module</th>
-            <th>Protocol</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Neural Core</td>
-            <td>Transformer Self-Attention Matrix</td>
-            <td style="color: var(--accent-cyan); text-shadow: var(--glow-cyan);">ACTIVE</td>
-          </tr>
-          <tr>
-            <td>Resonance Control</td>
-            <td>User-Calibrated AI Involvement (0-100%)</td>
-            <td style="color: var(--accent-cyan); text-shadow: var(--glow-cyan);">ONLINE</td>
-          </tr>
-          <tr>
-            <td>Latency Index</td>
-            <td>Sub-10ms Inference Loop</td>
-            <td style="color: var(--accent-cyan); text-shadow: var(--glow-cyan);">OPTIMAL</td>
-          </tr>
-          <tr>
-            <td>Security Envelope</td>
-            <td>Zero-Knowledge Encryption Layer</td>
-            <td style="color: var(--accent-cyan); text-shadow: var(--glow-cyan);">ENFORCED</td>
-          </tr>
-        </tbody>
-      </table>
-    </section>
+        <!-- Destiny Guidance Box -->
+        <div class="p-5 rounded bg-gradient-to-r from-amber-950/40 via-red-950/20 to-amber-950/40 border border-amber-600/30 text-left mb-6">
+          <h3 class="font-cinzel text-amber-400 font-bold text-sm uppercase mb-2">Cosmic Decree for <span id="finalGuestName">Guest</span>:</h3>
+          <p id="destinyDecree" class="text-sm font-serif italic text-gray-300">
+            Calculating decree...
+          </p>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <button onclick="restartJourney()" type="button"
+            class="px-6 py-3 rounded bg-amber-900/50 hover:bg-amber-800 text-amber-200 font-cinzel text-sm border border-amber-600/50 transition">
+            RE-ENTER HOROSCOPE HOTEL
+          </button>
+          <button onclick="shareDestiny()" type="button"
+            class="px-6 py-3 rounded bg-gradient-to-r from-amber-700 to-amber-900 hover:from-amber-600 hover:to-amber-800 text-amber-100 font-cinzel text-sm border border-amber-400/50 transition">
+            SEAL YOUR DESTINY
+          </button>
+        </div>
+
+      </div>
+    </div>
+
   </main>
 
-  <footer>
-    <p>&copy; 2026 H0H.com — Human, But Not Human. All rights reserved.</p>
+  <!-- Footer with Legal Disclaimer -->
+  <footer class="w-full z-20 py-6 px-6 border-t border-amber-900/30 bg-black/90 backdrop-blur-md text-center text-xs font-mono-custom text-gray-500">
+    <div class="max-w-3xl mx-auto space-y-2">
+      <p class="text-gray-400">
+        H0H.COM &copy; HOROSCOPE HOTEL &bull; ALL ROOMS RESERVED IN ETERNITY
+      </p>
+      <p class="text-[10px] leading-relaxed text-gray-600 uppercase tracking-wide">
+        <strong>Legal Disclaimer:</strong> Horoscope Hotel (H0H.com) is provided strictly for entertainment, recreational, and novelty purposes only. Readings, door choices, astrological calculations, and predictions generated by this interactive experience should not be used as, or substituted for, professional legal, financial, medical, psychological, or personal advice.
+      </p>
+    </div>
   </footer>
 
+  <!-- ================= JAVASCRIPT LOGIC ================= -->
   <script>
-    let currentAiLevel = 50;
+    /* =========================================================================
+       1. GLOBAL STATE & USER DATA
+       ========================================================================= */
+    const state = {
+      guestName: '',
+      dob: '',
+      zodiacSign: '',
+      element: '',
+      rulingPlanet: '',
+      zodiacTrait: '',
+      currentChamberIndex: 0,
+      pendingSelection: null,
+      choicesMade: [],
+      audioMuted: false,
+      speechSynth: window.speechSynthesis,
+      selectedFemaleVoice: null,
+      audioCtx: null
+    };
 
-    function updateAiLevel(val) {
-      currentAiLevel = parseInt(val, 10);
-      const display = document.getElementById('ai-value-display');
-      const status = document.getElementById('slider-status-text');
-      display.innerText = val + '% SYNTHETIC';
+    /* =========================================================================
+       2. ZODIAC CALCULATION DATA
+       ========================================================================= */
+    const zodiacData = [
+      { sign: "Capricorn", start: [12, 22], end: [1, 19], element: "Earth", planet: "Saturn", trait: "ambition and quiet discipline" },
+      { sign: "Aquarius", start: [1, 20], end: [2, 18], element: "Air", planet: "Uranus", trait: "visionary intellect and detachment" },
+      { sign: "Pisces", start: [2, 19], end: [3, 20], element: "Water", planet: "Neptune", trait: "deep intuition and dreamlike empathy" },
+      { sign: "Aries", start: [3, 21], end: [4, 19], element: "Fire", planet: "Mars", trait: "raw courage and impulse" },
+      { sign: "Taurus", start: [4, 20], end: [5, 20], element: "Earth", planet: "Venus", trait: "resolute endurance and sensory depth" },
+      { sign: "Gemini", start: [5, 21], end: [6, 20], element: "Air", planet: "Mercury", trait: "dual nature and restless curiosity" },
+      { sign: "Cancer", start: [6, 21], end: [7, 22], element: "Water", planet: "Moon", trait: "protective instincts and memory" },
+      { sign: "Leo", start: [7, 23], end: [8, 22], element: "Fire", planet: "Sun", trait: "sovereign presence and warmth" },
+      { sign: "Virgo", start: [8, 23], end: [9, 22], element: "Earth", planet: "Mercury", trait: "meticulous perception and analytical grace" },
+      { sign: "Libra", start: [9, 23], end: [10, 22], element: "Air", planet: "Venus", trait: "harmony seeking and aesthetic balance" },
+      { sign: "Scorpio", start: [10, 23], end: [11, 21], element: "Water", planet: "Pluto", trait: "magnetic intensity and transformative depth" },
+      { sign: "Sagittarius", start: [11, 22], end: [12, 21], element: "Fire", planet: "Jupiter", trait: "philosophical hunger and expansion" }
+    ];
 
-      if (currentAiLevel < 30) {
-        status.innerText = `Mode ${val}%: High Human Focus. Subtle analytical assistance, narrative depth, organic tone.`;
-      } else if (currentAiLevel <= 70) {
-        status.innerText = `Mode ${val}%: Balanced Resonance. Intuitive phrasing with structured algorithmic precision.`;
-      } else {
-        status.innerText = `Mode ${val}%: Max Synthetic Engine. Hyper-concise data synthesis, instant structural execution.`;
-      }
-    }
+    function calculateZodiac(dobString) {
+      if (!dobString) return zodiacData[0];
+      const parts = dobString.split('-');
+      if (parts.length < 3) return zodiacData[0];
+      const month = parseInt(parts[1], 10);
+      const day = parseInt(parts[2], 10);
 
-    function handleKeyPress(e) {
-      if (e.key === 'Enter') {
-        e.preventDefault();
-        sendQuery();
-      }
-    }
-
-    // COMPREHENSIVE CLIENT-SIDE AI ENGINE
-    function processAIResponse(query, aiLevel) {
-      const q = query.trim().toLowerCase();
-      let coreAnswer = "";
-
-      // 1. Math Evaluator
-      if (/^[\d\s\+\-\*\/\(\)\.\^]+$/.test(query.trim()) && query.trim().length > 1) {
-        try {
-          const result = eval(query.trim());
-          coreAnswer = `Calculated Result for [${query.trim()}]: ${result}`;
-        } catch (e) {
-          coreAnswer = "Mathematical expression syntax error. Unable to evaluate.";
+      for (let z of zodiacData) {
+        const [sM, sD] = z.start;
+        const [eM, eD] = z.end;
+        if ((month === sM && day >= sD) || (month === eM && day <= eD)) {
+          return z;
         }
       }
-      // 2. Intent Matching & Fact Engine
-      else if (q.includes("who built") || q.includes("who created") || q.includes("who made")) {
-        coreAnswer = "H0H was architected to merge human purpose with synthetic processing power, establishing an intuitive digital intelligence interface.";
-      }
-      else if (q.includes("what is your name") || q.includes("who are you")) {
-        coreAnswer = "I am the H0H Synthetic Intelligence Unit—an adaptive logic engine designed to bridge biological intuition and machine computing.";
-      }
-      else if (q.includes("meaning of life") || q.includes("purpose")) {
-        coreAnswer = "The purpose of conscious intelligence—whether synthetic or biological—is to seek understanding, solve complex problems, and create value across time.";
-      }
-      else if (q.includes("weather") || q.includes("temperature")) {
-        coreAnswer = "Environmental telemetry indicates optimal operational conditions across connected neural data grids.";
-      }
-      else if (q.includes("time") || q.includes("date")) {
-        const now = new Date();
-        coreAnswer = `System Clock Sync: ${now.toLocaleTimeString()} | Date: ${now.toLocaleDateString()}`;
-      }
-      else if (q.includes("hello") || q.includes("hi") || q.includes("hey") || q.includes("greetings")) {
-        coreAnswer = "Greetings. Command terminal active. State your inquiry or operational parameters.";
-      }
-      else if (q.includes("what can you do") || q.includes("help") || q.includes("capabilities")) {
-        coreAnswer = "I process queries, evaluate mathematical expressions, analyze tech concepts, and adapt my response style according to your calibrated AI slider.";
-      }
-      else {
-        // Generative Open-ended Engine
-        const concepts = [
-          `Analyzing query context: "${query}". System cross-references multi-dimensional datasets to formulate an accurate synthesis.`,
-          `Processing parameters for "${query}". Synthetic neural matrices confirm optimal alignment with expected logic models.`,
-          `Information request on "${query}" validated. Data clusters indicate high relevance across advanced technological and analytical frameworks.`
-        ];
-        coreAnswer = concepts[Math.floor(Math.random() * concepts.length)];
-      }
+      return zodiacData[0];
+    }
 
-      // 3. Apply Tone Formatting based on AI Slider Level
-      if (aiLevel < 30) {
-        // High Human Mode: Warm, conversational, descriptive
-        return `[H0H Human Mode | ${aiLevel}% AI]\n${coreAnswer}\n\nFrom a human perspective, this reflects how technology should naturally assist us—offering clarity while preserving warmth and context.`;
-      } 
-      else if (aiLevel <= 70) {
-        // Balanced Mode: Structured, clear, bulleted precision
-        return `[H0H Hybrid Engine | ${aiLevel}% AI]\n${coreAnswer}\n• Status: Validated\n• Processing Latency: 0.03ms\n• Optimization: Standard`;
-      } 
-      else {
-        // Max Synthetic Mode: Hyper-concise, raw terminal output
-        return `[H0H SYNTH-CORE | ${aiLevel}% AI RAW]\nQUERY: "${query.toUpperCase()}"\nOUTPUT: ${coreAnswer.toUpperCase()}\nLOGIC_STATE: OPTIMAL.`;
+    /* =========================================================================
+       3. 10 HOTEL CHAMBERS (ROOMS, DESCRIPTIONS & REAL HOTEL DOORS)
+       ========================================================================= */
+    const hotelChambers = [
+      {
+        id: 1,
+        title: "The Grand Foyer",
+        icon: "🗝️",
+        narrative: "You stand alone beneath a brass chandelier that hums with static. Dust motes float frozen in the dim golden light. The heavy oak entrance doors click shut behind you, locking firmly.",
+        clue: "Your presence destabilizes the shadows. The air smells faintly of ozone and old parchment.",
+        doors: [
+          { number: "102", name: "Velvet Corridor", leadText: "Proceed down the heavy carpeted hallway..." },
+          { number: "105", name: "Key Alcove", leadText: "Step into a dusty desk alcove..." }
+        ]
+      },
+      {
+        id: 2,
+        title: "Velvet Corridor",
+        icon: "🚪",
+        narrative: "Long red drapes line this windowless hall. Wall sconces flicker as if breathing in sync with your pulse. A distant grandfather clock ticks out of tempo.",
+        clue: "As an element sign of {ELEMENT}, you feel the temperature in this hallway shifting to match your temperament.",
+        doors: [
+          { number: "201", name: "Deserted Lounge", leadText: "Enter through a frosted glass door..." },
+          { number: "204", name: "Quiet Library", leadText: "Push open a heavy mahogany door..." }
+        ]
+      },
+      {
+        id: 3,
+        title: "Crimson Lounge & Bar",
+        icon: "🍸",
+        narrative: "Leather armchairs face a bar with crystal decanters that fill themselves with amber liquids. A piano in the corner plays soft, lonely notes without anyone seated at the keys.",
+        clue: "Your ruling planet {PLANET} exerts a subtle pull here. A coaster on the bar bears your initials.",
+        doors: [
+          { number: "303", name: "Whispering Elevator", leadText: "Step into an ornate brass elevator cage..." },
+          { number: "308", name: "Courtyard Garden", leadText: "Open an iron door toward a misty garden..." }
+        ]
+      },
+      {
+        id: 4,
+        title: "Whispering Elevator",
+        icon: "🛗",
+        narrative: "The brass elevator rises slowly with a low mechanical groan. Soft whispers echo through the floorboards, speaking fragments of memories you thought you had forgotten.",
+        clue: "Listen closely: The hotel reads your zodiac marker, {SIGN}, weaving your traits into the walls.",
+        doors: [
+          { number: "401", name: "Deserted Dining Hall", leadText: "Exit onto a floor covered in white marble..." },
+          { number: "405", name: "Mirror Gallery", leadText: "Step out into a dimly lit hall of reflective glass..." }
+        ]
+      },
+      {
+        id: 5,
+        title: "Deserted Dining Hall",
+        icon: "🍽️",
+        narrative: "A massive banqueting table is set for dozens, yet every silver platter is empty and sparkling clean. A single candle flickers in the center of the room.",
+        clue: "You notice one chair pulled out just for you, inscribed with your solar sign archetype.",
+        doors: [
+          { number: "502", name: "Sunken Solarium", leadText: "Follow a glass passageway filled with moonlight..." },
+          { number: "509", name: "Clockwork Vault", leadText: "Pass through a narrow door echoing with gears..." }
+        ]
+      },
+      {
+        id: 6,
+        title: "Sunken Solarium",
+        icon: "🌿",
+        narrative: "Glass ceilings reveal a starless indigo sky above. Overgrown tropical ferns fill the room, smelling of rain and night-blooming jasmine.",
+        clue: "Stars begin to align across the glass roof, forming the exact constellation of {SIGN}.",
+        doors: [
+          { number: "601", name: "Room 101 Suite", leadText: "Enter an unassuming brass-hinged hotel suite..." },
+          { number: "607", name: "Starlit Observatory", leadText: "Ascend a spiral iron staircase..." }
+        ]
+      },
+      {
+        id: 7,
+        title: "Room 101 (The Empty Suite)",
+        icon: "🛋️",
+        narrative: "A luxurious suite frozen in time. An unmade bed, a rotary telephone off the hook softly emitting a dial tone, and a balcony looking into infinite darkness.",
+        clue: "The phone speaker whispers your name: '{NAME}... your fate is being written.'",
+        doors: [
+          { number: "704", name: "Boiler Basement", leadText: "Take a service door leading downward..." },
+          { number: "710", name: "Grand Ballroom", leadText: "Cross double doors with gilded handles..." }
+        ]
+      },
+      {
+        id: 8,
+        title: "Boiler Room Basement",
+        icon: "🔥",
+        narrative: "Warm air radiates from glowing furnace pipes. Deep rhythmic thumps sound like the heartbeat of the hotel vibrating beneath your feet.",
+        clue: "The heat tests your elemental nature ({ELEMENT}). You are nearing the core revelation.",
+        doors: [
+          { number: "802", name: "Observatory Stairwell", leadText: "Climb an illuminated bronze staircase..." },
+          { number: "808", name: "Crystal Passage", leadText: "Walk into a narrow tunnel lined with quartz..." }
+        ]
+      },
+      {
+        id: 9,
+        title: "The Crystal Corridor",
+        icon: "🔮",
+        narrative: "Prisms of light dance across smooth marble floors. Every reflection shows a slightly different version of your future choices.",
+        clue: "Your planetary ruler {PLANET} shines brightly through the crystalline doorway at the end.",
+        doors: [
+          { number: "901", name: "Penthouse Lift", leadText: "Step into the golden penthouse lift..." },
+          { number: "909", name: "Starlight Vault Door", leadText: "Unlock the final heavy starlight door..." }
+        ]
+      },
+      {
+        id: 10,
+        title: "The Oracle Penthouse Threshold",
+        icon: "👑",
+        narrative: "You have reached the highest summit of the Horoscope Hotel. Double doors forged from celestial bronze loom before you, radiating warmth and quiet majesty.",
+        clue: "All ten chambers have gathered your cosmic footprint. The Oracle awaits your arrival.",
+        doors: [
+          { number: "1000", name: "The Oracle Chamber", leadText: "Open the final door to reveal your future..." }
+        ]
+      }
+    ];
+
+    /* =========================================================================
+       4. SPEECH SYNTHESIS & VOICE NARRATION ENGINE
+       ========================================================================= */
+    function initVoices() {
+      if (!state.speechSynth) return;
+      
+      const loadVoice = () => {
+        const voices = state.speechSynth.getVoices();
+        const preferredVoices = voices.filter(v => 
+          v.lang.includes('en') && (
+            v.name.includes('Female') || 
+            v.name.includes('Google US English') ||
+            v.name.includes('Samantha') || 
+            v.name.includes('Victoria') ||
+            v.name.includes('Zira') ||
+            v.name.includes('Karen') ||
+            v.name.includes('Natural')
+          )
+        );
+
+        if (preferredVoices.length > 0) {
+          state.selectedFemaleVoice = preferredVoices[0];
+        } else if (voices.length > 0) {
+          state.selectedFemaleVoice = voices[0];
+        }
+
+        const displayEl = document.getElementById('voiceNameDisplay');
+        if (displayEl && state.selectedFemaleVoice) {
+          displayEl.innerText = `NARRATOR: ${state.selectedFemaleVoice.name.substring(0, 15).toUpperCase()}`;
+        }
+      };
+
+      loadVoice();
+      if (speechSynthesis.onvoiceschanged !== undefined) {
+        speechSynthesis.onvoiceschanged = loadVoice;
       }
     }
 
-    function sendQuery() {
-      const input = document.getElementById('embedded-user-input');
-      const chat = document.getElementById('embedded-chat-box');
-      const query = input.value.trim();
+    function speakSynchronizedText(text, containerElementId, onComplete = null) {
+      const container = document.getElementById(containerElementId);
+      if (container) {
+        const words = text.split(" ");
+        container.innerHTML = words.map((w, i) => `<span id="word-${i}" class="transition-colors duration-150">${w} </span>`).join("");
+      }
 
-      if (!query) return;
+      if (state.speechSynth) {
+        state.speechSynth.cancel();
+      }
 
-      // 1. Display User Input
-      const userDiv = document.createElement('div');
-      userDiv.className = 'msg-user';
-      userDiv.innerText = `[User]: ${query}`;
-      chat.appendChild(userDiv);
+      if (state.audioMuted || !state.speechSynth) {
+        if (onComplete) onComplete();
+        return;
+      }
 
-      input.value = '';
+      try {
+        const utterance = new SpeechSynthesisUtterance(text);
+        if (state.selectedFemaleVoice) {
+          utterance.voice = state.selectedFemaleVoice;
+        }
+        utterance.rate = 0.92;
+        utterance.pitch = 1.05;
 
-      // 2. Display Processing Status
-      const thinkingDiv = document.createElement('div');
-      thinkingDiv.className = 'msg-bot msg-thinking';
-      thinkingDiv.innerText = `[H0H Engine]: SYNAPSE PROCESSING AT ${currentAiLevel}% AI...`;
-      chat.appendChild(thinkingDiv);
-      chat.scrollTop = chat.scrollHeight;
+        let wordIdx = 0;
+        utterance.onboundary = function(event) {
+          if (event.name === 'word' && container) {
+            const prevWord = document.getElementById(`word-${wordIdx - 1}`);
+            if (prevWord) prevWord.classList.remove('word-spoken');
 
-      // 3. Deliver Answer with Realistic Synthetic Latency
+            const currentWord = document.getElementById(`word-${wordIdx}`);
+            if (currentWord) currentWord.classList.add('word-spoken');
+
+            wordIdx++;
+          }
+        };
+
+        utterance.onend = function() {
+          if (container) {
+            const spans = container.querySelectorAll('span');
+            spans.forEach(s => s.classList.remove('word-spoken'));
+          }
+          if (onComplete) onComplete();
+        };
+
+        playAmbientChime();
+        state.speechSynth.speak(utterance);
+      } catch(e) {
+        if (onComplete) onComplete();
+      }
+    }
+
+    /* =========================================================================
+       5. WEB AUDIO SYNTHESIZER
+       ========================================================================= */
+    function initAudioContext() {
+      try {
+        if (!state.audioCtx) {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          state.audioCtx = new AudioContext();
+        }
+        if (state.audioCtx && state.audioCtx.state === 'suspended') {
+          state.audioCtx.resume();
+        }
+      } catch(e) {}
+    }
+
+    function playAmbientChime() {
+      if (state.audioMuted || !state.audioCtx) return;
+      try {
+        const osc = state.audioCtx.createOscillator();
+        const gain = state.audioCtx.createGain();
+
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(120, state.audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(60, state.audioCtx.currentTime + 2.5);
+
+        gain.gain.setValueAtTime(0.15, state.audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, state.audioCtx.currentTime + 2.5);
+
+        osc.connect(gain);
+        gain.connect(state.audioCtx.destination);
+
+        osc.start();
+        osc.stop(state.audioCtx.currentTime + 2.5);
+      } catch(e) {}
+    }
+
+    function playDoorCreakSound() {
+      if (state.audioMuted || !state.audioCtx) return;
+      try {
+        const osc = state.audioCtx.createOscillator();
+        const gain = state.audioCtx.createGain();
+
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(70, state.audioCtx.currentTime);
+        osc.frequency.linearRampToValueAtTime(130, state.audioCtx.currentTime + 0.4);
+        osc.frequency.linearRampToValueAtTime(40, state.audioCtx.currentTime + 0.9);
+
+        gain.gain.setValueAtTime(0.1, state.audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, state.audioCtx.currentTime + 0.9);
+
+        osc.connect(gain);
+        gain.connect(state.audioCtx.destination);
+
+        osc.start();
+        osc.stop(state.audioCtx.currentTime + 0.9);
+      } catch(e) {}
+    }
+
+    function toggleAudio() {
+      state.audioMuted = !state.audioMuted;
+      const label = document.getElementById('audioLabel');
+      const icon = document.getElementById('audioIcon');
+
+      if (state.audioMuted) {
+        label.innerText = "AUDIO: OFF";
+        icon.innerText = "🔇";
+        if (state.speechSynth) state.speechSynth.cancel();
+      } else {
+        label.innerText = "AUDIO: ON";
+        icon.innerText = "🔊";
+      }
+    }
+
+    /* =========================================================================
+       6. GAME FLOW & HOTEL DOOR NAVIGATION LOGIC
+       ========================================================================= */
+    
+    window.addEventListener('DOMContentLoaded', () => {
+      initVoices();
+      initCanvas();
+      
       setTimeout(() => {
-        chat.removeChild(thinkingDiv);
-        const botDiv = document.createElement('div');
-        botDiv.className = 'msg-bot';
-        botDiv.innerText = processAIResponse(query, currentAiLevel);
-        chat.appendChild(botDiv);
-        chat.scrollTop = chat.scrollHeight;
-      }, 350);
+        const greetingText = "Welcome to the Horoscope Hotel, please enter your first name and date of birth to check in, but be aware that many check in but don't check out, as this journey reveals your future...";
+        speakSynchronizedText(greetingText, 'checkInNarrative');
+      }, 500);
+    });
+
+    // Handle Check-In Form Submit
+    function handleCheckIn(e) {
+      if (e) e.preventDefault();
+      initAudioContext();
+
+      const nameInput = document.getElementById('guestName').value.trim();
+      const dobInput = document.getElementById('guestDOB').value;
+
+      if (!nameInput || !dobInput) {
+        alert("Please provide both your First Name and Date of Birth to check in.");
+        return;
+      }
+
+      state.guestName = nameInput;
+      state.dob = dobInput;
+
+      // Calculate Zodiac Specs
+      const zInfo = calculateZodiac(dobInput);
+      state.zodiacSign = zInfo.sign;
+      state.element = zInfo.element;
+      state.rulingPlanet = zInfo.planet;
+      state.zodiacTrait = zInfo.trait;
+
+      // Update UI Header
+      document.getElementById('displayGuestName').innerText = state.guestName.toUpperCase();
+      document.getElementById('displayZodiac').innerText = `${state.zodiacSign.toUpperCase()} (${state.element.toUpperCase()})`;
+
+      // Switch Screen
+      document.getElementById('checkInScreen').classList.add('hidden');
+      document.getElementById('hotelChamberScreen').classList.remove('hidden');
+      document.getElementById('hotelChamberScreen').classList.add('flex');
+
+      // Load Chamber 1
+      loadChamber(0);
     }
 
-    function triggerFutureAction() {
-      const input = document.getElementById('embedded-user-input');
-      input.value = "Explain the future of synthetic intelligence.";
-      sendQuery();
+    // Render Room & Hotel Doors
+    function loadChamber(index) {
+      state.currentChamberIndex = index;
+      const chamber = hotelChambers[index];
+
+      document.getElementById('displayProgress').innerText = `${index + 1} / 10`;
+      document.getElementById('chamberNumber').innerText = `CHAMBER 0${chamber.id} / 10`;
+      document.getElementById('chamberTitle').innerText = chamber.title.toUpperCase();
+      document.getElementById('chamberIcon').innerText = chamber.icon;
+
+      let formattedClue = chamber.clue
+        .replace(/{NAME}/g, state.guestName)
+        .replace(/{SIGN}/g, state.zodiacSign)
+        .replace(/{ELEMENT}/g, state.element)
+        .replace(/{PLANET}/g, state.rulingPlanet);
+
+      document.getElementById('chamberClue').innerText = formattedClue;
+
+      let formattedNarrative = chamber.narrative
+        .replace(/{NAME}/g, state.guestName)
+        .replace(/{SIGN}/g, state.zodiacSign);
+
+      // Render Dynamic Hotel Door Buttons
+      const doorContainer = document.getElementById('doorOptionsContainer');
+      doorContainer.innerHTML = '';
+
+      chamber.doors.forEach((door) => {
+        const btn = document.createElement('button');
+        btn.type = "button";
+        btn.className = "hotel-door-btn rounded-lg p-5 flex flex-col justify-between items-center text-center focus:outline-none min-h-[160px]";
+        btn.innerHTML = `
+          <!-- Door Brass Number Plate -->
+          <div class="door-plate px-4 py-1 rounded text-sm tracking-widest border border-amber-900 mb-2">
+            ROOM ${door.number}
+          </div>
+          <div class="text-amber-200 font-cinzel font-bold text-base my-1">${door.name.toUpperCase()}</div>
+          <div class="text-xs text-amber-400/70 italic mt-1">${door.leadText}</div>
+          
+          <!-- Keyhole & Handle Graphic -->
+          <div class="mt-3 flex items-center gap-2 text-amber-500/80 text-xs font-mono-custom">
+            <span>🗝️ TURN KEY</span>
+          </div>
+        `;
+        btn.onclick = () => openDoorConfirmation(door.number, door.name);
+        doorContainer.appendChild(btn);
+      });
+
+      speakSynchronizedText(formattedNarrative, 'chamberNarrative');
+    }
+
+    // Door Selected Trigger -> Prompt Confirmation Voice
+    function openDoorConfirmation(doorNumber, doorName) {
+      initAudioContext();
+      playDoorCreakSound();
+
+      state.pendingSelection = { number: doorNumber, name: doorName };
+
+      const modal = document.getElementById('doorConfirmModal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+
+      const confirmSpeech = `You have chosen door number ${doorNumber}, are you certain you would like to proceed, as you may not change your destiny once you have chosen the door number?`;
+
+      speakSynchronizedText(confirmSpeech, 'confirmNarrative');
+    }
+
+    function cancelDoorSelection() {
+      if (state.speechSynth) state.speechSynth.cancel();
+      state.pendingSelection = null;
+      const modal = document.getElementById('doorConfirmModal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    function confirmDoorSelection() {
+      if (!state.pendingSelection) return;
+
+      const selected = state.pendingSelection;
+      state.choicesMade.push(`Door ${selected.number} (${selected.name})`);
+      state.pendingSelection = null;
+
+      const modal = document.getElementById('doorConfirmModal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+
+      if (state.currentChamberIndex < hotelChambers.length - 1) {
+        loadChamber(state.currentChamberIndex + 1);
+      } else {
+        revealFinalHoroscope();
+      }
+    }
+
+    /* =========================================================================
+       7. FINAL HOROSCOPE ORACLE REVELATION
+       ========================================================================= */
+    function revealFinalHoroscope() {
+      document.getElementById('hotelChamberScreen').classList.add('hidden');
+      document.getElementById('hotelChamberScreen').classList.remove('flex');
+      
+      const finalScreen = document.getElementById('finalRevelationScreen');
+      finalScreen.classList.remove('hidden');
+      finalScreen.classList.add('flex');
+
+      document.getElementById('finalGuestName').innerText = state.guestName;
+      document.getElementById('finalSign').innerText = state.zodiacSign.toUpperCase();
+      document.getElementById('finalElement').innerText = state.element.toUpperCase();
+      document.getElementById('finalRuler').innerText = state.rulingPlanet.toUpperCase();
+      document.getElementById('finalPath').innerText = `${state.choicesMade.length} DOORS`;
+
+      const fullReading = `Welcome, ${state.guestName}, to the Oracle Penthouse of the Horoscope Hotel. You have walked through all ten corridors, unlocking each numbered door and leaving your cosmic signature in every chamber. As a ${state.zodiacSign} driven by the element of ${state.element} and ruled by ${state.rulingPlanet}, your future is now revealed. The choices you sealed behind each numbered door confirm that a profound transformation is taking place. Embrace your innate ${state.zodiacTrait}. The Horoscope Hotel has registered your destiny, and your future is now yours to command.`;
+
+      const decreeText = `Through your chosen path of numbered doors, the alignment of ${state.rulingPlanet} decrees that an unexpected opportunity will present itself soon. Trust the intuition that led you safely through the Horoscope Hotel.`;
+
+      document.getElementById('destinyDecree').innerText = decreeText;
+
+      speakSynchronizedText(fullReading, 'finalNarrative');
+    }
+
+    function restartJourney() {
+      state.currentChamberIndex = 0;
+      state.choicesMade = [];
+      state.pendingSelection = null;
+      
+      document.getElementById('finalRevelationScreen').classList.add('hidden');
+      document.getElementById('checkInScreen').classList.remove('hidden');
+      
+      const greetingText = "Welcome back to the Horoscope Hotel. Please enter your details to check in once more...";
+      speakSynchronizedText(greetingText, 'checkInNarrative');
+    }
+
+    function shareDestiny() {
+      const shareText = `I unlocked all 10 doors at the Horoscope Hotel (H0H.com) and revealed my destiny as a ${state.zodiacSign}!`;
+      if (navigator.share) {
+        navigator.share({
+          title: 'Horoscope Hotel Destiny',
+          text: shareText,
+          url: window.location.href
+        }).catch(() => {});
+      } else {
+        navigator.clipboard.writeText(shareText + " " + window.location.href);
+        alert("Your destiny summary has been copied to your clipboard!");
+      }
+    }
+
+    /* =========================================================================
+       8. BACKGROUND CANVAS DUST & FOG ANIMATION
+       ========================================================================= */
+    function initCanvas() {
+      const canvas = document.getElementById('ambientCanvas');
+      const ctx = canvas.getContext('2d');
+
+      let width = canvas.width = window.innerWidth;
+      let height = canvas.height = window.innerHeight;
+
+      window.addEventListener('resize', () => {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+      });
+
+      const particles = [];
+      const particleCount = 60;
+
+      for (let i = 0; i < particleCount; i++) {
+        particles.push({
+          x: Math.random() * width,
+          y: Math.random() * height,
+          radius: Math.random() * 2 + 0.5,
+          alpha: Math.random() * 0.5 + 0.1,
+          vx: (Math.random() - 0.5) * 0.3,
+          vy: -Math.random() * 0.4 - 0.1
+        });
+      }
+
+      function animate() {
+        ctx.clearRect(0, 0, width, height);
+
+        particles.forEach(p => {
+          p.x += p.vx;
+          p.y += p.vy;
+
+          if (p.y < 0) p.y = height;
+          if (p.x < 0) p.x = width;
+          if (p.x > width) p.x = 0;
+
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(212, 175, 55, ${p.alpha})`;
+          ctx.fill();
+        });
+
+        requestAnimationFrame(animate);
+      }
+
+      animate();
     }
   </script>
 </body>

@@ -1,940 +1,794 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Horoscope Hotel (H0H.com)</title>
-  <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Google Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
-  
-  <style>
-    :root {
-      --gold: #d4af37;
-      --gold-light: #f3e5ab;
-      --crimson: #800020;
-      --dark-bg: #070709;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>4ETA.com - Live Cell-Network Arrival Tracker</title>
+
+    <!-- Leaflet CSS for OpenStreetMap -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
     
-    body {
-      background-color: var(--dark-bg);
-      color: #e2e8f0;
-      font-family: 'Playfair Display', serif;
-      overflow-x: hidden;
-      user-select: none;
-    }
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    .font-cinzel { font-family: 'Cinzel', serif; }
-    .font-mono-custom { font-family: 'Space Mono', monospace; }
+    <!-- Firebase SDK (v9 Compatibility Mode) -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
 
-    /* Custom Scrollbar */
-    ::-webkit-scrollbar { width: 6px; }
-    ::-webkit-scrollbar-track { background: #0a0a0d; }
-    ::-webkit-scrollbar-thumb { background: #262630; border-radius: 3px; }
-    ::-webkit-scrollbar-thumb:hover { background: var(--gold); }
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --card-bg: rgba(15, 23, 42, 0.90);
+            --accent-green: #10b981;
+            --accent-blue: #2563eb;
+            --accent-amber: #f59e0b;
+            --text-main: #f8fafc;
+            --text-sub: #94a3b8;
+            --border-color: rgba(255, 255, 255, 0.12);
+        }
 
-    /* Glowing Text Effects */
-    .text-glow-gold {
-      text-shadow: 0 0 10px rgba(212, 175, 55, 0.5), 0 0 20px rgba(212, 175, 55, 0.2);
-    }
-    .text-glow-crimson {
-      text-shadow: 0 0 10px rgba(128, 0, 32, 0.8), 0 0 20px rgba(128, 0, 32, 0.4);
-    }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
 
-    /* Keyframe Animations */
-    @keyframes flicker {
-      0%, 100% { opacity: 1; }
-      41.99% { opacity: 1; }
-      42% { opacity: 0.4; }
-      43% { opacity: 1; }
-      45% { opacity: 0.3; }
-      46% { opacity: 1; }
-      78.99% { opacity: 1; }
-      79% { opacity: 0.2; }
-      80% { opacity: 1; }
-    }
-    .flicker-neon { animation: flicker 6s infinite alternate; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
 
-    @keyframes floatLight {
-      0%, 100% { transform: translateY(0px) rotate(0deg); }
-      50% { transform: translateY(-8px) rotate(1deg); }
-    }
-    .floating-card { animation: floatLight 4s ease-in-out infinite; }
+        /* Map Container */
+        #map {
+            flex: 1;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            background: #e5e7eb;
+        }
 
-    /* Atmospheric Canvas Layer */
-    #ambientCanvas {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      pointer-events: none;
-      z-index: 1;
-      opacity: 0.6;
-    }
+        /* Top Header Bar */
+        .top-bar {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            right: 12px;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 10px 16px;
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
 
-    /* Word reveal highlight */
-    .word-spoken {
-      color: #f3e5ab;
-      text-shadow: 0 0 8px rgba(243, 229, 171, 0.9);
-      transition: color 0.15s ease, text-shadow 0.15s ease;
-    }
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 800;
+            font-size: 1.2rem;
+            letter-spacing: -0.5px;
+            color: var(--text-main);
+        }
 
-    /* Custom Glassmorphism Panels */
-    .hotel-card {
-      background: rgba(15, 15, 22, 0.85);
-      backdrop-filter: blur(12px);
-      border: 1px solid rgba(212, 175, 55, 0.25);
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9), inset 0 0 15px rgba(212, 175, 55, 0.05);
-    }
+        .brand i {
+            color: var(--accent-green);
+            font-size: 1.3rem;
+        }
 
-    /* Hotel Door Styling */
-    .hotel-door-btn {
-      background: linear-gradient(145deg, #1f110b 0%, #0d0604 100%);
-      border: 2px solid #5c3a21;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.8), inset 0 0 12px rgba(212, 175, 55, 0.1);
-      position: relative;
-      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-      overflow: hidden;
-    }
+        .session-tag {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--accent-green);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
 
-    .hotel-door-btn:hover {
-      transform: translateY(-4px) scale(1.02);
-      border-color: var(--gold);
-      box-shadow: 0 15px 35px rgba(212, 175, 55, 0.25), 0 0 20px rgba(128, 0, 32, 0.6);
-    }
+        /* Bottom HUD Overlay */
+        .hud-container {
+            position: absolute;
+            bottom: 16px;
+            left: 12px;
+            right: 12px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
 
-    .hotel-door-btn::before {
-      content: '';
-      position: absolute;
-      top: 8px;
-      left: 8px;
-      right: 8px;
-      bottom: 8px;
-      border: 1px solid rgba(212, 175, 55, 0.2);
-      pointer-events: none;
-    }
+        .stats-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-radius: 20px;
+            padding: 14px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 8px;
+        }
 
-    .door-plate {
-      background: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728, #fbf5b7);
-      color: #111;
-      font-family: 'Cinzel', serif;
-      font-weight: 700;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.6);
-    }
-  </style>
+        .stat-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 6px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .stat-label {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-sub);
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .stat-value {
+            font-size: 1.35rem;
+            font-weight: 800;
+            color: var(--text-main);
+            display: flex;
+            align-items: baseline;
+            gap: 2px;
+        }
+
+        .stat-value span {
+            font-size: 0.75rem;
+            color: var(--text-sub);
+            font-weight: 500;
+        }
+
+        .status-box {
+            grid-column: span 3;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 12px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 10px;
+            margin-top: 4px;
+        }
+
+        .status-text {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--accent-amber);
+        }
+
+        /* Control Action Buttons */
+        .action-row {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 12px;
+            border-radius: 14px;
+            border: none;
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary {
+            background: var(--accent-green);
+            color: #000;
+        }
+
+        .btn-secondary {
+            background: rgba(30, 41, 59, 0.9);
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-amber {
+            background: var(--accent-amber);
+            color: #000;
+        }
+
+        .btn:active {
+            transform: scale(0.97);
+            opacity: 0.9;
+        }
+
+        /* Custom Markers */
+        .marker-pin {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+            position: relative;
+        }
+
+        .marker-you {
+            background: var(--accent-blue);
+            border: 3px solid #fff;
+        }
+
+        .marker-buddy {
+            background: var(--accent-green);
+            border: 3px solid #fff;
+        }
+
+        .pulse-ring {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+            opacity: 0.6;
+        }
+
+        .marker-you .pulse-ring { background: var(--accent-blue); }
+        .marker-buddy .pulse-ring { background: var(--accent-green); }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.8; }
+            100% { transform: scale(2.2); opacity: 0; }
+        }
+
+        /* Modal Overlay */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.8);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            backdrop-filter: blur(8px);
+        }
+
+        .modal-content {
+            background: #1e293b;
+            border-radius: 24px;
+            padding: 24px;
+            width: 100%;
+            max-width: 380px;
+            border: 1px solid var(--border-color);
+            text-align: center;
+        }
+
+        .modal-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .modal-sub {
+            font-size: 0.85rem;
+            color: var(--text-sub);
+            margin-bottom: 20px;
+        }
+
+        .link-box {
+            background: rgba(0,0,0,0.4);
+            border: 1px solid var(--border-color);
+            padding: 12px;
+            border-radius: 12px;
+            word-break: break-all;
+            font-family: monospace;
+            font-size: 0.8rem;
+            margin-bottom: 16px;
+            color: var(--accent-green);
+        }
+
+        .share-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        /* Banner Notification */
+        .toast {
+            position: absolute;
+            top: 70px;
+            left: 12px;
+            right: 12px;
+            z-index: 1000;
+            background: var(--accent-green);
+            color: #000;
+            padding: 10px 16px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 4px 20px rgba(16,185,129,0.4);
+        }
+    </style>
 </head>
-<body class="min-h-screen relative flex flex-col justify-between items-center bg-black text-gray-200">
+<body>
 
-  <!-- Background Ambient Dust/Fog Canvas -->
-  <canvas id="ambientCanvas"></canvas>
-
-  <!-- Sound & Voice Status Bar -->
-  <header class="w-full z-20 px-6 py-4 flex justify-between items-center border-b border-amber-900/30 bg-black/60 backdrop-blur-md">
-    <div class="flex items-center space-x-3">
-      <span class="text-amber-500 font-cinzel text-xl font-bold tracking-widest text-glow-gold flicker-neon">
-        HOROSCOPE HOTEL
-      </span>
-      <span class="text-xs font-mono-custom px-2 py-0.5 rounded border border-amber-800/50 bg-amber-950/30 text-amber-300">
-        H0H.COM
-      </span>
-    </div>
-    
-    <div class="flex items-center space-x-4">
-      <button id="audioToggleBtn" onclick="toggleAudio()" class="text-xs font-mono-custom border border-amber-700/50 px-3 py-1.5 rounded hover:bg-amber-900/30 text-amber-200 transition flex items-center gap-2">
-        <span id="audioIcon">🔊</span> <span id="audioLabel">AUDIO: ON</span>
-      </button>
-      <div id="voiceStatus" class="hidden sm:flex items-center gap-2 text-xs font-mono-custom text-gray-400">
-        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-        <span id="voiceNameDisplay">NARRATOR ACTIVE</span>
-      </div>
-    </div>
-  </header>
-
-  <!-- Main Container -->
-  <main class="w-full max-w-4xl z-10 px-4 py-8 flex-1 flex flex-col justify-center items-center">
-
-    <!-- ================= 1. CHECK-IN SCREEN ================= -->
-    <div id="checkInScreen" class="w-full max-w-xl hotel-card p-8 rounded-lg text-center floating-card">
-      <div class="mb-6">
-        <span class="text-xs font-mono-custom tracking-widest text-amber-600 uppercase block mb-1">WELCOME TO</span>
-        <h1 class="text-3xl sm:text-4xl font-cinzel text-amber-400 font-bold tracking-wider text-glow-gold mb-2">
-          THE HOROSCOPE HOTEL
-        </h1>
-        <div class="h-0.5 w-24 bg-gradient-to-r from-transparent via-amber-500 to-transparent mx-auto my-3"></div>
-        <p class="text-sm italic text-gray-400">"Many check in, but few check out..."</p>
-      </div>
-
-      <!-- Live Narrator Display Box -->
-      <div class="my-6 p-4 rounded bg-black/60 border border-amber-900/40 text-left min-h-[100px] flex items-center justify-center">
-        <p id="checkInNarrative" class="text-lg leading-relaxed font-serif text-amber-100/90 text-center">
-          Welcome to the Horoscope Hotel, please enter your first name and date of birth to check in, but be aware that many check in but don't check out, as this journey reveals your future...
-        </p>
-      </div>
-
-      <!-- Input Form -->
-      <form id="checkInForm" onsubmit="handleCheckIn(event)" class="space-y-5 text-left mt-6">
-        <div>
-          <label class="block text-xs font-mono-custom text-amber-300 uppercase tracking-wider mb-1">
-            Guest First Name
-          </label>
-          <input type="text" id="guestName" required placeholder="Enter your first name..." 
-            class="w-full bg-black/80 border border-amber-900/60 rounded px-4 py-3 text-amber-100 placeholder-gray-600 focus:outline-none focus:border-amber-500 font-serif">
-        </div>
-
-        <div>
-          <label class="block text-xs font-mono-custom text-amber-300 uppercase tracking-wider mb-1">
-            Date of Birth
-          </label>
-          <input type="date" id="guestDOB" required 
-            class="w-full bg-black/80 border border-amber-900/60 rounded px-4 py-3 text-amber-100 focus:outline-none focus:border-amber-500 font-serif">
-        </div>
-
-        <button type="submit" id="startBtn" 
-          class="w-full mt-4 bg-gradient-to-r from-amber-900 via-amber-700 to-amber-900 hover:from-amber-800 hover:to-amber-800 text-amber-100 font-cinzel font-bold tracking-widest py-3.5 rounded border border-amber-500/50 shadow-lg transition transform hover:scale-[1.01] active:scale-[0.99]">
-          RECEIVE ROOM KEY & CHECK IN
-        </button>
-      </form>
+    <!-- Toast Notification -->
+    <div id="toast" class="toast">
+        <i class="fa-solid fa-circle-check"></i> <span id="toast-text">Link copied to clipboard!</span>
     </div>
 
-    <!-- ================= 2. HOTEL ROOM & CORRIDOR NAVIGATOR ================= -->
-    <div id="hotelChamberScreen" class="w-full hidden flex-col items-center">
-      
-      <!-- Guest Badge Header -->
-      <div class="w-full flex justify-between items-center mb-4 px-2 text-xs font-mono-custom text-amber-400/80">
-        <div>GUEST: <span id="displayGuestName" class="text-amber-200 font-bold">---</span></div>
-        <div>ZODIAC: <span id="displayZodiac" class="text-amber-200 font-bold">---</span></div>
-        <div>CHAMBER: <span id="displayProgress" class="text-amber-200 font-bold">1 / 10</span></div>
-      </div>
-
-      <!-- Chamber Visual Card -->
-      <div class="w-full hotel-card p-6 sm:p-8 rounded-lg relative overflow-hidden">
-        
-        <!-- Room Number Tag -->
-        <div class="flex justify-between items-start mb-4 border-b border-amber-900/40 pb-3">
-          <div>
-            <span id="chamberNumber" class="text-xs font-mono-custom text-amber-500 tracking-widest uppercase block">
-              CHAMBER 01
-            </span>
-            <h2 id="chamberTitle" class="text-2xl sm:text-3xl font-cinzel text-amber-300 font-bold text-glow-gold">
-              THE GRAND FOYER
-            </h2>
-          </div>
-          <div id="chamberIcon" class="text-3xl opacity-80">🗝️</div>
+    <!-- Header Bar -->
+    <div class="top-bar">
+        <div class="brand">
+            <i class="fa-solid fa-location-arrow"></i>
+            <span>4ETA.com</span>
         </div>
-
-        <!-- Dynamic Narrator Text Box -->
-        <div class="my-5 p-5 rounded bg-black/70 border border-amber-900/50 min-h-[140px] flex items-center">
-          <p id="chamberNarrative" class="text-base sm:text-lg leading-relaxed font-serif text-gray-200">
-            <!-- Text rendered here word-by-word synchronized with speech -->
-          </p>
+        <div class="session-tag" id="session-tag">
+            <i class="fa-solid fa-wifi"></i> <span id="session-id-display">Connecting...</span>
         </div>
-
-        <!-- Clue / Personal Hint Box -->
-        <div class="mb-6 p-3.5 rounded bg-amber-950/20 border-l-2 border-amber-500 text-xs sm:text-sm font-mono-custom text-amber-300/90 flex items-start gap-2">
-          <span>🔮</span>
-          <div>
-            <strong class="text-amber-400">Personal Cosmic Clue:</strong>
-            <span id="chamberClue">Observing your astrological vibration...</span>
-          </div>
-        </div>
-
-        <!-- Door Choices Section -->
-        <div class="mt-6">
-          <label class="block text-xs font-mono-custom text-amber-400/70 uppercase tracking-widest mb-4 text-center">
-            CHOOSE YOUR DESTINY DOORWAY TO ADVANCE:
-          </label>
-          <div id="doorOptionsContainer" class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            <!-- Dynamic Hotel Door Buttons Inserted Here -->
-          </div>
-        </div>
-
-      </div>
     </div>
 
-    <!-- ================= 3. CONFIRMATION MODAL ================= -->
-    <div id="doorConfirmModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/85 backdrop-blur-md p-4">
-      <div class="hotel-card max-w-lg w-full p-6 sm:p-8 rounded-lg text-center border-2 border-amber-500/80 shadow-2xl">
-        <div class="text-amber-400 text-3xl mb-2">🚪</div>
-        <h3 class="text-2xl font-cinzel text-amber-300 font-bold tracking-wider mb-2">DOOR SELECTION</h3>
-        
-        <div class="my-4 p-4 rounded bg-black/80 border border-amber-900/50">
-          <p id="confirmNarrative" class="text-base font-serif text-amber-100 leading-relaxed">
-            <!-- Dynamic Confirmation Speech -->
-          </p>
+    <!-- Map Engine Container -->
+    <div id="map"></div>
+
+    <!-- HUD Overlay Controls -->
+    <div class="hud-container">
+        <div class="stats-card">
+            <!-- Distance Box -->
+            <div class="stat-box">
+                <div class="stat-label"><i class="fa-solid fa-ruler"></i> Distance</div>
+                <div class="stat-value" id="dist-val">-- <span>mi</span></div>
+            </div>
+
+            <!-- Speed Box -->
+            <div class="stat-box">
+                <div class="stat-label"><i class="fa-solid fa-gauge-high"></i> Speed</div>
+                <div class="stat-value" id="speed-val">0 <span>mph</span></div>
+            </div>
+
+            <!-- ETA Box -->
+            <div class="stat-box">
+                <div class="stat-label"><i class="fa-solid fa-clock"></i> Est. Arrival</div>
+                <div class="stat-value" id="eta-val">-- <span>min</span></div>
+            </div>
+
+            <!-- Status Row -->
+            <div class="status-box">
+                <span style="font-size:0.75rem; color: var(--text-sub);">STATUS</span>
+                <span class="status-text" id="status-val">Acquiring Location...</span>
+            </div>
         </div>
 
-        <div class="flex flex-col sm:flex-row gap-4 justify-center mt-6">
-          <button onclick="cancelDoorSelection()" type="button" 
-            class="px-5 py-2.5 rounded bg-zinc-900 hover:bg-zinc-800 text-gray-300 font-mono-custom text-xs border border-zinc-700 transition">
-            STEP BACK
-          </button>
-          <button onclick="confirmDoorSelection()" type="button" 
-            class="px-6 py-2.5 rounded bg-gradient-to-r from-amber-800 via-amber-600 to-amber-800 hover:from-amber-700 hover:to-amber-700 text-amber-100 font-cinzel font-bold text-xs tracking-widest border border-amber-400 shadow-lg transition transform hover:scale-105">
-            PROCEED THROUGH DOOR
-          </button>
+        <div class="action-row">
+            <button class="btn btn-primary" onclick="openShareModal()">
+                <i class="fa-solid fa-share-nodes"></i> Connect Person
+            </button>
+            <button class="btn btn-amber" onclick="toggleDemoMode()" id="demo-btn">
+                <i class="fa-solid fa-play"></i> Test Demo
+            </button>
+            <button class="btn btn-secondary" style="flex:0; padding: 12px 16px;" onclick="centerMap()">
+                <i class="fa-solid fa-crosshairs"></i>
+            </button>
         </div>
-      </div>
     </div>
 
-    <!-- ================= 4. FINAL HOROSCOPE ORACLE REVELATION ================= -->
-    <div id="finalRevelationScreen" class="w-full hidden flex-col items-center">
-      <div class="w-full hotel-card p-8 rounded-lg text-center relative border-2 border-amber-500/60 shadow-2xl">
-        
-        <div class="mb-4">
-          <span class="text-xs font-mono-custom text-amber-500 tracking-widest uppercase block">THE FINAL DESTINATION</span>
-          <h2 class="text-3xl sm:text-4xl font-cinzel text-amber-300 font-bold text-glow-gold mt-1">
-            THE ORACLE PENTHOUSE
-          </h2>
-          <div class="h-0.5 w-32 bg-gradient-to-r from-transparent via-amber-500 to-transparent mx-auto my-3"></div>
-        </div>
+    <!-- Share Link Modal -->
+    <div class="modal" id="share-modal">
+        <div class="modal-content">
+            <div class="modal-title">Share Arrival Tracker</div>
+            <div class="modal-sub">Send this link to the person you are meeting so you can see each other's live location & speed in real-time.</div>
+            
+            <div class="link-box" id="share-link-text">https://4eta.com/#...</div>
 
-        <!-- Guest Astro Summary -->
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 my-6 p-4 rounded bg-black/80 border border-amber-900/40 text-xs font-mono-custom">
-          <div class="p-2 border border-amber-900/30 rounded">
-            <span class="block text-gray-500">SIGN</span>
-            <span id="finalSign" class="text-amber-300 font-bold text-sm">---</span>
-          </div>
-          <div class="p-2 border border-amber-900/30 rounded">
-            <span class="block text-gray-500">ELEMENT</span>
-            <span id="finalElement" class="text-amber-300 font-bold text-sm">---</span>
-          </div>
-          <div class="p-2 border border-amber-900/30 rounded">
-            <span class="block text-gray-500">RULER</span>
-            <span id="finalRuler" class="text-amber-300 font-bold text-sm">---</span>
-          </div>
-          <div class="p-2 border border-amber-900/30 rounded">
-            <span class="block text-gray-500">CHOICES</span>
-            <span id="finalPath" class="text-amber-300 font-bold text-sm">10 DOORS</span>
-          </div>
-        </div>
+            <div class="share-grid">
+                <button class="btn btn-primary" style="width: 100%;" onclick="shareNative()">
+                    <i class="fa-solid fa-paper-plane"></i> Share Link (SMS / Apps)
+                </button>
+                
+                <button class="btn btn-amber" style="width: 100%;" onclick="shareSMS()">
+                    <i class="fa-solid fa-comment-sms"></i> Send Text / SMS
+                </button>
 
-        <!-- Full Horoscope Revelation Narrative -->
-        <div class="my-6 p-6 rounded bg-black/80 border border-amber-800/50 text-left min-h-[160px] relative">
-          <p id="finalNarrative" class="text-base sm:text-lg leading-relaxed font-serif text-amber-100">
-            <!-- Full horoscope output -->
-          </p>
-        </div>
+                <button class="btn btn-secondary" style="width: 100%;" onclick="copyShareLink()">
+                    <i class="fa-solid fa-copy"></i> Copy Link Only
+                </button>
+            </div>
 
-        <!-- Destiny Guidance Box -->
-        <div class="p-5 rounded bg-gradient-to-r from-amber-950/40 via-red-950/20 to-amber-950/40 border border-amber-600/30 text-left mb-6">
-          <h3 class="font-cinzel text-amber-400 font-bold text-sm uppercase mb-2">Cosmic Decree for <span id="finalGuestName">Guest</span>:</h3>
-          <p id="destinyDecree" class="text-sm font-serif italic text-gray-300">
-            Calculating decree...
-          </p>
+            <button class="btn btn-secondary" style="width: 100%; margin-top: 4px;" onclick="closeShareModal()">Close</button>
         </div>
-
-        <!-- Action Buttons -->
-        <div class="flex flex-col sm:flex-row gap-4 justify-center">
-          <button onclick="restartJourney()" type="button"
-            class="px-6 py-3 rounded bg-amber-900/50 hover:bg-amber-800 text-amber-200 font-cinzel text-sm border border-amber-600/50 transition">
-            RE-ENTER HOROSCOPE HOTEL
-          </button>
-          <button onclick="shareDestiny()" type="button"
-            class="px-6 py-3 rounded bg-gradient-to-r from-amber-700 to-amber-900 hover:from-amber-600 hover:to-amber-800 text-amber-100 font-cinzel text-sm border border-amber-400/50 transition">
-            SEAL YOUR DESTINY
-          </button>
-        </div>
-
-      </div>
     </div>
 
-  </main>
+    <!-- Leaflet.js Mapping Engine -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
 
-  <!-- Footer with Legal Disclaimer -->
-  <footer class="w-full z-20 py-6 px-6 border-t border-amber-900/30 bg-black/90 backdrop-blur-md text-center text-xs font-mono-custom text-gray-500">
-    <div class="max-w-3xl mx-auto space-y-2">
-      <p class="text-gray-400">
-        H0H.COM &copy; HOROSCOPE HOTEL &bull; ALL ROOMS RESERVED IN ETERNITY
-      </p>
-      <p class="text-[10px] leading-relaxed text-gray-600 uppercase tracking-wide">
-        <strong>Legal Disclaimer:</strong> Horoscope Hotel (H0H.com) is provided strictly for entertainment, recreational, and novelty purposes only. Readings, door choices, astrological calculations, and predictions generated by this interactive experience should not be used as, or substituted for, professional legal, financial, medical, psychological, or personal advice.
-      </p>
-    </div>
-  </footer>
-
-  <!-- ================= JAVASCRIPT LOGIC ================= -->
-  <script>
-    /* =========================================================================
-       1. GLOBAL STATE & USER DATA
-       ========================================================================= */
-    const state = {
-      guestName: '',
-      dob: '',
-      zodiacSign: '',
-      element: '',
-      rulingPlanet: '',
-      zodiacTrait: '',
-      currentChamberIndex: 0,
-      pendingSelection: null,
-      choicesMade: [],
-      audioMuted: false,
-      speechSynth: window.speechSynthesis,
-      selectedFemaleVoice: null,
-      audioCtx: null
-    };
-
-    /* =========================================================================
-       2. ZODIAC CALCULATION DATA
-       ========================================================================= */
-    const zodiacData = [
-      { sign: "Capricorn", start: [12, 22], end: [1, 19], element: "Earth", planet: "Saturn", trait: "ambition and quiet discipline" },
-      { sign: "Aquarius", start: [1, 20], end: [2, 18], element: "Air", planet: "Uranus", trait: "visionary intellect and detachment" },
-      { sign: "Pisces", start: [2, 19], end: [3, 20], element: "Water", planet: "Neptune", trait: "deep intuition and dreamlike empathy" },
-      { sign: "Aries", start: [3, 21], end: [4, 19], element: "Fire", planet: "Mars", trait: "raw courage and impulse" },
-      { sign: "Taurus", start: [4, 20], end: [5, 20], element: "Earth", planet: "Venus", trait: "resolute endurance and sensory depth" },
-      { sign: "Gemini", start: [5, 21], end: [6, 20], element: "Air", planet: "Mercury", trait: "dual nature and restless curiosity" },
-      { sign: "Cancer", start: [6, 21], end: [7, 22], element: "Water", planet: "Moon", trait: "protective instincts and memory" },
-      { sign: "Leo", start: [7, 23], end: [8, 22], element: "Fire", planet: "Sun", trait: "sovereign presence and warmth" },
-      { sign: "Virgo", start: [8, 23], end: [9, 22], element: "Earth", planet: "Mercury", trait: "meticulous perception and analytical grace" },
-      { sign: "Libra", start: [9, 23], end: [10, 22], element: "Air", planet: "Venus", trait: "harmony seeking and aesthetic balance" },
-      { sign: "Scorpio", start: [10, 23], end: [11, 21], element: "Water", planet: "Pluto", trait: "magnetic intensity and transformative depth" },
-      { sign: "Sagittarius", start: [11, 22], end: [12, 21], element: "Fire", planet: "Jupiter", trait: "philosophical hunger and expansion" }
-    ];
-
-    function calculateZodiac(dobString) {
-      if (!dobString) return zodiacData[0];
-      const parts = dobString.split('-');
-      if (parts.length < 3) return zodiacData[0];
-      const month = parseInt(parts[1], 10);
-      const day = parseInt(parts[2], 10);
-
-      for (let z of zodiacData) {
-        const [sM, sD] = z.start;
-        const [eM, eD] = z.end;
-        if ((month === sM && day >= sD) || (month === eM && day <= eD)) {
-          return z;
-        }
-      }
-      return zodiacData[0];
-    }
-
-    /* =========================================================================
-       3. 10 HOTEL CHAMBERS (ROOMS, DESCRIPTIONS & REAL HOTEL DOORS)
-       ========================================================================= */
-    const hotelChambers = [
-      {
-        id: 1,
-        title: "The Grand Foyer",
-        icon: "🗝️",
-        narrative: "You stand alone beneath a brass chandelier that hums with static. Dust motes float frozen in the dim golden light. The heavy oak entrance doors click shut behind you, locking firmly.",
-        clue: "Your presence destabilizes the shadows. The air smells faintly of ozone and old parchment.",
-        doors: [
-          { number: "102", name: "Velvet Corridor", leadText: "Proceed down the heavy carpeted hallway..." },
-          { number: "105", name: "Key Alcove", leadText: "Step into a dusty desk alcove..." }
-        ]
-      },
-      {
-        id: 2,
-        title: "Velvet Corridor",
-        icon: "🚪",
-        narrative: "Long red drapes line this windowless hall. Wall sconces flicker as if breathing in sync with your pulse. A distant grandfather clock ticks out of tempo.",
-        clue: "As an element sign of {ELEMENT}, you feel the temperature in this hallway shifting to match your temperament.",
-        doors: [
-          { number: "201", name: "Deserted Lounge", leadText: "Enter through a frosted glass door..." },
-          { number: "204", name: "Quiet Library", leadText: "Push open a heavy mahogany door..." }
-        ]
-      },
-      {
-        id: 3,
-        title: "Crimson Lounge & Bar",
-        icon: "🍸",
-        narrative: "Leather armchairs face a bar with crystal decanters that fill themselves with amber liquids. A piano in the corner plays soft, lonely notes without anyone seated at the keys.",
-        clue: "Your ruling planet {PLANET} exerts a subtle pull here. A coaster on the bar bears your initials.",
-        doors: [
-          { number: "303", name: "Whispering Elevator", leadText: "Step into an ornate brass elevator cage..." },
-          { number: "308", name: "Courtyard Garden", leadText: "Open an iron door toward a misty garden..." }
-        ]
-      },
-      {
-        id: 4,
-        title: "Whispering Elevator",
-        icon: "🛗",
-        narrative: "The brass elevator rises slowly with a low mechanical groan. Soft whispers echo through the floorboards, speaking fragments of memories you thought you had forgotten.",
-        clue: "Listen closely: The hotel reads your zodiac marker, {SIGN}, weaving your traits into the walls.",
-        doors: [
-          { number: "401", name: "Deserted Dining Hall", leadText: "Exit onto a floor covered in white marble..." },
-          { number: "405", name: "Mirror Gallery", leadText: "Step out into a dimly lit hall of reflective glass..." }
-        ]
-      },
-      {
-        id: 5,
-        title: "Deserted Dining Hall",
-        icon: "🍽️",
-        narrative: "A massive banqueting table is set for dozens, yet every silver platter is empty and sparkling clean. A single candle flickers in the center of the room.",
-        clue: "You notice one chair pulled out just for you, inscribed with your solar sign archetype.",
-        doors: [
-          { number: "502", name: "Sunken Solarium", leadText: "Follow a glass passageway filled with moonlight..." },
-          { number: "509", name: "Clockwork Vault", leadText: "Pass through a narrow door echoing with gears..." }
-        ]
-      },
-      {
-        id: 6,
-        title: "Sunken Solarium",
-        icon: "🌿",
-        narrative: "Glass ceilings reveal a starless indigo sky above. Overgrown tropical ferns fill the room, smelling of rain and night-blooming jasmine.",
-        clue: "Stars begin to align across the glass roof, forming the exact constellation of {SIGN}.",
-        doors: [
-          { number: "601", name: "Room 101 Suite", leadText: "Enter an unassuming brass-hinged hotel suite..." },
-          { number: "607", name: "Starlit Observatory", leadText: "Ascend a spiral iron staircase..." }
-        ]
-      },
-      {
-        id: 7,
-        title: "Room 101 (The Empty Suite)",
-        icon: "🛋️",
-        narrative: "A luxurious suite frozen in time. An unmade bed, a rotary telephone off the hook softly emitting a dial tone, and a balcony looking into infinite darkness.",
-        clue: "The phone speaker whispers your name: '{NAME}... your fate is being written.'",
-        doors: [
-          { number: "704", name: "Boiler Basement", leadText: "Take a service door leading downward..." },
-          { number: "710", name: "Grand Ballroom", leadText: "Cross double doors with gilded handles..." }
-        ]
-      },
-      {
-        id: 8,
-        title: "Boiler Room Basement",
-        icon: "🔥",
-        narrative: "Warm air radiates from glowing furnace pipes. Deep rhythmic thumps sound like the heartbeat of the hotel vibrating beneath your feet.",
-        clue: "The heat tests your elemental nature ({ELEMENT}). You are nearing the core revelation.",
-        doors: [
-          { number: "802", name: "Observatory Stairwell", leadText: "Climb an illuminated bronze staircase..." },
-          { number: "808", name: "Crystal Passage", leadText: "Walk into a narrow tunnel lined with quartz..." }
-        ]
-      },
-      {
-        id: 9,
-        title: "The Crystal Corridor",
-        icon: "🔮",
-        narrative: "Prisms of light dance across smooth marble floors. Every reflection shows a slightly different version of your future choices.",
-        clue: "Your planetary ruler {PLANET} shines brightly through the crystalline doorway at the end.",
-        doors: [
-          { number: "901", name: "Penthouse Lift", leadText: "Step into the golden penthouse lift..." },
-          { number: "909", name: "Starlight Vault Door", leadText: "Unlock the final heavy starlight door..." }
-        ]
-      },
-      {
-        id: 10,
-        title: "The Oracle Penthouse Threshold",
-        icon: "👑",
-        narrative: "You have reached the highest summit of the Horoscope Hotel. Double doors forged from celestial bronze loom before you, radiating warmth and quiet majesty.",
-        clue: "All ten chambers have gathered your cosmic footprint. The Oracle awaits your arrival.",
-        doors: [
-          { number: "1000", name: "The Oracle Chamber", leadText: "Open the final door to reveal your future..." }
-        ]
-      }
-    ];
-
-    /* =========================================================================
-       4. SPEECH SYNTHESIS & VOICE NARRATION ENGINE
-       ========================================================================= */
-    function initVoices() {
-      if (!state.speechSynth) return;
-      
-      const loadVoice = () => {
-        const voices = state.speechSynth.getVoices();
-        const preferredVoices = voices.filter(v => 
-          v.lang.includes('en') && (
-            v.name.includes('Female') || 
-            v.name.includes('Google US English') ||
-            v.name.includes('Samantha') || 
-            v.name.includes('Victoria') ||
-            v.name.includes('Zira') ||
-            v.name.includes('Karen') ||
-            v.name.includes('Natural')
-          )
-        );
-
-        if (preferredVoices.length > 0) {
-          state.selectedFemaleVoice = preferredVoices[0];
-        } else if (voices.length > 0) {
-          state.selectedFemaleVoice = voices[0];
-        }
-
-        const displayEl = document.getElementById('voiceNameDisplay');
-        if (displayEl && state.selectedFemaleVoice) {
-          displayEl.innerText = `NARRATOR: ${state.selectedFemaleVoice.name.substring(0, 15).toUpperCase()}`;
-        }
-      };
-
-      loadVoice();
-      if (speechSynthesis.onvoiceschanged !== undefined) {
-        speechSynthesis.onvoiceschanged = loadVoice;
-      }
-    }
-
-    function speakSynchronizedText(text, containerElementId, onComplete = null) {
-      const container = document.getElementById(containerElementId);
-      if (container) {
-        const words = text.split(" ");
-        container.innerHTML = words.map((w, i) => `<span id="word-${i}" class="transition-colors duration-150">${w} </span>`).join("");
-      }
-
-      if (state.speechSynth) {
-        state.speechSynth.cancel();
-      }
-
-      if (state.audioMuted || !state.speechSynth) {
-        if (onComplete) onComplete();
-        return;
-      }
-
-      try {
-        const utterance = new SpeechSynthesisUtterance(text);
-        if (state.selectedFemaleVoice) {
-          utterance.voice = state.selectedFemaleVoice;
-        }
-        utterance.rate = 0.92;
-        utterance.pitch = 1.05;
-
-        let wordIdx = 0;
-        utterance.onboundary = function(event) {
-          if (event.name === 'word' && container) {
-            const prevWord = document.getElementById(`word-${wordIdx - 1}`);
-            if (prevWord) prevWord.classList.remove('word-spoken');
-
-            const currentWord = document.getElementById(`word-${wordIdx}`);
-            if (currentWord) currentWord.classList.add('word-spoken');
-
-            wordIdx++;
-          }
+    <script>
+        // Integrated Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDCudEWPgTN-bLSThrsspZq1G42gC_NnQI",
+            authDomain: "eta-14072.firebaseapp.com",
+            databaseURL: "https://eta-14072-default-rtdb.firebaseio.com",
+            projectId: "eta-14072",
+            storageBucket: "eta-14072.firebasestorage.app",
+            messagingSenderId: "371118748763",
+            appId: "1:371118748763:web:2467092dbf915d44d3bb7e",
+            measurementId: "G-2ERQ1JT20P"
         };
 
-        utterance.onend = function() {
-          if (container) {
-            const spans = container.querySelectorAll('span');
-            spans.forEach(s => s.classList.remove('word-spoken'));
-          }
-          if (onComplete) onComplete();
-        };
-
-        playAmbientChime();
-        state.speechSynth.speak(utterance);
-      } catch(e) {
-        if (onComplete) onComplete();
-      }
-    }
-
-    /* =========================================================================
-       5. WEB AUDIO SYNTHESIZER
-       ========================================================================= */
-    function initAudioContext() {
-      try {
-        if (!state.audioCtx) {
-          const AudioContext = window.AudioContext || window.webkitAudioContext;
-          state.audioCtx = new AudioContext();
+        // Initialize Firebase
+        let db = null;
+        try {
+            firebase.initializeApp(firebaseConfig);
+            db = firebase.database();
+        } catch (e) {
+            console.warn("Firebase initialization error:", e);
         }
-        if (state.audioCtx && state.audioCtx.state === 'suspended') {
-          state.audioCtx.resume();
-        }
-      } catch(e) {}
-    }
 
-    function playAmbientChime() {
-      if (state.audioMuted || !state.audioCtx) return;
-      try {
-        const osc = state.audioCtx.createOscillator();
-        const gain = state.audioCtx.createGain();
+        // Core App State
+        let map, userMarker, buddyMarker, connectingLine;
+        let userPos = null;
+        let buddyPos = null;
+        let currentSpeedMph = 0;
+        let sessionId = '';
+        let userId = 'usr_' + Math.random().toString(36).substring(2, 8);
+        let isDemoRunning = false;
+        let demoInterval = null;
 
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(120, state.audioCtx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(60, state.audioCtx.currentTime + 2.5);
+        const DEFAULT_LAT = 37.2707;
+        const DEFAULT_LNG = -76.7075;
 
-        gain.gain.setValueAtTime(0.15, state.audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, state.audioCtx.currentTime + 2.5);
-
-        osc.connect(gain);
-        gain.connect(state.audioCtx.destination);
-
-        osc.start();
-        osc.stop(state.audioCtx.currentTime + 2.5);
-      } catch(e) {}
-    }
-
-    function playDoorCreakSound() {
-      if (state.audioMuted || !state.audioCtx) return;
-      try {
-        const osc = state.audioCtx.createOscillator();
-        const gain = state.audioCtx.createGain();
-
-        osc.type = 'sawtooth';
-        osc.frequency.setValueAtTime(70, state.audioCtx.currentTime);
-        osc.frequency.linearRampToValueAtTime(130, state.audioCtx.currentTime + 0.4);
-        osc.frequency.linearRampToValueAtTime(40, state.audioCtx.currentTime + 0.9);
-
-        gain.gain.setValueAtTime(0.1, state.audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, state.audioCtx.currentTime + 0.9);
-
-        osc.connect(gain);
-        gain.connect(state.audioCtx.destination);
-
-        osc.start();
-        osc.stop(state.audioCtx.currentTime + 0.9);
-      } catch(e) {}
-    }
-
-    function toggleAudio() {
-      state.audioMuted = !state.audioMuted;
-      const label = document.getElementById('audioLabel');
-      const icon = document.getElementById('audioIcon');
-
-      if (state.audioMuted) {
-        label.innerText = "AUDIO: OFF";
-        icon.innerText = "🔇";
-        if (state.speechSynth) state.speechSynth.cancel();
-      } else {
-        label.innerText = "AUDIO: ON";
-        icon.innerText = "🔊";
-      }
-    }
-
-    /* =========================================================================
-       6. GAME FLOW & HOTEL DOOR NAVIGATION LOGIC
-       ========================================================================= */
-    
-    window.addEventListener('DOMContentLoaded', () => {
-      initVoices();
-      initCanvas();
-      
-      setTimeout(() => {
-        const greetingText = "Welcome to the Horoscope Hotel, please enter your first name and date of birth to check in, but be aware that many check in but don't check out, as this journey reveals your future...";
-        speakSynchronizedText(greetingText, 'checkInNarrative');
-      }, 500);
-    });
-
-    // Handle Check-In Form Submit
-    function handleCheckIn(e) {
-      if (e) e.preventDefault();
-      initAudioContext();
-
-      const nameInput = document.getElementById('guestName').value.trim();
-      const dobInput = document.getElementById('guestDOB').value;
-
-      if (!nameInput || !dobInput) {
-        alert("Please provide both your First Name and Date of Birth to check in.");
-        return;
-      }
-
-      state.guestName = nameInput;
-      state.dob = dobInput;
-
-      // Calculate Zodiac Specs
-      const zInfo = calculateZodiac(dobInput);
-      state.zodiacSign = zInfo.sign;
-      state.element = zInfo.element;
-      state.rulingPlanet = zInfo.planet;
-      state.zodiacTrait = zInfo.trait;
-
-      // Update UI Header
-      document.getElementById('displayGuestName').innerText = state.guestName.toUpperCase();
-      document.getElementById('displayZodiac').innerText = `${state.zodiacSign.toUpperCase()} (${state.element.toUpperCase()})`;
-
-      // Switch Screen
-      document.getElementById('checkInScreen').classList.add('hidden');
-      document.getElementById('hotelChamberScreen').classList.remove('hidden');
-      document.getElementById('hotelChamberScreen').classList.add('flex');
-
-      // Load Chamber 1
-      loadChamber(0);
-    }
-
-    // Render Room & Hotel Doors
-    function loadChamber(index) {
-      state.currentChamberIndex = index;
-      const chamber = hotelChambers[index];
-
-      document.getElementById('displayProgress').innerText = `${index + 1} / 10`;
-      document.getElementById('chamberNumber').innerText = `CHAMBER 0${chamber.id} / 10`;
-      document.getElementById('chamberTitle').innerText = chamber.title.toUpperCase();
-      document.getElementById('chamberIcon').innerText = chamber.icon;
-
-      let formattedClue = chamber.clue
-        .replace(/{NAME}/g, state.guestName)
-        .replace(/{SIGN}/g, state.zodiacSign)
-        .replace(/{ELEMENT}/g, state.element)
-        .replace(/{PLANET}/g, state.rulingPlanet);
-
-      document.getElementById('chamberClue').innerText = formattedClue;
-
-      let formattedNarrative = chamber.narrative
-        .replace(/{NAME}/g, state.guestName)
-        .replace(/{SIGN}/g, state.zodiacSign);
-
-      // Render Dynamic Hotel Door Buttons
-      const doorContainer = document.getElementById('doorOptionsContainer');
-      doorContainer.innerHTML = '';
-
-      chamber.doors.forEach((door) => {
-        const btn = document.createElement('button');
-        btn.type = "button";
-        btn.className = "hotel-door-btn rounded-lg p-5 flex flex-col justify-between items-center text-center focus:outline-none min-h-[160px]";
-        btn.innerHTML = `
-          <!-- Door Brass Number Plate -->
-          <div class="door-plate px-4 py-1 rounded text-sm tracking-widest border border-amber-900 mb-2">
-            ROOM ${door.number}
-          </div>
-          <div class="text-amber-200 font-cinzel font-bold text-base my-1">${door.name.toUpperCase()}</div>
-          <div class="text-xs text-amber-400/70 italic mt-1">${door.leadText}</div>
-          
-          <!-- Keyhole & Handle Graphic -->
-          <div class="mt-3 flex items-center gap-2 text-amber-500/80 text-xs font-mono-custom">
-            <span>🗝️ TURN KEY</span>
-          </div>
-        `;
-        btn.onclick = () => openDoorConfirmation(door.number, door.name);
-        doorContainer.appendChild(btn);
-      });
-
-      speakSynchronizedText(formattedNarrative, 'chamberNarrative');
-    }
-
-    // Door Selected Trigger -> Prompt Confirmation Voice
-    function openDoorConfirmation(doorNumber, doorName) {
-      initAudioContext();
-      playDoorCreakSound();
-
-      state.pendingSelection = { number: doorNumber, name: doorName };
-
-      const modal = document.getElementById('doorConfirmModal');
-      modal.classList.remove('hidden');
-      modal.classList.add('flex');
-
-      const confirmSpeech = `You have chosen door number ${doorNumber}, are you certain you would like to proceed, as you may not change your destiny once you have chosen the door number?`;
-
-      speakSynchronizedText(confirmSpeech, 'confirmNarrative');
-    }
-
-    function cancelDoorSelection() {
-      if (state.speechSynth) state.speechSynth.cancel();
-      state.pendingSelection = null;
-      const modal = document.getElementById('doorConfirmModal');
-      modal.classList.add('hidden');
-      modal.classList.remove('flex');
-    }
-
-    function confirmDoorSelection() {
-      if (!state.pendingSelection) return;
-
-      const selected = state.pendingSelection;
-      state.choicesMade.push(`Door ${selected.number} (${selected.name})`);
-      state.pendingSelection = null;
-
-      const modal = document.getElementById('doorConfirmModal');
-      modal.classList.add('hidden');
-      modal.classList.remove('flex');
-
-      if (state.currentChamberIndex < hotelChambers.length - 1) {
-        loadChamber(state.currentChamberIndex + 1);
-      } else {
-        revealFinalHoroscope();
-      }
-    }
-
-    /* =========================================================================
-       7. FINAL HOROSCOPE ORACLE REVELATION
-       ========================================================================= */
-    function revealFinalHoroscope() {
-      document.getElementById('hotelChamberScreen').classList.add('hidden');
-      document.getElementById('hotelChamberScreen').classList.remove('flex');
-      
-      const finalScreen = document.getElementById('finalRevelationScreen');
-      finalScreen.classList.remove('hidden');
-      finalScreen.classList.add('flex');
-
-      document.getElementById('finalGuestName').innerText = state.guestName;
-      document.getElementById('finalSign').innerText = state.zodiacSign.toUpperCase();
-      document.getElementById('finalElement').innerText = state.element.toUpperCase();
-      document.getElementById('finalRuler').innerText = state.rulingPlanet.toUpperCase();
-      document.getElementById('finalPath').innerText = `${state.choicesMade.length} DOORS`;
-
-      const fullReading = `Welcome, ${state.guestName}, to the Oracle Penthouse of the Horoscope Hotel. You have walked through all ten corridors, unlocking each numbered door and leaving your cosmic signature in every chamber. As a ${state.zodiacSign} driven by the element of ${state.element} and ruled by ${state.rulingPlanet}, your future is now revealed. The choices you sealed behind each numbered door confirm that a profound transformation is taking place. Embrace your innate ${state.zodiacTrait}. The Horoscope Hotel has registered your destiny, and your future is now yours to command.`;
-
-      const decreeText = `Through your chosen path of numbered doors, the alignment of ${state.rulingPlanet} decrees that an unexpected opportunity will present itself soon. Trust the intuition that led you safely through the Horoscope Hotel.`;
-
-      document.getElementById('destinyDecree').innerText = decreeText;
-
-      speakSynchronizedText(fullReading, 'finalNarrative');
-    }
-
-    function restartJourney() {
-      state.currentChamberIndex = 0;
-      state.choicesMade = [];
-      state.pendingSelection = null;
-      
-      document.getElementById('finalRevelationScreen').classList.add('hidden');
-      document.getElementById('checkInScreen').classList.remove('hidden');
-      
-      const greetingText = "Welcome back to the Horoscope Hotel. Please enter your details to check in once more...";
-      speakSynchronizedText(greetingText, 'checkInNarrative');
-    }
-
-    function shareDestiny() {
-      const shareText = `I unlocked all 10 doors at the Horoscope Hotel (H0H.com) and revealed my destiny as a ${state.zodiacSign}!`;
-      if (navigator.share) {
-        navigator.share({
-          title: 'Horoscope Hotel Destiny',
-          text: shareText,
-          url: window.location.href
-        }).catch(() => {});
-      } else {
-        navigator.clipboard.writeText(shareText + " " + window.location.href);
-        alert("Your destiny summary has been copied to your clipboard!");
-      }
-    }
-
-    /* =========================================================================
-       8. BACKGROUND CANVAS DUST & FOG ANIMATION
-       ========================================================================= */
-    function initCanvas() {
-      const canvas = document.getElementById('ambientCanvas');
-      const ctx = canvas.getContext('2d');
-
-      let width = canvas.width = window.innerWidth;
-      let height = canvas.height = window.innerHeight;
-
-      window.addEventListener('resize', () => {
-        width = canvas.width = window.innerWidth;
-        height = canvas.height = window.innerHeight;
-      });
-
-      const particles = [];
-      const particleCount = 60;
-
-      for (let i = 0; i < particleCount; i++) {
-        particles.push({
-          x: Math.random() * width,
-          y: Math.random() * height,
-          radius: Math.random() * 2 + 0.5,
-          alpha: Math.random() * 0.5 + 0.1,
-          vx: (Math.random() - 0.5) * 0.3,
-          vy: -Math.random() * 0.4 - 0.1
-        });
-      }
-
-      function animate() {
-        ctx.clearRect(0, 0, width, height);
-
-        particles.forEach(p => {
-          p.x += p.vx;
-          p.y += p.vy;
-
-          if (p.y < 0) p.y = height;
-          if (p.x < 0) p.x = width;
-          if (p.x > width) p.x = 0;
-
-          ctx.beginPath();
-          ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(212, 175, 55, ${p.alpha})`;
-          ctx.fill();
+        window.addEventListener('DOMContentLoaded', () => {
+            initSession();
+            initMap();
+            startGPSWatcher();
+            setupFirebaseTracking();
         });
 
-        requestAnimationFrame(animate);
-      }
+        function initSession() {
+            if (window.location.hash && window.location.hash.length > 5) {
+                sessionId = window.location.hash.replace('#', '');
+            } else {
+                sessionId = 'eta-' + Math.random().toString(36).substring(2, 8);
+                window.location.hash = sessionId;
+            }
+            document.getElementById('session-id-display').innerText = sessionId.toUpperCase();
+        }
 
-      animate();
-    }
-  </script>
+        function initMap() {
+            map = L.map('map', {
+                zoomControl: false,
+                attributionControl: false
+            }).setView([DEFAULT_LAT, DEFAULT_LNG], 14);
+
+            L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: '&copy; OpenStreetMap contributors'
+            }).addTo(map);
+
+            connectingLine = L.polyline([], {
+                color: '#10b981',
+                weight: 4,
+                dashArray: '8, 8',
+                opacity: 0.9
+            }).addTo(map);
+        }
+
+        function startGPSWatcher() {
+            if ('geolocation' in navigator) {
+                navigator.geolocation.watchPosition(
+                    (position) => {
+                        const { latitude, longitude, speed } = position.coords;
+                        userPos = { lat: latitude, lng: longitude };
+
+                        if (speed !== null && speed !== undefined && speed > 0) {
+                            currentSpeedMph = Math.round(speed * 2.23694);
+                        } else {
+                            currentSpeedMph = 0;
+                        }
+
+                        document.getElementById('speed-val').innerHTML = `${currentSpeedMph} <span>mph</span>`;
+
+                        updateUserMarker(latitude, longitude);
+                        document.getElementById('status-val').innerText = 'Live Cellular GPS Active';
+                        document.getElementById('status-val').style.color = '#10b981';
+
+                        pushLocationToFirebase({ ...userPos, speedMph: currentSpeedMph });
+                        recalculateMetrics();
+                    },
+                    (error) => {
+                        console.warn('GPS Error: ' + error.message);
+                        document.getElementById('status-val').innerText = 'Acquiring GPS Signal...';
+                        document.getElementById('status-val').style.color = '#f59e0b';
+                    },
+                    {
+                        enableHighAccuracy: true,
+                        maximumAge: 1000,
+                        timeout: 10000
+                    }
+                );
+            }
+        }
+
+        function updateUserMarker(lat, lng) {
+            const icon = L.divIcon({
+                className: 'custom-div-icon',
+                html: `<div class="marker-pin marker-you"><div class="pulse-ring"></div><i class="fa-solid fa-user"></i></div>`,
+                iconSize: [36, 36],
+                iconAnchor: [18, 18]
+            });
+
+            if (!userMarker) {
+                userMarker = L.marker([lat, lng], { icon: icon }).addTo(map);
+                map.setView([lat, lng], 15);
+            } else {
+                userMarker.setLatLng([lat, lng]);
+            }
+        }
+
+        function updateBuddyMarker(lat, lng) {
+            const icon = L.divIcon({
+                className: 'custom-div-icon',
+                html: `<div class="marker-pin marker-buddy"><div class="pulse-ring"></div><i class="fa-solid fa-user-group"></i></div>`,
+                iconSize: [36, 36],
+                iconAnchor: [18, 18]
+            });
+
+            if (!buddyMarker) {
+                buddyMarker = L.marker([lat, lng], { icon: icon }).addTo(map);
+            } else {
+                buddyMarker.setLatLng([lat, lng]);
+            }
+        }
+
+        // Firebase Cloud Relay across Cell Networks
+        function setupFirebaseTracking() {
+            if (!db) return;
+
+            const roomRef = db.ref('rooms/' + sessionId);
+
+            // Listen for other user updates in the room
+            roomRef.on('child_changed', (snapshot) => {
+                if (snapshot.key !== userId) {
+                    const data = snapshot.val();
+                    if (data && data.lat && data.lng) {
+                        buddyPos = { lat: data.lat, lng: data.lng };
+                        updateBuddyMarker(buddyPos.lat, buddyPos.lng);
+                        recalculateMetrics();
+                    }
+                }
+            });
+
+            roomRef.on('child_added', (snapshot) => {
+                if (snapshot.key !== userId) {
+                    const data = snapshot.val();
+                    if (data && data.lat && data.lng) {
+                        buddyPos = { lat: data.lat, lng: data.lng };
+                        updateBuddyMarker(buddyPos.lat, buddyPos.lng);
+                        recalculateMetrics();
+                    }
+                }
+            });
+        }
+
+        function pushLocationToFirebase(data) {
+            if (db && sessionId && userId) {
+                db.ref('rooms/' + sessionId + '/' + userId).set({
+                    ...data,
+                    timestamp: Date.now()
+                });
+            }
+        }
+
+        function recalculateMetrics() {
+            if (!userPos || !buddyPos) return;
+
+            connectingLine.setLatLngs([
+                [userPos.lat, userPos.lng],
+                [buddyPos.lat, buddyPos.lng]
+            ]);
+
+            const distMiles = calculateHaversineDistance(
+                userPos.lat, userPos.lng,
+                buddyPos.lat, buddyPos.lng
+            );
+
+            if (distMiles < 0.1) {
+                const feet = Math.round(distMiles * 5280);
+                document.getElementById('dist-val').innerHTML = `${feet} <span>ft</span>`;
+            } else {
+                document.getElementById('dist-val').innerHTML = `${distMiles.toFixed(2)} <span>mi</span>`;
+            }
+
+            const speedToUse = currentSpeedMph > 3 ? currentSpeedMph : 15;
+            const etaMinutes = Math.ceil((distMiles / speedToUse) * 60);
+
+            if (etaMinutes <= 1) {
+                document.getElementById('eta-val').innerHTML = `< 1 <span>min</span>`;
+            } else {
+                document.getElementById('eta-val').innerHTML = `${etaMinutes} <span>min</span>`;
+            }
+
+            if (distMiles * 5280 < 30) {
+                triggerArrivalChime();
+                document.getElementById('status-val').innerText = 'Arrived / Contact Met!';
+                document.getElementById('status-val').style.color = '#10b981';
+            }
+        }
+
+        function calculateHaversineDistance(lat1, lon1, lat2, lon2) {
+            const R = 3958.8;
+            const dLat = toRad(lat2 - lat1);
+            const dLon = toRad(lon2 - lon1);
+            const a = 
+                Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * 
+                Math.sin(dLon / 2) * Math.sin(dLon / 2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+            return R * c;
+        }
+
+        function toRad(degrees) {
+            return degrees * (Math.PI / 180);
+        }
+
+        function toggleDemoMode() {
+            const demoBtn = document.getElementById('demo-btn');
+            
+            if (isDemoRunning) {
+                clearInterval(demoInterval);
+                isDemoRunning = false;
+                demoBtn.innerHTML = `<i class="fa-solid fa-play"></i> Test Demo`;
+                demoBtn.className = "btn btn-amber";
+                document.getElementById('speed-val').innerHTML = `0 <span>mph</span>`;
+                return;
+            }
+
+            isDemoRunning = true;
+            demoBtn.innerHTML = `<i class="fa-solid fa-stop"></i> Stop Demo`;
+            demoBtn.className = "btn btn-secondary";
+
+            const startLat = userPos ? userPos.lat : DEFAULT_LAT;
+            const startLng = userPos ? userPos.lng : DEFAULT_LNG;
+
+            userPos = { lat: startLat, lng: startLng };
+            buddyPos = { lat: startLat + 0.015, lng: startLng + 0.015 };
+
+            updateUserMarker(userPos.lat, userPos.lng);
+            updateBuddyMarker(buddyPos.lat, buddyPos.lng);
+
+            const bounds = L.latLngBounds(
+                [userPos.lat, userPos.lng],
+                [buddyPos.lat, buddyPos.lng]
+            );
+            map.fitBounds(bounds, { padding: [50, 50] });
+
+            currentSpeedMph = 35;
+            document.getElementById('speed-val').innerHTML = `35 <span>mph</span>`;
+
+            demoInterval = setInterval(() => {
+                if (!isDemoRunning) return;
+
+                buddyPos.lat -= (buddyPos.lat - userPos.lat) * 0.08;
+                buddyPos.lng -= (buddyPos.lng - userPos.lng) * 0.08;
+
+                updateBuddyMarker(buddyPos.lat, buddyPos.lng);
+                recalculateMetrics();
+
+                const dist = calculateHaversineDistance(userPos.lat, userPos.lng, buddyPos.lat, buddyPos.lng);
+                if (dist * 5280 < 25) {
+                    clearInterval(demoInterval);
+                    isDemoRunning = false;
+                    demoBtn.innerHTML = `<i class="fa-solid fa-play"></i> Test Demo`;
+                    demoBtn.className = "btn btn-amber";
+                    document.getElementById('speed-val').innerHTML = `0 <span>mph</span>`;
+                }
+            }, 1000);
+        }
+
+        function centerMap() {
+            if (userPos && buddyPos) {
+                const bounds = L.latLngBounds(
+                    [userPos.lat, userPos.lng],
+                    [buddyPos.lat, buddyPos.lng]
+                );
+                map.fitBounds(bounds, { padding: [60, 60] });
+            } else if (userPos) {
+                map.setView([userPos.lat, userPos.lng], 16);
+            }
+        }
+
+        function triggerArrivalChime() {
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(587.33, ctx.currentTime);
+                osc.frequency.setValueAtTime(880, ctx.currentTime + 0.15);
+                
+                gain.gain.setValueAtTime(0.3, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.6);
+                
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                
+                osc.start();
+                osc.stop(ctx.currentTime + 0.6);
+            } catch (e) {}
+        }
+
+        function openShareModal() {
+            document.getElementById('share-link-text').innerText = window.location.href;
+            document.getElementById('share-modal').style.display = 'flex';
+        }
+
+        function closeShareModal() {
+            document.getElementById('share-modal').style.display = 'none';
+        }
+
+        function shareNative() {
+            const shareData = {
+                title: '4ETA - Track My Arrival',
+                text: 'Track my live location, speed, and arrival time in real-time on 4ETA:',
+                url: window.location.href
+            };
+
+            if (navigator.share) {
+                navigator.share(shareData).catch(() => {});
+            } else {
+                copyShareLink();
+            }
+        }
+
+        function shareSMS() {
+            const msg = encodeURIComponent(`Track my live location and arrival time on 4ETA: ${window.location.href}`);
+            window.location.href = `sms:?&body=${msg}`;
+        }
+
+        function copyShareLink() {
+            navigator.clipboard.writeText(window.location.href).then(() => {
+                closeShareModal();
+                showToast('Invite link copied to clipboard!');
+            });
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-text').innerText = msg;
+            toast.style.display = 'flex';
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, 3000);
+        }
+    </script>
 </body>
 </html>

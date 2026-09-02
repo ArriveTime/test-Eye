@@ -191,7 +191,7 @@
       color: var(--accent);
     }
 
-    /* Primary Actions & Buttons */
+    /* Buttons */
     .btn {
       background: var(--accent);
       color: #000;
@@ -211,6 +211,23 @@
       background: transparent;
       color: var(--text);
       border: 1px solid var(--card-border);
+    }
+
+    .btn-streetview {
+      background: #10b981;
+      color: #fff;
+      display: none;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+    }
+
+    .btn-streetview.visible {
+      display: inline-flex;
     }
 
     /* Modal System */
@@ -240,6 +257,25 @@
       width: 90%;
       max-width: 400px;
       box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+    }
+
+    /* Google View Modal Expansion */
+    .modal-streetview {
+      max-width: 900px;
+      width: 90vw;
+      height: 80vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .streetview-container {
+      flex: 1;
+      width: 100%;
+      height: 100%;
+      border-radius: 8px;
+      border: 1px solid var(--card-border);
+      overflow: hidden;
+      margin-top: 12px;
     }
 
     .modal-title {
@@ -376,6 +412,9 @@
       <div id="bannerSub" style="font-size: 0.8rem; color: var(--muted);">Select someone from the list to track</div>
     </div>
     <div id="bannerEta" class="banner-time">-- min</div>
+    <button id="btnStreetView" class="btn-streetview" onclick="openStreetViewModal()">
+      🏢 Explore Inside (360°)
+    </button>
   </div>
 </div>
 
@@ -416,6 +455,19 @@
   </div>
 </div>
 
+<!-- Modal for Google Street / Business View at End of Journey -->
+<div class="modal-overlay" id="streetViewModal">
+  <div class="modal modal-streetview">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+      <div class="modal-title" id="streetViewTitle">Destination View (Inside/360°)</div>
+      <button class="btn btn-secondary" onclick="closeStreetViewModal()">Close</button>
+    </div>
+    <div class="streetview-container">
+      <iframe id="streetViewIframe" width="100%" height="100%" frameborder="0" style="border:0;" allowfullscreen loading="lazy"></iframe>
+    </div>
+  </div>
+</div>
+
 <div id="toast"></div>
 
 <script>
@@ -423,10 +475,17 @@
 //  CONFIG & INITIALIZATION
 // ══════════════════════════════
 const firebaseConfig = {
-  databaseURL: "https://arrivetime-default-rtdb.firebaseio.com" // Replace with your Firebase RTDB URL
+  apiKey: "YOUR_ACTUAL_FIREBASE_API_KEY",
+  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+  databaseURL: "https://YOUR_PROJECT_ID-default-rtdb.firebaseio.com",
+  projectId: "YOUR_PROJECT_ID",
+  storageBucket: "YOUR_PROJECT_ID.appspot.com",
+  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+  appId: "YOUR_APP_ID"
 };
 
-// Fallback session ID generator or URL query parser
+const GOOGLE_MAPS_API_KEY = "YOUR_ACTUAL_GOOGLE_MAPS_API_KEY"; // Insert Google API Key for Street View / Indoor Embeds
+
 const urlParams = new URLSearchParams(window.location.search);
 const SESSION_ID = urlParams.get('session') || 'demo-room';
 
@@ -444,7 +503,6 @@ const GROUP_COLORS = {
   business: '#3b82f6'
 };
 
-// Initialize Application
 window.addEventListener('load', () => {
   initFirebase();
   initMap();
@@ -457,7 +515,6 @@ function initFirebase() {
   }
   database = firebase.database();
   
-  // Listen for real-time room sync
   database.ref('sessions/' + SESSION_ID + '/users').on('value', (snapshot) => {
     const data = snapshot.val() || {};
     syncPeopleData(data);
@@ -465,7 +522,6 @@ function initFirebase() {
 }
 
 function initMap() {
-  // Default centered at center of US prior to GPS lock
   map = L.map('map', { zoomControl: false }).setView([37.7749, -122.4194], 12);
 
   L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
@@ -528,7 +584,6 @@ function syncPeopleData(remoteUsers) {
     }
   });
 
-  // Remove stale trackers
   Object.keys(people).forEach(id => {
     if (!remoteUsers[id]) {
       if (people[id].marker) map.removeLayer(people[id].marker);
@@ -583,13 +638,11 @@ function addPersonSubmit() {
 
   const personId = 'u_' + Math.random().toString(36).substr(2, 6);
   
-  // Create mock starting position near user for local visualization
   const latOffset = (Math.random() - 0.5) * 0.04;
   const lngOffset = (Math.random() - 0.5) * 0.04;
   const initialLat = (myLat || 37.7749) + latOffset;
   const initialLng = (myLng || -122.4194) + lngOffset;
 
-  // Add directly to Firebase for active room synchronization
   database.ref('sessions/' + SESSION_ID + '/users/' + personId).set({
     id: personId,
     name: name,
@@ -617,6 +670,29 @@ function selectPerson(p) {
 }
 
 // ══════════════════════════════
+//  END-OF-JOURNEY GOOGLE VIEW
+// ══════════════════════════════
+function openStreetViewModal() {
+  if (!selectedPerson) return;
+
+  const lat = selectedPerson.lat;
+  const lng = selectedPerson.lng;
+
+  document.getElementById('streetViewTitle').textContent = `Inside/360° View near ${selectedPerson.name}`;
+  
+  // Embed Google Maps Street View Panorama at destination location
+  const streetViewUrl = `https://www.google.com/maps/embed/v1/streetview?key=${GOOGLE_MAPS_API_KEY}&location=${lat},${lng}&heading=210&pitch=10&fov=80`;
+  
+  document.getElementById('streetViewIframe').src = streetViewUrl;
+  document.getElementById('streetViewModal').classList.add('visible');
+}
+
+function closeStreetViewModal() {
+  document.getElementById('streetViewModal').classList.remove('visible');
+  document.getElementById('streetViewIframe').src = '';
+}
+
+// ══════════════════════════════
 //  ETA CALCULATIONS & DISTANCE
 // ══════════════════════════════
 function updateAllETAs() {
@@ -626,7 +702,6 @@ function updateAllETAs() {
     const distKm = getHaversineDistance(myLat, myLng, p.lat, p.lng);
     const miles = distKm * 0.621371;
     
-    // Assume average transit speed of 25 mph urban
     const travelTimeMins = Math.round((miles / 25) * 60);
 
     if (travelTimeMins < 1) {
@@ -649,6 +724,14 @@ function updateAllETAs() {
     if (selectedPerson && selectedPerson.id === p.id) {
       document.getElementById('bannerEta').textContent = p.etaLabel;
       document.getElementById('bannerSub').textContent = `Distance: ${p.distanceLabel}`;
+
+      // Show Google Street/Inside View button when near or arrived
+      const btnSV = document.getElementById('btnStreetView');
+      if (p.etaLabel === 'Arrived' || travelTimeMins <= 2) {
+        btnSV.classList.add('visible');
+      } else {
+        btnSV.classList.remove('visible');
+      }
     }
   });
 
@@ -656,7 +739,7 @@ function updateAllETAs() {
 }
 
 function getHaversineDistance(lat1, lon1, lat2, lon2) {
-  const R = 6371; // Radius of Earth in km
+  const R = 6371;
   const dLat = (lat2 - lat1) * Math.PI / 180;
   const dLon = (lon2 - lon1) * Math.PI / 180;
   const a = 

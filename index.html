@@ -207,6 +207,7 @@
     padding: 20px;
     border-bottom: 1px solid var(--border);
     background: rgba(22, 31, 48, 0.4);
+    position: relative;
   }
   .dest-input {
     width: 100%;
@@ -221,6 +222,20 @@
     transition: border-color 0.2s;
   }
   .dest-input:focus { border-color: var(--accent); }
+  
+  /* SEARCH RESULTS DROPDOWN */
+  .search-results {
+    position: absolute; top: 100%; left: 20px; right: 20px;
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 0 0 10px 10px; z-index: 2000; max-height: 200px;
+    overflow-y: auto; display: none; box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+  }
+  .search-results.visible { display: block; }
+  .search-item {
+    padding: 10px 12px; font-size: 0.82rem; cursor: pointer;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  .search-item:hover { background: rgba(59,130,246,0.2); }
 
   /* STEP 1 — SHARE LINK */
   .share-panel {
@@ -299,7 +314,7 @@
     animation: pulse 2s ease infinite;
   }
 
-  /* ADD PERSON MODAL */
+  /* MODALS */
   .modal-overlay {
     display: none; position: fixed; inset: 0;
     background: rgba(0,0,0,0.75); z-index: 9000;
@@ -341,7 +356,7 @@
   }
   .btn-confirm:hover { opacity: 0.9; }
 
-  /* ─── STREET VIEW MODAL ─── */
+  /* ─── 360° VIEW MODAL ─── */
   .sv-modal {
     background: var(--surface); border: 1px solid var(--border);
     border-radius: 20px; width: 92%; max-width: 900px; height: 80vh;
@@ -361,7 +376,7 @@
   }
   .sv-close:hover { color: var(--text); }
   .sv-container { width: 100%; flex: 1; background: var(--bg); position: relative; }
-  #pano { width: 100%; height: 100%; }
+  #panoFrame { width: 100%; height: 100%; border: none; }
 
   /* ─── MAP AREA ─── */
   .map-area { flex: 1; position: relative; }
@@ -396,7 +411,6 @@
   .banner-eta { font-size: 2rem; font-weight: 300; color: var(--accent2); font-family: 'Syne', sans-serif; }
   .banner-sub { font-size: 0.78rem; color: var(--muted); margin-top: 4px; }
   
-  /* EXPLORE INSIDE BUTTON */
   .explore-btn {
     margin-top: 12px; padding: 10px 20px; border-radius: 20px;
     background: linear-gradient(135deg, var(--accent2), #02c39a);
@@ -406,9 +420,8 @@
     display: inline-flex; align-items: center; gap: 6px;
   }
   .explore-btn:hover { transform: scale(1.05); box-shadow: 0 0 24px rgba(6,214,160,0.5); }
-  .explore-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
 
-  /* ─── MY LOCATION PANEL ─── */
+  /* MY LOCATION PANEL */
   .my-location-panel {
     position: absolute; top: 16px; left: 16px; z-index: 500;
     background: rgba(15,23,36,0.92); border: 1px solid var(--border);
@@ -430,10 +443,8 @@
   }
   .toast.show { display: block; }
 
-  /* ANIMATIONS */
   @keyframes fadeDown { from{transform:translateY(-20px);opacity:0;} to{transform:translateY(0);opacity:1;} }
 
-  /* RESPONSIVE */
   @media (max-width: 700px) {
     .steps-strip { flex-direction: column; }
     .step-item:not(:last-child)::after { content: '↓'; right: auto; left: 50%; transform: translateX(-50%); bottom: -12px; top: auto; }
@@ -444,7 +455,6 @@
     .my-location-panel { display: none; }
   }
 
-  /* Leaflet dark overrides */
   .leaflet-tile { filter: invert(1) hue-rotate(190deg) brightness(0.85) saturate(1.3); }
   .leaflet-container { background: var(--bg); }
 </style>
@@ -507,7 +517,6 @@
 
 <!-- ══════════════════ APP ══════════════════ -->
 <div id="app">
-  <!-- NAV -->
   <nav class="app-nav">
     <div class="nav-logo">📍 ArriveTime</div>
     <div class="nav-pulse">
@@ -518,13 +527,13 @@
   </nav>
 
   <div class="app-body">
-    <!-- SIDEBAR -->
     <div class="sidebar">
 
-      <!-- DESTINATION SEARCH -->
+      <!-- FREE OPENSTREETMAP SEARCH -->
       <div class="dest-panel">
-        <div class="panel-title">📍 Search Destination</div>
-        <input type="text" id="destination-input" class="dest-input" placeholder="Search venue, business or address..." />
+        <div class="panel-title">📍 Search Destination (Free)</div>
+        <input type="text" id="destination-input" class="dest-input" placeholder="Search address or venue..." oninput="debounceSearch()" />
+        <div id="searchResults" class="search-results"></div>
       </div>
 
       <!-- STEP 1: SHARE -->
@@ -546,7 +555,6 @@
       <div class="groups-panel">
         <div class="panel-title" style="margin-bottom:18px;"><span class="badge">2</span> Who Are You Tracking?</div>
 
-        <!-- FAMILY -->
         <div class="group-section">
           <div class="group-header">
             <div class="group-name">
@@ -558,7 +566,6 @@
           <div id="family-list"></div>
         </div>
 
-        <!-- FRIENDS -->
         <div class="group-section">
           <div class="group-header">
             <div class="group-name">
@@ -570,7 +577,6 @@
           <div id="friends-list"></div>
         </div>
 
-        <!-- BUSINESS -->
         <div class="group-section">
           <div class="group-header">
             <div class="group-name">
@@ -588,26 +594,23 @@
     <div class="map-area">
       <div id="map"></div>
 
-      <!-- MY LOCATION -->
       <div class="my-location-panel">
         <div class="ml-label">📍 My Location</div>
         <div class="ml-coords" id="myCoords">Acquiring GPS...</div>
         <div class="ml-accuracy" id="myAccuracy"></div>
       </div>
 
-      <!-- MAP CONTROLS -->
       <div class="map-controls">
         <button class="map-ctrl-btn" onclick="centerOnMe()" title="Center on me">🎯</button>
         <button class="map-ctrl-btn" onclick="fitAll()" title="Fit all">👁</button>
         <button class="map-ctrl-btn" onclick="toggleSatellite()" title="Toggle style" id="satBtn">🛰</button>
       </div>
 
-      <!-- ARRIVAL BANNER -->
       <div class="arrival-banner" id="arrivalBanner">
         <div class="banner-name" id="bannerName">—</div>
         <div class="banner-eta" id="bannerEta">—</div>
         <div class="banner-sub" id="bannerSub">Estimated arrival time</div>
-        <button class="explore-btn" id="exploreBtn" onclick="openStreetView()">🌐 Explore 360° View</button>
+        <button class="explore-btn" id="exploreBtn" onclick="openStreetView()">🌐 Free 360° View / Preview</button>
       </div>
     </div>
   </div>
@@ -633,11 +636,6 @@
       <label class="form-label">Emoji / Icon</label>
       <input class="form-input" id="addEmoji" placeholder="e.g. 👩 👴 🚗" maxlength="4" value="👤" />
     </div>
-    <div class="form-field">
-      <label class="form-label" style="font-size:0.7rem;color:var(--muted)">
-        Share their unique link so they can share location with you
-      </label>
-    </div>
     <div class="modal-btns">
       <button class="btn-cancel" onclick="closeModal()">Cancel</button>
       <button class="btn-confirm" onclick="confirmAdd()">Add & Generate Link</button>
@@ -645,15 +643,15 @@
   </div>
 </div>
 
-<!-- 360° STREET VIEW MODAL -->
+<!-- FREE 360° PANORAMA MODAL -->
 <div class="modal-overlay" id="streetViewModal">
   <div class="sv-modal">
     <div class="sv-header">
-      <div class="sv-title" id="svTitle">360° Destination Intelligence</div>
+      <div class="sv-title" id="svTitle">360° Destination Preview (OpenStreetCam/Mapillary)</div>
       <button class="sv-close" onclick="closeStreetView()">✕</button>
     </div>
     <div class="sv-container">
-      <div id="pano"></div>
+      <iframe id="panoFrame" src=""></iframe>
     </div>
   </div>
 </div>
@@ -661,13 +659,9 @@
 <!-- TOAST -->
 <div class="toast" id="toast">✅ Copied to clipboard!</div>
 
-<!-- Google Maps API with Places Library -->
-<!-- IMPORTANT: Replace YOUR_API_KEY below with your actual Google Maps API key -->
-<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places"></script>
-
 <script>
 // ══════════════════════════════
-//  STATE & FIREBASE CONNECTION
+//  FIREBASE CONFIG
 // ══════════════════════════════
 const firebaseConfig = {
   apiKey: "AIzaSyCvJDFCjiG87R-27_sCVpjQkaFf7xM3pmQ",
@@ -679,13 +673,11 @@ const firebaseConfig = {
   appId: "1:565109802674:web:543df846eac81f2b49ebab"
 };
 
-// Initialize Firebase Realtime Database
 if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
 }
 const database = firebase.database();
 
-// Get or generate URL Session Room ID
 const urlParams = new URLSearchParams(window.location.search);
 let SESSION_ID = urlParams.get('session');
 if (!SESSION_ID) {
@@ -694,7 +686,6 @@ if (!SESSION_ID) {
   window.history.pushState({path: newUrl}, '', newUrl);
 }
 
-// Session User Identity Setup
 const MY_USER_ID = 'u_' + Math.random().toString(36).substr(2, 6);
 
 let map, myMarker, destMarker, myLat, myLng;
@@ -704,30 +695,22 @@ let people = {};
 let selectedPerson = null;
 let tileLayer;
 
-// Google Maps & Street View Dynamic Objects
-let autocomplete, streetViewService, panorama;
-let currentPanoId = null;
+let searchTimeout = null;
 let destinationLatLng = null;
 
 const GROUP_COLORS = { family: '#06d6a0', friends: '#f72585', business: '#fbbf24' };
-const GROUP_EMOJIS = { family: '🏠', friends: '🎉', business: '💼' };
 
-// ══════════════════════════════
-//  LANDING & SHARE SETUP
-// ══════════════════════════════
 function launchApp() {
   document.getElementById('landing').style.display = 'none';
   document.getElementById('app').style.display = 'block';
   initMap();
-  initGooglePlaces();
   startGPS();
   updateShareLink();
   listenForFirebaseUpdates();
 }
 
 function updateShareLink() {
-  const linkText = window.location.href;
-  document.getElementById('shareLinkText').textContent = linkText;
+  document.getElementById('shareLinkText').textContent = window.location.href;
 }
 
 function copyShareLink() {
@@ -755,17 +738,17 @@ function showToast(msg) {
 }
 
 // ══════════════════════════════
-//  MAP INITIALIZATION & CONTROLS
+//  LEAFLET MAP SETUP
 // ══════════════════════════════
 function initMap() {
   if (map) return;
   map = L.map('map', { zoomControl: false, attributionControl: false });
 
   tileLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(map);
-  map.setView([37.2707, -76.7075], 13); // Default view Williamsburg, VA
+  map.setView([37.2707, -76.7075], 13); // Default Williamsburg, VA
 
   L.control.zoom({ position: 'bottomright' }).addTo(map);
-  L.control.attribution({ position: 'bottomright', prefix: '© OSM' }).addTo(map);
+  L.control.attribution({ position: 'bottomright', prefix: '© OpenStreetMap' }).addTo(map);
 
   map.on('click', () => {
     document.getElementById('arrivalBanner').classList.remove('visible');
@@ -775,9 +758,7 @@ function initMap() {
 }
 
 function centerOnMe() {
-  if (myLat && myLng) {
-    map.setView([myLat, myLng], 15);
-  }
+  if (myLat && myLng) map.setView([myLat, myLng], 15);
 }
 
 function fitAll() {
@@ -786,9 +767,7 @@ function fitAll() {
   if (destinationLatLng) bounds.push(destinationLatLng);
   Object.values(people).forEach(p => { if (p.lat && p.lng) bounds.push([p.lat, p.lng]); });
   
-  if (bounds.length > 0) {
-    map.fitBounds(bounds, { padding: [50, 50] });
-  }
+  if (bounds.length > 0) map.fitBounds(bounds, { padding: [50, 50] });
 }
 
 function toggleSatellite() {
@@ -803,99 +782,81 @@ function toggleSatellite() {
 }
 
 // ══════════════════════════════
-//  GOOGLE PLACES AUTOCOMPLETE & 360° ENGINE
+//  100% FREE SEARCH (NOMINATIM / OPENSTREETMAP)
 // ══════════════════════════════
-function initGooglePlaces() {
-  const input = document.getElementById('destination-input');
-  if (!window.google || !google.maps || !google.maps.places) return;
-
-  autocomplete = new google.maps.places.Autocomplete(input, {
-    fields: ["geometry", "name", "formatted_address"]
-  });
-
-  streetViewService = new google.maps.StreetViewService();
-
-  autocomplete.addListener("place_changed", () => {
-    const place = autocomplete.getPlace();
-    if (!place.geometry || !place.geometry.location) return;
-
-    const lat = place.geometry.location.lat();
-    const lng = place.geometry.location.lng();
-    destinationLatLng = [lat, lng];
-
-    if (destMarker) map.removeLayer(destMarker);
-    destMarker = L.marker(destinationLatLng, { icon: createDestIcon() }).addTo(map)
-      .bindPopup(`<b>${place.name || 'Destination'}</b>`).openPopup();
-
-    fitAll();
-    check360Availability(place.geometry.location);
-    updateAllETAs();
-  });
+function debounceSearch() {
+  clearTimeout(searchTimeout);
+  searchTimeout = setTimeout(performSearch, 350);
 }
 
-function check360Availability(googleLocation) {
-  const exploreBtn = document.getElementById('exploreBtn');
-  exploreBtn.disabled = true;
-  exploreBtn.textContent = '🔄 Checking 360° View...';
-
-  // Check Indoor First
-  streetViewService.getPanorama({
-    location: googleLocation,
-    radius: 50,
-    source: google.maps.StreetViewSource.INDOOR
-  }, (data, status) => {
-    if (status === google.maps.StreetViewStatus.OK) {
-      currentPanoId = data.location.pano;
-      exploreBtn.disabled = false;
-      exploreBtn.textContent = '🏠 360° Inside View Available';
-    } else {
-      // Fallback to Outdoor Street View
-      streetViewService.getPanorama({
-        location: googleLocation,
-        radius: 50,
-        source: google.maps.StreetViewSource.DEFAULT
-      }, (dataOut, statusOut) => {
-        if (statusOut === google.maps.StreetViewStatus.OK) {
-          currentPanoId = dataOut.location.pano;
-          exploreBtn.disabled = false;
-          exploreBtn.textContent = '🌐 360° Street View Available';
-        } else {
-          currentPanoId = null;
-          exploreBtn.disabled = true;
-          exploreBtn.textContent = '🚫 No 360° View Available';
-        }
-      });
-    }
-  });
-}
-
-function openStreetView() {
-  if (!currentPanoId) return;
-  const modal = document.getElementById('streetViewModal');
-  modal.classList.add('open');
-
-  if (!panorama) {
-    panorama = new google.maps.StreetViewPanorama(
-      document.getElementById('pano'),
-      { pano: currentPanoId, pov: { heading: 0, pitch: 0 }, zoom: 1 }
-    );
-  } else {
-    panorama.setPano(currentPanoId);
+function performSearch() {
+  const q = document.getElementById('destination-input').value.trim();
+  const resultsBox = document.getElementById('searchResults');
+  
+  if (q.length < 3) {
+    resultsBox.classList.remove('visible');
+    return;
   }
+
+  fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(q)}`)
+    .then(res => res.json())
+    .then(data => {
+      resultsBox.innerHTML = '';
+      if (!data || data.length === 0) {
+        resultsBox.classList.remove('visible');
+        return;
+      }
+
+      data.slice(0, 5).forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'search-item';
+        div.textContent = item.display_name;
+        div.onclick = () => selectDestination(item.lat, item.lon, item.display_name);
+        resultsBox.appendChild(div);
+      });
+      resultsBox.classList.add('visible');
+    })
+    .catch(() => resultsBox.classList.remove('visible'));
+}
+
+function selectDestination(lat, lon, label) {
+  const resultsBox = document.getElementById('searchResults');
+  resultsBox.classList.remove('visible');
+  document.getElementById('destination-input').value = label.split(',')[0];
+
+  destinationLatLng = [parseFloat(lat), parseFloat(lon)];
+
+  if (destMarker) map.removeLayer(destMarker);
+  destMarker = L.marker(destinationLatLng, { icon: createDestIcon() }).addTo(map)
+    .bindPopup(`<b>${label.split(',')[0]}</b>`).openPopup();
+
+  fitAll();
+  updateAllETAs();
+}
+
+// ══════════════════════════════
+//  100% FREE 360° PREVIEW ENGINE
+// ══════════════════════════════
+function openStreetView() {
+  const target = destinationLatLng || [myLat || 37.2707, myLng || -76.7075];
+  const modal = document.getElementById('streetViewModal');
+  const frame = document.getElementById('panoFrame');
+
+  // Uses Mapillary / OpenStreetMap 360° embed engine
+  frame.src = `https://www.mapillary.com/app/?lat=${target[0]}&lng=${target[1]}&z=17&focus=map`;
+  modal.classList.add('open');
 }
 
 function closeStreetView() {
   document.getElementById('streetViewModal').classList.remove('open');
+  document.getElementById('panoFrame').src = '';
 }
 
 // ══════════════════════════════
-//  GPS / GEOLOCATION PIPELINE
+//  GPS & LOCATION TRACKING
 // ══════════════════════════════
 function startGPS() {
-  if (!navigator.geolocation) {
-    document.getElementById('myCoords').textContent = 'GPS not supported';
-    return;
-  }
+  if (!navigator.geolocation) return;
   const opts = { enableHighAccuracy: true, maximumAge: 3000, timeout: 15000 };
 
   navigator.geolocation.getCurrentPosition(onPosition, onGPSError, opts);
@@ -908,7 +869,7 @@ function onPosition(pos) {
   const acc = Math.round(pos.coords.accuracy);
 
   document.getElementById('myCoords').textContent = `${myLat.toFixed(5)}, ${myLng.toFixed(5)}`;
-  document.getElementById('myAccuracy').textContent = `±${acc}m accuracy · ${getSourceLabel(pos)}`;
+  document.getElementById('myAccuracy').textContent = `±${acc}m accuracy · Live GPS`;
 
   if (!myMarker) {
     myMarker = L.marker([myLat, myLng], { icon: createMyIcon() }).addTo(map);
@@ -917,7 +878,6 @@ function onPosition(pos) {
     myMarker.setLatLng([myLat, myLng]);
   }
 
-  // Push updated tracking coordinate directly to Firebase
   database.ref('sessions/' + SESSION_ID + '/users/' + MY_USER_ID).update({
     id: MY_USER_ID,
     name: "Me",
@@ -931,33 +891,12 @@ function onPosition(pos) {
   updateAllETAs();
 }
 
-function getSourceLabel(pos) {
-  const acc = pos.coords.accuracy;
-  if (acc < 20) return 'GPS';
-  if (acc < 100) return 'GPS/WiFi';
-  return 'WiFi/Cell';
-}
-
-function onGPSError(err) {
-  fetch('https://ipapi.co/json/')
-    .then(r => r.json())
-    .then(d => {
-      myLat = d.latitude; myLng = d.longitude;
-      document.getElementById('myCoords').textContent = `${myLat.toFixed(4)}, ${myLng.toFixed(4)}`;
-      document.getElementById('myAccuracy').textContent = 'IP Location (approx.)';
-      if (!myMarker) {
-        myMarker = L.marker([myLat, myLng], { icon: createMyIcon() }).addTo(map);
-        map.setView([myLat, myLng], 12);
-      }
-      updateAllETAs();
-    })
-    .catch(() => {
-      document.getElementById('myCoords').textContent = 'Location unavailable';
-    });
+function onGPSError() {
+  document.getElementById('myCoords').textContent = 'Location unavailable';
 }
 
 // ══════════════════════════════
-//  FIREBASE REALTIME SYNC
+//  REALTIME SYNC & ETA MATRIX
 // ══════════════════════════════
 function listenForFirebaseUpdates() {
   const sessionRef = database.ref('sessions/' + SESSION_ID + '/users');
@@ -999,9 +938,6 @@ function processFirebaseUser(data) {
   updateAllETAs();
 }
 
-// ══════════════════════════════
-//  ETA MATRIX & DISTANCE LOGIC
-// ══════════════════════════════
 function updateAllETAs() {
   Object.values(people).forEach(p => {
     let targetLat = myLat;
@@ -1014,7 +950,7 @@ function updateAllETAs() {
 
     if (p.lat && p.lng && targetLat && targetLng) {
       const miles = calculateHaversine(p.lat, p.lng, targetLat, targetLng);
-      const minutes = Math.round((miles / 30) * 60); // assumes 30mph speed
+      const minutes = Math.round((miles / 30) * 60);
       
       if (minutes < 1) p.etaLabel = 'Arrived!';
       else if (minutes < 60) p.etaLabel = `${minutes} min (${miles.toFixed(1)} mi)`;
@@ -1029,7 +965,7 @@ function updateAllETAs() {
 }
 
 function calculateHaversine(lat1, lon1, lat2, lon2) {
-  const R = 3958.8; // Radius of earth in miles
+  const R = 3958.8;
   const dLat = (lat2 - lat1) * Math.PI / 180;
   const dLon = (lon2 - lon1) * Math.PI / 180;
   const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
@@ -1039,7 +975,7 @@ function calculateHaversine(lat1, lon1, lat2, lon2) {
 }
 
 // ══════════════════════════════
-//  MAP ICONS & CARDS UI
+//  UI MARKERS & LISTS
 // ══════════════════════════════
 function createMyIcon() {
   return L.divIcon({
@@ -1111,7 +1047,7 @@ function renderLists() {
 }
 
 // ══════════════════════════════
-//  MODAL MANAGEMENT
+//  MODALS
 // ══════════════════════════════
 let currentAddGroup = 'family';
 function openAddModal(group) {

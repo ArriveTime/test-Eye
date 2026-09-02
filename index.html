@@ -1,1003 +1,717 @@
-<!DOCTYPE html>  
-<html lang="en">  
-<head>  
-    <meta charset="UTF-8">  
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">  
-    <title>ArriveTime.com- Live Cell-Network Arrival Tracker</title>  
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>ArriveTime.com — Live Arrival & ETA Tracker</title>
 
-    <!-- Leaflet CSS for OpenStreetMap -->  
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />  
+  <!-- Leaflet Maps CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+  <!-- Firebase Compatibility Libraries -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
+  <!-- Leaflet Maps JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card-bg: rgba(30, 41, 59, 0.85);
+      --card-border: rgba(255, 255, 255, 0.1);
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --accent: #38bdf8;
+      --family-color: #ef4444;
+      --friends-color: #10b981;
+      --business-color: #3b82f6;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body, html {
+      height: 100%;
+      width: 100vw;
+      background-color: var(--bg);
+      color: var(--text);
+      overflow: hidden;
+    }
+
+    #app-container {
+      display: flex;
+      height: 100vh;
+      width: 100vw;
+      position: relative;
+    }
+
+    /* Map Interface */
+    #map {
+      flex: 1;
+      height: 100%;
+      width: 100%;
+      z-index: 1;
+    }
+
+    /* Sidebar Interface */
+    #sidebar {
+      width: 380px;
+      height: 100%;
+      background: var(--card-bg);
+      backdrop-filter: blur(12px);
+      border-right: 1px solid var(--card-border);
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 4px 0 24px rgba(0, 0, 0, 0.5);
+    }
+
+    .header {
+      padding: 20px;
+      border-bottom: 1px solid var(--card-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .brand {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .content-area {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px;
+    }
+
+    .group-section {
+      margin-bottom: 24px;
+    }
+
+    .group-title {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--muted);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Cards & Lists */
+    .person-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 12px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .person-card:hover, .person-card.active {
+      background: rgba(56, 189, 248, 0.1);
+      border-color: var(--accent);
+    }
+
+    .avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      border: 2px solid transparent;
+    }
+
+    .person-info {
+      flex: 1;
+    }
+
+    .person-name {
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    .person-eta {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .eta-time {
+      font-weight: 600;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    /* Floating Banners & Overlays */
+    #arrivalBanner {
+      position: absolute;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--card-bg);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 12px 24px;
+      z-index: 5;
+      display: none;
+      align-items: center;
+      gap: 16px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    }
+
+    #arrivalBanner.visible {
+      display: flex;
+    }
+
+    .banner-time {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    /* Primary Actions & Buttons */
+    .btn {
+      background: var(--accent);
+      color: #000;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.2s ease;
+    }
+
+    .btn:hover {
+      opacity: 0.9;
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--card-border);
+    }
+
+    /* Modal System */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(4px);
+      z-index: 100;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-overlay.visible {
+      display: flex;
+    }
+
+    .modal {
+      background: var(--bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 24px;
+      width: 90%;
+      max-width: 400px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+    }
+
+    .modal-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .form-group input, .form-group select {
+      width: 100%;
+      padding: 10px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      color: var(--text);
+      font-size: 0.95rem;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+      margin-top: 20px;
+    }
+
+    /* Map Custom Markers */
+    .leaflet-marker-icon {
+      border: none;
+      background: none;
+    }
+
+    .map-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+      border: 2px solid white;
+    }
+
+    /* Toast Notification */
+    #toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: var(--accent);
+      color: #000;
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-weight: 600;
+      z-index: 200;
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+
+    #toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    @media (max-width: 768px) {
+      #app-container {
+        flex-direction: column-reverse;
+      }
+      #sidebar {
+        width: 100%;
+        height: 45vh;
+      }
+      #map {
+        height: 55vh;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div id="app-container">
+  <!-- Left Navigation / Roster Sidebar -->
+  <div id="sidebar">
+    <div class="header">
+      <div class="brand">📍 ArriveTime</div>
+      <button class="btn" onclick="openModal()">+ Track Person</button>
+    </div>
     
-    <!-- FontAwesome Icons -->  
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">  
-
-    <!-- Firebase SDK (v9 Compatibility Mode) -->  
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>  
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>  
-
-    <style>  
-        :root {  
-            --bg-dark: #0f172a;  
-            --card-bg: rgba(15, 23, 42, 0.90);  
-            --accent-green: #10b981;  
-            --accent-blue: #2563eb;  
-            --accent-amber: #f59e0b;  
-            --accent-red: #ef4444;  
-            --text-main: #f8fafc;  
-            --text-sub: #94a3b8;  
-            --border-color: rgba(255, 255, 255, 0.12);  
-        }  
-
-        * {  
-            box-sizing: border-box;  
-            margin: 0;  
-            padding: 0;  
-            user-select: none;  
-            -webkit-tap-highlight-color: transparent;  
-        }  
-
-        body {  
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;  
-            background-color: var(--bg-dark);  
-            color: var(--text-main);  
-            height: 100vh;  
-            width: 100vw;  
-            overflow: hidden;  
-            display: flex;  
-            flex-direction: column;  
-        }  
-
-        /* Map Container */  
-        #map {  
-            flex: 1;  
-            width: 100%;  
-            height: 100%;  
-            z-index: 1;  
-            background: #e5e7eb;  
-        }  
-
-        /* Top Header Bar */  
-        .top-bar {  
-            position: absolute;  
-            top: 12px;  
-            left: 12px;  
-            right: 12px;  
-            z-index: 1000;  
-            display: flex;  
-            justify-content: space-between;  
-            align-items: center;  
-            background: var(--card-bg);  
-            backdrop-filter: blur(12px);  
-            -webkit-backdrop-filter: blur(12px);  
-            padding: 10px 16px;  
-            border-radius: 16px;  
-            border: 1px solid var(--border-color);  
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);  
-        }  
-
-        .brand {  
-            display: flex;  
-            align-items: center;  
-            gap: 10px;  
-            font-weight: 800;  
-            font-size: 1.2rem;  
-            letter-spacing: -0.5px;  
-            color: var(--text-main);  
-        }  
-
-        .brand i {  
-            color: var(--accent-green);  
-            font-size: 1.3rem;  
-        }  
-
-        .top-actions {  
-            display: flex;  
-            align-items: center;  
-            gap: 8px;  
-        }  
-
-        .session-tag {  
-            background: rgba(16, 185, 129, 0.15);  
-            color: var(--accent-green);  
-            padding: 4px 10px;  
-            border-radius: 20px;  
-            font-size: 0.75rem;  
-            font-weight: 700;  
-            border: 1px solid rgba(16, 185, 129, 0.3);  
-            display: flex;  
-            align-items: center;  
-            gap: 6px;  
-        }  
-
-        .icon-btn {  
-            background: rgba(255, 255, 255, 0.1);  
-            color: var(--text-main);  
-            border: 1px solid var(--border-color);  
-            padding: 6px 10px;  
-            border-radius: 12px;  
-            cursor: pointer;  
-            font-size: 0.85rem;  
-            display: flex;  
-            align-items: center;  
-            gap: 6px;  
-        }  
-
-        .icon-btn:hover {  
-            background: rgba(255, 255, 255, 0.2);  
-        }  
-
-        /* Bottom HUD Overlay */  
-        .hud-container {  
-            position: absolute;  
-            bottom: 16px;  
-            left: 12px;  
-            right: 12px;  
-            z-index: 1000;  
-            display: flex;  
-            flex-direction: column;  
-            gap: 10px;  
-        }  
-
-        .stats-card {  
-            background: var(--card-bg);  
-            backdrop-filter: blur(16px);  
-            -webkit-backdrop-filter: blur(16px);  
-            border-radius: 20px;  
-            padding: 14px;  
-            border: 1px solid var(--border-color);  
-            box-shadow: 0 10px 40px rgba(0,0,0,0.5);  
-            display: grid;  
-            grid-template-columns: 1fr 1fr 1fr;  
-            gap: 8px;  
-        }  
-
-        .stat-box {  
-            display: flex;  
-            flex-direction: column;  
-            align-items: center;  
-            justify-content: center;  
-            padding: 10px 6px;  
-            background: rgba(255, 255, 255, 0.05);  
-            border-radius: 12px;  
-            border: 1px solid rgba(255,255,255,0.08);  
-        }  
-
-        .stat-label {  
-            font-size: 0.65rem;  
-            text-transform: uppercase;  
-            letter-spacing: 0.5px;  
-            color: var(--text-sub);  
-            margin-bottom: 4px;  
-            display: flex;  
-            align-items: center;  
-            gap: 4px;  
-        }  
-
-        .stat-value {  
-            font-size: 1.35rem;  
-            font-weight: 800;  
-            color: var(--text-main);  
-            display: flex;  
-            align-items: baseline;  
-            gap: 2px;  
-        }  
-
-        .stat-value span {  
-            font-size: 0.75rem;  
-            color: var(--text-sub);  
-            font-weight: 500;  
-        }  
-
-        .status-box {  
-            grid-column: span 3;  
-            display: flex;  
-            align-items: center;  
-            justify-content: space-between;  
-            padding: 8px 12px;  
-            background: rgba(0,0,0,0.2);  
-            border-radius: 10px;  
-            margin-top: 4px;  
-        }  
-
-        .status-text {  
-            font-size: 0.8rem;  
-            font-weight: 700;  
-            color: var(--accent-amber);  
-        }  
-
-        /* Control Action Buttons */  
-        .action-row {  
-            display: flex;  
-            gap: 8px;  
-        }  
-
-        .btn {  
-            flex: 1;  
-            padding: 12px;  
-            border-radius: 14px;  
-            border: none;  
-            font-weight: 700;  
-            font-size: 0.85rem;  
-            cursor: pointer;  
-            display: flex;  
-            align-items: center;  
-            justify-content: center;  
-            gap: 8px;  
-            transition: all 0.2s ease;  
-        }  
-
-        .btn-primary {  
-            background: var(--accent-green);  
-            color: #000;  
-        }  
-
-        .btn-secondary {  
-            background: rgba(30, 41, 59, 0.9);  
-            color: var(--text-main);  
-            border: 1px solid var(--border-color);  
-        }  
-
-        .btn-amber {  
-            background: var(--accent-amber);  
-            color: #000;  
-        }  
-
-        .btn-danger {  
-            background: var(--accent-red);  
-            color: #fff;  
-        }  
-
-        .btn:active {  
-            transform: scale(0.97);  
-            opacity: 0.9;  
-        }  
-
-        /* Custom Markers */  
-        .marker-pin {  
-            width: 36px;  
-            height: 36px;  
-            border-radius: 50%;  
-            display: flex;  
-            align-items: center;  
-            justify-content: center;  
-            color: white;  
-            font-weight: bold;  
-            box-shadow: 0 4px 12px rgba(0,0,0,0.4);  
-            position: relative;  
-        }  
-
-        .marker-you {  
-            background: var(--accent-blue);  
-            border: 3px solid #fff;  
-        }  
-
-        .marker-buddy {  
-            background: var(--accent-green);  
-            border: 3px solid #fff;  
-        }  
-
-        .pulse-ring {  
-            position: absolute;  
-            width: 100%;  
-            height: 100%;  
-            border-radius: 50%;  
-            animation: pulse 2s infinite;  
-            opacity: 0.6;  
-        }  
-
-        .marker-you .pulse-ring { background: var(--accent-blue); }  
-        .marker-buddy .pulse-ring { background: var(--accent-green); }  
-
-        @keyframes pulse {  
-            0% { transform: scale(1); opacity: 0.8; }  
-            100% { transform: scale(2.2); opacity: 0; }  
-        }  
-
-        /* Modal Overlay */  
-        .modal {  
-            display: none;  
-            position: fixed;  
-            top: 0; left: 0; right: 0; bottom: 0;  
-            background: rgba(0,0,0,0.8);  
-            z-index: 2000;  
-            align-items: center;  
-            justify-content: center;  
-            padding: 20px;  
-            backdrop-filter: blur(8px);  
-        }  
-
-        .modal-content {  
-            background: #1e293b;  
-            border-radius: 24px;  
-            padding: 24px;  
-            width: 100%;  
-            max-width: 420px;  
-            border: 1px solid var(--border-color);  
-            text-align: center;  
-            max-height: 85vh;  
-            display: flex;  
-            flex-direction: column;  
-        }  
-
-        .modal-title {  
-            font-size: 1.2rem;  
-            font-weight: 700;  
-            margin-bottom: 8px;  
-        }  
-
-        .modal-sub {  
-            font-size: 0.85rem;  
-            color: var(--text-sub);  
-            margin-bottom: 16px;  
-        }  
-
-        .link-box {  
-            background: rgba(0,0,0,0.4);  
-            border: 1px solid var(--border-color);  
-            padding: 12px;  
-            border-radius: 12px;  
-            word-break: break-all;  
-            font-family: monospace;  
-            font-size: 0.8rem;  
-            margin-bottom: 16px;  
-            color: var(--accent-green);  
-        }  
-
-        .share-grid {  
-            display: flex;  
-            flex-direction: column;  
-            gap: 10px;  
-            margin-bottom: 12px;  
-        }  
-
-        /* Events List Container */  
-        .events-list {  
-            overflow-y: auto;  
-            flex: 1;  
-            margin: 10px 0 16px 0;  
-            display: flex;  
-            flex-direction: column;  
-            gap: 8px;  
-            text-align: left;  
-            max-height: 300px;  
-            padding-right: 4px;  
-        }  
-
-        .event-card {  
-            background: rgba(0, 0, 0, 0.3);  
-            border: 1px solid var(--border-color);  
-            border-radius: 12px;  
-            padding: 10px 12px;  
-            display: flex;  
-            align-items: center;  
-            justify-content: space-between;  
-        }  
-
-        .event-info {  
-            display: flex;  
-            flex-direction: column;  
-            gap: 2px;  
-        }  
-
-        .event-time {  
-            font-size: 0.8rem;  
-            font-weight: 700;  
-            color: var(--accent-green);  
-        }  
-
-        .event-detail {  
-            font-size: 0.75rem;  
-            color: var(--text-sub);  
-        }  
-
-        .delete-btn {  
-            background: rgba(239, 68, 68, 0.15);  
-            color: var(--accent-red);  
-            border: 1px solid rgba(239, 68, 68, 0.3);  
-            border-radius: 8px;  
-            padding: 6px 10px;  
-            cursor: pointer;  
-            transition: all 0.2s;  
-        }  
-
-        .delete-btn:hover {  
-            background: var(--accent-red);  
-            color: white;  
-        }  
-
-        .empty-events {  
-            color: var(--text-sub);  
-            font-size: 0.85rem;  
-            padding: 20px 0;  
-            text-align: center;  
-        }  
-
-        /* Banner Notification */  
-        .toast {  
-            position: absolute;  
-            top: 70px;  
-            left: 12px;  
-            right: 12px;  
-            z-index: 1000;  
-            background: var(--accent-green);  
-            color: #000;  
-            padding: 10px 16px;  
-            border-radius: 12px;  
-            font-weight: 700;  
-            font-size: 0.85rem;  
-            display: none;  
-            align-items: center;  
-            justify-content: center;  
-            gap: 8px;  
-            box-shadow: 0 4px 20px rgba(16,185,129,0.4);  
-        }  
-    </style>  
-</head>  
-<body>  
-
-    <!-- Toast Notification -->  
-    <div id="toast" class="toast">  
-        <i class="fa-solid fa-circle-check"></i> <span id="toast-text">Link copied to clipboard!</span>  
-    </div>  
-
-    <!-- Header Bar -->  
-    <div class="top-bar">  
-        <div class="brand">  
-            <i class="fa-solid fa-location-arrow"></i>  
-            <span>4ETA.com</span>  
-        </div>  
-        <div class="top-actions">  
-            <button class="icon-btn" onclick="openEventsModal()" title="View Arrival History">  
-                <i class="fa-solid fa-list-check"></i> Arrived Log  
-            </button>  
-            <div class="session-tag" id="session-tag">  
-                <i class="fa-solid fa-wifi"></i> <span id="session-id-display">Connecting...</span>  
-            </div>  
-        </div>  
-    </div>  
-
-    <!-- Map Engine Container -->  
-    <div id="map"></div>  
-
-    <!-- HUD Overlay Controls -->  
-    <div class="hud-container">  
-        <div class="stats-card">  
-            <!-- Distance Box -->  
-            <div class="stat-box">  
-                <div class="stat-label"><i class="fa-solid fa-ruler"></i> Distance</div>  
-                <div class="stat-value" id="dist-val">-- <span>mi</span></div>  
-            </div>  
-
-            <!-- Speed Box -->  
-            <div class="stat-box">  
-                <div class="stat-label"><i class="fa-solid fa-gauge-high"></i> Speed</div>  
-                <div class="stat-value" id="speed-val">0 <span>mph</span></div>  
-            </div>  
-
-            <!-- ETA Box -->  
-            <div class="stat-box">  
-                <div class="stat-label"><i class="fa-solid fa-clock"></i> Est. Arrival</div>  
-                <div class="stat-value" id="eta-val">-- <span>min</span></div>  
-            </div>  
-
-            <!-- Status Row -->  
-            <div class="status-box">  
-                <span style="font-size:0.75rem; color: var(--text-sub);">STATUS</span>  
-                <span class="status-text" id="status-val">Acquiring Location...</span>  
-            </div>  
-        </div>  
-
-        <div class="action-row">  
-            <button class="btn btn-primary" onclick="openShareModal()">  
-                <i class="fa-solid fa-share-nodes"></i> Connect Person  
-            </button>  
-            <button class="btn btn-amber" onclick="toggleDemoMode()" id="demo-btn">  
-                <i class="fa-solid fa-play"></i> Test Demo  
-            </button>  
-            <button class="btn btn-secondary" style="flex:0; padding: 12px 16px;" onclick="centerMap()">  
-                <i class="fa-solid fa-crosshairs"></i>  
-            </button>  
-        </div>  
-    </div>  
-
-    <!-- Share Link Modal -->  
-    <div class="modal" id="share-modal">  
-        <div class="modal-content">  
-            <div class="modal-title">Share Arrival Tracker</div>  
-            <div class="modal-sub">Send this link to the person you are meeting so you can see each other's live location & speed in real-time.</div>  
-            
-            <div class="link-box" id="share-link-text">https://4eta.com/#...</div>  
-
-            <div class="share-grid">  
-                <button class="btn btn-primary" style="width: 100%;" onclick="shareNative()">  
-                    <i class="fa-solid fa-paper-plane"></i> Share Link (SMS / Apps)  
-                </button>  
-                
-                <button class="btn btn-amber" style="width: 100%;" onclick="shareSMS()">  
-                    <i class="fa-solid fa-comment-sms"></i> Send Text / SMS  
-                </button>  
-
-                <button class="btn btn-secondary" style="width: 100%;" onclick="copyShareLink()">  
-                    <i class="fa-solid fa-copy"></i> Copy Link Only  
-                </button>  
-            </div>  
-
-            <button class="btn btn-secondary" style="width: 100%; margin-top: 4px;" onclick="closeShareModal()">Close</button>  
-        </div>  
-    </div>  
-
-    <!-- Arrival Events Manager Modal -->  
-    <div class="modal" id="events-modal">  
-        <div class="modal-content">  
-            <div class="modal-title"><i class="fa-solid fa-clock-rotate-left"></i> Arrival Log & Events</div>  
-            <div class="modal-sub">View, delete, or reset logged arrival events for this tracking session.</div>  
-            
-            <div class="events-list" id="events-list-container">  
-                <div class="empty-events">No arrival events recorded yet.</div>  
-            </div>  
-
-            <div style="display: flex; gap: 8px; width: 100%;">  
-                <button class="btn btn-danger" style="flex:1;" onclick="resetAllEvents()">  
-                    <i class="fa-solid fa-trash-can"></i> Reset All Events  
-                </button>  
-                <button class="btn btn-secondary" style="flex:1;" onclick="closeEventsModal()">Close</button>  
-            </div>  
-        </div>  
-    </div>  
-
-    <!-- Leaflet.js Mapping Engine -->  
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>  
-
-    <script>  
-        // Integrated Firebase Configuration  
-        const firebaseConfig = {  
-            apiKey: "AIzaSyDCudEWPgTN-bLSThrsspZq1G42gC_NnQI",  
-            authDomain: "eta-14072.firebaseapp.com",  
-            databaseURL: "https://eta-14072-default-rtdb.firebaseio.com",  
-            projectId: "eta-14072",  
-            storageBucket: "eta-14072.firebasestorage.app",  
-            messagingSenderId: "371118748763",  
-            appId: "1:371118748763:web:2467092dbf915d44d3bb7e",  
-            measurementId: "G-2ERQ1JT20P"  
-        };  
-
-        // Initialize Firebase  
-        let db = null;  
-        try {  
-            firebase.initializeApp(firebaseConfig);  
-            db = firebase.database();  
-        } catch (e) {  
-            console.warn("Firebase initialization error:", e);  
-        }  
-
-        // Core App State  
-        let map, userMarker, buddyMarker, connectingLine;  
-        let userPos = null;  
-        let buddyPos = null;  
-        let currentSpeedMph = 0;  
-        let sessionId = '';  
-        let userId = 'usr_' + Math.random().toString(36).substring(2, 8);  
-        let isDemoRunning = false;  
-        let demoInterval = null;  
-        let arrivalEvents = {}; // Stores arrival event records  
-        let hasTriggeredCurrentArrival = false;  
-
-        const DEFAULT_LAT = 37.2707;  
-        const DEFAULT_LNG = -76.7075;  
-
-        window.addEventListener('DOMContentLoaded', () => {  
-            initSession();  
-            initMap();  
-            startGPSWatcher();  
-            setupFirebaseTracking();  
-        });  
-
-        function initSession() {  
-            if (window.location.hash && window.location.hash.length > 5) {  
-                sessionId = window.location.hash.replace('#', '');  
-            } else {  
-                sessionId = 'eta-' + Math.random().toString(36).substring(2, 8);  
-                window.location.hash = sessionId;  
-            }  
-            document.getElementById('session-id-display').innerText = sessionId.toUpperCase();  
-        }  
-
-        function initMap() {  
-            map = L.map('map', {  
-                zoomControl: false,  
-                attributionControl: false  
-            }).setView([DEFAULT_LAT, DEFAULT_LNG], 14);  
-
-            L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {  
-                maxZoom: 19,  
-                attribution: '&copy; OpenStreetMap contributors'  
-            }).addTo(map);  
-
-            connectingLine = L.polyline([], {  
-                color: '#10b981',  
-                weight: 4,  
-                dashArray: '8, 8',  
-                opacity: 0.9  
-            }).addTo(map);  
-        }  
-
-        function startGPSWatcher() {  
-            if ('geolocation' in navigator) {  
-                navigator.geolocation.watchPosition(  
-                    (position) => {  
-                        const { latitude, longitude, speed } = position.coords;  
-                        userPos = { lat: latitude, lng: longitude };  
-
-                        if (speed !== null && speed !== undefined && speed > 0) {  
-                            currentSpeedMph = Math.round(speed * 2.23694);  
-                        } else {  
-                            currentSpeedMph = 0;  
-                        }  
-
-                        document.getElementById('speed-val').innerHTML = `${currentSpeedMph} <span>mph</span>`;  
-
-                        updateUserMarker(latitude, longitude);  
-                        document.getElementById('status-val').innerText = 'Live Cellular GPS Active';  
-                        document.getElementById('status-val').style.color = '#10b981';  
-
-                        pushLocationToFirebase({ ...userPos, speedMph: currentSpeedMph });  
-                        recalculateMetrics();  
-                    },  
-                    (error) => {  
-                        console.warn('GPS Error: ' + error.message);  
-                        document.getElementById('status-val').innerText = 'Acquiring GPS Signal...';  
-                        document.getElementById('status-val').style.color = '#f59e0b';  
-                    },  
-                    {  
-                        enableHighAccuracy: true,  
-                        maximumAge: 1000,  
-                        timeout: 10000  
-                    }  
-                );  
-            }  
-        }  
-
-        function updateUserMarker(lat, lng) {  
-            const icon = L.divIcon({  
-                className: 'custom-div-icon',  
-                html: `<div class="marker-pin marker-you"><div class="pulse-ring"></div><i class="fa-solid fa-user"></i></div>`,  
-                iconSize: [36, 36],  
-                iconAnchor: [18, 18]  
-            });  
-
-            if (!userMarker) {  
-                userMarker = L.marker([lat, lng], { icon: icon }).addTo(map);  
-                map.setView([lat, lng], 15);  
-            } else {  
-                userMarker.setLatLng([lat, lng]);  
-            }  
-        }  
-
-        function updateBuddyMarker(lat, lng) {  
-            const icon = L.divIcon({  
-                className: 'custom-div-icon',  
-                html: `<div class="marker-pin marker-buddy"><div class="pulse-ring"></div><i class="fa-solid fa-user-group"></i></div>`,  
-                iconSize: [36, 36],  
-                iconAnchor: [18, 18]  
-            });  
-
-            if (!buddyMarker) {  
-                buddyMarker = L.marker([lat, lng], { icon: icon }).addTo(map);  
-            } else {  
-                buddyMarker.setLatLng([lat, lng]);  
-            }  
-        }  
-
-        // Firebase Cloud Relay across Cell Networks  
-        function setupFirebaseTracking() {  
-            if (!db) return;  
-
-            const roomRef = db.ref('rooms/' + sessionId);  
-
-            // Listen for other user updates in the room  
-            roomRef.child('locations').on('child_changed', (snapshot) => {  
-                if (snapshot.key !== userId) {  
-                    const data = snapshot.val();  
-                    if (data && data.lat && data.lng) {  
-                        buddyPos = { lat: data.lat, lng: data.lng };  
-                        updateBuddyMarker(buddyPos.lat, buddyPos.lng);  
-                        recalculateMetrics();  
-                    }  
-                }  
-            });  
-
-            roomRef.child('locations').on('child_added', (snapshot) => {  
-                if (snapshot.key !== userId) {  
-                    const data = snapshot.val();  
-                    if (data && data.lat && data.lng) {  
-                        buddyPos = { lat: data.lat, lng: data.lng };  
-                        updateBuddyMarker(buddyPos.lat, buddyPos.lng);  
-                        recalculateMetrics();  
-                    }  
-                }  
-            });  
-
-            // Sync Arrival Events from Firebase  
-            roomRef.child('events').on('value', (snapshot) => {  
-                arrivalEvents = snapshot.val() || {};  
-                renderEventsList();  
-            });  
-        }  
-
-        function pushLocationToFirebase(data) {  
-            if (db && sessionId && userId) {  
-                db.ref('rooms/' + sessionId + '/locations/' + userId).set({  
-                    ...data,  
-                    timestamp: Date.now()  
-                });  
-            }  
-        }  
-
-        function logArrivalEvent(distanceFeet) {  
-            if (hasTriggeredCurrentArrival) return;  
-            hasTriggeredCurrentArrival = true;  
-
-            const eventData = {  
-                timestamp: Date.now(),  
-                formattedTime: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }),  
-                distanceFeet: distanceFeet,  
-                user: userId  
-            };  
-
-            if (db && sessionId) {  
-                const newEventRef = db.ref('rooms/' + sessionId + '/events').push();  
-                newEventRef.set(eventData);  
-            } else {  
-                const localKey = 'evt_' + Date.now();  
-                arrivalEvents[localKey] = eventData;  
-                renderEventsList();  
-            }  
-            showToast('Arrival Event Recorded!');  
-        }  
-
-        function deleteSingleEvent(eventId) {  
-            if (db && sessionId) {  
-                db.ref('rooms/' + sessionId + '/events/' + eventId).remove();  
-            } else {  
-                delete arrivalEvents[eventId];  
-                renderEventsList();  
-            }  
-            showToast('Event deleted');  
-        }  
-
-        function resetAllEvents() {  
-            if (db && sessionId) {  
-                db.ref('rooms/' + sessionId + '/events').remove();  
-            } else {  
-                arrivalEvents = {};  
-                renderEventsList();  
-            }  
-            hasTriggeredCurrentArrival = false;  
-            showToast('All arrival events cleared!');  
-        }  
-
-        function renderEventsList() {  
-            const container = document.getElementById('events-list-container');  
-            const keys = Object.keys(arrivalEvents);  
-
-            if (keys.length === 0) {  
-                container.innerHTML = '<div class="empty-events">No arrival events recorded yet.</div>';  
-                return;  
-            }  
-
-            let html = '';  
-            keys.reverse().forEach(key => {  
-                const evt = arrivalEvents[key];  
-                html += `  
-                    <div class="event-card">  
-                        <div class="event-info">  
-                            <div class="event-time"><i class="fa-solid fa-circle-check"></i> Arrived at ${evt.formattedTime || 'Recent'}</div>  
-                            <div class="event-detail">Distance proximity: ${evt.distanceFeet || 0} ft</div>  
-                        </div>  
-                        <button class="delete-btn" onclick="deleteSingleEvent('${key}')" title="Delete event">  
-                            <i class="fa-solid fa-trash-can"></i>  
-                        </button>  
-                    </div>  
-                `;  
-            });  
-            container.innerHTML = html;  
-        }  
-
-        function recalculateMetrics() {  
-            if (!userPos || !buddyPos) return;  
-
-            connectingLine.setLatLngs([  
-                [userPos.lat, userPos.lng],  
-                [buddyPos.lat, buddyPos.lng]  
-            ]);  
-
-            const distMiles = calculateHaversineDistance(  
-                userPos.lat, userPos.lng,  
-                buddyPos.lat, buddyPos.lng  
-            );  
-
-            const distanceInFeet = Math.round(distMiles * 5280);  
-
-            if (distMiles < 0.1) {  
-                document.getElementById('dist-val').innerHTML = `${distanceInFeet} <span>ft</span>`;  
-            } else {  
-                document.getElementById('dist-val').innerHTML = `${distMiles.toFixed(2)} <span>mi</span>`;  
-            }  
-
-            const speedToUse = currentSpeedMph > 3 ? currentSpeedMph : 15;  
-            const etaMinutes = Math.ceil((distMiles / speedToUse) * 60);  
-
-            if (etaMinutes <= 1) {  
-                document.getElementById('eta-val').innerHTML = `< 1 <span>min</span>`;  
-            } else {  
-                document.getElementById('eta-val').innerHTML = `${etaMinutes} <span>min</span>`;  
-            }  
-
-            if (distanceInFeet < 30) {  
-                triggerArrivalChime();  
-                document.getElementById('status-val').innerText = 'Arrived / Contact Met!';  
-                document.getElementById('status-val').style.color = '#10b981';  
-                logArrivalEvent(distanceInFeet);  
-            } else {  
-                hasTriggeredCurrentArrival = false; // Reset trigger state when moving away  
-            }  
-        }  
-
-        function calculateHaversineDistance(lat1, lon1, lat2, lon2) {  
-            const R = 3958.8;  
-            const dLat = toRad(lat2 - lat1);  
-            const dLon = toRad(lon2 - lon1);  
-            const a =   
-                Math.sin(dLat / 2) * Math.sin(dLat / 2) +  
-                Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *   
-                Math.sin(dLon / 2) * Math.sin(dLon / 2);  
-            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));  
-            return R * c;  
-        }  
-
-        function toRad(degrees) {  
-            return degrees * (Math.PI / 180);  
-        }  
-
-        function toggleDemoMode() {  
-            const demoBtn = document.getElementById('demo-btn');  
-            
-            if (isDemoRunning) {  
-                clearInterval(demoInterval);  
-                isDemoRunning = false;  
-                demoBtn.innerHTML = `<i class="fa-solid fa-play"></i> Test Demo`;  
-                demoBtn.className = "btn btn-amber";  
-                document.getElementById('speed-val').innerHTML = `0 <span>mph</span>`;  
-                return;  
-            }  
-
-            isDemoRunning = true;  
-            demoBtn.innerHTML = `<i class="fa-solid fa-stop"></i> Stop Demo`;  
-            demoBtn.className = "btn btn-secondary";  
-
-            const startLat = userPos ? userPos.lat : DEFAULT_LAT;  
-            const startLng = userPos ? userPos.lng : DEFAULT_LNG;  
-
-            userPos = { lat: startLat, lng: startLng };  
-            buddyPos = { lat: startLat + 0.015, lng: startLng + 0.015 };  
-
-            updateUserMarker(userPos.lat, userPos.lng);  
-            updateBuddyMarker(buddyPos.lat, buddyPos.lng);  
-
-            const bounds = L.latLngBounds(  
-                [userPos.lat, userPos.lng],  
-                [buddyPos.lat, buddyPos.lng]  
-            );  
-            map.fitBounds(bounds, { padding: [50, 50] });  
-
-            currentSpeedMph = 35;  
-            document.getElementById('speed-val').innerHTML = `35 <span>mph</span>`;  
-
-            demoInterval = setInterval(() => {  
-                if (!isDemoRunning) return;  
-
-                buddyPos.lat -= (buddyPos.lat - userPos.lat) * 0.08;  
-                buddyPos.lng -= (buddyPos.lng - userPos.lng) * 0.08;  
-
-                updateBuddyMarker(buddyPos.lat, buddyPos.lng);  
-                recalculateMetrics();  
-
-                const dist = calculateHaversineDistance(userPos.lat, userPos.lng, buddyPos.lat, buddyPos.lng);  
-                if (dist * 5280 < 25) {  
-                    clearInterval(demoInterval);  
-                    isDemoRunning = false;  
-                    demoBtn.innerHTML = `<i class="fa-solid fa-play"></i> Test Demo`;  
-                    demoBtn.className = "btn btn-amber";  
-                    document.getElementById('speed-val').innerHTML = `0 <span>mph</span>`;  
-                }  
-            }, 1000);  
-        }  
-
-        function centerMap() {  
-            if (userPos && buddyPos) {  
-                const bounds = L.latLngBounds(  
-                    [userPos.lat, userPos.lng],  
-                    [buddyPos.lat, buddyPos.lng]  
-                );  
-                map.fitBounds(bounds, { padding: [60, 60] });  
-            } else if (userPos) {  
-                map.setView([userPos.lat, userPos.lng], 16);  
-            }  
-        }  
-
-        function triggerArrivalChime() {  
-            try {  
-                const ctx = new (window.AudioContext || window.webkitAudioContext)();  
-                const osc = ctx.createOscillator();  
-                const gain = ctx.createGain();  
-                
-                osc.type = 'sine';  
-                osc.frequency.setValueAtTime(587.33, ctx.currentTime);  
-                osc.frequency.setValueAtTime(880, ctx.currentTime + 0.15);  
-                
-                gain.gain.setValueAtTime(0.3, ctx.currentTime);  
-                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.6);  
-                
-                osc.connect(gain);  
-                gain.connect(ctx.destination);  
-                
-                osc.start();  
-                osc.stop(ctx.currentTime + 0.6);  
-            } catch (e) {}  
-        }  
-
-        function openShareModal() {  
-            document.getElementById('share-link-text').innerText = window.location.href;  
-            document.getElementById('share-modal').style.display = 'flex';  
-        }  
-
-        function closeShareModal() {  
-            document.getElementById('share-modal').style.display = 'none';  
-        }  
-
-        function openEventsModal() {  
-            renderEventsList();  
-            document.getElementById('events-modal').style.display = 'flex';  
-        }  
-
-        function closeEventsModal() {  
-            document.getElementById('events-modal').style.display = 'none';  
-        }  
-
-        function shareNative() {  
-            const shareData = {  
-                title: '4ETA - Track My Arrival',  
-                text: 'Track my live location, speed, and arrival time in real-time on 4ETA:',  
-                url: window.location.href  
-            };  
-
-            if (navigator.share) {  
-                navigator.share(shareData).catch(() => {});  
-            } else {  
-                copyShareLink();  
-            }  
-        }  
-
-        function shareSMS() {  
-            const msg = encodeURIComponent(`Track my live location and arrival time on 4ETA: ${window.location.href}`);  
-            window.location.href = `sms:?&body=${msg}`;  
-        }  
-
-        function copyShareLink() {  
-            navigator.clipboard.writeText(window.location.href).then(() => {  
-                closeShareModal();  
-                showToast('Invite link copied to clipboard!');  
-            });  
-        }  
-
-        function showToast(msg) {  
-            const toast = document.getElementById('toast');  
-            document.getElementById('toast-text').innerText = msg;  
-            toast.style.display = 'flex';  
-            setTimeout(() => {  
-                toast.style.display = 'none';  
-            }, 3000);  
-        }  
-    </script>  
-</body>  
+    <div class="content-area">
+      <!-- Family Group -->
+      <div class="group-section">
+        <div class="group-title">
+          <span style="color: var(--family-color);">●</span> Family
+        </div>
+        <div id="family-list"></div>
+      </div>
+
+      <!-- Friends Group -->
+      <div class="group-section">
+        <div class="group-title">
+          <span style="color: var(--friends-color);">●</span> Friends
+        </div>
+        <div id="friends-list"></div>
+      </div>
+
+      <!-- Business Group -->
+      <div class="group-section">
+        <div class="group-title">
+          <span style="color: var(--business-color);">●</span> Business
+        </div>
+        <div id="business-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Interactive Map Workspace -->
+  <div id="map"></div>
+
+  <!-- Top Active ETA Banner -->
+  <div id="arrivalBanner">
+    <div>
+      <div id="bannerName" style="font-weight: 600;">Select a contact</div>
+      <div id="bannerSub" style="font-size: 0.8rem; color: var(--muted);">Select someone from the list to track</div>
+    </div>
+    <div id="bannerEta" class="banner-time">-- min</div>
+  </div>
+</div>
+
+<!-- Modal for Adding Trackers -->
+<div class="modal-overlay" id="addModal">
+  <div class="modal">
+    <div class="modal-title">Track New Person</div>
+    
+    <div class="form-group">
+      <label for="addName">Name</label>
+      <input type="text" id="addName" placeholder="e.g. Alex Morgan" />
+    </div>
+
+    <div class="form-group">
+      <label for="addGroup">Category</label>
+      <select id="addGroup">
+        <option value="family">Family</option>
+        <option value="friends">Friends</option>
+        <option value="business">Business</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="addEmoji">Icon / Emoji</label>
+      <select id="addEmoji">
+        <option value="🚗">🚗 Car</option>
+        <option value="🏃">🏃 Walking</option>
+        <option value="🚴">🚴 Bicycle</option>
+        <option value="✈️">✈️ Flight</option>
+        <option value="💼">💼 Business</option>
+      </select>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+      <button class="btn" onclick="addPersonSubmit()">Start Tracking</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ══════════════════════════════
+//  CONFIG & INITIALIZATION
+// ══════════════════════════════
+const firebaseConfig = {
+  databaseURL: "https://arrivetime-default-rtdb.firebaseio.com" // Replace with your Firebase RTDB URL
+};
+
+// Fallback session ID generator or URL query parser
+const urlParams = new URLSearchParams(window.location.search);
+const SESSION_ID = urlParams.get('session') || 'demo-room';
+
+let database;
+let map;
+let myMarker;
+let myLat = null;
+let myLng = null;
+let people = {};
+let selectedPerson = null;
+
+const GROUP_COLORS = {
+  family: '#ef4444',
+  friends: '#10b981',
+  business: '#3b82f6'
+};
+
+// Initialize Application
+window.addEventListener('load', () => {
+  initFirebase();
+  initMap();
+  setupGeolocation();
+});
+
+function initFirebase() {
+  if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+  }
+  database = firebase.database();
+  
+  // Listen for real-time room sync
+  database.ref('sessions/' + SESSION_ID + '/users').on('value', (snapshot) => {
+    const data = snapshot.val() || {};
+    syncPeopleData(data);
+  });
+}
+
+function initMap() {
+  // Default centered at center of US prior to GPS lock
+  map = L.map('map', { zoomControl: false }).setView([37.7749, -122.4194], 12);
+
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+    attribution: '&copy; OpenStreetMap &copy; CARTO',
+    subdomains: 'abcd',
+    maxZoom: 19
+  }).addTo(map);
+
+  L.control.zoom({ position: 'bottomright' }).addTo(map);
+}
+
+// ══════════════════════════════
+//  GEOLOCATION & LIVE UPDATES
+// ══════════════════════════════
+function setupGeolocation() {
+  if ('geolocation' in navigator) {
+    navigator.geolocation.watchPosition(
+      (position) => {
+        myLat = position.coords.latitude;
+        myLng = position.coords.longitude;
+
+        if (!myMarker) {
+          map.setView([myLat, myLng], 13);
+          const customIcon = L.divIcon({
+            className: 'custom-pin',
+            html: `<div class="map-avatar" style="background:#38bdf8; border-color:#fff;">📍</div>`
+          });
+          myMarker = L.marker([myLat, myLng], { icon: customIcon }).addTo(map);
+        } else {
+          myMarker.setLatLng([myLat, myLng]);
+        }
+
+        updateAllETAs();
+      },
+      (error) => {
+        console.warn('Geolocation error or permission denied:', error);
+      },
+      { enableHighAccuracy: true, maximumAge: 10000, timeout: 5000 }
+    );
+  }
+}
+
+function syncPeopleData(remoteUsers) {
+  Object.keys(remoteUsers).forEach(id => {
+    const p = remoteUsers[id];
+    
+    if (!people[id]) {
+      people[id] = p;
+      createMapMarker(people[id]);
+    } else {
+      people[id].lat = p.lat;
+      people[id].lng = p.lng;
+      people[id].name = p.name;
+      people[id].group = p.group;
+      people[id].emoji = p.emoji;
+      
+      if (people[id].marker) {
+        people[id].marker.setLatLng([p.lat, p.lng]);
+      }
+    }
+  });
+
+  // Remove stale trackers
+  Object.keys(people).forEach(id => {
+    if (!remoteUsers[id]) {
+      if (people[id].marker) map.removeLayer(people[id].marker);
+      delete people[id];
+    }
+  });
+
+  updateAllETAs();
+}
+
+function createMapMarker(p) {
+  const color = GROUP_COLORS[p.group] || '#38bdf8';
+  const icon = L.divIcon({
+    className: 'custom-pin',
+    html: `<div class="map-avatar" style="background:${color}; border-color:#fff;">${p.emoji}</div>`
+  });
+
+  p.marker = L.marker([p.lat, p.lng], { icon: icon }).addTo(map);
+  p.marker.on('click', () => selectPerson(p));
+}
+
+function createPersonIcon(p) {
+  const color = GROUP_COLORS[p.group] || '#38bdf8';
+  return L.divIcon({
+    className: 'custom-pin',
+    html: `<div class="map-avatar" style="background:${color}; border-color:#fff;">${p.emoji}</div>`
+  });
+}
+
+// ══════════════════════════════
+//  MODALS & FORM HANDLERS
+// ══════════════════════════════
+function openModal() {
+  document.getElementById('addModal').classList.add('visible');
+  document.getElementById('addName').focus();
+}
+
+function closeModal() {
+  document.getElementById('addModal').classList.remove('visible');
+  document.getElementById('addName').value = '';
+}
+
+function addPersonSubmit() {
+  const name = document.getElementById('addName').value.trim();
+  const group = document.getElementById('addGroup').value;
+  const emoji = document.getElementById('addEmoji').value;
+
+  if (!name) { 
+    document.getElementById('addName').focus(); 
+    return; 
+  }
+
+  const personId = 'u_' + Math.random().toString(36).substr(2, 6);
+  
+  // Create mock starting position near user for local visualization
+  const latOffset = (Math.random() - 0.5) * 0.04;
+  const lngOffset = (Math.random() - 0.5) * 0.04;
+  const initialLat = (myLat || 37.7749) + latOffset;
+  const initialLng = (myLng || -122.4194) + lngOffset;
+
+  // Add directly to Firebase for active room synchronization
+  database.ref('sessions/' + SESSION_ID + '/users/' + personId).set({
+    id: personId,
+    name: name,
+    group: group,
+    emoji: emoji,
+    lat: initialLat,
+    lng: initialLng,
+    updatedAt: firebase.database.ServerValue.TIMESTAMP
+  });
+
+  closeModal();
+  showToast(`✅ Added ${name}! Share your link with them.`);
+}
+
+function selectPerson(p) {
+  selectedPerson = p;
+  map.flyTo([p.lat, p.lng], 15, { duration: 1 });
+  
+  document.getElementById('bannerName').textContent = `${p.emoji} ${p.name}`;
+  document.getElementById('bannerEta').textContent = p.etaLabel || 'Calculating...';
+  document.getElementById('bannerSub').textContent = `Distance: ${p.distanceLabel || 'Near'}`;
+  document.getElementById('arrivalBanner').classList.add('visible');
+
+  renderLists();
+}
+
+// ══════════════════════════════
+//  ETA CALCULATIONS & DISTANCE
+// ══════════════════════════════
+function updateAllETAs() {
+  if (!myLat || !myLng) return;
+
+  Object.values(people).forEach(p => {
+    const distKm = getHaversineDistance(myLat, myLng, p.lat, p.lng);
+    const miles = distKm * 0.621371;
+    
+    // Assume average transit speed of 25 mph urban
+    const travelTimeMins = Math.round((miles / 25) * 60);
+
+    if (travelTimeMins < 1) {
+      p.etaLabel = 'Arrived';
+      p.distanceLabel = 'Here';
+    } else if (travelTimeMins >= 60) {
+      const hrs = Math.floor(travelTimeMins / 60);
+      const mins = travelTimeMins % 60;
+      p.etaLabel = `~${hrs}h ${mins}m`;
+      p.distanceLabel = `${miles.toFixed(1)} miles away`;
+    } else {
+      p.etaLabel = `~${travelTimeMins} min`;
+      p.distanceLabel = `${miles.toFixed(1)} miles away`;
+    }
+
+    if (p.marker) {
+      p.marker.setIcon(createPersonIcon(p));
+    }
+
+    if (selectedPerson && selectedPerson.id === p.id) {
+      document.getElementById('bannerEta').textContent = p.etaLabel;
+      document.getElementById('bannerSub').textContent = `Distance: ${p.distanceLabel}`;
+    }
+  });
+
+  renderLists();
+}
+
+function getHaversineDistance(lat1, lon1, lat2, lon2) {
+  const R = 6371; // Radius of Earth in km
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+  const a = 
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
+    Math.sin(dLon / 2) * Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c;
+}
+
+// ══════════════════════════════
+//  UI RENDERERS & UTILITIES
+// ══════════════════════════════
+function renderLists() {
+  const groups = { family: [], friends: [], business: [] };
+
+  Object.values(people).forEach(p => {
+    if (groups[p.group]) groups[p.group].push(p);
+  });
+
+  ['family', 'friends', 'business'].forEach(groupKey => {
+    const container = document.getElementById(`${groupKey}-list`);
+    if (!container) return;
+
+    if (groups[groupKey].length === 0) {
+      container.innerHTML = `<div style="font-size:0.75rem;color:var(--muted);padding:8px 0;">No active trackers yet</div>`;
+      return;
+    }
+
+    container.innerHTML = groups[groupKey].map(p => {
+      const isSelected = selectedPerson && selectedPerson.id === p.id;
+      const color = GROUP_COLORS[p.group];
+      return `
+        <div class="person-card ${isSelected ? 'active' : ''}" onclick="selectPerson(people['${p.id}'])">
+          <div class="avatar" style="background:${color}22; border-color:${color};">${p.emoji}</div>
+          <div class="person-info">
+            <div class="person-name">${p.name}</div>
+            <div class="person-eta">
+              <span class="eta-time" style="color:${color};">${p.etaLabel || 'Updating...'}</span>
+              <span>· ${p.distanceLabel || ''}</span>
+            </div>
+          </div>
+          <div class="status-dot" style="background:${color};"></div>
+        </div>
+      `;
+    }).join('');
+  });
+}
+
+function showToast(msg) {
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 3000);
+}
+</script>
+</body>
 </html>

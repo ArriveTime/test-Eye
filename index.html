@@ -202,6 +202,26 @@
     scrollbar-width: thin; scrollbar-color: var(--border) transparent;
   }
 
+  /* SEARCH DESTINATION PANEL */
+  .dest-panel {
+    padding: 20px;
+    border-bottom: 1px solid var(--border);
+    background: rgba(22, 31, 48, 0.4);
+  }
+  .dest-input {
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .dest-input:focus { border-color: var(--accent); }
+
   /* STEP 1 — SHARE LINK */
   .share-panel {
     padding: 20px;
@@ -282,7 +302,7 @@
   /* ADD PERSON MODAL */
   .modal-overlay {
     display: none; position: fixed; inset: 0;
-    background: rgba(0,0,0,0.6); z-index: 9000;
+    background: rgba(0,0,0,0.75); z-index: 9000;
     backdrop-filter: blur(8px);
     align-items: center; justify-content: center;
   }
@@ -324,9 +344,10 @@
   /* ─── STREET VIEW MODAL ─── */
   .sv-modal {
     background: var(--surface); border: 1px solid var(--border);
-    border-radius: 20px; width: 92%; max-width: 800px; height: 80vh;
+    border-radius: 20px; width: 92%; max-width: 900px; height: 80vh;
     display: flex; flex-direction: column; overflow: hidden;
     animation: scaleIn 0.25s ease;
+    box-shadow: 0 0 50px rgba(0, 0, 0, 0.8);
   }
   .sv-header {
     padding: 16px 20px; background: var(--surface2);
@@ -339,7 +360,8 @@
     font-size: 1.4rem; cursor: pointer; transition: color 0.2s;
   }
   .sv-close:hover { color: var(--text); }
-  .sv-iframe { width: 100%; flex: 1; border: none; background: var(--bg); }
+  .sv-container { width: 100%; flex: 1; background: var(--bg); position: relative; }
+  #pano { width: 100%; height: 100%; }
 
   /* ─── MAP AREA ─── */
   .map-area { flex: 1; position: relative; }
@@ -365,7 +387,7 @@
     z-index: 500; background: rgba(15,23,36,0.95);
     border: 1px solid var(--border); border-radius: 16px;
     padding: 16px 24px; backdrop-filter: blur(20px);
-    min-width: 280px; text-align: center;
+    min-width: 300px; text-align: center;
     display: none;
   }
   .arrival-banner.visible { display: block; animation: slideUp 0.4s ease; }
@@ -376,14 +398,15 @@
   
   /* EXPLORE INSIDE BUTTON */
   .explore-btn {
-    margin-top: 12px; padding: 8px 18px; border-radius: 20px;
+    margin-top: 12px; padding: 10px 20px; border-radius: 20px;
     background: linear-gradient(135deg, var(--accent2), #02c39a);
     color: #080c14; font-family: 'Syne', sans-serif; font-weight: 700;
-    font-size: 0.82rem; border: none; cursor: pointer;
+    font-size: 0.85rem; border: none; cursor: pointer;
     box-shadow: 0 0 16px rgba(6,214,160,0.3); transition: all 0.2s ease;
     display: inline-flex; align-items: center; gap: 6px;
   }
   .explore-btn:hover { transform: scale(1.05); box-shadow: 0 0 24px rgba(6,214,160,0.5); }
+  .explore-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
 
   /* ─── MY LOCATION PANEL ─── */
   .my-location-panel {
@@ -416,7 +439,7 @@
     .step-item:not(:last-child)::after { content: '↓'; right: auto; left: 50%; transform: translateX(-50%); bottom: -12px; top: auto; }
     .step-item:not(:last-child) { border-right: none; border-bottom: 1px solid var(--border); padding-bottom: 14px; margin-bottom: 12px; }
     .app-body { flex-direction: column; }
-    .sidebar { width: 100%; height: 280px; border-right: none; border-bottom: 1px solid var(--border); }
+    .sidebar { width: 100%; height: 320px; border-right: none; border-bottom: 1px solid var(--border); }
     .map-area { flex: 1; min-height: 300px; }
     .my-location-panel { display: none; }
   }
@@ -498,6 +521,12 @@
     <!-- SIDEBAR -->
     <div class="sidebar">
 
+      <!-- DESTINATION SEARCH -->
+      <div class="dest-panel">
+        <div class="panel-title">📍 Search Destination</div>
+        <input type="text" id="destination-input" class="dest-input" placeholder="Search venue, business or address..." />
+      </div>
+
       <!-- STEP 1: SHARE -->
       <div class="share-panel">
         <div class="panel-title"><span class="badge">1</span> Your Tracking Link</div>
@@ -578,7 +607,7 @@
         <div class="banner-name" id="bannerName">—</div>
         <div class="banner-eta" id="bannerEta">—</div>
         <div class="banner-sub" id="bannerSub">Estimated arrival time</div>
-        <button class="explore-btn" onclick="openStreetView()">🌐 Explore Inside</button>
+        <button class="explore-btn" id="exploreBtn" onclick="openStreetView()">🌐 Explore 360° View</button>
       </div>
     </div>
   </div>
@@ -616,19 +645,25 @@
   </div>
 </div>
 
-<!-- STREET VIEW MODAL -->
+<!-- 360° STREET VIEW MODAL -->
 <div class="modal-overlay" id="streetViewModal">
   <div class="sv-modal">
     <div class="sv-header">
-      <div class="sv-title" id="svTitle">360° View</div>
+      <div class="sv-title" id="svTitle">360° Destination Intelligence</div>
       <button class="sv-close" onclick="closeStreetView()">✕</button>
     </div>
-    <iframe class="sv-iframe" id="svIframe" src="" allowfullscreen loading="lazy"></iframe>
+    <div class="sv-container">
+      <div id="pano"></div>
+    </div>
   </div>
 </div>
 
 <!-- TOAST -->
 <div class="toast" id="toast">✅ Copied to clipboard!</div>
+
+<!-- Google Maps API with Places Library -->
+<!-- IMPORTANT: Replace YOUR_API_KEY below with your actual Google Maps API key -->
+<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places"></script>
 
 <script>
 // ══════════════════════════════
@@ -662,12 +697,17 @@ if (!SESSION_ID) {
 // Session User Identity Setup
 const MY_USER_ID = 'u_' + Math.random().toString(36).substr(2, 6);
 
-let map, myMarker, myLat, myLng;
+let map, myMarker, destMarker, myLat, myLng;
 let watchId = null;
 let satellite = false;
 let people = {};
 let selectedPerson = null;
 let tileLayer;
+
+// Google Maps & Street View Dynamic Objects
+let autocomplete, streetViewService, panorama;
+let currentPanoId = null;
+let destinationLatLng = null;
 
 const GROUP_COLORS = { family: '#06d6a0', friends: '#f72585', business: '#fbbf24' };
 const GROUP_EMOJIS = { family: '🏠', friends: '🎉', business: '💼' };
@@ -679,6 +719,7 @@ function launchApp() {
   document.getElementById('landing').style.display = 'none';
   document.getElementById('app').style.display = 'block';
   initMap();
+  initGooglePlaces();
   startGPS();
   updateShareLink();
   listenForFirebaseUpdates();
@@ -706,15 +747,22 @@ function shareVia(method) {
   }
 }
 
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
 // ══════════════════════════════
-//  MAP INITIALIZATION
+//  MAP INITIALIZATION & CONTROLS
 // ══════════════════════════════
 function initMap() {
   if (map) return;
   map = L.map('map', { zoomControl: false, attributionControl: false });
 
   tileLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(map);
-  map.setView([37.7749, -122.4194], 12);
+  map.setView([37.2707, -76.7075], 13); // Default view Williamsburg, VA
 
   L.control.zoom({ position: 'bottomright' }).addTo(map);
   L.control.attribution({ position: 'bottomright', prefix: '© OSM' }).addTo(map);
@@ -724,6 +772,120 @@ function initMap() {
     selectedPerson = null;
     renderLists();
   });
+}
+
+function centerOnMe() {
+  if (myLat && myLng) {
+    map.setView([myLat, myLng], 15);
+  }
+}
+
+function fitAll() {
+  const bounds = [];
+  if (myLat && myLng) bounds.push([myLat, myLng]);
+  if (destinationLatLng) bounds.push(destinationLatLng);
+  Object.values(people).forEach(p => { if (p.lat && p.lng) bounds.push([p.lat, p.lng]); });
+  
+  if (bounds.length > 0) {
+    map.fitBounds(bounds, { padding: [50, 50] });
+  }
+}
+
+function toggleSatellite() {
+  satellite = !satellite;
+  if (satellite) {
+    tileLayer.setUrl('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}');
+    document.getElementById('satBtn').style.borderColor = 'var(--accent2)';
+  } else {
+    tileLayer.setUrl('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
+    document.getElementById('satBtn').style.borderColor = 'var(--border)';
+  }
+}
+
+// ══════════════════════════════
+//  GOOGLE PLACES AUTOCOMPLETE & 360° ENGINE
+// ══════════════════════════════
+function initGooglePlaces() {
+  const input = document.getElementById('destination-input');
+  if (!window.google || !google.maps || !google.maps.places) return;
+
+  autocomplete = new google.maps.places.Autocomplete(input, {
+    fields: ["geometry", "name", "formatted_address"]
+  });
+
+  streetViewService = new google.maps.StreetViewService();
+
+  autocomplete.addListener("place_changed", () => {
+    const place = autocomplete.getPlace();
+    if (!place.geometry || !place.geometry.location) return;
+
+    const lat = place.geometry.location.lat();
+    const lng = place.geometry.location.lng();
+    destinationLatLng = [lat, lng];
+
+    if (destMarker) map.removeLayer(destMarker);
+    destMarker = L.marker(destinationLatLng, { icon: createDestIcon() }).addTo(map)
+      .bindPopup(`<b>${place.name || 'Destination'}</b>`).openPopup();
+
+    fitAll();
+    check360Availability(place.geometry.location);
+    updateAllETAs();
+  });
+}
+
+function check360Availability(googleLocation) {
+  const exploreBtn = document.getElementById('exploreBtn');
+  exploreBtn.disabled = true;
+  exploreBtn.textContent = '🔄 Checking 360° View...';
+
+  // Check Indoor First
+  streetViewService.getPanorama({
+    location: googleLocation,
+    radius: 50,
+    source: google.maps.StreetViewSource.INDOOR
+  }, (data, status) => {
+    if (status === google.maps.StreetViewStatus.OK) {
+      currentPanoId = data.location.pano;
+      exploreBtn.disabled = false;
+      exploreBtn.textContent = '🏠 360° Inside View Available';
+    } else {
+      // Fallback to Outdoor Street View
+      streetViewService.getPanorama({
+        location: googleLocation,
+        radius: 50,
+        source: google.maps.StreetViewSource.DEFAULT
+      }, (dataOut, statusOut) => {
+        if (statusOut === google.maps.StreetViewStatus.OK) {
+          currentPanoId = dataOut.location.pano;
+          exploreBtn.disabled = false;
+          exploreBtn.textContent = '🌐 360° Street View Available';
+        } else {
+          currentPanoId = null;
+          exploreBtn.disabled = true;
+          exploreBtn.textContent = '🚫 No 360° View Available';
+        }
+      });
+    }
+  });
+}
+
+function openStreetView() {
+  if (!currentPanoId) return;
+  const modal = document.getElementById('streetViewModal');
+  modal.classList.add('open');
+
+  if (!panorama) {
+    panorama = new google.maps.StreetViewPanorama(
+      document.getElementById('pano'),
+      { pano: currentPanoId, pov: { heading: 0, pitch: 0 }, zoom: 1 }
+    );
+  } else {
+    panorama.setPano(currentPanoId);
+  }
+}
+
+function closeStreetView() {
+  document.getElementById('streetViewModal').classList.remove('open');
 }
 
 // ══════════════════════════════
@@ -838,7 +1000,46 @@ function processFirebaseUser(data) {
 }
 
 // ══════════════════════════════
-//  MAP CONTROLS & ICONS
+//  ETA MATRIX & DISTANCE LOGIC
+// ══════════════════════════════
+function updateAllETAs() {
+  Object.values(people).forEach(p => {
+    let targetLat = myLat;
+    let targetLng = myLng;
+
+    if (destinationLatLng) {
+      targetLat = destinationLatLng[0];
+      targetLng = destinationLatLng[1];
+    }
+
+    if (p.lat && p.lng && targetLat && targetLng) {
+      const miles = calculateHaversine(p.lat, p.lng, targetLat, targetLng);
+      const minutes = Math.round((miles / 30) * 60); // assumes 30mph speed
+      
+      if (minutes < 1) p.etaLabel = 'Arrived!';
+      else if (minutes < 60) p.etaLabel = `${minutes} min (${miles.toFixed(1)} mi)`;
+      else p.etaLabel = `${Math.floor(minutes/60)}h ${minutes%60}m`;
+    } else {
+      p.etaLabel = 'Calculating...';
+    }
+  });
+
+  renderLists();
+  if (selectedPerson) updateBanner(selectedPerson);
+}
+
+function calculateHaversine(lat1, lon1, lat2, lon2) {
+  const R = 3958.8; // Radius of earth in miles
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+  const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+            Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+            Math.sin(dLon/2) * Math.sin(dLon/2);
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+}
+
+// ══════════════════════════════
+//  MAP ICONS & CARDS UI
 // ══════════════════════════════
 function createMyIcon() {
   return L.divIcon({
@@ -850,42 +1051,73 @@ function createMyIcon() {
 function createPersonIcon(p) {
   const color = GROUP_COLORS[p.group] || '#3b82f6';
   return L.divIcon({
-    html: `<div style="width:40px;height:40px;border-radius:50%;background:${color}22;border:2.5px solid ${color};display:grid;place-items:center;font-size:18px;box-shadow:0 0 16px ${color}55;cursor:pointer;backdrop-filter:blur(4px);">${p.emoji}</div>
-    <div style="position:absolute;top:42px;left:50%;transform:translateX(-50%);background:rgba(8,12,20,0.9);border:1px solid ${color}66;border-radius:6px;padding:3px 8px;white-space:nowrap;font-size:0.7rem;color:#fff;font-family:'DM Sans',sans-serif;font-weight:500;">${p.name} ${p.etaLabel || ''}</div>`,
+    html: `<div style="width:40px;height:40px;border-radius:50%;background:${color}22;border:2.5px solid ${color};display:grid;place-items:center;font-size:18px;box-shadow:0 0 15px ${color}88;">${p.emoji}</div>`,
     iconSize: [40, 40], iconAnchor: [20, 20], className: ''
   });
 }
 
-function centerOnMe() {
-  if (myLat && myLng) map.flyTo([myLat, myLng], 15);
+function createDestIcon() {
+  return L.divIcon({
+    html: `<div style="width:42px;height:42px;border-radius:50%;background:#fbbf24;display:grid;place-items:center;font-size:22px;border:3px solid #fff;box-shadow:0 0 25px rgba(251,191,36,0.6);">🏁</div>`,
+    iconSize: [42, 42], iconAnchor: [21, 21], className: ''
+  });
 }
 
-function fitAll() {
-  const markers = [myMarker, ...Object.values(people).map(p => p.marker)].filter(Boolean);
-  if (markers.length > 0) {
-    const group = L.featureGroup(markers);
-    map.fitBounds(group.getBounds().pad(0.2));
-  }
+function selectPerson(p) {
+  selectedPerson = p;
+  map.setView([p.lat, p.lng], 15);
+  updateBanner(p);
+  renderLists();
 }
 
-function toggleSatellite() {
-  satellite = !satellite;
-  if (satellite) {
-    tileLayer.setUrl('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}');
-  } else {
-    tileLayer.setUrl('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
-  }
+function updateBanner(p) {
+  const banner = document.getElementById('arrivalBanner');
+  document.getElementById('bannerName').textContent = `${p.emoji} ${p.name}`;
+  document.getElementById('bannerEta').textContent = p.etaLabel || 'Calculating...';
+  document.getElementById('bannerSub').textContent = destinationLatLng ? 'Estimated time to destination' : 'Estimated time to your location';
+  banner.classList.add('visible');
+}
+
+function renderLists() {
+  ['family', 'friends', 'business'].forEach(group => {
+    const listEl = document.getElementById(`${group}-list`);
+    if (!listEl) return;
+    listEl.innerHTML = '';
+
+    const groupPeople = Object.values(people).filter(p => p.group === group);
+    
+    if (groupPeople.length === 0) {
+      listEl.innerHTML = `<div style="font-size:0.75rem;color:var(--muted);padding:6px 0;">No active members</div>`;
+      return;
+    }
+
+    groupPeople.forEach(p => {
+      const activeClass = (selectedPerson && selectedPerson.id === p.id) ? 'active' : '';
+      const color = GROUP_COLORS[p.group];
+      const card = document.createElement('div');
+      card.className = `person-card ${activeClass}`;
+      card.onclick = () => selectPerson(p);
+      card.innerHTML = `
+        <div class="avatar" style="border-color:${color};background:${color}15;">${p.emoji}</div>
+        <div class="person-info">
+          <div class="person-name">${p.name}</div>
+          <div class="person-eta">⏱ <span class="eta-time">${p.etaLabel || 'Calculating...'}</span></div>
+        </div>
+        <div class="status-dot" style="background:${color}"></div>
+      `;
+      listEl.appendChild(card);
+    });
+  });
 }
 
 // ══════════════════════════════
-//  PEOPLE & LIST UI MANAGEMENT
+//  MODAL MANAGEMENT
 // ══════════════════════════════
+let currentAddGroup = 'family';
 function openAddModal(group) {
+  currentAddGroup = group;
   document.getElementById('addGroup').value = group;
-  document.getElementById('addName').value = '';
-  document.getElementById('addEmoji').value = group === 'family' ? '👤' : group === 'friends' ? '🙂' : '💼';
   document.getElementById('addModal').classList.add('open');
-  setTimeout(() => document.getElementById('addName').focus(), 100);
 }
 
 function closeModal() {
@@ -897,135 +1129,25 @@ function confirmAdd() {
   const group = document.getElementById('addGroup').value;
   const emoji = document.getElementById('addEmoji').value.trim() || '👤';
 
-  if (!name) return;
+  if (!name) {
+    showToast("⚠️ Please enter a name");
+    return;
+  }
 
-  const newId = 'u_' + Math.random().toString(36).substr(2, 6);
-  const offsetLat = (myLat || 37.7749) + (Math.random() - 0.5) * 0.05;
-  const offsetLng = (myLng || -122.4194) + (Math.random() - 0.5) * 0.05;
-
-  database.ref('sessions/' + SESSION_ID + '/users/' + newId).set({
-    id: newId,
+  const newUserId = 'u_' + Math.random().toString(36).substr(2, 6);
+  database.ref('sessions/' + SESSION_ID + '/users/' + newUserId).set({
+    id: newUserId,
     name: name,
     group: group,
     emoji: emoji,
-    lat: offsetLat,
-    lng: offsetLng,
+    lat: (myLat || 37.2707) + (Math.random() - 0.5) * 0.02,
+    lng: (myLng || -76.7075) + (Math.random() - 0.5) * 0.02,
     updatedAt: firebase.database.ServerValue.TIMESTAMP
   });
 
   closeModal();
-  showToast(`✅ Added ${name}! Tracking initialized.`);
-}
-
-function selectPerson(p) {
-  selectedPerson = p;
-  map.flyTo([p.lat, p.lng], 15);
-  
-  document.getElementById('bannerName').textContent = `${p.emoji} ${p.name}`;
-  document.getElementById('bannerEta').textContent = p.etaLabel || 'Calculating...';
-  document.getElementById('bannerSub').textContent = `Distance: ${p.distanceLabel || 'Calculating...'}`;
-  document.getElementById('arrivalBanner').classList.add('visible');
-
-  renderLists();
-}
-
-function renderLists() {
-  const groups = { family: [], friends: [], business: [] };
-  Object.values(people).forEach(p => {
-    if (groups[p.group]) groups[p.group].push(p);
-  });
-
-  ['family', 'friends', 'business'].forEach(groupKey => {
-    const container = document.getElementById(`${groupKey}-list`);
-    if (!container) return;
-
-    if (groups[groupKey].length === 0) {
-      container.innerHTML = `<div style="font-size:0.75rem;color:var(--muted);padding:8px 0;">No active trackers yet</div>`;
-      return;
-    }
-
-    container.innerHTML = groups[groupKey].map(p => {
-      const activeClass = selectedPerson && selectedPerson.id === p.id ? 'active' : '';
-      const color = GROUP_COLORS[p.group];
-      return `
-        <div class="person-card ${activeClass}" onclick='selectPerson(people["${p.id}"])'>
-          <div class="avatar" style="background:${color}22;border-color:${color}">${p.emoji}</div>
-          <div class="person-info">
-            <div class="person-name">${p.name}</div>
-            <div class="person-eta">
-              <span class="status-dot" style="background:${color}"></span>
-              ETA: <span class="eta-time">${p.etaLabel || 'Calculating...'}</span>
-            </div>
-          </div>
-        </div>
-      `;
-    }).join('');
-  });
-}
-
-function updateAllETAs() {
-  if (!myLat || !myLng) return;
-
-  Object.values(people).forEach(p => {
-    const distKm = getHaversineDistance(myLat, myLng, p.lat, p.lng);
-    const speedKmh = 40; // Assumed average city driving speed
-    const timeHours = distKm / speedKmh;
-    const timeMinutes = Math.round(timeHours * 60);
-
-    p.distanceLabel = distKm < 1 ? `${Math.round(distKm * 1000)}m` : `${distKm.toFixed(1)} km`;
-    p.etaLabel = timeMinutes <= 1 ? 'Arriving now' : `~${timeMinutes} mins`;
-
-    if (p.marker) {
-      p.marker.setIcon(createPersonIcon(p));
-    }
-  });
-
-  if (selectedPerson && people[selectedPerson.id]) {
-    document.getElementById('bannerEta').textContent = people[selectedPerson.id].etaLabel;
-    document.getElementById('bannerSub').textContent = `Distance: ${people[selectedPerson.id].distanceLabel}`;
-  }
-
-  renderLists();
-}
-
-function getHaversineDistance(lat1, lon1, lat2, lon2) {
-  const R = 6371;
-  const dLat = (lat2 - lat1) * Math.PI / 180;
-  const dLon = (lon2 - lon1) * Math.PI / 180;
-  const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-            Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-            Math.sin(dLon/2) * Math.sin(dLon/2);
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-  return R * c;
-}
-
-// ══════════════════════════════
-//  STREET VIEW / EXPLORE INSIDE
-// ══════════════════════════════
-function openStreetView() {
-  if (!selectedPerson) return;
-  const lat = selectedPerson.lat;
-  const lng = selectedPerson.lng;
-  const embedUrl = `https://maps.google.com/maps?q=&layer=c&cbll=${lat},${lng}&cbp=12,0,0,0,0&output=embed`;
-  
-  document.getElementById('svTitle').textContent = `360° Street View — ${selectedPerson.name}'s Location`;
-  document.getElementById('svIframe').src = embedUrl;
-  document.getElementById('streetViewModal').classList.add('open');
-}
-
-function closeStreetView() {
-  document.getElementById('streetViewModal').classList.remove('open');
-  document.getElementById('svIframe').src = '';
-}
-
-// ══════════════════════════════
-//  UTILITIES
-// ══════════════════════════════
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 3000);
+  document.getElementById('addName').value = '';
+  showToast(`✅ Added ${name}! Link updated.`);
 }
 </script>
 </body>

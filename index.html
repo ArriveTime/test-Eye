@@ -1,1067 +1,658 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="h-full bg-slate-950 text-slate-100">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <!-- Primary SEO Meta Tags -->
-  <title>IvoryPalace.com | UNRIVALED LUXURY & GLOBAL ADVENTURE | Private Jets, Yacht Charters & Luxury Expeditions</title>
-  <meta name="title" content="IvoryPalace.com | UNRIVALED LUXURY & GLOBAL ADVENTURE | Private Jets, Yacht Charters & Luxury Expeditions">
-  <meta name="description" content="IvoryPalace.com: The world's premier platform for bespoke international travel, private jet expeditions, luxury yacht charters, and ultra-exclusive cultural adventures across 7 continents.">
-  <meta name="keywords" content="IvoryPalace, Ivory Palace travel, luxury travel, private jet charters, luxury yacht charter, bespoke expeditions, luxury African safari, luxury Antarctic cruise, ultra luxury travel media">
-  <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
-  <meta name="author" content="IvoryPalace.com Executive Desk">
-  <link rel="canonical" href="https://ivorypalace.com/">
-
-  <!-- Open Graph / Social Media Tags -->
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://ivorypalace.com/">
-  <meta property="og:title" content="IvoryPalace.com | UNRIVALED LUXURY & GLOBAL ADVENTURE">
-  <meta property="og:description" content="Curated private expeditions, private island escapes, and bespoke world tours for discerning international travelers.">
-  <meta property="og:image" content="https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=1200&q=80">
-  <meta property="og:site_name" content="IvoryPalace.com">
-  <meta property="og:locale" content="en_US">
-
-  <!-- Twitter SEO Tags -->
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:url" content="https://ivorypalace.com/">
-  <meta name="twitter:title" content="IvoryPalace.com | UNRIVALED LUXURY & GLOBAL ADVENTURE">
-  <meta name="twitter:description" content="Curated private expeditions, private island escapes, and bespoke world tours for discerning international travelers.">
-  <meta name="twitter:image" content="https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=1200&q=80">
-
-  <!-- Structured Data JSON-LD Schema -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": "Organization",
-        "@id": "https://ivorypalace.com/#organization",
-        "name": "IvoryPalace.com",
-        "url": "https://ivorypalace.com",
-        "logo": "https://ivorypalace.com/logo.png",
-        "email": "concierge@ivorypalace.com",
-        "description": "UNRIVALED LUXURY & GLOBAL ADVENTURE: Media and marketing platform for bespoke international travel, private jet charters, superyacht expeditions, and luxury estate stays.",
-        "address": {
-          "@type": "PostalAddress",
-          "addressLocality": "Beverly Hills",
-          "addressRegion": "CA",
-          "postalCode": "90210",
-          "addressCountry": "US"
-        }
-      },
-      {
-        "@type": "WebSite",
-        "@id": "https://ivorypalace.com/#website",
-        "url": "https://ivorypalace.com",
-        "name": "IvoryPalace.com",
-        "publisher": {
-          "@id": "https://ivorypalace.com/#organization"
-        }
-      }
-    ]
-  }
-  </script>
-
+  <title>MindsetAlarm.com - Set your mind for success</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    :root {
-      --ivory-bg: #fcfbfa;
-      --ivory-card: #ffffff;
-      --gold-main: #c5a059;
-      --gold-dark: #9a7b38;
-      --gold-light: #e5cc94;
-      --navy-deep: #0b1321;
-      --navy-light: #16243b;
-      --text-dark: #1c1d1f;
-      --text-muted: #65686d;
-      --border-color: #e8e4dc;
-      --accent-black: #111111;
+    @keyframes pulse-ring {
+      0% { transform: scale(0.95); opacity: 0.8; }
+      50% { transform: scale(1.05); opacity: 0.4; }
+      100% { transform: scale(0.95); opacity: 0.8; }
     }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    .animate-pulse-ring {
+      animation: pulse-ring 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
     }
-
-    body {
-      background-color: var(--ivory-bg);
-      color: var(--text-dark);
-      line-height: 1.6;
-      overflow-x: hidden;
+    .gold-gradient {
+      background: linear-gradient(135deg, #d4af37 0%, #f3e5ab 50%, #aa7c11 100%);
     }
-
-    /* Top Utility Bar with World Clocks & Audio Stream */
-    .top-bar {
-      background-color: var(--navy-deep);
-      color: #ffffff;
-      padding: 0.5rem 2rem;
-      font-size: 0.72rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 1px solid rgba(197, 160, 89, 0.3);
-      flex-wrap: wrap;
-      gap: 1rem;
-    }
-
-    .clocks-wrap {
-      display: flex;
-      gap: 1.5rem;
-      align-items: center;
-    }
-
-    .clock-item {
-      display: flex;
-      gap: 0.3rem;
-    }
-
-    .clock-item span {
-      color: var(--gold-light);
-      font-weight: 700;
-    }
-
-    .audio-player-wrap {
-      display: flex;
-      align-items: center;
-      gap: 0.8rem;
-    }
-
-    .btn-audio-toggle {
-      background: var(--gold-main);
-      color: var(--navy-deep);
-      border: none;
-      border-radius: 50%;
-      width: 26px;
-      height: 26px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.7rem;
-      font-weight: bold;
-      transition: background 0.2s;
-    }
-
-    .btn-audio-toggle:hover {
-      background: var(--gold-light);
-    }
-
-    /* Main Navigation Header */
-    header.main-header {
-      background: var(--ivory-card);
-      border-bottom: 1px solid var(--border-color);
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.03);
-    }
-
-    .header-container {
-      max-width: 1300px;
-      margin: 0 auto;
-      padding: 1.2rem 2rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .brand-logo {
-      text-decoration: none;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .brand-name {
-      font-family: Georgia, 'Times New Roman', serif;
-      font-size: 2.2rem;
-      font-weight: 700;
-      color: var(--navy-deep);
-      letter-spacing: -0.02em;
-      line-height: 1;
-    }
-
-    .brand-name span {
-      color: var(--gold-main);
-    }
-
-    .brand-tagline {
-      font-size: 0.6rem;
-      color: var(--gold-dark);
-      letter-spacing: 0.35em;
-      text-transform: uppercase;
-      font-weight: 800;
-      margin-top: 4px;
-    }
-
-    .nav-menu {
-      display: flex;
-      gap: 1.8rem;
-      align-items: center;
-      list-style: none;
-    }
-
-    .nav-link {
-      text-decoration: none;
-      color: var(--navy-deep);
-      font-size: 0.8rem;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      transition: color 0.2s;
-      position: relative;
-    }
-
-    .nav-link:hover, .nav-link.active {
-      color: var(--gold-main);
-    }
-
-    .btn-concierge {
-      background: linear-gradient(135deg, var(--gold-main), var(--gold-dark));
-      color: #ffffff;
-      padding: 0.6rem 1.4rem;
-      border-radius: 2px;
-      font-size: 0.75rem;
-      font-weight: 800;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      text-decoration: none;
-      border: none;
-      cursor: pointer;
-      box-shadow: 0 4px 10px rgba(197, 160, 89, 0.25);
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
-
-    .btn-concierge:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 6px 15px rgba(197, 160, 89, 0.35);
-    }
-
-    /* Hero Section */
-    .hero-section {
-      position: relative;
-      height: 70vh;
-      min-height: 520px;
-      background: linear-gradient(rgba(11, 19, 33, 0.45), rgba(11, 19, 33, 0.85)), url('https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=1800&q=80') center/cover no-repeat;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      color: #ffffff;
-      padding: 2rem;
-    }
-
-    .hero-content {
-      max-width: 950px;
-    }
-
-    .hero-sub-badge {
-      display: inline-block;
-      border: 1px solid var(--gold-light);
-      color: var(--gold-light);
-      font-size: 0.75rem;
-      font-weight: 800;
-      letter-spacing: 0.3em;
-      text-transform: uppercase;
-      padding: 0.4rem 1.2rem;
-      margin-bottom: 1.5rem;
-      background: rgba(11, 19, 33, 0.4);
-      backdrop-filter: blur(4px);
-    }
-
-    .hero-title {
-      font-family: Georgia, 'Times New Roman', serif;
-      font-size: 3.8rem;
-      font-weight: 400;
-      letter-spacing: 0.02em;
-      margin-bottom: 0.8rem;
-      line-height: 1.1;
-      text-shadow: 0 2px 10px rgba(0,0,0,0.5);
-    }
-
-    .hero-title-sub {
-      font-family: Georgia, serif;
-      font-size: 2rem;
-      background: linear-gradient(135deg, #ffffff, var(--gold-light));
+    .gold-text {
+      background: linear-gradient(135deg, #f3e5ab 0%, #d4af37 50%, #aa7c11 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      font-weight: 700;
-      margin-bottom: 2rem;
-      text-shadow: 0 2px 15px rgba(0,0,0,0.6);
     }
-
-    .hero-buttons {
-      display: flex;
-      gap: 1.2rem;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-
-    .btn-hero-primary {
-      background: var(--gold-main);
-      color: var(--navy-deep);
-      padding: 0.9rem 2.2rem;
-      font-size: 0.8rem;
-      font-weight: 800;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      text-decoration: none;
-      border-radius: 2px;
-      transition: background 0.2s;
-    }
-
-    .btn-hero-primary:hover {
-      background: var(--gold-light);
-    }
-
-    .btn-hero-outline {
-      background: transparent;
-      color: #ffffff;
-      border: 1px solid #ffffff;
-      padding: 0.9rem 2.2rem;
-      font-size: 0.8rem;
-      font-weight: 800;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      text-decoration: none;
-      border-radius: 2px;
-      transition: background 0.2s, border-color 0.2s;
-    }
-
-    .btn-hero-outline:hover {
-      background: rgba(255,255,255,0.15);
-      border-color: var(--gold-light);
-    }
-
-    /* Page Main Container */
-    .container {
-      max-width: 1300px;
-      margin: 0 auto;
-      padding: 4rem 2rem;
-    }
-
-    /* Section Headings */
-    .section-header {
-      text-align: center;
-      margin-bottom: 3rem;
-    }
-
-    .section-kicker {
-      color: var(--gold-dark);
-      font-size: 0.75rem;
-      font-weight: 800;
-      letter-spacing: 0.25em;
-      text-transform: uppercase;
-      display: block;
-      margin-bottom: 0.5rem;
-    }
-
-    .section-title {
-      font-family: Georgia, 'Times New Roman', serif;
-      font-size: 2.3rem;
-      color: var(--navy-deep);
-      font-weight: 400;
-      letter-spacing: -0.01em;
-    }
-
-    .section-divider {
-      width: 60px;
-      height: 2px;
-      background: var(--gold-main);
-      margin: 1rem auto 0 auto;
-    }
-
-    /* Interactive Journey Builder Tool */
-    .builder-card {
-      background: var(--ivory-card);
-      border: 1px solid var(--border-color);
-      border-top: 4px solid var(--gold-main);
-      padding: 2.5rem;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.04);
-      margin-bottom: 5rem;
-    }
-
-    .builder-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 1.5rem;
-      margin-bottom: 2rem;
-    }
-
-    .form-group label {
-      display: block;
-      font-size: 0.72rem;
-      font-weight: 800;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--navy-deep);
-      margin-bottom: 0.5rem;
-    }
-
-    .form-control {
-      width: 100%;
-      padding: 0.8rem;
-      border: 1px solid var(--border-color);
-      background: var(--ivory-bg);
-      font-size: 0.88rem;
-      color: var(--text-dark);
-      border-radius: 2px;
-      outline: none;
-    }
-
-    .form-control:focus {
-      border-color: var(--gold-main);
-    }
-
-    .builder-result {
-      background: var(--navy-deep);
-      color: #ffffff;
-      padding: 1.8rem;
-      border-radius: 2px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 1.5rem;
-    }
-
-    .builder-result-text h4 {
-      font-family: Georgia, serif;
-      font-size: 1.2rem;
-      color: var(--gold-light);
-      margin-bottom: 0.3rem;
-    }
-
-    .builder-result-text p {
-      font-size: 0.85rem;
-      color: #ccc;
-    }
-
-    /* Destination Filters & Grid */
-    .filter-bar {
-      display: flex;
-      justify-content: center;
-      gap: 1rem;
-      margin-bottom: 2.5rem;
-      flex-wrap: wrap;
-    }
-
-    .btn-filter {
-      background: transparent;
-      border: 1px solid var(--border-color);
-      color: var(--text-dark);
-      padding: 0.6rem 1.4rem;
-      font-size: 0.75rem;
-      font-weight: 700;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
+    input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+      filter: invert(0.8) sepia(1) saturate(5) hue-rotate(5deg);
       cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .btn-filter:hover, .btn-filter.active {
-      background: var(--navy-deep);
-      color: var(--gold-light);
-      border-color: var(--navy-deep);
-    }
-
-    .destination-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 2rem;
-      margin-bottom: 5rem;
-    }
-
-    .dest-card {
-      background: var(--ivory-card);
-      border: 1px solid var(--border-color);
-      box-shadow: 0 4px 15px rgba(0,0,0,0.03);
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      transition: transform 0.3s, box-shadow 0.3s;
-    }
-
-    .dest-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 12px 25px rgba(0,0,0,0.08);
-    }
-
-    .dest-img {
-      height: 240px;
-      background-size: cover;
-      background-position: center;
-      position: relative;
-    }
-
-    .dest-badge {
-      position: absolute;
-      top: 15px;
-      left: 15px;
-      background: rgba(11, 19, 33, 0.85);
-      color: var(--gold-light);
-      font-size: 0.65rem;
-      font-weight: 800;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      padding: 0.3rem 0.8rem;
-      border-radius: 2px;
-    }
-
-    .dest-body {
-      padding: 1.8rem;
-      display: flex;
-      flex-direction: column;
-      flex: 1;
-    }
-
-    .dest-region {
-      font-size: 0.7rem;
-      color: var(--gold-dark);
-      font-weight: 800;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      margin-bottom: 0.3rem;
-    }
-
-    .dest-title {
-      font-family: Georgia, serif;
-      font-size: 1.4rem;
-      color: var(--navy-deep);
-      margin-bottom: 0.8rem;
-    }
-
-    .dest-desc {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      margin-bottom: 1.5rem;
-      line-height: 1.5;
-    }
-
-    .dest-footer {
-      margin-top: auto;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-top: 1px solid var(--border-color);
-      padding-top: 1rem;
-    }
-
-    .dest-price {
-      font-size: 0.8rem;
-      color: var(--navy-deep);
-      font-weight: 700;
-    }
-
-    .dest-price span {
-      display: block;
-      font-size: 0.65rem;
-      color: var(--text-muted);
-      font-weight: 400;
-      text-transform: uppercase;
-    }
-
-    .btn-details {
-      color: var(--gold-dark);
-      text-decoration: none;
-      font-size: 0.75rem;
-      font-weight: 800;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      cursor: pointer;
-    }
-
-    .btn-details:hover {
-      color: var(--navy-deep);
-    }
-
-    /* Modals */
-    .modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(11, 19, 33, 0.85);
-      backdrop-filter: blur(5px);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
-      padding: 2rem;
-    }
-
-    .modal-overlay.active {
-      display: flex;
-    }
-
-    .modal-card {
-      background: #ffffff;
-      border: 2px solid var(--gold-main);
-      max-width: 680px;
-      width: 100%;
-      padding: 2.5rem;
-      position: relative;
-      max-height: 90vh;
-      overflow-y: auto;
-    }
-
-    .modal-close {
-      position: absolute;
-      top: 1rem;
-      right: 1.2rem;
-      background: none;
-      border: none;
-      font-size: 1.8rem;
-      cursor: pointer;
-      color: var(--navy-deep);
-    }
-
-    /* Footer */
-    footer {
-      background: var(--navy-deep);
-      color: #8892a0;
-      padding: 4rem 2rem 2rem 2rem;
-      border-top: 3px solid var(--gold-main);
-      font-size: 0.8rem;
-    }
-
-    .footer-container {
-      max-width: 1300px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: 2fr 1fr 1fr 1fr;
-      gap: 3rem;
-      margin-bottom: 3rem;
-    }
-
-    .footer-brand h3 {
-      font-family: Georgia, serif;
-      font-size: 1.8rem;
-      color: #ffffff;
-      margin-bottom: 0.5rem;
-    }
-
-    .footer-brand h3 span {
-      color: var(--gold-main);
-    }
-
-    .footer-col h4 {
-      color: #ffffff;
-      font-size: 0.8rem;
-      font-weight: 800;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      margin-bottom: 1.2rem;
-    }
-
-    .footer-links {
-      list-style: none;
-    }
-
-    .footer-links li {
-      margin-bottom: 0.6rem;
-    }
-
-    .footer-links a {
-      color: #8892a0;
-      text-decoration: none;
-      transition: color 0.2s;
-    }
-
-    .footer-links a:hover {
-      color: var(--gold-light);
-    }
-
-    /* Legal Disclaimer Box */
-    .legal-disclaimer-box {
-      max-width: 1300px;
-      margin: 0 auto 2rem auto;
-      padding: 1.25rem 1.5rem;
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(197, 160, 89, 0.25);
-      border-left: 3px solid var(--gold-main);
-      border-radius: 2px;
-      font-size: 0.72rem;
-      line-height: 1.6;
-      color: #a0aab8;
-    }
-
-    .legal-disclaimer-box strong {
-      color: var(--gold-light);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      display: block;
-      margin-bottom: 0.4rem;
-      font-size: 0.75rem;
-    }
-
-    .footer-bottom {
-      max-width: 1300px;
-      margin: 0 auto;
-      border-top: 1px solid rgba(255,255,255,0.1);
-      padding-top: 1.5rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 1rem;
-    }
-
-    /* Audio Hidden */
-    audio { display: none; }
-
-    /* Responsive */
-    @media (max-width: 992px) {
-      .destination-grid { grid-template-columns: repeat(2, 1fr); }
-      .builder-grid { grid-template-columns: repeat(2, 1fr); }
-      .footer-container { grid-template-columns: 1fr 1fr; }
-      .hero-title { font-size: 2.8rem; }
-      .hero-title-sub { font-size: 1.4rem; }
-    }
-
-    @media (max-width: 600px) {
-      .destination-grid, .builder-grid, .footer-container { grid-template-columns: 1fr; }
-      .hero-title { font-size: 2.1rem; }
-      .hero-title-sub { font-size: 1.1rem; }
-      .nav-menu { display: none; }
-      .top-bar { justify-content: center; text-align: center; }
     }
   </style>
 </head>
-<body>
+<body class="h-full flex flex-col font-sans antialiased selection:bg-amber-500 selection:text-slate-950">
 
-  <!-- Hidden Ambient Travel Lounge Audio Stream -->
-  <audio id="travelAudio" src="https://stream.zeno.fm/f3wvbbqmdg8uv" preload="none"></audio>
+  <div class="flex-1 flex flex-col max-w-6xl w-full mx-auto p-4 md:p-6 lg:p-8 space-y-6">
 
-  <!-- Top Bar: World Clocks & Ambient Audio Control -->
-  <div class="top-bar">
-    <div class="clocks-wrap">
-      <div class="clock-item">LONDON: <span id="clockLondon">12:00</span></div>
-      <div class="clock-item">PARIS: <span id="clockParis">13:00</span></div>
-      <div class="clock-item">TOKYO: <span id="clockTokyo">20:00</span></div>
-      <div class="clock-item">NEW YORK: <span id="clockNY">07:00</span></div>
+    <!-- Header Navigation -->
+    <header class="flex items-center justify-between border-b border-slate-800 pb-4">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-xl gold-gradient flex items-center justify-center text-slate-950 font-black text-xl shadow-lg shadow-amber-500/10">
+          <i class="fa-solid font-bold fa-clock"></i>
+        </div>
+        <div>
+          <h1 class="text-xl md:text-2xl font-bold tracking-tight gold-text">MindsetAlarm.com</h1>
+          <p class="text-xs text-slate-400">Set your mind for success</p>
+        </div>
+      </div>
+      <div id="liveClock" class="text-xl md:text-3xl font-mono font-semibold text-amber-400 tracking-wider">
+        00/00/0000 00:00:00 AM
+      </div>
+    </header>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 flex-1">
+
+      <!-- Column 1: Alarm Creation & Active Alarms -->
+      <div class="lg:col-span-2 space-y-6">
+
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 md:p-6 shadow-xl">
+          <h2 class="text-lg font-semibold text-slate-200 mb-4 flex items-center space-x-2">
+            <i class="fa-solid fa-plus-circle text-amber-400"></i>
+            <span>Set New Success Alarm / Reminder</span>
+          </h2>
+
+          <form id="alarmForm" class="space-y-4" novalidate>
+            <div>
+              <div class="flex justify-between items-center mb-1">
+                <label class="block text-xs uppercase tracking-wider text-slate-400">Date & Time (Pick Exact Minute or Use Quick Buttons)</label>
+                <!-- Quick Preset Buttons -->
+                <div class="space-x-1">
+                  <button type="button" onclick="setQuickTime(15)" class="text-[10px] bg-slate-800 hover:bg-slate-700 text-amber-400 px-2 py-0.5 rounded border border-amber-500/20">+15 Mins</button>
+                  <button type="button" onclick="setQuickTime(30)" class="text-[10px] bg-slate-800 hover:bg-slate-700 text-amber-400 px-2 py-0.5 rounded border border-amber-500/20">+30 Mins</button>
+                  <button type="button" onclick="setQuickTime(60)" class="text-[10px] bg-slate-800 hover:bg-slate-700 text-amber-400 px-2 py-0.5 rounded border border-amber-500/20">+1 Hour</button>
+                  <button type="button" onclick="setTomorrowMorning()" class="text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-300 px-2 py-0.5 rounded">Tomorrow AM</button>
+                </div>
+              </div>
+              <!-- step="60" enables 1-minute precise selection across browsers -->
+              <input type="datetime-local" id="alarmTime" step="60" required class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-amber-300 font-mono text-base focus:outline-none focus:border-amber-400 transition">
+            </div>
+
+            <div>
+              <label class="block text-xs uppercase tracking-wider text-slate-400 mb-1">Objective / Label</label>
+              <input type="text" id="alarmLabel" placeholder="e.g. Q3 Sales Goal Review" required class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 placeholder-slate-600 focus:outline-none focus:border-amber-400 transition">
+            </div>
+
+            <div>
+              <label class="block text-xs uppercase tracking-wider text-slate-400 mb-1">Audio Source</label>
+              <select id="audioSourceType" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-slate-200 focus:outline-none focus:border-amber-400 transition">
+                <option value="custom-speech">🗣️ Custom AI Voice Message (Set Below)</option>
+                <optgroup label="Nature & Audio Soundscapes">
+                  <option value="sound-rain">🌧️ Gentle Rain Soundscape</option>
+                  <option value="sound-stream">🌊 Babbling Stream Soundscape</option>
+                  <option value="sound-birds">🎵 Song</option>
+                  <option value="sound-dog">🐶 Dog Bark (Realistic Recording)</option>
+                </optgroup>
+                <optgroup label="Your Saved Voice Recordings" id="recordingsOptGroup">
+                  <!-- Custom recordings populate here -->
+                </optgroup>
+              </select>
+            </div>
+
+            <!-- Custom Speech Script Box -->
+            <div id="customSpeechContainer" class="space-y-2 bg-slate-950 p-4 border border-slate-800 rounded-xl">
+              <div class="flex items-center justify-between">
+                <label class="block text-xs uppercase tracking-wider text-amber-400 font-semibold">Custom Voice Message Script</label>
+                <div class="space-x-1">
+                  <button type="button" onclick="loadTemplate(1)" class="text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-300 px-2 py-0.5 rounded">Morning Victory</button>
+                  <button type="button" onclick="loadTemplate(2)" class="text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-300 px-2 py-0.5 rounded">Sales Target</button>
+                  <button type="button" onclick="loadTemplate(3)" class="text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-300 px-2 py-0.5 rounded">Focus & Discipline</button>
+                </div>
+              </div>
+              <textarea id="customSpeechText" rows="3" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm text-slate-200 focus:outline-none focus:border-amber-400 placeholder-slate-600" placeholder="Type the exact motivational message you want spoken when this alarm triggers..."></textarea>
+              <div class="flex justify-end">
+                <button type="button" onclick="previewCurrentCustomMessage()" class="text-xs text-amber-400 hover:text-amber-300 flex items-center space-x-1">
+                  <i class="fa-solid fa-volume-high"></i>
+                  <span>Test Speak Message</span>
+                </button>
+              </div>
+            </div>
+
+            <button type="submit" class="w-full gold-gradient text-slate-950 font-bold py-3 rounded-lg shadow-md hover:brightness-110 active:scale-[0.99] transition flex items-center justify-center space-x-2">
+              <i class="fa-solid fa-bell"></i>
+              <span>Activate Alarm</span>
+            </button>
+          </form>
+        </div>
+
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 md:p-6 shadow-xl">
+          <h2 class="text-lg font-semibold text-slate-200 mb-4 flex items-center justify-between">
+            <span class="flex items-center space-x-2">
+              <i class="fa-solid fa-list-check text-amber-400"></i>
+              <span>Active Scheduled Alarms</span>
+            </span>
+            <span id="alarmCountBadge" class="text-xs bg-amber-500/10 text-amber-400 border border-amber-500/30 px-2.5 py-0.5 rounded-full font-mono">0 Active</span>
+          </h2>
+
+          <div id="alarmList" class="space-y-3">
+            <div class="text-center py-8 text-slate-500 border border-dashed border-slate-800 rounded-xl">
+              <i class="fa-solid fa-clock-rotate-left text-2xl mb-2 text-slate-600"></i>
+              <p>No active alarms set. Choose a date, time, and message above to schedule.</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Column 2: Voice Studio, Voice Selector & Saved Library -->
+      <div class="space-y-6">
+
+        <!-- AI Voice & Sound Preview Panel -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 md:p-6 shadow-xl space-y-4">
+          <h2 class="text-lg font-semibold text-slate-200 flex items-center space-x-2">
+            <i class="fa-solid fa-sliders text-amber-400"></i>
+            <span>Voices & Audio Studio</span>
+          </h2>
+
+          <!-- Gender Category Tabs -->
+          <div class="grid grid-cols-3 gap-1.5 p-1 bg-slate-950 rounded-lg border border-slate-800 text-[11px] font-semibold">
+            <button id="tabFemale" type="button" onclick="setGenderFilter('female')" class="py-1.5 rounded-md bg-amber-500/20 text-amber-400 border border-amber-500/30">
+              <i class="fa-solid fa-venus mr-1"></i> Female
+            </button>
+            <button id="tabMale" type="button" onclick="setGenderFilter('male')" class="py-1.5 rounded-md text-slate-400 hover:text-slate-200">
+              <i class="fa-solid fa-mars mr-1"></i> Male
+            </button>
+            <button id="tabNature" type="button" onclick="setGenderFilter('nature')" class="py-1.5 rounded-md text-slate-400 hover:text-slate-200">
+              <i class="fa-solid fa-tree mr-1"></i> Sounds
+            </button>
+          </div>
+
+          <div id="voiceDropdownContainer">
+            <label class="block text-xs text-slate-400 mb-1.5">Selected Voice Model:</label>
+            <select id="voiceSelectDropdown" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-amber-400">
+              <option value="">Detecting device voice engine...</option>
+            </select>
+            <button type="button" onclick="testSelectedVoice()" class="w-full mt-3 bg-slate-800 hover:bg-slate-700 text-amber-400 border border-amber-500/30 py-2 rounded-lg text-xs font-medium transition flex items-center justify-center space-x-1.5">
+              <i class="fa-solid fa-circle-play"></i>
+              <span>Test Selected Voice</span>
+            </button>
+          </div>
+
+          <!-- Nature & Audio Sounds Selector -->
+          <div id="natureSoundsContainer" class="hidden space-y-2">
+            <label class="block text-xs text-slate-400 mb-1">Instant Sound Preview:</label>
+            <div class="grid grid-cols-2 gap-2 text-xs">
+              <button type="button" onclick="playSound('sound-rain')" class="p-2.5 bg-slate-950 border border-slate-800 hover:border-amber-400 rounded-lg text-slate-200 flex items-center space-x-2">
+                <span>🌧️ Gentle Rain</span>
+              </button>
+              <button type="button" onclick="playSound('sound-stream')" class="p-2.5 bg-slate-950 border border-slate-800 hover:border-amber-400 rounded-lg text-slate-200 flex items-center space-x-2">
+                <span>🌊 Stream</span>
+              </button>
+              <button type="button" onclick="playSound('sound-birds')" class="p-2.5 bg-slate-950 border border-slate-800 hover:border-amber-400 rounded-lg text-slate-200 flex items-center space-x-2">
+                <span>🎵 Song</span>
+              </button>
+              <button type="button" onclick="playSound('sound-dog')" class="p-2.5 bg-slate-950 border border-slate-800 hover:border-amber-400 rounded-lg text-slate-200 flex items-center space-x-2">
+                <span>🐶 Dog Bark</span>
+              </button>
+            </div>
+            <button type="button" onclick="stopSound()" class="w-full mt-2 bg-red-950/40 border border-red-800 text-red-300 py-1.5 rounded-lg text-xs">
+              Stop Sound Preview
+            </button>
+          </div>
+        </div>
+
+        <!-- Voice Recorder Studio -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 md:p-6 shadow-xl">
+          <h2 class="text-lg font-semibold text-slate-200 mb-1 flex items-center space-x-2">
+            <i class="fa-solid fa-microphone text-amber-400"></i>
+            <span>Personal Voice Studio</span>
+          </h2>
+          <p class="text-xs text-slate-400 mb-4">Record your own spoken voice directive.</p>
+
+          <div class="bg-slate-950 border border-slate-800 rounded-xl p-4 text-center space-y-3">
+            <div id="recordTimer" class="font-mono text-2xl text-slate-400">00:00</div>
+            
+            <div class="flex justify-center items-center space-x-3">
+              <button type="button" id="recordBtn" class="w-12 h-12 rounded-full bg-red-600 hover:bg-red-500 text-white flex items-center justify-center shadow-lg transition active:scale-95">
+                <i class="fa-solid fa-microphone text-lg"></i>
+              </button>
+              <button type="button" id="stopRecordBtn" disabled class="w-12 h-12 rounded-full bg-slate-800 text-slate-500 flex items-center justify-center transition cursor-not-allowed">
+                <i class="fa-solid fa-square text-lg"></i>
+              </button>
+            </div>
+
+            <div id="recordingStatus" class="text-xs text-slate-500 italic">Click mic to start recording</div>
+          </div>
+
+          <div id="recordingSaveContainer" class="hidden mt-4 space-y-3 border-t border-slate-800 pt-4">
+            <audio id="audioPreview" controls class="w-full h-8 rounded-lg bg-slate-950"></audio>
+            <input type="text" id="recordingTitle" placeholder="Memo Title (e.g., Morning Focus Goal)" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-amber-400">
+            <button type="button" id="saveRecordingBtn" class="w-full bg-slate-800 hover:bg-slate-700 text-amber-400 border border-amber-500/30 font-medium py-2 rounded-lg text-sm transition">
+              Save Recording to Library
+            </button>
+          </div>
+        </div>
+
+        <!-- Saved Personal Voice Recordings List -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 md:p-6 shadow-xl">
+          <h2 class="text-lg font-semibold text-slate-200 mb-3 flex items-center space-x-2">
+            <i class="fa-solid fa-folder-open text-amber-400"></i>
+            <span>Your Saved Voice Recordings</span>
+          </h2>
+          
+          <div id="savedRecordingsList" class="space-y-3">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+
+      </div>
+
     </div>
+
+    <footer class="border-t border-slate-800 pt-4 text-center text-xs text-slate-500">
+      &copy; MindsetAlarm.com &bull; Set your mind for success
+    </footer>
+
+  </div>
+
+  <!-- Triggered Alarm Modal -->
+  <div id="alarmModal" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-50 hidden flex-col items-center justify-center p-6 text-center">
+    <div class="absolute w-72 h-72 rounded-full gold-gradient opacity-20 blur-3xl animate-pulse-ring"></div>
     
-    <div class="audio-player-wrap">
-      <span>Ambient Expedition Stream</span>
-      <button class="btn-audio-toggle" id="audioBtn" onclick="toggleAudio()" title="Play/Pause Audio">&#9654;</button>
-    </div>
-  </div>
-
-  <!-- Header Navigation Bar -->
-  <header class="main-header">
-    <div class="header-container">
-      <a href="#" class="brand-logo">
-        <span class="brand-name">Ivory<span>Palace</span>.com</span>
-        <span class="brand-tagline">UNRIVALED LUXURY & GLOBAL ADVENTURE</span>
-      </a>
-
-      <ul class="nav-menu">
-        <li><a href="#expeditions" class="nav-link active">Expeditions</a></li>
-        <li><a href="#builder" class="nav-link">Journey Builder</a></li>
-        <li><a href="#charters" class="nav-link">Air & Yacht Charters</a></li>
-        <li><a href="#estates" class="nav-link">Private Estates</a></li>
-      </ul>
-
-      <button class="btn-concierge" onclick="openModal('modalConcierge')">Executive Concierge</button>
-    </div>
-  </header>
-
-  <!-- Hero Section -->
-  <section class="hero-section">
-    <div class="hero-content">
-      <span class="hero-sub-badge">Bespoke International Travel & Expeditions</span>
-      <h1 class="hero-title">IvoryPalace.com</h1>
-      <div class="hero-title-sub">UNRIVALED LUXURY & GLOBAL ADVENTURE</div>
-      <div class="hero-buttons">
-        <a href="#builder" class="btn-hero-primary">Design Your Journey</a>
-        <a href="#expeditions" class="btn-hero-outline">Explore Portfolios</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- Main Container -->
-  <div class="container">
-
-    <!-- Bespoke Journey Builder Tool -->
-    <section id="builder">
-      <div class="section-header">
-        <span class="section-kicker">Tailored Travel Architecture</span>
-        <h2 class="section-title">The Bespoke Journey Builder</h2>
-        <div class="section-divider"></div>
+    <div class="relative z-10 max-w-md w-full space-y-6 bg-slate-900 border border-amber-500/40 p-8 rounded-3xl shadow-2xl">
+      <div class="w-16 h-16 gold-gradient text-slate-950 rounded-2xl flex items-center justify-center mx-auto text-3xl font-black shadow-lg">
+        <i class="fa-solid fa-bell animate-bounce"></i>
       </div>
 
-      <div class="builder-card">
-        <div class="builder-grid">
-          <div class="form-group">
-            <label>Primary Mode of Travel</label>
-            <select class="form-control" id="buildMode" onchange="updateJourney()">
-              <option value="Private Jet Expedition">Private Jet Charter (Global)</option>
-              <option value="Superyacht Charter">Superyacht Expedition</option>
-              <option value="Private Estate & Helicopter">Private Villa & Chopper</option>
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label>Target Continent / Region</label>
-            <select class="form-control" id="buildRegion" onchange="updateJourney()">
-              <option value="East & Southern Africa">African Wildlife Reserves</option>
-              <option value="French Riviera & Mediterranean">Mediterranean & Amalfi</option>
-              <option value="Japanese Alps & Kyoto">Japan Cultural & Alpine</option>
-              <option value="Antarctica & South Pole">Polar Ice Expeditions</option>
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label>Expedition Duration</label>
-            <select class="form-control" id="buildDuration" onchange="updateJourney()">
-              <option value="7 Days Private Access">7 Days Ultra Luxury</option>
-              <option value="14 Days Full Circuit">14 Days Multi-Country</option>
-              <option value="21 Days Grand World Tour">21 Days Grand Expedition</option>
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label>Guest Capacity</label>
-            <select class="form-control" id="buildGuests" onchange="updateJourney()">
-              <option value="Couple (2 Guests)">Private Couple Escarpment</option>
-              <option value="Executive Family (4-6)">Family Office / Private Group</option>
-              <option value="Full Delegation (8-12)">VIP Corporate Charter</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="builder-result">
-          <div class="builder-result-text">
-            <h4 id="resTitle">Private Jet Expedition across East & Southern Africa</h4>
-            <p id="resDesc">7 Days Ultra Luxury itinerary tailored for Couple (2 Guests) with dedicated host and helicopter transfers.</p>
-          </div>
-          <button class="btn-concierge" onclick="openModal('modalConcierge')">Request Custom Itinerary</button>
-        </div>
-      </div>
-    </section>
-
-    <!-- Destination Portfolios -->
-    <section id="expeditions">
-      <div class="section-header">
-        <span class="section-kicker">Curated Destinations</span>
-        <h2 class="section-title">Worldwide Expedition Portfolios</h2>
-        <div class="section-divider"></div>
+      <div>
+        <div id="modalAlarmTime" class="text-2xl font-mono font-bold text-amber-400 mb-2">00/00 00:00 AM</div>
+        <h3 id="modalAlarmLabel" class="text-2xl font-bold text-slate-100 mb-1">Executive Focus Time</h3>
+        <p class="text-xs text-slate-400">Scheduled Success Directive</p>
       </div>
 
-      <!-- Filter Buttons -->
-      <div class="filter-bar">
-        <button class="btn-filter active" onclick="filterDest('all', this)">All Portfolios</button>
-        <button class="btn-filter" onclick="filterDest('safari', this)">African Safaris</button>
-        <button class="btn-filter" onclick="filterDest('yacht', this)">Yacht Charters</button>
-        <button class="btn-filter" onclick="filterDest('cultural', this)">Asian Cultural</button>
-        <button class="btn-filter" onclick="filterDest('polar', this)">Polar Expeditions</button>
+      <div class="p-4 bg-slate-950 border border-slate-800 rounded-xl">
+        <div class="text-xs text-amber-400 font-semibold mb-1 flex items-center justify-center space-x-1">
+          <i class="fa-solid fa-volume-high"></i>
+          <span>PLAYING DIRECTIVE AUDIO</span>
+        </div>
+        <div id="modalAudioTitle" class="text-sm font-medium text-slate-300 italic">"Playing Directive"</div>
       </div>
 
-      <!-- Grid -->
-      <div class="destination-grid">
-
-        <!-- Card 1 -->
-        <div class="dest-card" data-cat="safari">
-          <div class="dest-img" style="background-image: url('https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=800&q=80');">
-            <span class="dest-badge">Private Reserve</span>
-          </div>
-          <div class="dest-body">
-            <span class="dest-region">Serengeti & Ngorongoro</span>
-            <h3 class="dest-title">The Great Migration Air Safari</h3>
-            <p class="dest-desc">Fly directly between luxury tented camps via private bush aircraft, with personal game drivers and wildlife conservationists.</p>
-            <div class="dest-footer">
-              <div class="dest-price">From $28,500 <span>per guest / 8 days</span></div>
-              <span class="btn-details" onclick="openModal('modalDest1')">View Itinerary &rarr;</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Card 2 -->
-        <div class="dest-card" data-cat="yacht">
-          <div class="dest-img" style="background-image: url('https://images.unsplash.com/photo-1569263979104-865ab7cd8d13?auto=format&fit=crop&w=800&q=80');">
-            <span class="dest-badge">Superyacht Charter</span>
-          </div>
-          <div class="dest-body">
-            <span class="dest-region">Amalfi & Cyclades Islands</span>
-            <h3 class="dest-title">Mediterranean Island Sovereign</h3>
-            <p class="dest-desc">60m motor yacht charter complete with Michelin-trained private chef, helipad, tender fleets, and secluded cove access.</p>
-            <div class="dest-footer">
-              <div class="dest-price">From $140,000 <span>weekly charter base</span></div>
-              <span class="btn-details" onclick="openModal('modalConcierge')">Inquire Charter &rarr;</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Card 3 -->
-        <div class="dest-card" data-cat="cultural">
-          <div class="dest-img" style="background-image: url('https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=800&q=80');">
-            <span class="dest-badge">Exclusive Access</span>
-          </div>
-          <div class="dest-body">
-            <span class="dest-region">Kyoto & Hokkaido, Japan</span>
-            <h3 class="dest-title">Imperial Heritage & Alpine Sanctuary</h3>
-            <p class="dest-desc">Private temple evening viewings, tea ceremonies with legendary masters, and helicopter transfers to private Hokkaido hot springs.</p>
-            <div class="dest-footer">
-              <div class="dest-price">From $32,000 <span>per guest / 10 days</span></div>
-              <span class="btn-details" onclick="openModal('modalConcierge')">View Itinerary &rarr;</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Card 4 -->
-        <div class="dest-card" data-cat="polar">
-          <div class="dest-img" style="background-image: url('https://images.unsplash.com/photo-1517411032315-54ef2cb783bb?auto=format&fit=crop&w=800&q=80');">
-            <span class="dest-badge">Ultra Adventure</span>
-          </div>
-          <div class="dest-body">
-            <span class="dest-region">Antarctica & South Pole</span>
-            <h3 class="dest-title">White Desert & Emperor Colony</h3>
-            <p class="dest-desc">Land on blue ice runways via private Gulfstream jet, staying in heated luxury pods surrounded by remote polar wilderness.</p>
-            <div class="dest-footer">
-              <div class="dest-price">From $65,000 <span>per guest / 7 days</span></div>
-              <span class="btn-details" onclick="openModal('modalConcierge')">View Itinerary &rarr;</span>
-            </div>
-          </div>
-        </div>
-
+      <div class="flex flex-col space-y-3 pt-2">
+        <button id="dismissBtn" type="button" class="w-full gold-gradient text-slate-950 font-bold py-3.5 rounded-xl shadow-lg hover:brightness-110 transition text-base">
+          DISMISS & TAKE ACTION
+        </button>
+        <button id="snoozeBtn" type="button" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-300 font-medium py-2.5 rounded-xl text-sm transition border border-slate-700">
+          Snooze 5 Minutes
+        </button>
       </div>
-    </section>
-
-  </div>
-
-  <!-- Footer -->
-  <footer>
-    <div class="footer-container">
-      <div class="footer-brand">
-        <h3>Ivory<span>Palace</span>.com</h3>
-        <p style="margin-bottom: 1rem; color: #8892a0;">UNRIVALED LUXURY & GLOBAL ADVENTURE</p>
-        <p>Providing executive travel architecture, private aviation information, and bespoke international expedition planning content for globally minded individuals and family offices.</p>
-      </div>
-
-      <div class="footer-col">
-        <h4>Expeditions</h4>
-        <ul class="footer-links">
-          <li><a href="#expeditions">African Air Safaris</a></li>
-          <li><a href="#expeditions">Superyacht Charters</a></li>
-          <li><a href="#expeditions">Polar Ice Crossings</a></li>
-          <li><a href="#expeditions">Private Island Estates</a></li>
-        </ul>
-      </div>
-
-      <div class="footer-col">
-        <h4>Aviation & Sea</h4>
-        <ul class="footer-links">
-          <li><a href="#charters">Gulfstream Charters</a></li>
-          <li><a href="#charters">Helicopter Transfers</a></li>
-          <li><a href="#charters">Mega Yacht Logistics</a></li>
-          <li><a href="#charters">Security Escorts</a></li>
-        </ul>
-      </div>
-
-      <div class="footer-col">
-        <h4>Desk Contact</h4>
-        <ul class="footer-links">
-          <li><a href="mailto:concierge@ivorypalace.com">concierge@ivorypalace.com</a></li>
-          <li><a href="tel:+18005550199">+1 (800) 555-0199</a></li>
-          <li><a href="#">Geneva Desk</a></li>
-          <li><a href="#">Tokyo Desk</a></li>
-        </ul>
-      </div>
-    </div>
-
-    <!-- Legal Disclaimer Section -->
-    <div class="legal-disclaimer-box">
-      <strong>Legal & Service Disclaimer</strong>
-      IvoryPalace.com is not a travel agency and all bookings are fulfilled via third-party merchants holding appropriate licenses in their respective home states and jurisdictions. IvoryPalace.com does not receive compensation of any kind via our website or as commission from any merchants. IvoryPalace.com operates solely as a media and marketing platform for news, information, and editorial content only, and we do not guarantee the services or prices offered by third-party merchants. Please perform your own due diligence prior to purchasing any services or products from third-party merchants.
-    </div>
-
-    <div class="footer-bottom">
-      <div>&copy; 2026 IvoryPalace.com. All rights reserved. International Travel Luxury Platform.</div>
-      <div style="color: var(--gold-light);">Geneva • London • New York • Tokyo • Singapore</div>
-    </div>
-  </footer>
-
-  <!-- Concierge Request Modal -->
-  <div id="modalConcierge" class="modal-overlay">
-    <div class="modal-card">
-      <button class="modal-close" onclick="closeModal('modalConcierge')">&times;</button>
-      <h3 style="font-family: Georgia, serif; font-size: 1.6rem; color: var(--navy-deep); margin-bottom: 0.5rem;">IvoryPalace Executive Desk</h3>
-      <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.5rem;">Inquire regarding private jet charters, custom itineraries, or estate access worldwide.</p>
-      
-      <form onsubmit="event.preventDefault(); alert('Your dispatch request has been logged with the IvoryPalace Executive Desk.'); closeModal('modalConcierge');">
-        <div class="form-group" style="margin-bottom: 1rem;">
-          <label>Full Name / Principal Representative</label>
-          <input type="text" class="form-control" required placeholder="e.g. Lord Harrington / Executive Office">
-        </div>
-
-        <div class="form-group" style="margin-bottom: 1rem;">
-          <label>Email Address</label>
-          <input type="email" class="form-control" required placeholder="concierge@office.com">
-        </div>
-
-        <div class="form-group" style="margin-bottom: 1rem;">
-          <label>Estimated Departure Timeline</label>
-          <input type="text" class="form-control" placeholder="e.g. Q3 2026 / Immediate Dispatch">
-        </div>
-
-        <div class="form-group" style="margin-bottom: 1.5rem;">
-          <label>Expedition Requirements & Scope</label>
-          <textarea class="form-control" rows="4" placeholder="Detail destination preferences, yacht size, jet requirements..."></textarea>
-        </div>
-
-        <button type="submit" class="btn-concierge" style="width: 100%; padding: 0.9rem;">Submit Confidential Inquiry</button>
-      </form>
     </div>
   </div>
 
   <script>
-    function openModal(id) {
-      document.getElementById(id).classList.add('active');
+    let alarms = JSON.parse(localStorage.getItem('mindset_alarms') || '[]');
+    let customAudioList = [];
+    let allSystemVoices = [];
+    let currentGenderFilter = 'female';
+    let selectedVoice = null;
+    let activeTriggeredAlarm = null;
+    let currentPlayingAudio = null;
+    let db;
+
+    let audioCtx = null;
+    let activeSoundNode = null;
+
+    const soundUrls = {
+      'sound-dog': 'https://actions.google.com/sounds/v1/animals/dog_barking.ogg',
+      'sound-birds': 'https://cdn.pixabay.com/download/audio/2022/01/18/audio_d0a13f69d2.mp3'
+    };
+
+    let mediaRecorder;
+    let audioChunks = [];
+    let recordInterval;
+    let recordSeconds = 0;
+    let currentRecordedBlob = null;
+
+    const templates = {
+      1: "Good morning champion. Today is another opportunity to build your empire. Execute your plans without hesitation, maintain high energy, and win the day.",
+      2: "Time for revenue generation. Review key targets, deliver extreme value, and close out major priorities with focus.",
+      3: "Discipline equals freedom. Maintain extreme focus on primary business objectives. Eliminate distractions and conquer the task."
+    };
+
+    const liveClockEl = document.getElementById('liveClock');
+    const alarmForm = document.getElementById('alarmForm');
+    const alarmTimeInput = document.getElementById('alarmTime');
+    const alarmListEl = document.getElementById('alarmList');
+    const alarmCountBadge = document.getElementById('alarmCountBadge');
+    const audioSourceTypeSelect = document.getElementById('audioSourceType');
+    const recordingsOptGroup = document.getElementById('recordingsOptGroup');
+    const savedRecordingsList = document.getElementById('savedRecordingsList');
+    const voiceSelectDropdown = document.getElementById('voiceSelectDropdown');
+    const customSpeechText = document.getElementById('customSpeechText');
+    const customSpeechContainer = document.getElementById('customSpeechContainer');
+
+    const tabFemale = document.getElementById('tabFemale');
+    const tabMale = document.getElementById('tabMale');
+    const tabNature = document.getElementById('tabNature');
+    const voiceDropdownContainer = document.getElementById('voiceDropdownContainer');
+    const natureSoundsContainer = document.getElementById('natureSoundsContainer');
+
+    const recordBtn = document.getElementById('recordBtn');
+    const stopRecordBtn = document.getElementById('stopRecordBtn');
+    const recordTimer = document.getElementById('recordTimer');
+    const recordingStatus = document.getElementById('recordingStatus');
+    const recordingSaveContainer = document.getElementById('recordingSaveContainer');
+    const audioPreview = document.getElementById('audioPreview');
+    const recordingTitleInput = document.getElementById('recordingTitle');
+    const saveRecordingBtn = document.getElementById('saveRecordingBtn');
+
+    const alarmModal = document.getElementById('alarmModal');
+    const modalAlarmTime = document.getElementById('modalAlarmTime');
+    const modalAlarmLabel = document.getElementById('modalAlarmLabel');
+    const modalAudioTitle = document.getElementById('modalAudioTitle');
+    const dismissBtn = document.getElementById('dismissBtn');
+    const snoozeBtn = document.getElementById('snoozeBtn');
+
+    if (customSpeechText) customSpeechText.value = templates[1];
+
+    function formatForDateTimeInput(date) {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      const hours = String(date.getHours()).padStart(2, '0');
+      const minutes = String(date.getMinutes()).padStart(2, '0');
+      return `${year}-${month}-${day}T${hours}:${minutes}`;
     }
 
-    function closeModal(id) {
-      document.getElementById(id).classList.remove('active');
+    if (alarmTimeInput) {
+      const defaultTime = new Date(Date.now() + 15 * 60000);
+      alarmTimeInput.value = formatForDateTimeInput(defaultTime);
     }
 
-    function toggleAudio() {
-      const audio = document.getElementById('travelAudio');
-      const btn = document.getElementById('audioBtn');
-      if (audio.paused) {
-        audio.play();
-        btn.innerHTML = '&#10074;&#10074;';
-      } else {
-        audio.pause();
-        btn.innerHTML = '&#9654;';
+    window.setQuickTime = function(minutesToAdd) {
+      const target = new Date(Date.now() + minutesToAdd * 60000);
+      if (alarmTimeInput) alarmTimeInput.value = formatForDateTimeInput(target);
+    };
+
+    window.setTomorrowMorning = function() {
+      const target = new Date();
+      target.setDate(target.getDate() + 1);
+      target.setHours(7, 0, 0, 0);
+      if (alarmTimeInput) alarmTimeInput.value = formatForDateTimeInput(target);
+    };
+
+    document.addEventListener('click', () => {
+      if (audioCtx && audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+    }, { once: true });
+
+    function getAudioContext() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      return audioCtx;
+    }
+
+    function stopSound() {
+      if (activeSoundNode) {
+        try { activeSoundNode.stop(); } catch(e){}
+        activeSoundNode = null;
+      }
+      if (currentPlayingAudio) {
+        currentPlayingAudio.pause();
+        currentPlayingAudio = null;
       }
     }
 
-    function updateJourney() {
-      const mode = document.getElementById('buildMode').value;
-      const region = document.getElementById('buildRegion').value;
-      const duration = document.getElementById('buildDuration').value;
-      const guests = document.getElementById('buildGuests').value;
+    function playSound(type) {
+      stopSound();
 
-      document.getElementById('resTitle').innerText = `${mode} across ${region}`;
-      document.getElementById('resDesc').innerText = `${duration} itinerary tailored for ${guests} with dedicated host and private transfers.`;
+      if (type === 'sound-rain' || type === 'sound-stream') {
+        const ctx = getAudioContext();
+        const bufferSize = ctx.sampleRate * 2;
+        const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+        const data = buffer.getChannelData(0);
+        let b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0, b5 = 0, b6 = 0;
+        
+        for (let i = 0; i < bufferSize; i++) {
+          let white = Math.random() * 2 - 1;
+          b0 = 0.99886 * b0 + white * 0.0555179;
+          b1 = 0.99332 * b1 + white * 0.0750759;
+          b2 = 0.96900 * b2 + white * 0.1538520;
+          b3 = 0.86650 * b3 + white * 0.3104856;
+          b4 = 0.55000 * b4 + white * 0.5329522;
+          b5 = -0.7616 * b5 - white * 0.0168980;
+          data[i] = b0 + b1 + b2 + b3 + b4 + b5 + b6 + white * 0.5362;
+          data[i] *= 0.11;
+          b6 = white * 0.115926;
+        }
+
+        const noise = ctx.createBufferSource();
+        noise.buffer = buffer;
+        noise.loop = true;
+
+        const filter = ctx.createBiquadFilter();
+        filter.type = type === 'sound-rain' ? 'lowpass' : 'bandpass';
+        filter.frequency.value = type === 'sound-rain' ? 1000 : 800;
+
+        noise.connect(filter);
+        filter.connect(ctx.destination);
+        noise.start();
+        activeSoundNode = noise;
+
+      } else if (soundUrls[type]) {
+        currentPlayingAudio = new Audio(soundUrls[type]);
+        currentPlayingAudio.loop = true;
+        currentPlayingAudio.play().catch(e => console.error('Audio play error:', e));
+      }
     }
 
-    function filterDest(cat, btn) {
-      const buttons = document.querySelectorAll('.btn-filter');
-      buttons.forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
+    function initDB() {
+      return new Promise((resolve, reject) => {
+        const request = indexedDB.open('MindsetAlarmAudioDB', 1);
+        request.onupgradeneeded = (e) => {
+          const database = e.target.result;
+          if (!database.objectStoreNames.contains('recordings')) {
+            database.createObjectStore('recordings', { keyPath: 'id' });
+          }
+        };
+        request.onsuccess = (e) => {
+          db = e.target.result;
+          resolve(db);
+        };
+        request.onerror = (e) => reject(e);
+      });
+    }
 
-      const cards = document.querySelectorAll('.dest-card');
-      cards.forEach(card => {
-        if (cat === 'all' || card.getAttribute('data-cat') === cat) {
-          card.style.display = 'flex';
+    async function loadRecordingsFromDB() {
+      if (!db) return;
+      const tx = db.transaction('recordings', 'readonly');
+      const store = tx.objectStore('recordings');
+      const req = store.getAll();
+      req.onsuccess = () => {
+        customAudioList = req.result || [];
+        renderCustomAudioOptions();
+        renderSavedRecordingsList();
+      };
+    }
+
+    async function saveRecordingToDB(recording) {
+      return new Promise((resolve, reject) => {
+        const tx = db.transaction('recordings', 'readwrite');
+        const store = tx.objectStore('recordings');
+        const req = store.put(recording);
+        req.onsuccess = () => resolve();
+        req.onerror = (e) => reject(e);
+      });
+    }
+
+    async function deleteRecordingFromDB(id) {
+      return new Promise((resolve, reject) => {
+        const tx = db.transaction('recordings', 'readwrite');
+        const store = tx.objectStore('recordings');
+        const req = store.delete(id);
+        req.onsuccess = () => resolve();
+        req.onerror = (e) => reject(e);
+      });
+    }
+
+    function loadAndFilterVoices() {
+      if (!('speechSynthesis' in window)) return;
+      
+      allSystemVoices = window.speechSynthesis.getVoices()
+        .filter(v => v.lang.startsWith('en') && v.name.toLowerCase() !== 'fred');
+
+      const maleKeywords = ['male', 'david', 'mark', 'george', 'guy', 'alex', 'daniel', 'oliver', 'ryan', 'james'];
+      const femaleKeywords = ['female', 'samantha', 'victoria', 'zira', 'jenny', 'jennie', 'aria', 'karen', 'ava', 'emma', 'sora'];
+
+      let filtered = [];
+      if (currentGenderFilter === 'male') {
+        filtered = allSystemVoices.filter(v => maleKeywords.some(kw => v.name.toLowerCase().includes(kw)));
+        if (filtered.length === 0) filtered = allSystemVoices;
+      } else {
+        filtered = allSystemVoices.filter(v => femaleKeywords.some(kw => v.name.toLowerCase().includes(kw)));
+        if (filtered.length === 0) filtered = allSystemVoices;
+      }
+
+      if (voiceSelectDropdown) {
+        voiceSelectDropdown.innerHTML = '';
+        filtered.forEach((v, idx) => {
+          const opt = document.createElement('option');
+          opt.value = v.name;
+          opt.textContent = `${v.name} (${v.lang})`;
+          if (idx === 0) opt.selected = true;
+          voiceSelectDropdown.appendChild(opt);
+        });
+      }
+
+      if (filtered.length > 0) {
+        selectedVoice = filtered[0];
+      }
+    }
+
+    function setGenderFilter(gender) {
+      currentGenderFilter = gender;
+      stopSound();
+
+      if (gender === 'female') {
+        if (tabFemale) tabFemale.className = "py-1.5 rounded-md bg-amber-500/20 text-amber-400 border border-amber-500/30";
+        if (tabMale) tabMale.className = "py-1.5 rounded-md text-slate-400 hover:text-slate-200";
+        if (tabNature) tabNature.className = "py-1.5 rounded-md text-slate-400 hover:text-slate-200";
+        if (voiceDropdownContainer) voiceDropdownContainer.classList.remove('hidden');
+        if (natureSoundsContainer) natureSoundsContainer.classList.add('hidden');
+        loadAndFilterVoices();
+      } else if (gender === 'male') {
+        if (tabMale) tabMale.className = "py-1.5 rounded-md bg-amber-500/20 text-amber-400 border border-amber-500/30";
+        if (tabFemale) tabFemale.className = "py-1.5 rounded-md text-slate-400 hover:text-slate-200";
+        if (tabNature) tabNature.className = "py-1.5 rounded-md text-slate-400 hover:text-slate-200";
+        if (voiceDropdownContainer) voiceDropdownContainer.classList.remove('hidden');
+        if (natureSoundsContainer) natureSoundsContainer.classList.add('hidden');
+        loadAndFilterVoices();
+      } else {
+        if (tabNature) tabNature.className = "py-1.5 rounded-md bg-amber-500/20 text-amber-400 border border-amber-500/30";
+        if (tabFemale) tabFemale.className = "py-1.5 rounded-md text-slate-400 hover:text-slate-200";
+        if (tabMale) tabMale.className = "py-1.5 rounded-md text-slate-400 hover:text-slate-200";
+        if (voiceDropdownContainer) voiceDropdownContainer.classList.add('hidden');
+        if (natureSoundsContainer) natureSoundsContainer.classList.remove('hidden');
+      }
+    }
+
+    if (voiceSelectDropdown) {
+      voiceSelectDropdown.addEventListener('change', (e) => {
+        selectedVoice = allSystemVoices.find(v => v.name === e.target.value);
+      });
+    }
+
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.onvoiceschanged = loadAndFilterVoices;
+      loadAndFilterVoices();
+    }
+
+    function testSelectedVoice() {
+      speakText("Hello executive. Voice engine test successful. Ready to drive performance.");
+    }
+
+    function previewCurrentCustomMessage() {
+      const msg = customSpeechText ? customSpeechText.value.trim() : "Please enter a message to speak.";
+      speakText(msg || "Please enter a message to speak.");
+    }
+
+    function loadTemplate(num) {
+      if (customSpeechText) customSpeechText.value = templates[num];
+    }
+
+    function speakText(text) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      if (selectedVoice) {
+        utterance.voice = selectedVoice;
+      }
+      utterance.rate = 0.95;
+      utterance.pitch = currentGenderFilter === 'male' ? 0.95 : 1.05;
+      window.speechSynthesis.speak(utterance);
+    }
+
+    async function init() {
+      updateClock();
+      setInterval(updateClock, 1000);
+      try {
+        await initDB();
+        await loadRecordingsFromDB();
+      } catch(e) {
+        console.error("Database initialization failed:", e);
+      }
+      renderAlarms();
+      setupRecorder();
+      setInterval(checkAlarms, 1000);
+    }
+
+    function updateClock() {
+      if (liveClockEl) {
+        const now = new Date();
+        liveClockEl.textContent = now.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' }) + ' ' +
+                                  now.toLocaleTimeString('en-US', { hour12: true, hour: '2-digit', minute: '2-digit', second: '2-digit' });
+      }
+    }
+
+    if (audioSourceTypeSelect) {
+      audioSourceTypeSelect.addEventListener('change', (e) => {
+        if (e.target.value === 'custom-speech') {
+          if (customSpeechContainer) customSpeechContainer.classList.remove('hidden');
         } else {
-          card.style.display = 'none';
+          if (customSpeechContainer) customSpeechContainer.classList.add('hidden');
         }
       });
+    }
+
+    function renderCustomAudioOptions() {
+      if (!recordingsOptGroup) return;
+      recordingsOptGroup.innerHTML = '';
+      if (customAudioList.length === 0) {
+        const opt = document.createElement('option');
+        opt.disabled = true;
+        opt.textContent = '(No saved voice recordings yet)';
+        recordingsOptGroup.appendChild(opt);
+      } else {
+        customAudioList.forEach(item => {
+          const opt = document.createElement('option');
+          opt.value = item.id;
+          opt.textContent = `🎙️ ${item.title}`;
+          recordingsOptGroup.appendChild(opt);
+        });
+      }
+    }
+
+    function renderSavedRecordingsList() {
+      if (!savedRecordingsList) return;
+      savedRecordingsList.innerHTML = '';
+      if (customAudioList.length === 0) {
+        savedRecordingsList.innerHTML = `
+          <div class="text-center py-6 text-slate-500 border border-dashed border-slate-800 rounded-xl text-xs">
+            No recordings saved yet.
+          </div>`;
+      }
     }
   </script>
 </body>

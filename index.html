@@ -1,775 +1,410 @@
 <!DOCTYPE html>
-<html lang="en" class="h-full bg-slate-950 text-slate-100">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MindsetAlarm.com - Set your mind for success</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <title>APlaceForBusiness.com - Domain Directory</title>
   <style>
-    @keyframes pulse-ring {
-      0% { transform: scale(0.95); opacity: 0.8; }
-      50% { transform: scale(1.05); opacity: 0.4; }
-      100% { transform: scale(0.95); opacity: 0.8; }
+    :root {
+      --bg-color: #0f172a;
+      --card-bg: #1e293b;
+      --card-border: #334155;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent: #38bdf8;
+      --accent-hover: #0284c7;
+      --badge-bg: #0369a1;
+      --badge-text: #e0f2fe;
     }
-    .animate-pulse-ring {
-      animation: pulse-ring 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
-    .gold-gradient {
-      background: linear-gradient(135deg, #d4af37 0%, #f3e5ab 50%, #aa7c11 100%);
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      padding: 2rem 1rem;
+      line-height: 1.5;
     }
-    .gold-text {
-      background: linear-gradient(135deg, #f3e5ab 0%, #d4af37 50%, #aa7c11 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+
+    header {
+      text-align: center;
+      max-width: 800px;
+      margin: 0 auto 2.5rem auto;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.025em;
+    }
+
+    h1 span {
+      color: var(--accent);
+    }
+
+    p.subtitle {
+      color: var(--text-muted);
+      font-size: 1.1rem;
+    }
+
+    /* Filter Controls */
+    .controls {
+      max-width: 1200px;
+      margin: 0 auto 2rem auto;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .filter-btn {
+      background-color: var(--card-bg);
+      color: var(--text-muted);
+      border: 1px solid var(--card-border);
+      padding: 0.5rem 1rem;
+      border-radius: 9999px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: all 0.2s ease;
+    }
+
+    .filter-btn:hover {
+      border-color: var(--accent);
+      color: var(--text-main);
+    }
+
+    .filter-btn.active {
+      background-color: var(--accent);
+      color: #0f172a;
+      border-color: var(--accent);
+      font-weight: 700;
+    }
+
+    /* Grid Layout */
+    .domain-grid {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+
+    /* Domain Cards */
+    .card {
+      background-color: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+      position: relative;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      border-color: var(--accent);
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 0.75rem;
+    }
+
+    .char-badge {
+      background-color: rgba(56, 189, 248, 0.1);
+      color: var(--accent);
+      border: 1px solid rgba(56, 189, 248, 0.2);
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 0.2rem 0.5rem;
+      border-radius: 0.375rem;
+      white-space: nowrap;
+    }
+
+    .domain-name {
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: #ffffff;
+      word-break: break-all;
+    }
+
+    .category-tag {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .card-footer {
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--card-border);
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .inquire-btn {
+      color: var(--accent);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      transition: color 0.2s ease;
+    }
+
+    .inquire-btn:hover {
+      color: #ffffff;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--card-border);
+      color: var(--text-muted);
+      font-size: 0.9rem;
     }
   </style>
 </head>
-<body class="h-full flex flex-col font-sans antialiased selection:bg-amber-500 selection:text-slate-950">
+<body>
 
-  <div class="flex-1 flex flex-col max-w-6xl w-full mx-auto p-4 md:p-6 lg:p-8 space-y-6">
+  <header>
+    <h1>APlaceFor<span>Business</span>.com</h1>
+    <p class="subtitle">Premium Domain Portfolio Directory</p>
+  </header>
 
-    <!-- Header Navigation -->
-    <header class="flex items-center justify-between border-b border-slate-800 pb-4">
-      <div class="flex items-center space-x-3">
-        <div class="w-10 h-10 rounded-xl gold-gradient flex items-center justify-center text-slate-950 font-black text-xl shadow-lg shadow-amber-500/10">
-          <i class="fa-solid font-bold fa-clock"></i>
-        </div>
-        <div>
-          <h1 class="text-xl md:text-2xl font-bold tracking-tight gold-text">MindsetAlarm.com</h1>
-          <p class="text-xs text-slate-400">Set your mind for success</p>
-        </div>
-      </div>
-      <div id="liveClock" class="text-xl md:text-3xl font-mono font-semibold text-amber-400 tracking-wider">
-        00:00:00 AM
-      </div>
-    </header>
-
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 flex-1">
-
-      <!-- Column 1: Alarm Creation & Active Alarms -->
-      <div class="lg:col-span-2 space-y-6">
-
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 md:p-6 shadow-xl">
-          <h2 class="text-lg font-semibold text-slate-200 mb-4 flex items-center space-x-2">
-            <i class="fa-solid fa-plus-circle text-amber-400"></i>
-            <span>Set New Success Alarm / Reminder</span>
-          </h2>
-
-          <form id="alarmForm" class="space-y-4">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label class="block text-xs uppercase tracking-wider text-slate-400 mb-1">Time</label>
-                <input type="time" id="alarmTime" required class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-amber-300 font-mono text-lg focus:outline-none focus:border-amber-400 transition">
-              </div>
-
-              <div>
-                <label class="block text-xs uppercase tracking-wider text-slate-400 mb-1">Objective / Label</label>
-                <input type="text" id="alarmLabel" placeholder="e.g. Q3 Sales Goal Review" required class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 placeholder-slate-600 focus:outline-none focus:border-amber-400 transition">
-              </div>
-            </div>
-
-            <div>
-              <label class="block text-xs uppercase tracking-wider text-slate-400 mb-1">Audio Source</label>
-              <select id="audioSourceType" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-slate-200 focus:outline-none focus:border-amber-400 transition">
-                <option value="custom-speech">🗣️ Custom AI Voice Message (Set Below)</option>
-                <optgroup label="Your Saved Voice Recordings" id="recordingsOptGroup">
-                  <!-- Custom recordings populate here -->
-                </optgroup>
-              </select>
-            </div>
-
-            <!-- Custom Speech Script Box -->
-            <div id="customSpeechContainer" class="space-y-2 bg-slate-950 p-4 border border-slate-800 rounded-xl">
-              <div class="flex items-center justify-between">
-                <label class="block text-xs uppercase tracking-wider text-amber-400 font-semibold">Custom Voice Message Script</label>
-                <div class="space-x-1">
-                  <button type="button" onclick="loadTemplate(1)" class="text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-300 px-2 py-0.5 rounded">Morning Victory</button>
-                  <button type="button" onclick="loadTemplate(2)" class="text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-300 px-2 py-0.5 rounded">Sales Target</button>
-                  <button type="button" onclick="loadTemplate(3)" class="text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-300 px-2 py-0.5 rounded">Focus & Discipline</button>
-                </div>
-              </div>
-              <textarea id="customSpeechText" rows="3" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm text-slate-200 focus:outline-none focus:border-amber-400 placeholder-slate-600" placeholder="Type the exact motivational message you want spoken when this alarm triggers..."></textarea>
-              <div class="flex justify-end">
-                <button type="button" onclick="previewCurrentCustomMessage()" class="text-xs text-amber-400 hover:text-amber-300 flex items-center space-x-1">
-                  <i class="fa-solid fa-volume-high"></i>
-                  <span>Test Speak Message</span>
-                </button>
-              </div>
-            </div>
-
-            <button type="submit" class="w-full gold-gradient text-slate-950 font-bold py-3 rounded-lg shadow-md hover:brightness-110 active:scale-[0.99] transition flex items-center justify-center space-x-2">
-              <i class="fa-solid fa-bell"></i>
-              <span>Activate Alarm</span>
-            </button>
-          </form>
-        </div>
-
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 md:p-6 shadow-xl">
-          <h2 class="text-lg font-semibold text-slate-200 mb-4 flex items-center justify-between">
-            <span class="flex items-center space-x-2">
-              <i class="fa-solid fa-list-check text-amber-400"></i>
-              <span>Active Scheduled Alarms</span>
-            </span>
-            <span id="alarmCountBadge" class="text-xs bg-amber-500/10 text-amber-400 border border-amber-500/30 px-2.5 py-0.5 rounded-full font-mono">0 Active</span>
-          </h2>
-
-          <div id="alarmList" class="space-y-3">
-            <div class="text-center py-8 text-slate-500 border border-dashed border-slate-800 rounded-xl">
-              <i class="fa-solid fa-clock-rotate-left text-2xl mb-2 text-slate-600"></i>
-              <p>No active alarms set. Choose a time and message above to schedule.</p>
-            </div>
-          </div>
-        </div>
-
-      </div>
-
-      <!-- Column 2: Voice Studio, Voice Selector & Saved Library -->
-      <div class="space-y-6">
-
-        <!-- Male & Female AI Voice Selector Panel -->
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 md:p-6 shadow-xl space-y-4">
-          <h2 class="text-lg font-semibold text-slate-200 flex items-center space-x-2">
-            <i class="fa-solid fa-user-gear text-amber-400"></i>
-            <span>AI Voice Settings (Male & Female)</span>
-          </h2>
-
-          <!-- Gender Category Tabs -->
-          <div class="grid grid-cols-2 gap-2 p-1 bg-slate-950 rounded-lg border border-slate-800">
-            <button id="tabFemale" onclick="setGenderFilter('female')" class="py-1.5 text-xs font-semibold rounded-md bg-amber-500/20 text-amber-400 border border-amber-500/30">
-              <i class="fa-solid fa-venus mr-1"></i> Female Voices
-            </button>
-            <button id="tabMale" onclick="setGenderFilter('male')" class="py-1.5 text-xs font-semibold rounded-md text-slate-400 hover:text-slate-200">
-              <i class="fa-solid fa-mars mr-1"></i> Male Voices
-            </button>
-          </div>
-
-          <div>
-            <label class="block text-xs text-slate-400 mb-1.5">Selected Voice Model:</label>
-            <select id="voiceSelectDropdown" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-amber-400">
-              <option value="">Detecting device voice engine...</option>
-            </select>
-          </div>
-
-          <button onclick="testSelectedVoice()" class="w-full bg-slate-800 hover:bg-slate-700 text-amber-400 border border-amber-500/30 py-2 rounded-lg text-xs font-medium transition flex items-center justify-center space-x-1.5">
-            <i class="fa-solid fa-circle-play"></i>
-            <span>Test Selected Voice</span>
-          </button>
-        </div>
-
-        <!-- Voice Recorder Studio -->
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 md:p-6 shadow-xl">
-          <h2 class="text-lg font-semibold text-slate-200 mb-1 flex items-center space-x-2">
-            <i class="fa-solid fa-microphone text-amber-400"></i>
-            <span>Personal Voice Studio</span>
-          </h2>
-          <p class="text-xs text-slate-400 mb-4">Record your own spoken voice directive.</p>
-
-          <div class="bg-slate-950 border border-slate-800 rounded-xl p-4 text-center space-y-3">
-            <div id="recordTimer" class="font-mono text-2xl text-slate-400">00:00</div>
-            
-            <div class="flex justify-center items-center space-x-3">
-              <button id="recordBtn" class="w-12 h-12 rounded-full bg-red-600 hover:bg-red-500 text-white flex items-center justify-center shadow-lg transition active:scale-95">
-                <i class="fa-solid fa-microphone text-lg"></i>
-              </button>
-              <button id="stopRecordBtn" disabled class="w-12 h-12 rounded-full bg-slate-800 text-slate-500 flex items-center justify-center transition cursor-not-allowed">
-                <i class="fa-solid fa-square text-lg"></i>
-              </button>
-            </div>
-
-            <div id="recordingStatus" class="text-xs text-slate-500 italic">Click mic to start recording</div>
-          </div>
-
-          <div id="recordingSaveContainer" class="hidden mt-4 space-y-3 border-t border-slate-800 pt-4">
-            <audio id="audioPreview" controls class="w-full h-8 rounded-lg bg-slate-950"></audio>
-            <input type="text" id="recordingTitle" placeholder="Memo Title (e.g., Morning Focus Goal)" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-amber-400">
-            <button id="saveRecordingBtn" class="w-full bg-slate-800 hover:bg-slate-700 text-amber-400 border border-amber-500/30 font-medium py-2 rounded-lg text-sm transition">
-              Save Recording to Library
-            </button>
-          </div>
-        </div>
-
-        <!-- Saved Personal Voice Recordings List -->
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 md:p-6 shadow-xl">
-          <h2 class="text-lg font-semibold text-slate-200 mb-3 flex items-center space-x-2">
-            <i class="fa-solid fa-folder-open text-amber-400"></i>
-            <span>Your Saved Voice Recordings</span>
-          </h2>
-          
-          <div id="savedRecordingsList" class="space-y-3">
-            <!-- Dynamically populated -->
-          </div>
-        </div>
-
-      </div>
-
-    </div>
-
-    <footer class="border-t border-slate-800 pt-4 text-center text-xs text-slate-500">
-      &copy; MindsetAlarm.com &bull; Set your mind for success
-    </footer>
-
+  <!-- Category Filter Bar -->
+  <div class="controls" id="filter-bar">
+    <button class="filter-btn active" data-category="all">All Domains</button>
+    <button class="filter-btn" data-category="Mindset & Self-Help">Mindset & Self-Help</button>
+    <!-- Add additional category buttons here as portfolio grows -->
   </div>
 
-  <!-- Triggered Alarm Modal -->
-  <div id="alarmModal" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-50 hidden flex-col items-center justify-center p-6 text-center">
-    <div class="absolute w-72 h-72 rounded-full gold-gradient opacity-20 blur-3xl animate-pulse-ring"></div>
-    
-    <div class="relative z-10 max-w-md w-full space-y-6 bg-slate-900 border border-amber-500/40 p-8 rounded-3xl shadow-2xl">
-      <div class="w-16 h-16 gold-gradient text-slate-950 rounded-2xl flex items-center justify-center mx-auto text-3xl font-black shadow-lg">
-        <i class="fa-solid fa-bell animate-bounce"></i>
-      </div>
+  <!-- Domain Cards Container (Sorted by Character Length) -->
+  <main class="domain-grid" id="domain-grid">
 
+    <!-- 3 Characters -->
+    <div class="card" data-category="General / Brandable" data-chars="3">
       <div>
-        <div id="modalAlarmTime" class="text-4xl font-mono font-bold text-amber-400 mb-2">00:00 AM</div>
-        <h3 id="modalAlarmLabel" class="text-2xl font-bold text-slate-100 mb-1">Executive Focus Time</h3>
-        <p class="text-xs text-slate-400">Scheduled Success Directive</p>
-      </div>
-
-      <div class="p-4 bg-slate-950 border border-slate-800 rounded-xl">
-        <div class="text-xs text-amber-400 font-semibold mb-1 flex items-center justify-center space-x-1">
-          <i class="fa-solid fa-volume-high"></i>
-          <span>PLAYING DIRECTIVE AUDIO</span>
+        <div class="card-header">
+          <div class="domain-name">Cab0.com</div>
+          <span class="char-badge">3 Chars</span>
         </div>
-        <div id="modalAudioTitle" class="text-sm font-medium text-slate-300 italic">"Playing Directive"</div>
+        <div class="category-tag">General / Brandable</div>
       </div>
-
-      <div class="flex flex-col space-y-3 pt-2">
-        <button id="dismissBtn" class="w-full gold-gradient text-slate-950 font-bold py-3.5 rounded-xl shadow-lg hover:brightness-110 transition text-base">
-          DISMISS & TAKE ACTION
-        </button>
-        <button id="snoozeBtn" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-300 font-medium py-2.5 rounded-xl text-sm transition border border-slate-700">
-          Snooze 5 Minutes
-        </button>
+      <div class="card-footer">
+        <a href="mailto:inquire@aplaceforbusiness.com?subject=Inquiry: Cab0.com" class="inquire-btn">Inquire &rarr;</a>
       </div>
     </div>
-  </div>
+
+    <!-- 4 Characters -->
+    <div class="card" data-category="Transport & Travel" data-chars="4">
+      <div>
+        <div class="card-header">
+          <div class="domain-name">4O5.com</div>
+          <span class="char-badge">4 Chars</span>
+        </div>
+        <div class="category-tag">Transport & Travel</div>
+      </div>
+      <div class="card-footer">
+        <a href="mailto:inquire@aplaceforbusiness.com?subject=Inquiry: 4O5.com" class="inquire-btn">Inquire &rarr;</a>
+      </div>
+    </div>
+
+    <div class="card" data-category="Finance & Tech" data-chars="4">
+      <div>
+        <div class="card-header">
+          <div class="domain-name">APR0.com</div>
+          <span class="char-badge">4 Chars</span>
+        </div>
+        <div class="category-tag">Finance & Tech</div>
+      </div>
+      <div class="card-footer">
+        <a href="mailto:inquire@aplaceforbusiness.com?subject=Inquiry: APR0.com" class="inquire-btn">Inquire &rarr;</a>
+      </div>
+    </div>
+
+    <!-- 6 Characters -->
+    <div class="card" data-category="Local & Parking" data-chars="6">
+      <div>
+        <div class="card-header">
+          <div class="domain-name">ParkLV.com</div>
+          <span class="char-badge">6 Chars</span>
+        </div>
+        <div class="category-tag">Local & Parking</div>
+      </div>
+      <div class="card-footer">
+        <a href="mailto:inquire@aplaceforbusiness.com?subject=Inquiry: ParkLV.com" class="inquire-btn">Inquire &rarr;</a>
+      </div>
+    </div>
+
+    <div class="card" data-category="Tourism & Travel" data-chars="6">
+      <div>
+        <div class="card-header">
+          <div class="domain-name">TourLV.com</div>
+          <span class="char-badge">6 Chars</span>
+        </div>
+        <div class="category-tag">Tourism & Travel</div>
+      </div>
+      <div class="card-footer">
+        <a href="mailto:inquire@aplaceforbusiness.com?subject=Inquiry: TourLV.com" class="inquire-btn">Inquire &rarr;</a>
+      </div>
+    </div>
+
+    <div class="card" data-category="Lifestyle & Arts" data-chars="6">
+      <div>
+        <div class="card-header">
+          <div class="domain-name">InkTat.com</div>
+          <span class="char-badge">6 Chars</span>
+        </div>
+        <div class="category-tag">Lifestyle & Arts</div>
+      </div>
+      <div class="card-footer">
+        <a href="mailto:inquire@aplaceforbusiness.com?subject=Inquiry: InkTat.com" class="inquire-btn">Inquire &rarr;</a>
+      </div>
+    </div>
+
+    <div class="card" data-category="Media & Community" data-chars="6">
+      <div>
+        <div class="card-header">
+          <div class="domain-name">OcMix.com</div>
+          <span class="char-badge">6 Chars</span>
+        </div>
+        <div class="category-tag">Media & Community</div>
+      </div>
+      <div class="card-footer">
+        <a href="mailto:inquire@aplaceforbusiness.com?subject=Inquiry: OcMix.com" class="inquire-btn">Inquire &rarr;</a>
+      </div>
+    </div>
+
+    <div class="card" data-category="E-commerce & Tech" data-chars="6">
+      <div>
+        <div class="card-header">
+          <div class="domain-name">MrTags.com</div>
+          <span class="char-badge">6 Chars</span>
+        </div>
+        <div class="category-tag">E-commerce & Tech</div>
+      </div>
+      <div class="card-footer">
+        <a href="mailto:inquire@aplaceforbusiness.com?subject=Inquiry: MrTags.com" class="inquire-btn">Inquire &rarr;</a>
+      </div>
+    </div>
+
+    <!-- 9 Characters -->
+    <div class="card" data-category="Business & Trivia" data-chars="9">
+      <div>
+        <div class="card-header">
+          <div class="domain-name">BizQuizzz.com</div>
+          <span class="char-badge">9 Chars</span>
+        </div>
+        <div class="category-tag">Business & Trivia</div>
+      </div>
+      <div class="card-footer">
+        <a href="mailto:inquire@aplaceforbusiness.com?subject=Inquiry: BizQuizzz.com" class="inquire-btn">Inquire &rarr;</a>
+      </div>
+    </div>
+
+    <div class="card" data-category="Utilities & Search" data-chars="9">
+      <div>
+        <div class="card-header">
+          <div class="domain-name">GasLocate.com</div>
+          <span class="char-badge">9 Chars</span>
+        </div>
+        <div class="category-tag">Utilities & Search</div>
+      </div>
+      <div class="card-footer">
+        <a href="mailto:inquire@aplaceforbusiness.com?subject=Inquiry: GasLocate.com" class="inquire-btn">Inquire &rarr;</a>
+      </div>
+    </div>
+
+    <!-- 10 Characters -->
+    <div class="card" data-category="Sports & Networking" data-chars="10">
+      <div>
+        <div class="card-header">
+          <div class="domain-name">GolfMixer.com</div>
+          <span class="char-badge">10 Chars</span>
+        </div>
+        <div class="category-tag">Sports & Networking</div>
+      </div>
+      <div class="card-footer">
+        <a href="mailto:inquire@aplaceforbusiness.com?subject=Inquiry: GolfMixer.com" class="inquire-btn">Inquire &rarr;</a>
+      </div>
+    </div>
+
+    <div class="card" data-category="Travel & Logistics" data-chars="10">
+      <div>
+        <div class="card-header">
+          <div class="domain-name">ArriveTime.com</div>
+          <span class="char-badge">10 Chars</span>
+        </div>
+        <div class="category-tag">Travel & Logistics</div>
+      </div>
+      <div class="card-footer">
+        <a href="mailto:inquire@aplaceforbusiness.com?subject=Inquiry: ArriveTime.com" class="inquire-btn">Inquire &rarr;</a>
+      </div>
+    </div>
+
+    <!-- 12 Characters -->
+    <div class="card" data-category="Mindset & Self-Help" data-chars="12">
+      <div>
+        <div class="card-header">
+          <div class="domain-name">MindsetAlarm.com</div>
+          <span class="char-badge">12 Chars</span>
+        </div>
+        <div class="category-tag">Mindset & Self-Help</div>
+      </div>
+      <div class="card-footer">
+        <a href="mailto:inquire@aplaceforbusiness.com?subject=Inquiry: MindsetAlarm.com" class="inquire-btn">Inquire &rarr;</a>
+      </div>
+    </div>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2026 APlaceForBusiness.com — All Rights Reserved.</p>
+  </footer>
 
   <script>
-    // App State
-    let alarms = JSON.parse(localStorage.getItem('mindset_alarms') || '[]');
-    let customAudioList = [];
-    let allSystemVoices = [];
-    let currentGenderFilter = 'female';
-    let selectedVoice = null;
-    let activeTriggeredAlarm = null;
-    let currentPlayingAudio = null;
-    let db;
+    // Category Filtering Logic
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const domainCards = document.querySelectorAll('.card');
 
-    // Media Recorder Variables
-    let mediaRecorder;
-    let audioChunks = [];
-    let recordInterval;
-    let recordSeconds = 0;
-    let currentRecordedBlob = null;
+    filterButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        // Update active button state
+        filterButtons.forEach(btn => btn.classList.remove('active'));
+        button.classList.add('active');
 
-    const templates = {
-      1: "Good morning champion. Today is another opportunity to build your empire. Execute your plans without hesitation, maintain high energy, and win the day.",
-      2: "Time for revenue generation. Review key targets, deliver extreme value, and close out major priorities with focus.",
-      3: "Discipline equals freedom. Maintain extreme focus on primary business objectives. Eliminate distractions and conquer the task."
-    };
+        const selectedCategory = button.getAttribute('data-category');
 
-    // DOM Elements
-    const liveClockEl = document.getElementById('liveClock');
-    const alarmForm = document.getElementById('alarmForm');
-    const alarmListEl = document.getElementById('alarmList');
-    const alarmCountBadge = document.getElementById('alarmCountBadge');
-    const audioSourceTypeSelect = document.getElementById('audioSourceType');
-    const recordingsOptGroup = document.getElementById('recordingsOptGroup');
-    const savedRecordingsList = document.getElementById('savedRecordingsList');
-    const voiceSelectDropdown = document.getElementById('voiceSelectDropdown');
-    const customSpeechText = document.getElementById('customSpeechText');
-    const customSpeechContainer = document.getElementById('customSpeechContainer');
-
-    const tabFemale = document.getElementById('tabFemale');
-    const tabMale = document.getElementById('tabMale');
-
-    const recordBtn = document.getElementById('recordBtn');
-    const stopRecordBtn = document.getElementById('stopRecordBtn');
-    const recordTimer = document.getElementById('recordTimer');
-    const recordingStatus = document.getElementById('recordingStatus');
-    const recordingSaveContainer = document.getElementById('recordingSaveContainer');
-    const audioPreview = document.getElementById('audioPreview');
-    const recordingTitleInput = document.getElementById('recordingTitle');
-    const saveRecordingBtn = document.getElementById('saveRecordingBtn');
-
-    const alarmModal = document.getElementById('alarmModal');
-    const modalAlarmTime = document.getElementById('modalAlarmTime');
-    const modalAlarmLabel = document.getElementById('modalAlarmLabel');
-    const modalAudioTitle = document.getElementById('modalAudioTitle');
-    const dismissBtn = document.getElementById('dismissBtn');
-    const snoozeBtn = document.getElementById('snoozeBtn');
-
-    // Default template on load
-    customSpeechText.value = templates[1];
-
-    // IndexedDB Setup for Audio Files
-    function initDB() {
-      return new Promise((resolve, reject) => {
-        const request = indexedDB.open('MindsetAlarmAudioDB', 1);
-        request.onupgradeneeded = (e) => {
-          const database = e.target.result;
-          if (!database.objectStoreNames.contains('recordings')) {
-            database.createObjectStore('recordings', { keyPath: 'id' });
-          }
-        };
-        request.onsuccess = (e) => {
-          db = e.target.result;
-          resolve(db);
-        };
-        request.onerror = (e) => reject(e);
-      });
-    }
-
-    async function loadRecordingsFromDB() {
-      if (!db) return;
-      const tx = db.transaction('recordings', 'readonly');
-      const store = tx.objectStore('recordings');
-      const req = store.getAll();
-      req.onsuccess = () => {
-        customAudioList = req.result || [];
-        renderCustomAudioOptions();
-        renderSavedRecordingsList();
-      };
-    }
-
-    async function saveRecordingToDB(recording) {
-      return new Promise((resolve, reject) => {
-        const tx = db.transaction('recordings', 'readwrite');
-        const store = tx.objectStore('recordings');
-        const req = store.put(recording);
-        req.onsuccess = () => resolve();
-        req.onerror = (e) => reject(e);
-      });
-    }
-
-    async function deleteRecordingFromDB(id) {
-      return new Promise((resolve, reject) => {
-        const tx = db.transaction('recordings', 'readwrite');
-        const store = tx.objectStore('recordings');
-        const req = store.delete(id);
-        req.onsuccess = () => resolve();
-        req.onerror = (e) => reject(e);
-      });
-    }
-
-    // Advanced Voice Selection: Female & Male Voice Scanner
-    function loadAndFilterVoices() {
-      if (!('speechSynthesis' in window)) return;
-      allSystemVoices = window.speechSynthesis.getVoices().filter(v => v.lang.startsWith('en'));
-
-      const maleKeywords = ['male', 'david', 'mark', 'george', 'guy', 'alex', 'daniel', 'fred', 'oliver', 'ryan', 'james'];
-      const femaleKeywords = ['female', 'samantha', 'victoria', 'zira', 'jenny', 'jennie', 'aria', 'karen', 'ava', 'emma', 'sora'];
-
-      let filtered = [];
-      if (currentGenderFilter === 'male') {
-        filtered = allSystemVoices.filter(v => maleKeywords.some(kw => v.name.toLowerCase().includes(kw)));
-        if (filtered.length === 0) filtered = allSystemVoices; // Fallback
-      } else {
-        filtered = allSystemVoices.filter(v => femaleKeywords.some(kw => v.name.toLowerCase().includes(kw)));
-        if (filtered.length === 0) filtered = allSystemVoices; // Fallback
-      }
-
-      voiceSelectDropdown.innerHTML = '';
-      filtered.forEach((v, idx) => {
-        const opt = document.createElement('option');
-        opt.value = v.name;
-        opt.textContent = `${v.name} (${v.lang})`;
-        if (idx === 0) opt.selected = true;
-        voiceSelectDropdown.appendChild(opt);
-      });
-
-      if (filtered.length > 0) {
-        selectedVoice = filtered[0];
-      }
-    }
-
-    function setGenderFilter(gender) {
-      currentGenderFilter = gender;
-      if (gender === 'female') {
-        tabFemale.className = "py-1.5 text-xs font-semibold rounded-md bg-amber-500/20 text-amber-400 border border-amber-500/30";
-        tabMale.className = "py-1.5 text-xs font-semibold rounded-md text-slate-400 hover:text-slate-200";
-      } else {
-        tabMale.className = "py-1.5 text-xs font-semibold rounded-md bg-amber-500/20 text-amber-400 border border-amber-500/30";
-        tabFemale.className = "py-1.5 text-xs font-semibold rounded-md text-slate-400 hover:text-slate-200";
-      }
-      loadAndFilterVoices();
-    }
-
-    voiceSelectDropdown.addEventListener('change', (e) => {
-      selectedVoice = allSystemVoices.find(v => v.name === e.target.value);
-    });
-
-    if ('speechSynthesis' in window) {
-      window.speechSynthesis.onvoiceschanged = loadAndFilterVoices;
-      loadAndFilterVoices();
-    }
-
-    function testSelectedVoice() {
-      speakText("Hello executive. Voice engine test successful. Ready to drive performance.");
-    }
-
-    function previewCurrentCustomMessage() {
-      const msg = customSpeechText.value.trim() || "Please enter a message to speak.";
-      speakText(msg);
-    }
-
-    function loadTemplate(num) {
-      customSpeechText.value = templates[num];
-    }
-
-    function speakText(text) {
-      window.speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance(text);
-      if (selectedVoice) {
-        utterance.voice = selectedVoice;
-      }
-      utterance.rate = 0.95;
-      utterance.pitch = currentGenderFilter === 'male' ? 0.95 : 1.05;
-      window.speechSynthesis.speak(utterance);
-    }
-
-    // App Initialization
-    async function init() {
-      updateClock();
-      setInterval(updateClock, 1000);
-      try {
-        await initDB();
-        await loadRecordingsFromDB();
-      } catch(e) {
-        console.error("Database initialization failed:", e);
-      }
-      renderAlarms();
-      setupRecorder();
-      setInterval(checkAlarms, 1000);
-    }
-
-    function updateClock() {
-      const now = new Date();
-      liveClockEl.textContent = now.toLocaleTimeString('en-US', { hour12: true, hour: '2-digit', minute: '2-digit', second: '2-digit' });
-    }
-
-    audioSourceTypeSelect.addEventListener('change', (e) => {
-      if (e.target.value === 'custom-speech') {
-        customSpeechContainer.classList.remove('hidden');
-      } else {
-        customSpeechContainer.classList.add('hidden');
-      }
-    });
-
-    function renderCustomAudioOptions() {
-      recordingsOptGroup.innerHTML = '';
-      if (customAudioList.length === 0) {
-        const opt = document.createElement('option');
-        opt.disabled = true;
-        opt.textContent = '(No saved voice recordings yet)';
-        recordingsOptGroup.appendChild(opt);
-      } else {
-        customAudioList.forEach(item => {
-          const opt = document.createElement('option');
-          opt.value = item.id;
-          opt.textContent = `🎙️ ${item.title}`;
-          recordingsOptGroup.appendChild(opt);
-        });
-      }
-    }
-
-    function renderSavedRecordingsList() {
-      savedRecordingsList.innerHTML = '';
-      if (customAudioList.length === 0) {
-        savedRecordingsList.innerHTML = `
-          <div class="text-center py-6 text-slate-500 border border-dashed border-slate-800 rounded-xl text-xs">
-            No recordings saved yet. Record a voice memo above to build your list.
-          </div>`;
-        return;
-      }
-
-      customAudioList.forEach(rec => {
-        const item = document.createElement('div');
-        item.className = "bg-slate-950 border border-slate-800 rounded-xl p-3 flex items-center justify-between";
-        item.innerHTML = `
-          <div>
-            <div class="text-sm font-medium text-slate-200">🎙️ ${rec.title}</div>
-            <div class="text-xs text-slate-500">${rec.date || 'Saved Voice Recording'}</div>
-          </div>
-          <div class="flex items-center space-x-2">
-            <button onclick="playSavedAudio('${rec.id}')" class="text-amber-400 hover:text-amber-300 p-2"><i class="fa-solid fa-circle-play text-xl"></i></button>
-            <button onclick="deleteSavedAudio('${rec.id}')" class="text-slate-500 hover:text-red-400 p-2"><i class="fa-solid fa-trash-can"></i></button>
-          </div>
-        `;
-        savedRecordingsList.appendChild(item);
-      });
-    }
-
-    window.playSavedAudio = function(id) {
-      const rec = customAudioList.find(r => r.id === id);
-      if (rec) {
-        if (currentPlayingAudio) currentPlayingAudio.pause();
-        const blob = new Blob([rec.blobData], { type: rec.mimeType || 'audio/webm' });
-        const url = URL.createObjectURL(blob);
-        currentPlayingAudio = new Audio(url);
-        currentPlayingAudio.play();
-      }
-    };
-
-    window.deleteSavedAudio = async function(id) {
-      await deleteRecordingFromDB(id);
-      await loadRecordingsFromDB();
-    };
-
-    function renderAlarms() {
-      alarmCountBadge.textContent = `${alarms.length} Active`;
-      if (alarms.length === 0) {
-        alarmListEl.innerHTML = `
-          <div class="text-center py-8 text-slate-500 border border-dashed border-slate-800 rounded-xl">
-            <i class="fa-solid fa-clock-rotate-left text-2xl mb-2 text-slate-600"></i>
-            <p>No active alarms set. Choose a time and message above to schedule.</p>
-          </div>`;
-        return;
-      }
-
-      alarmListEl.innerHTML = '';
-      alarms.sort((a, b) => a.time.localeCompare(b.time)).forEach(alarm => {
-        const item = document.createElement('div');
-        item.className = "bg-slate-950 border border-slate-800 rounded-xl p-4 flex items-center justify-between";
-        
-        let audioLabel = "Custom AI Speech Message";
-        if (alarm.audioSource !== 'custom-speech') {
-          const rec = customAudioList.find(r => r.id === alarm.audioSource);
-          if (rec) audioLabel = `🎙️ ${rec.title}`;
-        }
-
-        item.innerHTML = `
-          <div class="flex items-center space-x-4">
-            <div class="text-2xl font-mono font-bold text-amber-400">${format12Hour(alarm.time)}</div>
-            <div>
-              <div class="text-sm font-semibold text-slate-200">${alarm.label}</div>
-              <div class="text-xs text-slate-500">${audioLabel}</div>
-            </div>
-          </div>
-          <button onclick="deleteAlarm('${alarm.id}')" class="text-slate-500 hover:text-red-400 p-2 transition">
-            <i class="fa-solid fa-trash-can"></i>
-          </button>
-        `;
-        alarmListEl.appendChild(item);
-      });
-    }
-
-    function format12Hour(timeStr) {
-      const [h, m] = timeStr.split(':');
-      let hour = parseInt(h, 10);
-      const ampm = hour >= 12 ? 'PM' : 'AM';
-      hour = hour % 12 || 12;
-      return `${hour.toString().padStart(2, '0')}:${m} ${ampm}`;
-    }
-
-    alarmForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const timeVal = document.getElementById('alarmTime').value;
-      const labelVal = document.getElementById('alarmLabel').value;
-      const sourceVal = audioSourceTypeSelect.value;
-      const messageTextVal = customSpeechText.value;
-
-      const newAlarm = {
-        id: 'alarm_' + Date.now(),
-        time: timeVal,
-        label: labelVal,
-        audioSource: sourceVal,
-        customText: messageTextVal
-      };
-
-      alarms.push(newAlarm);
-      localStorage.setItem('mindset_alarms', JSON.stringify(alarms));
-      renderAlarms();
-      document.getElementById('alarmLabel').value = '';
-    });
-
-    window.deleteAlarm = function(id) {
-      alarms = alarms.filter(a => a.id !== id);
-      localStorage.setItem('mindset_alarms', JSON.stringify(alarms));
-      renderAlarms();
-    };
-
-    function setupRecorder() {
-      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-        recordingStatus.textContent = "Microphone recording not supported on this browser.";
-        recordBtn.disabled = true;
-        return;
-      }
-
-      recordBtn.addEventListener('click', async () => {
-        try {
-          const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-          
-          let mimeType = 'audio/webm';
-          if (MediaRecorder.isTypeSupported('audio/mp4')) mimeType = 'audio/mp4';
-          else if (MediaRecorder.isTypeSupported('audio/ogg')) mimeType = 'audio/ogg';
-
-          mediaRecorder = new MediaRecorder(stream, { mimeType });
-          audioChunks = [];
-
-          mediaRecorder.ondataavailable = (e) => {
-            if (e.data.size > 0) audioChunks.push(e.data);
-          };
-
-          mediaRecorder.onstop = () => {
-            currentRecordedBlob = new Blob(audioChunks, { type: mimeType });
-            const audioUrl = URL.createObjectURL(currentRecordedBlob);
-            audioPreview.src = audioUrl;
-            recordingSaveContainer.classList.remove('hidden');
-          };
-
-          mediaRecorder.start();
-          recordBtn.disabled = true;
-          recordBtn.classList.add('opacity-50');
-          stopRecordBtn.disabled = false;
-          stopRecordBtn.classList.remove('text-slate-500', 'cursor-not-allowed');
-          stopRecordBtn.classList.add('bg-slate-700', 'text-amber-400', 'hover:bg-slate-600');
-
-          recordingStatus.textContent = "Recording in progress...";
-          recordSeconds = 0;
-          recordTimer.textContent = "00:00";
-          recordTimer.classList.add('text-red-500');
-
-          recordInterval = setInterval(() => {
-            recordSeconds++;
-            const m = Math.floor(recordSeconds / 60).toString().padStart(2, '0');
-            const s = (recordSeconds % 60).toString().padStart(2, '0');
-            recordTimer.textContent = `${m}:${s}`;
-          }, 1000);
-
-        } catch (err) {
-          recordingStatus.textContent = "Error: Microphone permission denied.";
-          alert("Microphone permission error: " + err.message);
-        }
-      });
-
-      stopRecordBtn.addEventListener('click', () => {
-        if (mediaRecorder && mediaRecorder.state !== 'inactive') {
-          mediaRecorder.stop();
-          mediaRecorder.stream.getTracks().forEach(track => track.stop());
-          clearInterval(recordInterval);
-          recordBtn.disabled = false;
-          recordBtn.classList.remove('opacity-50');
-          stopRecordBtn.disabled = true;
-          stopRecordBtn.classList.add('text-slate-500', 'cursor-not-allowed');
-          recordTimer.classList.remove('text-red-500');
-          recordingStatus.textContent = "Recording stopped. Preview and save below.";
-        }
-      });
-
-      saveRecordingBtn.addEventListener('click', async () => {
-        if (!currentRecordedBlob) return;
-        const title = recordingTitleInput.value.trim() || 'Custom Voice Directive ' + (customAudioList.length + 1);
-        
-        const recording = {
-          id: 'rec_' + Date.now(),
-          title: title,
-          blobData: currentRecordedBlob,
-          mimeType: currentRecordedBlob.type,
-          date: new Date().toLocaleDateString()
-        };
-
-        try {
-          await saveRecordingToDB(recording);
-          await loadRecordingsFromDB();
-          
-          recordingSaveContainer.classList.add('hidden');
-          recordingTitleInput.value = '';
-          recordingStatus.textContent = "Recording saved to library successfully!";
-        } catch(e) {
-          recordingStatus.textContent = "Error saving recording to storage.";
-          console.error(e);
-        }
-      });
-    }
-
-    function checkAlarms() {
-      const now = new Date();
-      const currentHours = now.getHours().toString().padStart(2, '0');
-      const currentMinutes = now.getMinutes().toString().padStart(2, '0');
-      const currentTimeStr = `${currentHours}:${currentMinutes}`;
-      const seconds = now.getSeconds();
-
-      if (seconds === 0) {
-        alarms.forEach(alarm => {
-          if (alarm.time === currentTimeStr && !activeTriggeredAlarm) {
-            triggerAlarm(alarm);
+        // Filter cards
+        domainCards.forEach(card => {
+          const cardCategory = card.getAttribute('data-category');
+          if (selectedCategory === 'all' || cardCategory === selectedCategory) {
+            card.style.display = 'flex';
+          } else {
+            card.style.display = 'none';
           }
         });
-      }
-    }
-
-    function triggerAlarm(alarm) {
-      activeTriggeredAlarm = alarm;
-      modalAlarmTime.textContent = format12Hour(alarm.time);
-      modalAlarmLabel.textContent = alarm.label;
-
-      alarmModal.classList.remove('hidden');
-      alarmModal.classList.add('flex');
-
-      if (alarm.audioSource === 'custom-speech') {
-        const text = alarm.customText || "Time to take action and achieve your goal.";
-        modalAudioTitle.textContent = `"${text}"`;
-        speakText(text);
-      } else {
-        const customRec = customAudioList.find(r => r.id === alarm.audioSource);
-        if (customRec) {
-          modalAudioTitle.textContent = `"${customRec.title}"`;
-          const blob = new Blob([customRec.blobData], { type: customRec.mimeType || 'audio/webm' });
-          const url = URL.createObjectURL(blob);
-          currentPlayingAudio = new Audio(url);
-          currentPlayingAudio.play();
-        } else {
-          modalAudioTitle.textContent = "Motivational Directive";
-          speakText("Time to execute your tasks and reach your target.");
-        }
-      }
-    }
-
-    dismissBtn.addEventListener('click', () => {
-      window.speechSynthesis.cancel();
-      if (currentPlayingAudio) {
-        currentPlayingAudio.pause();
-        currentPlayingAudio = null;
-      }
-      alarmModal.classList.add('hidden');
-      alarmModal.classList.remove('flex');
-      activeTriggeredAlarm = null;
+      });
     });
-
-    snoozeBtn.addEventListener('click', () => {
-      window.speechSynthesis.cancel();
-      if (currentPlayingAudio) {
-        currentPlayingAudio.pause();
-        currentPlayingAudio = null;
-      }
-
-      if (activeTriggeredAlarm) {
-        const now = new Date();
-        now.setMinutes(now.getMinutes() + 5);
-        const snoozeHours = now.getHours().toString().padStart(2, '0');
-        const snoozeMins = now.getMinutes().toString().padStart(2, '0');
-
-        const snoozeAlarm = {
-          id: 'snooze_' + Date.now(),
-          time: `${snoozeHours}:${snoozeMins}`,
-          label: `[SNOOZE] ${activeTriggeredAlarm.label}`,
-          audioSource: activeTriggeredAlarm.audioSource,
-          customText: activeTriggeredAlarm.customText
-        };
-
-        alarms.push(snoozeAlarm);
-        localStorage.setItem('mindset_alarms', JSON.stringify(alarms));
-        renderAlarms();
-      }
-
-      alarmModal.classList.add('hidden');
-      alarmModal.classList.remove('flex');
-      activeTriggeredAlarm = null;
-    });
-
-    init();
   </script>
 </body>
 </html>

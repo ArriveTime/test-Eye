@@ -1,853 +1,906 @@
-<!DOCTYPE html>
-<html lang="en" class="h-full bg-slate-950 text-slate-100">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MindsetAlarm.com - Set your mind for success</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <style>
-    @keyframes pulse-ring {
-      0% { transform: scale(0.95); opacity: 0.8; }
-      50% { transform: scale(1.05); opacity: 0.4; }
-      100% { transform: scale(0.95); opacity: 0.8; }
-    }
-    .animate-pulse-ring {
-      animation: pulse-ring 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-    }
-    .gold-gradient {
-      background: linear-gradient(135deg, #d4af37 0%, #f3e5ab 50%, #aa7c11 100%);
-    }
-    .gold-text {
-      background: linear-gradient(135deg, #f3e5ab 0%, #d4af37 50%, #aa7c11 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-    input[type="datetime-local"]::-webkit-calendar-picker-indicator {
-      filter: invert(0.8) sepia(1) saturate(5) hue-rotate(5deg);
-      cursor: pointer;
-    }
-  </style>
-</head>
-<body class="h-full flex flex-col font-sans antialiased selection:bg-amber-500 selection:text-slate-950">
-
-  <div class="flex-1 flex flex-col max-w-6xl w-full mx-auto p-4 md:p-6 lg:p-8 space-y-6">
-
-    <!-- Header Navigation -->
-    <header class="flex items-center justify-between border-b border-slate-800 pb-4">
-      <div class="flex items-center space-x-3">
-        <div class="w-10 h-10 rounded-xl gold-gradient flex items-center justify-center text-slate-950 font-black text-xl shadow-lg shadow-amber-500/10">
-          <i class="fa-solid font-bold fa-clock"></i>
-        </div>
-        <div>
-          <h1 class="text-xl md:text-2xl font-bold tracking-tight gold-text">MindsetAlarm.com</h1>
-          <p class="text-xs text-slate-400">Set your mind for success</p>
-        </div>
-      </div>
-      <div id="liveClock" class="text-xl md:text-3xl font-mono font-semibold text-amber-400 tracking-wider">
+<!DOCTYPE html> 
+<html lang="en" class="h-full bg-slate-950 text-slate-100"> 
+<head> 
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+<title>MindsetAlarm.com - Set your mind for success</title> 
+<script src="https://cdn.tailwindcss.com"></script> 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"> 
+<style> 
+@keyframes pulse-ring { 
+    0% { transform: scale(0.95); opacity: 0.8; } 
+    50% { transform: scale(1.05); opacity: 0.4; } 
+    100% { transform: scale(0.95); opacity: 0.8; } 
+} 
+.animate-pulse-ring { animation: pulse-ring 3s cubic-bezier(0.4, 0, 0.6, 1) infinite; } 
+.gold-gradient { background: linear-gradient(135deg, #d4af37 0%, #f3e5ab 50%, #aa7c11 100%); } 
+.gold-text { background: linear-gradient(135deg, #f3e5ab 0%, #d4af37 50%, #aa7c11 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; } 
+input[type="datetime-local"]::-webkit-calendar-picker-indicator { filter: invert(0.8) sepia(1) saturate(5) hue-rotate(5deg); cursor: pointer; } 
+</style> 
+</head> 
+<body class="h-full flex flex-col font-sans antialiased selection:bg-amber-500 selection:text-slate-950"> 
+<div class="flex-1 flex flex-col max-w-6xl w-full mx-auto p-4 md:p-6 lg:p-8 space-y-6"> 
+<!-- Header Navigation --> 
+<header class="flex items-center justify-between border-b border-slate-800 pb-4"> 
+    <div class="flex items-center space-x-3"> 
+        <div class="w-10 h-10 rounded-xl gold-gradient flex items-center justify-center text-slate-950 font-black text-xl shadow-lg shadow-amber-500/10"> 
+            <i class="fa-solid font-bold fa-clock"></i> 
+        </div> 
+        <div> 
+            <h1 class="text-xl md:text-2xl font-bold tracking-tight gold-text">MindsetAlarm.com</h1> 
+            <p class="text-xs text-slate-400">Set your mind for success</p> 
+        </div> 
+    </div> 
+    <div id="liveClock" class="text-xl md:text-3xl font-mono font-semibold text-amber-400 tracking-wider"> 
         --/--/---- --:--:-- --
-      </div>
-    </header>
+    </div> 
+</header> 
 
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 flex-1">
-
-      <!-- Column 1: Alarm Creation & Active Alarms -->
-      <div class="lg:col-span-2 space-y-6">
-
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 md:p-6 shadow-xl">
-          <h2 class="text-lg font-semibold text-slate-200 mb-4 flex items-center space-x-2">
-            <i class="fa-solid fa-plus-circle text-amber-400"></i>
-            <span>Set New Success Alarm / Reminder</span>
-          </h2>
-
-          <form id="alarmForm" class="space-y-4" novalidate>
-            <div>
-              <div class="flex justify-between items-center mb-1">
-                <label class="block text-xs uppercase tracking-wider text-slate-400">Date & Time (Pick Exact Minute or Use Quick Buttons)</label>
-                <!-- Quick Preset Buttons -->
-                <div class="space-x-1">
-                  <button type="button" onclick="setQuickTime(15)" class="text-[10px] bg-slate-800 hover:bg-slate-700 text-amber-400 px-2 py-0.5 rounded border border-amber-500/20">+15 Mins</button>
-                  <button type="button" onclick="setQuickTime(30)" class="text-[10px] bg-slate-800 hover:bg-slate-700 text-amber-400 px-2 py-0.5 rounded border border-amber-500/20">+30 Mins</button>
-                  <button type="button" onclick="setQuickTime(60)" class="text-[10px] bg-slate-800 hover:bg-slate-700 text-amber-400 px-2 py-0.5 rounded border border-amber-500/20">+1 Hour</button>
-                  <button type="button" onclick="setTomorrowMorning()" class="text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-300 px-2 py-0.5 rounded">Tomorrow AM</button>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6 flex-1"> 
+    <!-- Column 1: Alarm Creation & Active Alarms --> 
+    <div class="lg:col-span-2 space-y-6"> 
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 md:p-6 shadow-xl"> 
+            <h2 class="text-lg font-semibold text-slate-200 mb-4 flex items-center space-x-2"> 
+                <i class="fa-solid fa-plus-circle text-amber-400"></i> 
+                <span>Set New Success Alarm / Reminder</span> 
+            </h2> 
+            <form id="alarmForm" class="space-y-4" novalidate> 
+                <div> 
+                    <div class="flex justify-between items-center mb-1"> 
+                        <label class="block text-xs uppercase tracking-wider text-slate-400">Date & Time (Pick Exact Minute or Use Quick Buttons)</label> 
+                        <div class="space-x-1"> 
+                            <button type="button" onclick="setQuickTime(15)" class="text-[10px] bg-slate-800 hover:bg-slate-700 text-amber-400 px-2 py-0.5 rounded border border-amber-500/20">+15 Mins</button> 
+                            <button type="button" onclick="setQuickTime(30)" class="text-[10px] bg-slate-800 hover:bg-slate-700 text-amber-400 px-2 py-0.5 rounded border border-amber-500/20">+30 Mins</button> 
+                            <button type="button" onclick="setQuickTime(60)" class="text-[10px] bg-slate-800 hover:bg-slate-700 text-amber-400 px-2 py-0.5 rounded border border-amber-500/20">+1 Hour</button> 
+                            <button type="button" onclick="setTomorrowMorning()" class="text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-300 px-2 py-0.5 rounded">Tomorrow AM</button> 
+                        </div> 
+                    </div> 
+                    <input type="datetime-local" id="alarmTime" step="60" required class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-amber-300 font-mono text-base focus:outline-none focus:border-amber-400 transition"> 
+                </div> 
+                <div> 
+                    <label class="block text-xs uppercase tracking-wider text-slate-400 mb-1">Objective / Label</label> 
+                    <input type="text" id="alarmLabel" placeholder="e.g. Q3 Sales Goal Review" required class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 placeholder-slate-600 focus:outline-none focus:border-amber-400 transition"> 
+                </div> 
+                <div> 
+                    <label class="block text-xs uppercase tracking-wider text-slate-400 mb-1">Audio Source</label> 
+                    <select id="audioSourceType" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-slate-200 focus:outline-none focus:border-amber-400 transition"> 
+                        <option value="custom-speech">🗣️ Custom AI Voice Message (Set Below)</option> 
+                        <optgroup label="Nature & Audio Soundscapes"> 
+                            <option value="sound-rain">🌧️ Gentle Rain Soundscape</option> 
+                            <option value="sound-stream">🌊 Babbling Stream Soundscape</option> 
+                            <option value="sound-birds">🎵 Song</option>
+                            <option value="sound-dog">🐶 Dog Bark (Realistic Recording)</option> 
+                        </optgroup> 
+                        <optgroup label="Your Saved Voice Recordings" id="recordingsOptGroup"> 
+                        </optgroup> 
+                    </select> 
                 </div>
-              </div>
-              <input type="datetime-local" id="alarmTime" step="60" required class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-amber-300 font-mono text-base focus:outline-none focus:border-amber-400 transition">
-            </div>
+                <!-- Custom Speech Script Box --> 
+                <div id="customSpeechContainer" class="space-y-2 bg-slate-950 p-4 border border-slate-800 rounded-xl"> 
+                    <div class="flex items-center justify-between"> 
+                        <label class="block text-xs uppercase tracking-wider text-amber-400 font-semibold">Custom Voice Message Script</label> 
+                        <div class="space-x-1"> 
+                            <button type="button" onclick="loadTemplate(1)" class="text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-300 px-2 py-0.5 rounded">Morning Victory</button> 
+                            <button type="button" onclick="loadTemplate(2)" class="text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-300 px-2 py-0.5 rounded">Sales Target</button> 
+                            <button type="button" onclick="loadTemplate(3)" class="text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-300 px-2 py-0.5 rounded">Focus & Discipline</button> 
+                        </div> 
+                    </div> 
+                    <textarea id="customSpeechText" rows="3" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm text-slate-200 focus:outline-none focus:border-amber-400 placeholder-slate-600" placeholder="Type the exact motivational message you want spoken when this alarm triggers..."></textarea> 
+                    <div class="flex justify-end"> 
+                        <button type="button" onclick="previewCurrentCustomMessage()" class="text-xs text-amber-400 hover:text-amber-300 flex items-center space-x-1"> 
+                            <i class="fa-solid fa-volume-high"></i> 
+                            <span>Test Speak Message</span> 
+                        </button> 
+                    </div> 
+                </div> 
+                <button type="submit" class="w-full gold-gradient text-slate-950 font-bold py-3 rounded-lg shadow-md hover:brightness-110 active:scale-[0.99] transition flex items-center justify-center space-x-2"> 
+                    <i class="fa-solid fa-bell"></i> 
+                    <span>Activate Alarm</span> 
+                </button> 
+            </form> 
+        </div> 
 
-            <div>
-              <label class="block text-xs uppercase tracking-wider text-slate-400 mb-1">Objective / Label</label>
-              <input type="text" id="alarmLabel" placeholder="e.g. Q3 Sales Goal Review" required class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 placeholder-slate-600 focus:outline-none focus:border-amber-400 transition">
-            </div>
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 md:p-6 shadow-xl"> 
+            <h2 class="text-lg font-semibold text-slate-200 mb-4 flex items-center justify-between"> 
+                <span class="flex items-center space-x-2"> 
+                    <i class="fa-solid fa-list-check text-amber-400"></i><span>Active Scheduled Alarms</span> 
+                </span> 
+                <span id="alarmCountBadge" class="text-xs bg-amber-500/10 text-amber-400 border border-amber-500/30 px-2.5 py-0.5 rounded-full font-mono">0 Active</span> 
+            </h2> 
+            <div id="alarmList" class="space-y-3"> 
+                <div class="text-center py-8 text-slate-500 border border-dashed border-slate-800 rounded-xl"> 
+                    <i class="fa-solid fa-clock-rotate-left text-2xl mb-2 text-slate-600"></i> 
+                    <p>No active alarms set. Choose a date, time, and message above to schedule.</p> 
+                </div> 
+            </div> 
+        </div> 
+    </div> 
 
-            <div>
-              <label class="block text-xs uppercase tracking-wider text-slate-400 mb-1">Audio Source</label>
-              <select id="audioSourceType" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-slate-200 focus:outline-none focus:border-amber-400 transition">
-                <option value="custom-speech">🗣️ Custom AI Voice Message (Set Below)</option>
-                <optgroup label="Nature & Audio Soundscapes">
-                  <option value="sound-rain">🌧️ Gentle Rain Soundscape</option>
-                  <option value="sound-stream">🌊 Babbling Stream Soundscape</option>
-                  <option value="sound-birds">🎵 Song</option>
-                  <option value="sound-dog">🐶 Dog Bark (Realistic Recording)</option>
-                </optgroup>
-                <optgroup label="Your Saved Voice Recordings" id="recordingsOptGroup">
-                  <!-- Custom recordings populate here -->
-                </optgroup>
-              </select>
-            </div>
+    <!-- Column 2: Voice Studio, Voice Selector & Saved Library --> 
+    <div class="space-y-6"> 
+        <!-- AI Voice & Sound Preview Panel --> 
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 md:p-6 shadow-xl space-y-4"> 
+            <h2 class="text-lg font-semibold text-slate-200 flex items-center space-x-2"> 
+                <i class="fa-solid fa-sliders text-amber-400"></i> 
+                <span>Voices & Audio Studio</span> 
+            </h2> 
+            <!-- Gender Category Tabs --> 
+            <div class="grid grid-cols-3 gap-1.5 p-1 bg-slate-950 rounded-lg border border-slate-800 text-[11px] font-semibold"> 
+                <button id="tabFemale" type="button" onclick="setGenderFilter('female')" class="py-1.5 rounded-md bg-amber-500/20 text-amber-400 border border-amber-500/30"> 
+                    <i class="fa-solid fa-venus mr-1"></i> Female 
+                </button> 
+                <button id="tabMale" type="button" onclick="setGenderFilter('male')" class="py-1.5 rounded-md text-slate-400 hover:text-slate-200"> 
+                    <i class="fa-solid fa-mars mr-1"></i> Male 
+                </button> 
+                <button id="tabNature" type="button" onclick="setGenderFilter('nature')" class="py-1.5 rounded-md text-slate-400 hover:text-slate-200"> 
+                    <i class="fa-solid fa-tree mr-1"></i> Sounds
+                </button> 
+            </div> 
+            <div id="voiceDropdownContainer"> 
+                <label class="block text-xs text-slate-400 mb-1.5">Selected Voice Model:</label> 
+                <select id="voiceSelectDropdown" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-amber-400"> 
+                    <option value="">Detecting device voice engine...</option> 
+                </select> 
+                <button type="button" onclick="testSelectedVoice()" class="w-full mt-3 bg-slate-800 hover:bg-slate-700 text-amber-400 border border-amber-500/30 py-2 rounded-lg text-xs font-medium transition flex items-center justify-center space-x-1.5"> 
+                    <i class="fa-solid fa-circle-play"></i> <span>Test Selected Voice</span>
+                </button> 
+            </div> 
+            <!-- Nature & Audio Sounds Selector --> 
+            <div id="natureSoundsContainer" class="hidden space-y-2"> 
+                <label class="block text-xs text-slate-400 mb-1">Instant Sound Preview:</label> 
+                <div class="grid grid-cols-2 gap-2 text-xs"> 
+                    <button type="button" onclick="playSound('sound-rain')" class="p-2.5 bg-slate-950 border border-slate-800 hover:border-amber-400 rounded-lg text-slate-200 flex items-center space-x-2"> 
+                        <span>🌧️ Gentle Rain</span>
+                    </button> 
+                    <button type="button" onclick="playSound('sound-stream')" class="p-2.5 bg-slate-950 border border-slate-800 hover:border-amber-400 rounded-lg text-slate-200 flex items-center space-x-2"> 
+                        <span>🌊 Stream</span>
+                    </button> 
+                    <button type="button" onclick="playSound('sound-birds')" class="p-2.5 bg-slate-950 border border-slate-800 hover:border-amber-400 rounded-lg text-slate-200 flex items-center space-x-2"> 
+                        <span>🎵 Song</span> 
+                    </button>
+                    <button type="button" onclick="playSound('sound-dog')" class="p-2.5 bg-slate-950 border border-slate-800 hover:border-amber-400 rounded-lg text-slate-200 flex items-center space-x-2"> 
+                        <span>🐶 Dog Bark</span>
+                    </button> 
+                </div> 
+                <button type="button" onclick="stopSound()" class="w-full mt-2 bg-red-950/40 border border-red-800 text-red-300 py-1.5 rounded-lg text-xs"> 
+                    Stop Sound Preview 
+                </button> 
+            </div> 
+        </div> 
 
-            <!-- Custom Speech Script Box -->
-            <div id="customSpeechContainer" class="space-y-2 bg-slate-950 p-4 border border-slate-800 rounded-xl">
-              <div class="flex items-center justify-between">
-                <label class="block text-xs uppercase tracking-wider text-amber-400 font-semibold">Custom Voice Message Script</label>
-                <div class="space-x-1">
-                  <button type="button" onclick="loadTemplate(1)" class="text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-300 px-2 py-0.5 rounded">Morning Victory</button>
-                  <button type="button" onclick="loadTemplate(2)" class="text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-300 px-2 py-0.5 rounded">Sales Target</button>
-                  <button type="button" onclick="loadTemplate(3)" class="text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-300 px-2 py-0.5 rounded">Focus & Discipline</button>
+        <!-- Voice Recorder Studio --> 
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 md:p-6 shadow-xl"> 
+            <h2 class="text-lg font-semibold text-slate-200 mb-1 flex items-center space-x-2"> 
+                <i class="fa-solid fa-microphone text-amber-400"></i><span>Personal Voice Studio</span> 
+            </h2> 
+            <p class="text-xs text-slate-400 mb-4">Record your own spoken voice directive.</p> 
+            <div class="bg-slate-950 border border-slate-800 rounded-xl p-4 text-center space-y-3"> 
+                <div id="recordTimer" class="font-mono text-2xl text-slate-400">00:00</div> 
+                <div class="flex justify-center items-center space-x-3"> 
+                    <button type="button" id="recordBtn" class="w-12 h-12 rounded-full bg-red-600 hover:bg-red-500 text-white flex items-center justify-center shadow-lg transition active:scale-95"> 
+                        <i class="fa-solid fa-microphone text-lg"></i> 
+                    </button> 
+                    <button type="button" id="stopRecordBtn" disabled class="w-12 h-12 rounded-full bg-slate-800 text-slate-500 flex items-center justify-center transition cursor-not-allowed"> 
+                        <i class="fa-solid fa-square text-lg"></i>
+                    </button> 
+                </div> 
+                <div id="recordingStatus" class="text-xs text-slate-500 italic">Click mic to start recording</div>
+            </div> 
+            <div id="recordingSaveContainer" class="hidden mt-4 space-y-3 border-t border-slate-800 pt-4"> 
+                <audio id="audioPreview" controls class="w-full h-8 rounded-lg bg-slate-950"></audio> 
+                <input type="text" id="recordingTitle" placeholder="Memo Title (e.g., Morning Focus Goal)" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-amber-400"> 
+                <button type="button" id="saveRecordingBtn" class="w-full bg-slate-800 hover:bg-slate-700 text-amber-400 border border-amber-500/30 font-medium py-2 rounded-lg text-sm transition"> 
+                    Save Recording to Library 
+                </button> 
+            </div> 
+        </div>
+
+        <!-- Saved Personal Voice Recordings List --> 
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 md:p-6 shadow-xl"> 
+            <h2 class="text-lg font-semibold text-slate-200 mb-3 flex items-center space-x-2"> 
+                <i class="fa-solid fa-folder-open text-amber-400"></i> 
+                <span>Your Saved Voice Recordings</span> 
+            </h2> 
+            <div id="savedRecordingsList" class="space-y-3"> 
+            </div> 
+        </div> 
+    </div> 
+</div> 
+
+<footer class="border-t border-slate-800 pt-4 flex flex-col md:flex-row items-center justify-between text-xs text-slate-500 space-y-2 md:space-y-0"> 
+    <div>
+        &copy; MindsetAlarm.com &bull; Set your mind for success
+    </div>
+    <div class="flex items-center space-x-4">
+        <button type="button" onclick="openPrivacyModal()" class="hover:text-slate-300 transition underline">Privacy Notice</button>
+        <button type="button" onclick="openAdminModal()" class="text-slate-800 hover:text-amber-400 transition cursor-default focus:outline-none" title="Admin Portal">
+            <i class="fa-solid fa-lock text-[10px]"></i>
+        </button>
+    </div>
+</footer> 
+</div> 
+
+<!-- Triggered Alarm Modal --> 
+<div id="alarmModal" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-50 hidden flex flex-col items-center justify-center p-6 text-center"> 
+    <div class="absolute w-72 h-72 rounded-full gold-gradient opacity-20 blur-3xl animate-pulse-ring"></div> 
+    <div class="relative z-10 max-w-md w-full space-y-6 bg-slate-900 border border-amber-500/40 p-8 rounded-3xl shadow-2xl"> 
+        <div class="w-16 h-16 gold-gradient text-slate-950 rounded-2xl flex items-center justify-center mx-auto text-3xl font-black shadow-lg"> 
+            <i class="fa-solid fa-bell animate-bounce"></i> 
+        </div> 
+        <div> 
+            <div id="modalAlarmTime" class="text-2xl font-mono font-bold text-amber-400 mb-2">00/00 00:00 AM</div> 
+            <h3 id="modalAlarmLabel" class="text-2xl font-bold text-slate-100 mb-1">Executive Focus Time</h3> 
+            <p class="text-xs text-slate-400">Scheduled Success Directive</p>
+        </div> 
+        <div class="p-4 bg-slate-950 border border-slate-800 rounded-xl"> 
+            <div class="text-xs text-amber-400 font-semibold mb-1 flex items-center justify-center space-x-1"> 
+                <i class="fa-solid fa-volume-high"></i> 
+                <span>PLAYING DIRECTIVE AUDIO</span> 
+            </div> 
+            <div id="modalAudioTitle" class="text-sm font-medium text-slate-300 italic">"Playing Directive"</div> 
+        </div> 
+        <div class="flex flex-col space-y-3 pt-2"> 
+            <button id="dismissBtn" type="button" class="w-full gold-gradient text-slate-950 font-bold py-3.5 rounded-xl shadow-lg hover:brightness-110 transition text-base"> 
+                DISMISS & TAKE ACTION 
+            </button> 
+            <button id="snoozeBtn" type="button" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-300 font-medium py-2.5 rounded-xl text-sm transition border border-slate-700"> 
+                Snooze 5 Minutes 
+            </button> 
+        </div> 
+    </div> 
+</div>
+
+<!-- Privacy Notice Modal -->
+<div id="privacyModal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl text-left">
+        <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+            <h3 class="text-lg font-bold text-amber-400 flex items-center space-x-2">
+                <i class="fa-solid fa-shield-halved"></i>
+                <span>Privacy & Visitor Analytics Notice</span>
+            </h3>
+            <button onclick="closePrivacyModal()" class="text-slate-400 hover:text-slate-100"><i class="fa-solid fa-xmark text-lg"></i></button>
+        </div>
+        <div class="text-xs text-slate-300 leading-relaxed space-y-3 max-h-80 overflow-y-auto">
+            <p>MindsetAlarm.com respects your privacy. To ensure network stability and monitor overall application performance, we collect standard server access logs upon page request.</p>
+            <p><strong>Information Captured:</strong> Date, time, IP address, approximate geographical location (City/State), and browser system parameters.</p>
+            <p><strong>Data Usage:</strong> Logs are maintained solely for administrative operational metrics, security prevention, and network verification. We do not sell or share personal tracking data with third-party advertising brokers.</p>
+        </div>
+        <button onclick="closePrivacyModal()" class="w-full bg-slate-800 hover:bg-slate-700 text-amber-400 border border-amber-500/30 py-2 rounded-lg text-xs font-semibold">I Understand</button>
+    </div>
+</div>
+
+<!-- Admin Password & Real-Time Visitor Viewer Modal -->
+<div id="adminModal" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-4xl w-full p-6 space-y-4 shadow-2xl text-left">
+        <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+            <h3 class="text-lg font-bold text-amber-400 flex items-center space-x-2">
+                <i class="fa-solid fa-user-shield"></i>
+                <span>Admin Real-Time Visitor Logs</span>
+            </h3>
+            <button onclick="closeAdminModal()" class="text-slate-400 hover:text-slate-100"><i class="fa-solid fa-xmark text-lg"></i></button>
+        </div>
+
+        <div id="adminAuthContainer" class="space-y-4 py-4 max-w-sm mx-auto text-center">
+            <i class="fa-solid fa-key text-3xl text-amber-400 mb-2"></i>
+            <p class="text-xs text-slate-400">Enter administrator password to unlock real-time visitor records.</p>
+            <input type="password" id="adminPasswordInput" placeholder="Enter Admin Password" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-center text-slate-100 focus:outline-none focus:border-amber-400">
+            <p id="adminAuthError" class="text-xs text-red-400 hidden">Incorrect password. Access denied.</p>
+            <button onclick="authenticateAdmin()" class="w-full gold-gradient text-slate-950 font-bold py-2 rounded-lg text-sm hover:brightness-110">Authenticate</button>
+        </div>
+
+        <div id="adminTableContainer" class="hidden space-y-4">
+            <div class="flex justify-between items-center text-xs text-slate-400">
+                <span>Sorted: <strong>Descending (Newest First)</strong></span>
+                <span id="visitorTotalBadge" class="bg-amber-500/10 text-amber-400 border border-amber-500/30 px-2 py-0.5 rounded-full font-mono">Total Visits: 0</span>
+            </div>
+            <div class="overflow-x-auto border border-slate-800 rounded-xl max-h-96">
+                <table class="w-full text-xs text-left text-slate-300">
+                    <thead class="bg-slate-950 text-amber-400 uppercase font-mono border-b border-slate-800 sticky top-0">
+                        <tr>
+                            <th class="p-3">Date</th>
+                            <th class="p-3">Day</th>
+                            <th class="p-3">Time</th>
+                            <th class="p-3">City</th>
+                            <th class="p-3">State</th>
+                            <th class="p-3">IP Address</th>
+                        </tr>
+                    </thead>
+                    <tbody id="visitorTableBody" class="divide-y divide-slate-800/60 bg-slate-900/50">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script> 
+let alarms = JSON.parse(localStorage.getItem('mindset_alarms') || '[]'); 
+let customAudioList = []; 
+let allSystemVoices = []; 
+let currentGenderFilter = 'female'; 
+let selectedVoice = null; 
+let activeTriggeredAlarm = null; 
+let currentPlayingAudio = null; 
+let db; 
+let audioCtx = null; 
+let activeSoundNode = null; 
+const soundUrls = { 
+    'sound-dog': 'https://actions.google.com/sounds/v1/animals/dog_barking.ogg', 
+    'sound-birds': 'https://cdn.pixabay.com/download/audio/2022/01/18/audio_d0a13f69d2.mp3' 
+}; 
+
+let mediaRecorder; 
+let audioChunks = []; 
+let recordInterval; 
+let recordSeconds = 0; 
+let currentRecordedBlob = null; 
+const templates = { 
+    1: "Good morning champion. Today is another opportunity to build your empire. Execute your plans without hesitation, maintain high energy, and win the day.", 
+    2: "Time for revenue generation. Review key targets, deliver extreme value, and close out major priorities with focus.", 
+    3: "Discipline equals freedom. Maintain extreme focus on primary business objectives. Eliminate distractions and conquer the task." 
+}; 
+
+let liveClockEl; 
+let alarmForm; 
+let alarmTimeInput; 
+let alarmListEl; 
+let alarmCountBadge; 
+let audioSourceTypeSelect; 
+let recordingsOptGroup; 
+let savedRecordingsList; 
+let voiceSelectDropdown; 
+let customSpeechText; 
+let customSpeechContainer; 
+let tabFemale; 
+let tabMale; 
+let tabNature; 
+let voiceDropdownContainer; 
+let natureSoundsContainer; 
+let recordBtn; 
+let stopRecordBtn; 
+let recordTimer; 
+let recordingStatus; 
+let recordingSaveContainer; 
+let audioPreview; 
+let recordingTitleInput; 
+let saveRecordingBtn; 
+let alarmModal; 
+let modalAlarmTime; 
+let modalAlarmLabel; 
+let modalAudioTitle; 
+let dismissBtn; 
+let snoozeBtn; 
+
+/* Quick Preset Helpers */
+function formatForDateTimeInput(date) { 
+    const year = date.getFullYear(); 
+    const month = String(date.getMonth() + 1).padStart(2, '0'); 
+    const day = String(date.getDate()).padStart(2, '0'); 
+    const hours = String(date.getHours()).padStart(2, '0'); 
+    const minutes = String(date.getMinutes()).padStart(2, '0'); 
+    return `${year}-${month}-${day}T${hours}:${minutes}`; 
+} 
+window.setQuickTime = function(minutesToAdd) { 
+    const target = new Date(Date.now() + minutesToAdd * 60000); 
+    if (alarmTimeInput) alarmTimeInput.value = formatForDateTimeInput(target); 
+}; 
+window.setTomorrowMorning = function() { 
+    const target = new Date(); 
+    target.setDate(target.getDate() + 1); 
+    target.setHours(7, 0, 0, 0); 
+    if (alarmTimeInput) alarmTimeInput.value = formatForDateTimeInput(target); 
+}; 
+
+/* Audio Synthesizer Controls */
+document.addEventListener('click', () => { 
+    if (audioCtx && audioCtx.state === 'suspended') { audioCtx.resume(); } 
+}, { once: true }); 
+
+function getAudioContext() { 
+    if (!audioCtx) { audioCtx = new(window.AudioContext || window.webkitAudioContext)(); } 
+    if (audioCtx.state === 'suspended') { audioCtx.resume(); } 
+    return audioCtx; 
+} 
+
+function stopSound() { 
+    if (activeSoundNode) { 
+        try { activeSoundNode.stop(); } catch(e){} 
+        activeSoundNode = null; 
+    } 
+    if (currentPlayingAudio) { 
+        currentPlayingAudio.pause(); 
+        currentPlayingAudio = null; 
+    } 
+} 
+
+function playSound(type) { 
+    stopSound(); 
+    if (type === 'sound-rain' || type === 'sound-stream') { 
+        const ctx = getAudioContext(); 
+        const bufferSize = ctx.sampleRate * 2; 
+        const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate); 
+        const data = buffer.getChannelData(0); 
+        let b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0, b5 = 0, b6 = 0; 
+        for(let i = 0; i < bufferSize; i++) { 
+            let white = Math.random() * 2 - 1; 
+            b0 = 0.99886 * b0 + white * 0.0555179; 
+            b1 = 0.99332 * b1 + white * 0.0750759; 
+            b2 = 0.96900 * b2 + white * 0.1538520; 
+            b3 = 0.86650 * b3 + white * 0.3104856; 
+            b4 = 0.55000 * b4 + white * 0.5329522; 
+            b5 = -0.7616 * b5 - white * 0.0168980; 
+            data[i] = b0 + b1 + b2 + b3 + b4 + b5 + b6 + white * 0.5362; 
+            data[i] *= 0.11; 
+            b6 = white * 0.115926; 
+        } 
+        const noise = ctx.createBufferSource(); 
+        noise.buffer = buffer; 
+        noise.loop = true; 
+        const filter = ctx.createBiquadFilter(); 
+        filter.type = type === 'sound-rain' ? 'lowpass' : 'bandpass'; 
+        filter.frequency.value = type === 'sound-rain' ? 1000 : 800; 
+        noise.connect(filter); 
+        filter.connect(ctx.destination); 
+        noise.start(); 
+        activeSoundNode = noise; 
+    } else if (soundUrls[type]) { 
+        currentPlayingAudio = new Audio(soundUrls[type]); 
+        currentPlayingAudio.loop = true; 
+        currentPlayingAudio.play().catch(e => console.error('Audio play error:', e)); 
+    } 
+} 
+
+/* IndexedDB Management */
+function initDB() { 
+    return new Promise((resolve, reject) => { 
+        const request = indexedDB.open('MindsetAlarmDB', 1); 
+        request.onupgradeneeded = (e) => { 
+            db = e.target.result; 
+            if (!db.objectStoreNames.contains('recordings')) { 
+                db.createObjectStore('recordings', { keyPath: 'id', autoIncrement: true }); 
+            } 
+        }; 
+        request.onsuccess = (e) => { db = e.target.result; resolve(db); }; 
+        request.onerror = (e) => reject(e); 
+    }); 
+} 
+
+function saveRecordingToDB(title, blob) { 
+    return new Promise((resolve, reject) => { 
+        const tx = db.transaction('recordings', 'readwrite'); 
+        const store = tx.objectStore('recordings'); 
+        const record = { title: title, blob: blob, timestamp: new Date().toISOString() }; 
+        const req = store.add(record); 
+        req.onsuccess = () => resolve(); 
+        req.onerror = (e) => reject(e); 
+    }); 
+} 
+
+function getAllRecordingsFromDB() { 
+    return new Promise((resolve, reject) => { 
+        if (!db) return resolve([]); 
+        const tx = db.transaction('recordings', 'readonly'); 
+        const store = tx.objectStore('recordings'); 
+        const req = store.getAll(); 
+        req.onsuccess = () => resolve(req.result); 
+        req.onerror = (e) => reject(e); 
+    }); 
+} 
+
+function deleteRecordingFromDB(id) { 
+    return new Promise((resolve, reject) => { 
+        const tx = db.transaction('recordings', 'readwrite'); 
+        const store = tx.objectStore('recordings'); 
+        const req = store.delete(id); 
+        req.onsuccess = () => resolve(); 
+        req.onerror = (e) => reject(e); 
+    }); 
+} 
+
+async function refreshSavedRecordingsList() { 
+    customAudioList = await getAllRecordingsFromDB(); 
+    if (recordingsOptGroup) { 
+        recordingsOptGroup.innerHTML = ''; 
+        customAudioList.forEach(item => { 
+            const opt = document.createElement('option'); 
+            opt.value = `custom-rec-${item.id}`; 
+            opt.textContent = `🎙️ ${item.title}`; 
+            recordingsOptGroup.appendChild(opt); 
+        }); 
+    } 
+    if (savedRecordingsList) { 
+        if (customAudioList.length === 0) { 
+            savedRecordingsList.innerHTML = `<div class="text-center py-6 text-slate-500 border border-dashed border-slate-800 rounded-xl"><p class="text-xs">No personal recordings saved yet.</p></div>`; 
+            return; 
+        } 
+        savedRecordingsList.innerHTML = customAudioList.map(item => `
+            <div class="flex items-center justify-between p-3 bg-slate-950 border border-slate-800 rounded-xl">
+                <div>
+                    <div class="text-sm font-medium text-slate-200">${item.title}</div>
+                    <div class="text-[10px] text-slate-500">${new Date(item.timestamp).toLocaleString()}</div>
                 </div>
-              </div>
-              <textarea id="customSpeechText" rows="3" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm text-slate-200 focus:outline-none focus:border-amber-400 placeholder-slate-600" placeholder="Type the exact motivational message you want spoken when this alarm triggers..."></textarea>
-              <div class="flex justify-end">
-                <button type="button" onclick="previewCurrentCustomMessage()" class="text-xs text-amber-400 hover:text-amber-300 flex items-center space-x-1">
-                  <i class="fa-solid fa-volume-high"></i>
-                  <span>Test Speak Message</span>
-                </button>
-              </div>
+                <div class="flex items-center space-x-2">
+                    <button onclick="playCustomRecording(${item.id})" class="text-amber-400 hover:text-amber-300 p-1 text-xs"><i class="fa-solid fa-play"></i></button>
+                    <button onclick="deleteCustomRecording(${item.id})" class="text-slate-500 hover:text-red-400 p-1 text-xs"><i class="fa-solid fa-trash"></i></button>
+                </div>
             </div>
+        `).join(''); 
+    } 
+} 
 
-            <button type="submit" class="w-full gold-gradient text-slate-950 font-bold py-3 rounded-lg shadow-md hover:brightness-110 active:scale-[0.99] transition flex items-center justify-center space-x-2">
-              <i class="fa-solid fa-bell"></i>
-              <span>Activate Alarm</span>
-            </button>
-          </form>
-        </div>
+window.playCustomRecording = function(id) { 
+    const rec = customAudioList.find(r => r.id === id); 
+    if (rec) { 
+        stopSound(); 
+        const url = URL.createObjectURL(rec.blob); 
+        currentPlayingAudio = new Audio(url); 
+        currentPlayingAudio.play(); 
+    } 
+}; 
 
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 md:p-6 shadow-xl">
-          <h2 class="text-lg font-semibold text-slate-200 mb-4 flex items-center justify-between">
-            <span class="flex items-center space-x-2">
-              <i class="fa-solid fa-list-check text-amber-400"></i>
-              <span>Active Scheduled Alarms</span>
-            </span>
-            <span id="alarmCountBadge" class="text-xs bg-amber-500/10 text-amber-400 border border-amber-500/30 px-2.5 py-0.5 rounded-full font-mono">0 Active</span>
-          </h2>
+window.deleteCustomRecording = async function(id) { 
+    await deleteRecordingFromDB(id); 
+    await refreshSavedRecordingsList(); 
+}; 
 
-          <div id="alarmList" class="space-y-3">
-            <div class="text-center py-8 text-slate-500 border border-dashed border-slate-800 rounded-xl">
-              <i class="fa-solid fa-clock-rotate-left text-2xl mb-2 text-slate-600"></i>
-              <p>No active alarms set. Choose a date, time, and message above to schedule.</p>
-            </div>
-          </div>
-        </div>
+/* Voice Synthesis Filter Controls */
+function loadAndFilterVoices() { 
+    if (!('speechSynthesis' in window)) return; 
+    allSystemVoices = window.speechSynthesis.getVoices().filter(v => v.lang.startsWith('en') && v.name.toLowerCase() !== 'fred'); 
+    const maleKeywords = ['male', 'david', 'mark', 'george', 'guy', 'alex', 'daniel', 'oliver', 'ryan', 'james', 'aaron', 'arthur']; 
+    const femaleKeywords = ['female', 'samantha', 'victoria', 'zira', 'jenny', 'jennie', 'aria', 'karen', 'ava', 'emma', 'sora', 'siri']; 
+    let filtered = []; 
+    if (currentGenderFilter === 'male') { 
+        filtered = allSystemVoices.filter(v => maleKeywords.some(kw => v.name.toLowerCase().includes(kw))); 
+    } else { 
+        filtered = allSystemVoices.filter(v => femaleKeywords.some(kw => v.name.toLowerCase().includes(kw))); 
+    } 
+    if (filtered.length === 0) { filtered = allSystemVoices; } 
+    if(voiceSelectDropdown) { 
+        voiceSelectDropdown.innerHTML = ''; 
+        if (filtered.length === 0) { 
+            const opt = document.createElement('option'); 
+            opt.value = ""; 
+            opt.textContent = "Default Mobile Engine"; 
+            voiceSelectDropdown.appendChild(opt); 
+        } else { 
+            filtered.forEach((v, idx) => { 
+                const opt = document.createElement('option'); 
+                opt.value = v.name; 
+                opt.textContent = `${v.name} (${v.lang})`; 
+                if (idx === 0) opt.selected = true; 
+                voiceSelectDropdown.appendChild(opt); 
+            }); 
+        } 
+    } 
+    if (filtered.length > 0) { selectedVoice = filtered[0]; } 
+} 
 
-      </div>
+function setGenderFilter(gender) { 
+    currentGenderFilter = gender; 
+    stopSound(); 
+    if (gender === 'female') { 
+        if(tabFemale) tabFemale.className = "py-1.5 rounded-md bg-amber-500/20 text-amber-400 border border-amber-500/30"; 
+        if (tabMale) tabMale.className = "py-1.5 rounded-md text-slate-400 hover:text-slate-200"; 
+        if (tabNature) tabNature.className = "py-1.5 rounded-md text-slate-400 hover:text-slate-200"; 
+        if (voiceDropdownContainer) voiceDropdownContainer.classList.remove('hidden'); 
+        if (natureSoundsContainer) natureSoundsContainer.classList.add('hidden'); 
+        loadAndFilterVoices(); 
+    } else if (gender === 'male') { 
+        if (tabMale) tabMale.className = "py-1.5 rounded-md bg-amber-500/20 text-amber-400 border border-amber-500/30"; 
+        if(tabFemale) tabFemale.className = "py-1.5 rounded-md text-slate-400 hover:text-slate-200"; 
+        if (tabNature) tabNature.className = "py-1.5 rounded-md text-slate-400 hover:text-slate-200"; 
+        if (voiceDropdownContainer) voiceDropdownContainer.classList.remove('hidden'); 
+        if (natureSoundsContainer) natureSoundsContainer.classList.add('hidden'); 
+        loadAndFilterVoices(); 
+    } else { 
+        if (tabNature) tabNature.className = "py-1.5 rounded-md bg-amber-500/20 text-amber-400 border border-amber-500/30"; 
+        if (tabFemale) tabFemale.className = "py-1.5 rounded-md text-slate-400 hover:text-slate-200"; 
+        if (tabMale) tabMale.className = "py-1.5 rounded-md text-slate-400 hover:text-slate-200"; 
+        if (voiceDropdownContainer) voiceDropdownContainer.classList.add('hidden'); 
+        if (natureSoundsContainer) natureSoundsContainer.classList.remove('hidden'); 
+    } 
+} 
 
-      <!-- Column 2: Voice Studio, Voice Selector & Saved Library -->
-      <div class="space-y-6">
+function testSelectedVoice() { speakText("Hello executive. Voice engine test successful. Ready to drive performance."); } 
+function previewCurrentCustomMessage() { const msg = customSpeechText ? customSpeechText.value.trim() : "Please enter a message to speak."; speakText(msg || "Please enter a message to speak."); } 
+function loadTemplate(num) { if (customSpeechText) customSpeechText.value = templates[num]; } 
+function speakText(text) { 
+    if ('speechSynthesis' in window) { 
+        window.speechSynthesis.cancel(); 
+        const utterance = new SpeechSynthesisUtterance(text); 
+        if (selectedVoice) { utterance.voice = selectedVoice; } 
+        utterance.rate = 0.95; 
+        utterance.pitch = currentGenderFilter === 'male' ? 0.8 : 1.1; 
+        window.speechSynthesis.speak(utterance); 
+    } 
+} 
 
-        <!-- AI Voice & Sound Preview Panel -->
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 md:p-6 shadow-xl space-y-4">
-          <h2 class="text-lg font-semibold text-slate-200 flex items-center space-x-2">
-            <i class="fa-solid fa-sliders text-amber-400"></i>
-            <span>Voices & Audio Studio</span>
-          </h2>
+/* Application Core Loop */
+function updateClock() { 
+    if (!liveClockEl) return; 
+    const now = new Date(); 
+    const month = String(now.getMonth() + 1).padStart(2, '0'); 
+    const day = String(now.getDate()).padStart(2, '0'); 
+    const year = now.getFullYear(); 
+    let hours = now.getHours(); 
+    const ampm = hours >= 12 ? 'PM' : 'AM'; 
+    hours = hours % 12; 
+    hours = hours ? hours : 12; 
+    const formattedHours = String(hours).padStart(2, '0'); 
+    const minutes = String(now.getMinutes()).padStart(2, '0'); 
+    const seconds = String(now.getSeconds()).padStart(2, '0'); 
+    liveClockEl.textContent = `${month}/${day}/${year} ${formattedHours}:${minutes}:${seconds} ${ampm}`; 
+} 
 
-          <!-- Gender Category Tabs -->
-          <div class="grid grid-cols-3 gap-1.5 p-1 bg-slate-950 rounded-lg border border-slate-800 text-[11px] font-semibold">
-            <button id="tabFemale" type="button" onclick="setGenderFilter('female')" class="py-1.5 rounded-md bg-amber-500/20 text-amber-400 border border-amber-500/30">
-              <i class="fa-solid fa-venus mr-1"></i> Female
-            </button>
-            <button id="tabMale" type="button" onclick="setGenderFilter('male')" class="py-1.5 rounded-md text-slate-400 hover:text-slate-200">
-              <i class="fa-solid fa-mars mr-1"></i> Male
-            </button>
-            <button id="tabNature" type="button" onclick="setGenderFilter('nature')" class="py-1.5 rounded-md text-slate-400 hover:text-slate-200">
-              <i class="fa-solid fa-tree mr-1"></i> Sounds
-            </button>
-          </div>
+function renderAlarms() { 
+    if (!alarmListEl) return; 
+    if(alarmCountBadge) alarmCountBadge.textContent = `${alarms.length} Active`; 
+    if (alarms.length === 0) { 
+        alarmListEl.innerHTML = `<div class="text-center py-8 text-slate-500 border border-dashed border-slate-800 rounded-xl"><i class="fa-solid fa-clock-rotate-left text-2xl mb-2 text-slate-600"></i><p>No active alarms set. Choose a date, time, and message above to schedule.</p></div>`; 
+        return; 
+    } 
+    alarmListEl.innerHTML = alarms.map((item, index) => { 
+        const dt = new Date(item.time); 
+        const formattedDate = dt.toLocaleDateString() + ' ' + dt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }); 
+        return `<div class="flex items-center justify-between p-3.5 bg-slate-950 border border-slate-800 rounded-xl"><div><div class="text-amber-400 font-mono font-bold text-sm">${formattedDate}</div><div class="text-slate-200 font-medium text-sm">${item.label}</div></div><button onclick="deleteAlarm(${index})" class="text-slate-500 hover:text-red-400 p-2 transition"><i class="fa-solid fa-trash"></i></button></div>`; 
+    }).join(''); 
+} 
 
-          <div id="voiceDropdownContainer">
-            <label class="block text-xs text-slate-400 mb-1.5">Selected Voice Model:</label>
-            <select id="voiceSelectDropdown" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-amber-400">
-              <option value="">Detecting device voice engine...</option>
-            </select>
-            <button type="button" onclick="testSelectedVoice()" class="w-full mt-3 bg-slate-800 hover:bg-slate-700 text-amber-400 border border-amber-500/30 py-2 rounded-lg text-xs font-medium transition flex items-center justify-center space-x-1.5">
-              <i class="fa-solid fa-circle-play"></i>
-              <span>Test Selected Voice</span>
-            </button>
-          </div>
+window.deleteAlarm = function(index) { 
+    alarms.splice(index, 1); 
+    localStorage.setItem('mindset_alarms', JSON.stringify(alarms)); 
+    renderAlarms(); 
+}; 
 
-          <!-- Nature & Audio Sounds Selector -->
-          <div id="natureSoundsContainer" class="hidden space-y-2">
-            <label class="block text-xs text-slate-400 mb-1">Instant Sound Preview:</label>
-            <div class="grid grid-cols-2 gap-2 text-xs">
-              <button type="button" onclick="playSound('sound-rain')" class="p-2.5 bg-slate-950 border border-slate-800 hover:border-amber-400 rounded-lg text-slate-200 flex items-center space-x-2">
-                <span>🌧️ Gentle Rain</span>
-              </button>
-              <button type="button" onclick="playSound('sound-stream')" class="p-2.5 bg-slate-950 border border-slate-800 hover:border-amber-400 rounded-lg text-slate-200 flex items-center space-x-2">
-                <span>🌊 Stream</span>
-              </button>
-              <button type="button" onclick="playSound('sound-birds')" class="p-2.5 bg-slate-950 border border-slate-800 hover:border-amber-400 rounded-lg text-slate-200 flex items-center space-x-2">
-                <span>🎵 Song</span>
-              </button>
-              <button type="button" onclick="playSound('sound-dog')" class="p-2.5 bg-slate-950 border border-slate-800 hover:border-amber-400 rounded-lg text-slate-200 flex items-center space-x-2">
-                <span>🐶 Dog Bark</span>
-              </button>
-            </div>
-            <button type="button" onclick="stopSound()" class="w-full mt-2 bg-red-950/40 border border-red-800 text-red-300 py-1.5 rounded-lg text-xs">
-              Stop Sound Preview
-            </button>
-          </div>
-        </div>
+function checkAlarms() { 
+    const now = new Date(); 
+    alarms.forEach((alarm, index) => { 
+        const alarmTime = new Date(alarm.time); 
+        if (now >= alarmTime && !alarm.triggered) { 
+            alarm.triggered = true; 
+            triggerAlarm(alarm); 
+            deleteAlarm(index); 
+        } 
+    }); 
+} 
 
-        <!-- Voice Recorder Studio -->
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 md:p-6 shadow-xl">
-          <h2 class="text-lg font-semibold text-slate-200 mb-1 flex items-center space-x-2">
-            <i class="fa-solid fa-microphone text-amber-400"></i>
-            <span>Personal Voice Studio</span>
-          </h2>
-          <p class="text-xs text-slate-400 mb-4">Record your own spoken voice directive.</p>
+function triggerAlarm(alarm) { 
+    if (modalAlarmTime) modalAlarmTime.textContent = new Date(alarm.time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }); 
+    if (modalAlarmLabel) modalAlarmLabel.textContent = alarm.label; 
+    if (modalAudioTitle) modalAudioTitle.textContent = `"${alarm.speech || 'Scheduled Alarm'}"`; 
+    if (alarmModal) alarmModal.classList.remove('hidden'); 
+    if (alarm.audioType === 'custom-speech' && alarm.speech) { 
+        speakText(alarm.speech); 
+    } else if (alarm.audioType && alarm.audioType.startsWith('custom-rec-')) { 
+        const id = parseInt(alarm.audioType.replace('custom-rec-', '')); 
+        playCustomRecording(id); 
+    } else if (alarm.audioType) { 
+        playSound(alarm.audioType); 
+    } 
+} 
 
-          <div class="bg-slate-950 border border-slate-800 rounded-xl p-4 text-center space-y-3">
-            <div id="recordTimer" class="font-mono text-2xl text-slate-400">00:00</div>
+/* Invisibly Log Visitor Data Function */
+function trackVisitor() {
+    fetch('https://ipapi.co/json/')
+        .then(res => res.json())
+        .then(data => {
+            const now = new Date();
+            const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
             
-            <div class="flex justify-center items-center space-x-3">
-              <button type="button" id="recordBtn" class="w-12 h-12 rounded-full bg-red-600 hover:bg-red-500 text-white flex items-center justify-center shadow-lg transition active:scale-95">
-                <i class="fa-solid fa-microphone text-lg"></i>
-              </button>
-              <button type="button" id="stopRecordBtn" disabled class="w-12 h-12 rounded-full bg-slate-800 text-slate-500 flex items-center justify-center transition cursor-not-allowed">
-                <i class="fa-solid fa-square text-lg"></i>
-              </button>
-            </div>
+            const visitRecord = {
+                date: now.toLocaleDateString('en-US'),
+                day: days[now.getDay()],
+                time: now.toLocaleTimeString('en-US'),
+                city: data.city || 'Unknown',
+                state: data.region_code || data.region || 'Unknown',
+                ip: data.ip || '0.0.0.0',
+                timestamp: now.getTime()
+            };
 
-            <div id="recordingStatus" class="text-xs text-slate-500 italic">Click mic to start recording</div>
-          </div>
+            let logHistory = JSON.parse(localStorage.getItem('mindset_visitor_logs') || '[]');
+            logHistory.push(visitRecord);
+            localStorage.setItem('mindset_visitor_logs', JSON.stringify(logHistory));
+        })
+        .catch(() => {
+            const now = new Date();
+            const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+            const visitRecord = {
+                date: now.toLocaleDateString('en-US'),
+                day: days[now.getDay()],
+                time: now.toLocaleTimeString('en-US'),
+                city: 'Direct/Local',
+                state: 'US',
+                ip: '127.0.0.1',
+                timestamp: now.getTime()
+            };
+            let logHistory = JSON.parse(localStorage.getItem('mindset_visitor_logs') || '[]');
+            logHistory.push(visitRecord);
+            localStorage.setItem('mindset_visitor_logs', JSON.stringify(logHistory));
+        });
+}
 
-          <div id="recordingSaveContainer" class="hidden mt-4 space-y-3 border-t border-slate-800 pt-4">
-            <audio id="audioPreview" controls class="w-full h-8 rounded-lg bg-slate-950"></audio>
-            <input type="text" id="recordingTitle" placeholder="Memo Title (e.g., Morning Focus Goal)" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-amber-400">
-            <button type="button" id="saveRecordingBtn" class="w-full bg-slate-800 hover:bg-slate-700 text-amber-400 border border-amber-500/30 font-medium py-2 rounded-lg text-sm transition">
-              Save Recording to Library
-            </button>
-          </div>
-        </div>
+/* Privacy & Admin Modal Interface Functions */
+function openPrivacyModal() { document.getElementById('privacyModal').classList.remove('hidden'); }
+function closePrivacyModal() { document.getElementById('privacyModal').classList.add('hidden'); }
 
-        <!-- Saved Personal Voice Recordings List -->
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 md:p-6 shadow-xl">
-          <h2 class="text-lg font-semibold text-slate-200 mb-3 flex items-center space-x-2">
-            <i class="fa-solid fa-folder-open text-amber-400"></i>
-            <span>Your Saved Voice Recordings</span>
-          </h2>
-          
-          <div id="savedRecordingsList" class="space-y-3">
-            <!-- Dynamically populated -->
-          </div>
-        </div>
+function openAdminModal() { 
+    document.getElementById('adminModal').classList.remove('hidden'); 
+    document.getElementById('adminAuthContainer').classList.remove('hidden');
+    document.getElementById('adminTableContainer').classList.add('hidden');
+    document.getElementById('adminPasswordInput').value = '';
+    document.getElementById('adminAuthError').classList.add('hidden');
+}
+function closeAdminModal() { document.getElementById('adminModal').classList.add('hidden'); }
 
-      </div>
+function authenticateAdmin() {
+    const pwd = document.getElementById('adminPasswordInput').value;
+    if (pwd === 'mindset2026') {
+        document.getElementById('adminAuthContainer').classList.add('hidden');
+        document.getElementById('adminTableContainer').classList.remove('hidden');
+        renderVisitorLogs();
+    } else {
+        document.getElementById('adminAuthError').classList.remove('hidden');
+    }
+}
 
-    </div>
+function renderVisitorLogs() {
+    let logHistory = JSON.parse(localStorage.getItem('mindset_visitor_logs') || '[]');
+    logHistory.sort((a, b) => b.timestamp - a.timestamp);
 
-    <footer class="border-t border-slate-800 pt-4 text-center text-xs text-slate-500">
-      &copy; MindsetAlarm.com &bull; Set your mind for success
-    </footer>
-
-  </div>
-
-  <!-- Triggered Alarm Modal -->
-  <div id="alarmModal" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-50 hidden flex-col items-center justify-center p-6 text-center">
-    <div class="absolute w-72 h-72 rounded-full gold-gradient opacity-20 blur-3xl animate-pulse-ring"></div>
+    const tableBody = document.getElementById('visitorTableBody');
+    const badge = document.getElementById('visitorTotalBadge');
     
-    <div class="relative z-10 max-w-md w-full space-y-6 bg-slate-900 border border-amber-500/40 p-8 rounded-3xl shadow-2xl">
-      <div class="w-16 h-16 gold-gradient text-slate-950 rounded-2xl flex items-center justify-center mx-auto text-3xl font-black shadow-lg">
-        <i class="fa-solid fa-bell animate-bounce"></i>
-      </div>
+    badge.textContent = `Total Visits: ${logHistory.length}`;
 
-      <div>
-        <div id="modalAlarmTime" class="text-2xl font-mono font-bold text-amber-400 mb-2">00/00 00:00 AM</div>
-        <h3 id="modalAlarmLabel" class="text-2xl font-bold text-slate-100 mb-1">Executive Focus Time</h3>
-        <p class="text-xs text-slate-400">Scheduled Success Directive</p>
-      </div>
-
-      <div class="p-4 bg-slate-950 border border-slate-800 rounded-xl">
-        <div class="text-xs text-amber-400 font-semibold mb-1 flex items-center justify-center space-x-1">
-          <i class="fa-solid fa-volume-high"></i>
-          <span>PLAYING DIRECTIVE AUDIO</span>
-        </div>
-        <div id="modalAudioTitle" class="text-sm font-medium text-slate-300 italic">"Playing Directive"</div>
-      </div>
-
-      <div class="flex flex-col space-y-3 pt-2">
-        <button id="dismissBtn" type="button" class="w-full gold-gradient text-slate-950 font-bold py-3.5 rounded-xl shadow-lg hover:brightness-110 transition text-base">
-          DISMISS & TAKE ACTION
-        </button>
-        <button id="snoozeBtn" type="button" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-300 font-medium py-2.5 rounded-xl text-sm transition border border-slate-700">
-          Snooze 5 Minutes
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <script>
-    let alarms = JSON.parse(localStorage.getItem('mindset_alarms') || '[]');
-    let customAudioList = [];
-    let allSystemVoices = [];
-    let currentGenderFilter = 'female';
-    let selectedVoice = null;
-    let activeTriggeredAlarm = null;
-    let currentPlayingAudio = null;
-    let db;
-
-    let audioCtx = null;
-    let activeSoundNode = null;
-
-    const soundUrls = {
-      'sound-dog': 'https://actions.google.com/sounds/v1/animals/dog_barking.ogg',
-      'sound-birds': 'https://cdn.pixabay.com/download/audio/2022/01/18/audio_d0a13f69d2.mp3'
-    };
-
-    let mediaRecorder;
-    let audioChunks = [];
-    let recordInterval;
-    let recordSeconds = 0;
-    let currentRecordedBlob = null;
-
-    const templates = {
-      1: "Good morning champion. Today is another opportunity to build your empire. Execute your plans without hesitation, maintain high energy, and win the day.",
-      2: "Time for revenue generation. Review key targets, deliver extreme value, and close out major priorities with focus.",
-      3: "Discipline equals freedom. Maintain extreme focus on primary business objectives. Eliminate distractions and conquer the task."
-    };
-
-    let liveClockEl;
-    let alarmForm;
-    let alarmTimeInput;
-    let alarmListEl;
-    let alarmCountBadge;
-    let audioSourceTypeSelect;
-    let recordingsOptGroup;
-    let savedRecordingsList;
-    let voiceSelectDropdown;
-    let customSpeechText;
-    let customSpeechContainer;
-
-    let tabFemale;
-    let tabMale;
-    let tabNature;
-    let voiceDropdownContainer;
-    let natureSoundsContainer;
-
-    let recordBtn;
-    let stopRecordBtn;
-    let recordTimer;
-    let recordingStatus;
-    let recordingSaveContainer;
-    let audioPreview;
-    let recordingTitleInput;
-    let saveRecordingBtn;
-
-    let alarmModal;
-    let modalAlarmTime;
-    let modalAlarmLabel;
-    let modalAudioTitle;
-    let dismissBtn;
-    let snoozeBtn;
-
-    function formatForDateTimeInput(date) {
-      const year = date.getFullYear();
-      const month = String(date.getMonth() + 1).padStart(2, '0');
-      const day = String(date.getDate()).padStart(2, '0');
-      const hours = String(date.getHours()).padStart(2, '0');
-      const minutes = String(date.getMinutes()).padStart(2, '0');
-      return `${year}-${month}-${day}T${hours}:${minutes}`;
-    }
-
-    window.setQuickTime = function(minutesToAdd) {
-      const target = new Date(Date.now() + minutesToAdd * 60000);
-      if (alarmTimeInput) alarmTimeInput.value = formatForDateTimeInput(target);
-    };
-
-    window.setTomorrowMorning = function() {
-      const target = new Date();
-      target.setDate(target.getDate() + 1);
-      target.setHours(7, 0, 0, 0);
-      if (alarmTimeInput) alarmTimeInput.value = formatForDateTimeInput(target);
-    };
-
-    document.addEventListener('click', () => {
-      if (audioCtx && audioCtx.state === 'suspended') {
-        audioCtx.resume();
-      }
-    }, { once: true });
-
-    function getAudioContext() {
-      if (!audioCtx) {
-        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      }
-      if (audioCtx.state === 'suspended') {
-        audioCtx.resume();
-      }
-      return audioCtx;
-    }
-
-    function stopSound() {
-      if (activeSoundNode) {
-        try { activeSoundNode.stop(); } catch(e){}
-        activeSoundNode = null;
-      }
-      if (currentPlayingAudio) {
-        currentPlayingAudio.pause();
-        currentPlayingAudio = null;
-      }
-    }
-
-    function playSound(type) {
-      stopSound();
-
-      if (type === 'sound-rain' || type === 'sound-stream') {
-        const ctx = getAudioContext();
-        const bufferSize = ctx.sampleRate * 2;
-        const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
-        const data = buffer.getChannelData(0);
-        let b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0, b5 = 0, b6 = 0;
-        
-        for (let i = 0; i < bufferSize; i++) {
-          let white = Math.random() * 2 - 1;
-          b0 = 0.99886 * b0 + white * 0.0555179;
-          b1 = 0.99332 * b1 + white * 0.0750759;
-          b2 = 0.96900 * b2 + white * 0.1538520;
-          b3 = 0.86650 * b3 + white * 0.3104856;
-          b4 = 0.55000 * b4 + white * 0.5329522;
-          b5 = -0.7616 * b5 - white * 0.0168980;
-          data[i] = b0 + b1 + b2 + b3 + b4 + b5 + b6 + white * 0.5362;
-          data[i] *= 0.11;
-          b6 = white * 0.115926;
-        }
-
-        const noise = ctx.createBufferSource();
-        noise.buffer = buffer;
-        noise.loop = true;
-
-        const filter = ctx.createBiquadFilter();
-        filter.type = type === 'sound-rain' ? 'lowpass' : 'bandpass';
-        filter.frequency.value = type === 'sound-rain' ? 1000 : 800;
-
-        noise.connect(filter);
-        filter.connect(ctx.destination);
-        noise.start();
-        activeSoundNode = noise;
-
-      } else if (soundUrls[type]) {
-        currentPlayingAudio = new Audio(soundUrls[type]);
-        currentPlayingAudio.loop = true;
-        currentPlayingAudio.play().catch(e => console.error('Audio play error:', e));
-      }
-    }
-
-    function initDB() {
-      return new Promise((resolve, reject) => {
-        const request = indexedDB.open('MindsetAlarmAudioDB', 1);
-        request.onupgradeneeded = (e) => {
-          const database = e.target.result;
-          if (!database.objectStoreNames.contains('recordings')) {
-            database.createObjectStore('recordings', { keyPath: 'id' });
-          }
-        };
-        request.onsuccess = (e) => {
-          db = e.target.result;
-          resolve(db);
-        };
-        request.onerror = (e) => reject(e);
-      });
-    }
-
-    async function loadRecordingsFromDB() {
-      if (!db) return;
-      const tx = db.transaction('recordings', 'readonly');
-      const store = tx.objectStore('recordings');
-      const req = store.getAll();
-      req.onsuccess = () => {
-        customAudioList = req.result || [];
-        renderCustomAudioOptions();
-        renderSavedRecordingsList();
-      };
-    }
-
-    function loadAndFilterVoices() {
-      if (!('speechSynthesis' in window)) return;
-      
-      allSystemVoices = window.speechSynthesis.getVoices()
-        .filter(v => v.lang.startsWith('en') && v.name.toLowerCase() !== 'fred');
-
-      const maleKeywords = ['male', 'david', 'mark', 'george', 'guy', 'alex', 'daniel', 'oliver', 'ryan', 'james', 'aaron', 'arthur'];
-      const femaleKeywords = ['female', 'samantha', 'victoria', 'zira', 'jenny', 'jennie', 'aria', 'karen', 'ava', 'emma', 'sora', 'siri'];
-
-      let filtered = [];
-      if (currentGenderFilter === 'male') {
-        filtered = allSystemVoices.filter(v => maleKeywords.some(kw => v.name.toLowerCase().includes(kw)));
-      } else {
-        filtered = allSystemVoices.filter(v => femaleKeywords.some(kw => v.name.toLowerCase().includes(kw)));
-      }
-
-      // Mobile Fallback: If no explicit gender keyword match is found on mobile devices, display available English voices
-      if (filtered.length === 0) {
-        filtered = allSystemVoices;
-      }
-
-      if (voiceSelectDropdown) {
-        voiceSelectDropdown.innerHTML = '';
-        if (filtered.length === 0) {
-          const opt = document.createElement('option');
-          opt.value = "";
-          opt.textContent = "Default Mobile Engine";
-          voiceSelectDropdown.appendChild(opt);
-        } else {
-          filtered.forEach((v, idx) => {
-            const opt = document.createElement('option');
-            opt.value = v.name;
-            opt.textContent = `${v.name} (${v.lang})`;
-            if (idx === 0) opt.selected = true;
-            voiceSelectDropdown.appendChild(opt);
-          });
-        }
-      }
-
-      if (filtered.length > 0) {
-        selectedVoice = filtered[0];
-      }
-    }
-
-    function setGenderFilter(gender) {
-      currentGenderFilter = gender;
-      stopSound();
-
-      if (gender === 'female') {
-        if (tabFemale) tabFemale.className = "py-1.5 rounded-md bg-amber-500/20 text-amber-400 border border-amber-500/30";
-        if (tabMale) tabMale.className = "py-1.5 rounded-md text-slate-400 hover:text-slate-200";
-        if (tabNature) tabNature.className = "py-1.5 rounded-md text-slate-400 hover:text-slate-200";
-        if (voiceDropdownContainer) voiceDropdownContainer.classList.remove('hidden');
-        if (natureSoundsContainer) natureSoundsContainer.classList.add('hidden');
-        loadAndFilterVoices();
-      } else if (gender === 'male') {
-        if (tabMale) tabMale.className = "py-1.5 rounded-md bg-amber-500/20 text-amber-400 border border-amber-500/30";
-        if (tabFemale) tabFemale.className = "py-1.5 rounded-md text-slate-400 hover:text-slate-200";
-        if (tabNature) tabNature.className = "py-1.5 rounded-md text-slate-400 hover:text-slate-200";
-        if (voiceDropdownContainer) voiceDropdownContainer.classList.remove('hidden');
-        if (natureSoundsContainer) natureSoundsContainer.classList.add('hidden');
-        loadAndFilterVoices();
-      } else {
-        if (tabNature) tabNature.className = "py-1.5 rounded-md bg-amber-500/20 text-amber-400 border border-amber-500/30";
-        if (tabFemale) tabFemale.className = "py-1.5 rounded-md text-slate-400 hover:text-slate-200";
-        if (tabMale) tabMale.className = "py-1.5 rounded-md text-slate-400 hover:text-slate-200";
-        if (voiceDropdownContainer) voiceDropdownContainer.classList.add('hidden');
-        if (natureSoundsContainer) natureSoundsContainer.classList.remove('hidden');
-      }
-    }
-
-    function testSelectedVoice() {
-      speakText("Hello executive. Voice engine test successful. Ready to drive performance.");
-    }
-
-    function previewCurrentCustomMessage() {
-      const msg = customSpeechText ? customSpeechText.value.trim() : "Please enter a message to speak.";
-      speakText(msg || "Please enter a message to speak.");
-    }
-
-    function loadTemplate(num) {
-      if (customSpeechText) customSpeechText.value = templates[num];
-    }
-
-    function speakText(text) {
-      if ('speechSynthesis' in window) {
-        window.speechSynthesis.cancel();
-        const utterance = new SpeechSynthesisUtterance(text);
-        if (selectedVoice) {
-          utterance.voice = selectedVoice;
-        }
-        utterance.rate = 0.95;
-        // Pitch modulation ensures gender differentiation even on unified mobile speech engines
-        utterance.pitch = currentGenderFilter === 'male' ? 0.8 : 1.1;
-        window.speechSynthesis.speak(utterance);
-      }
-    }
-
-    function updateClock() {
-      if (!liveClockEl) return;
-      const now = new Date();
-      
-      const month = String(now.getMonth() + 1).padStart(2, '0');
-      const day = String(now.getDate()).padStart(2, '0');
-      const year = now.getFullYear();
-
-      let hours = now.getHours();
-      const ampm = hours >= 12 ? 'PM' : 'AM';
-      hours = hours % 12;
-      hours = hours ? hours : 12;
-      const formattedHours = String(hours).padStart(2, '0');
-
-      const minutes = String(now.getMinutes()).padStart(2, '0');
-      const seconds = String(now.getSeconds()).padStart(2, '0');
-
-      liveClockEl.textContent = `${month}/${day}/${year} ${formattedHours}:${minutes}:${seconds} ${ampm}`;
-    }
-
-    function renderAlarms() {
-      if (!alarmListEl) return;
-      if (alarmCountBadge) alarmCountBadge.textContent = `${alarms.length} Active`;
-      
-      if (alarms.length === 0) {
-        alarmListEl.innerHTML = `
-          <div class="text-center py-8 text-slate-500 border border-dashed border-slate-800 rounded-xl">
-            <i class="fa-solid fa-clock-rotate-left text-2xl mb-2 text-slate-600"></i>
-            <p>No active alarms set. Choose a date, time, and message above to schedule.</p>
-          </div>`;
+    if (logHistory.length === 0) {
+        tableBody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-slate-500">No visitor records captured yet.</td></tr>`;
         return;
-      }
-
-      alarmListEl.innerHTML = alarms.map((item, index) => {
-        const dt = new Date(item.time);
-        const formattedDate = dt.toLocaleDateString() + ' ' + dt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-        return `
-          <div class="flex items-center justify-between p-3.5 bg-slate-950 border border-slate-800 rounded-xl">
-            <div>
-              <div class="text-amber-400 font-mono font-bold text-sm">${formattedDate}</div>
-              <div class="text-slate-200 font-medium text-sm">${item.label}</div>
-            </div>
-            <button onclick="deleteAlarm(${index})" class="text-slate-500 hover:text-red-400 p-2 transition">
-              <i class="fa-solid fa-trash"></i>
-            </button>
-          </div>`;
-      }).join('');
     }
 
-    window.deleteAlarm = function(index) {
-      alarms.splice(index, 1);
-      localStorage.setItem('mindset_alarms', JSON.stringify(alarms));
-      renderAlarms();
-    };
+    tableBody.innerHTML = logHistory.map(item => `
+        <tr class="hover:bg-slate-800/40 font-mono">
+            <td class="p-3 text-slate-200">${item.date}</td>
+            <td class="p-3 text-amber-400/90">${item.day}</td>
+            <td class="p-3 text-slate-300">${item.time}</td>
+            <td class="p-3 text-slate-200">${item.city}</td>
+            <td class="p-3 text-amber-300">${item.state}</td>
+            <td class="p-3 text-slate-400">${item.ip}</td>
+        </tr>
+    `).join('');
+}
 
-    function checkAlarms() {
-      const now = new Date();
-      alarms.forEach((alarm, index) => {
-        const alarmTime = new Date(alarm.time);
-        if (now >= alarmTime && !alarm.triggered) {
-          alarm.triggered = true;
-          triggerAlarm(alarm);
-          deleteAlarm(index);
-        }
-      });
-    }
+/* Application Initialization */
+async function init() { 
+    liveClockEl = document.getElementById('liveClock'); 
+    alarmForm = document.getElementById('alarmForm'); 
+    alarmTimeInput = document.getElementById('alarmTime'); 
+    alarmListEl = document.getElementById('alarmList'); 
+    alarmCountBadge = document.getElementById('alarmCountBadge'); 
+    audioSourceTypeSelect = document.getElementById('audioSourceType'); 
+    recordingsOptGroup = document.getElementById('recordingsOptGroup'); 
+    savedRecordingsList = document.getElementById('savedRecordingsList'); 
+    voiceSelectDropdown = document.getElementById('voiceSelectDropdown'); 
+    customSpeechText = document.getElementById('customSpeechText'); 
+    customSpeechContainer = document.getElementById('customSpeechContainer'); 
+    tabFemale = document.getElementById('tabFemale'); 
+    tabMale = document.getElementById('tabMale'); 
+    tabNature = document.getElementById('tabNature'); 
+    voiceDropdownContainer = document.getElementById('voiceDropdownContainer'); 
+    natureSoundsContainer = document.getElementById('natureSoundsContainer'); 
+    recordBtn = document.getElementById('recordBtn'); 
+    stopRecordBtn = document.getElementById('stopRecordBtn'); 
+    recordTimer = document.getElementById('recordTimer'); 
+    recordingStatus = document.getElementById('recordingStatus'); 
+    recordingSaveContainer = document.getElementById('recordingSaveContainer'); 
+    audioPreview = document.getElementById('audioPreview'); 
+    recordingTitleInput = document.getElementById('recordingTitle'); 
+    saveRecordingBtn = document.getElementById('saveRecordingBtn'); 
+    alarmModal = document.getElementById('alarmModal'); 
+    modalAlarmTime = document.getElementById('modalAlarmTime'); 
+    modalAlarmLabel = document.getElementById('modalAlarmLabel'); 
+    modalAudioTitle = document.getElementById('modalAudioTitle'); 
+    dismissBtn = document.getElementById('dismissBtn'); 
+    snoozeBtn = document.getElementById('snoozeBtn'); 
 
-    function triggerAlarm(alarm) {
-      if (modalAlarmTime) modalAlarmTime.textContent = new Date(alarm.time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-      if (modalAlarmLabel) modalAlarmLabel.textContent = alarm.label;
-      if (modalAudioTitle) modalAudioTitle.textContent = `"${alarm.speech || 'Scheduled Alarm'}"`;
-      if (alarmModal) alarmModal.classList.remove('hidden');
+    await initDB(); 
+    await refreshSavedRecordingsList(); 
 
-      if (alarm.audioType === 'custom-speech' && alarm.speech) {
-        speakText(alarm.speech);
-      } else if (alarm.audioType) {
-        playSound(alarm.audioType);
-      }
-    }
+    if (customSpeechText) customSpeechText.value = templates[1]; 
+    if(alarmTimeInput) { const defaultTime = new Date(Date.now() + 15 * 60000); alarmTimeInput.value = formatForDateTimeInput(defaultTime); } 
+    if (voiceSelectDropdown) { voiceSelectDropdown.addEventListener('change', (e) => { selectedVoice = allSystemVoices.find(v => v.name === e.target.value); }); } 
+    if ('speechSynthesis' in window) { window.speechSynthesis.onvoiceschanged = loadAndFilterVoices; loadAndFilterVoices(); } 
 
-    function setupRecorder() {
-      if (!recordBtn) return;
-      recordBtn.addEventListener('click', async () => {
-        try {
-          const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-          mediaRecorder = new MediaRecorder(stream);
-          audioChunks = [];
-          mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
-          mediaRecorder.onstop = () => {
-            currentRecordedBlob = new Blob(audioChunks, { type: 'audio/webm' });
-            if (audioPreview) audioPreview.src = URL.createObjectURL(currentRecordedBlob);
-            if (recordingSaveContainer) recordingSaveContainer.classList.remove('hidden');
-          };
-          mediaRecorder.start();
-          if (recordBtn) recordBtn.disabled = true;
-          if (stopRecordBtn) stopRecordBtn.disabled = false;
-          recordSeconds = 0;
-          recordInterval = setInterval(() => {
-            recordSeconds++;
-            const mins = String(Math.floor(recordSeconds / 60)).padStart(2, '0');
-            const secs = String(recordSeconds % 60).padStart(2, '0');
-            if (recordTimer) recordTimer.textContent = `${mins}:${secs}`;
-          }, 1000);
-        } catch(e) {
-          alert("Microphone access denied or not supported.");
-        }
-      });
+    if (recordBtn) { 
+        recordBtn.addEventListener('click', async () => { 
+            try { 
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true }); 
+                mediaRecorder = new MediaRecorder(stream); 
+                audioChunks = []; 
+                mediaRecorder.ondataavailable = e => audioChunks.push(e.data); 
+                mediaRecorder.onstop = () => { 
+                    currentRecordedBlob = new Blob(audioChunks, { type: 'audio/webm' }); 
+                    audioPreview.src = URL.createObjectURL(currentRecordedBlob); 
+                    recordingSaveContainer.classList.remove('hidden'); 
+                }; 
+                mediaRecorder.start(); 
+                recordSeconds = 0; 
+                recordTimer.textContent = '00:00'; 
+                recordInterval = setInterval(() => { 
+                    recordSeconds++; 
+                    const m = String(Math.floor(recordSeconds / 60)).padStart(2, '0'); 
+                    const s = String(recordSeconds % 60).padStart(2, '0'); 
+                    recordTimer.textContent = `${m}:${s}`; 
+                }, 1000); 
+                recordBtn.disabled = true; 
+                recordBtn.classList.add('opacity-50'); 
+                stopRecordBtn.disabled = false; 
+                stopRecordBtn.classList.remove('text-slate-500', 'cursor-not-allowed'); 
+                stopRecordBtn.classList.add('bg-slate-700', 'text-slate-100', 'hover:bg-slate-600'); 
+                recordingStatus.textContent = 'Recording in progress...'; 
+            } catch (err) { 
+                alert('Microphone access denied or unverified in browser settings.'); 
+            } 
+        }); 
+    } 
 
-      if (stopRecordBtn) {
-        stopRecordBtn.addEventListener('click', () => {
-          if (mediaRecorder && mediaRecorder.state !== 'inactive') {
-            mediaRecorder.stop();
-            clearInterval(recordInterval);
-            if (recordBtn) recordBtn.disabled = false;
-            if (stopRecordBtn) stopRecordBtn.disabled = true;
-          }
-        });
-      }
-    }
+    if (stopRecordBtn) { 
+        stopRecordBtn.addEventListener('click', () => { 
+            if (mediaRecorder && mediaRecorder.state !== 'inactive') { 
+                mediaRecorder.stop(); 
+                mediaRecorder.stream.getTracks().forEach(t => t.stop()); 
+                clearInterval(recordInterval); 
+                recordBtn.disabled = false; 
+                recordBtn.classList.remove('opacity-50'); 
+                stopRecordBtn.disabled = true; 
+                stopRecordBtn.classList.add('text-slate-500', 'cursor-not-allowed'); 
+                recordingStatus.textContent = 'Recording complete. Preview and save below.'; 
+            } 
+        }); 
+    } 
 
-    function renderCustomAudioOptions() {
-      if (!recordingsOptGroup) return;
-      recordingsOptGroup.innerHTML = '';
-      if (customAudioList.length === 0) {
-        const opt = document.createElement('option');
-        opt.disabled = true;
-        opt.textContent = '(No saved voice recordings yet)';
-        recordingsOptGroup.appendChild(opt);
-      } else {
-        customAudioList.forEach(item => {
-          const opt = document.createElement('option');
-          opt.value = item.id;
-          opt.textContent = `🎙️ ${item.title}`;
-          recordingsOptGroup.appendChild(opt);
-        });
-      }
-    }
+    if (saveRecordingBtn) { 
+        saveRecordingBtn.addEventListener('click', async () => { 
+            const title = recordingTitleInput.value.trim() || `Voice Directive ${customAudioList.length + 1}`; 
+            if (currentRecordedBlob) { 
+                await saveRecordingToDB(title, currentRecordedBlob); 
+                await refreshSavedRecordingsList(); 
+                recordingSaveContainer.classList.add('hidden'); 
+                recordingTitleInput.value = ''; 
+                recordingStatus.textContent = 'Recording saved to library!'; 
+            } 
+        }); 
+    } 
 
-    function renderSavedRecordingsList() {
-      if (!savedRecordingsList) return;
-      savedRecordingsList.innerHTML = '';
-      if (customAudioList.length === 0) {
-        savedRecordingsList.innerHTML = `
-          <div class="text-center py-6 text-slate-500 border border-dashed border-slate-800 rounded-xl text-xs">
-            No recordings saved yet.
-          </div>`;
-      }
-    }
+    if (alarmForm) { 
+        alarmForm.addEventListener('submit', (e) => { 
+            e.preventDefault(); 
+            const timeVal = alarmTimeInput.value; 
+            const labelVal = document.getElementById('alarmLabel').value || 'Executive Reminder'; 
+            const audioType = audioSourceTypeSelect.value; 
+            const speechVal = customSpeechText ? customSpeechText.value : ''; 
+            if (!timeVal) return; 
+            alarms.push({ time: timeVal, label: labelVal, audioType: audioType, speech: speechVal, triggered: false }); 
+            localStorage.setItem('mindset_alarms', JSON.stringify(alarms)); 
+            renderAlarms(); 
+            alarmForm.reset(); 
+            const defaultTime = new Date(Date.now() + 15 * 60000); 
+            alarmTimeInput.value = formatForDateTimeInput(defaultTime); 
+        }); 
+    } 
 
-    async function init() {
-      liveClockEl = document.getElementById('liveClock');
-      alarmForm = document.getElementById('alarmForm');
-      alarmTimeInput = document.getElementById('alarmTime');
-      alarmListEl = document.getElementById('alarmList');
-      alarmCountBadge = document.getElementById('alarmCountBadge');
-      audioSourceTypeSelect = document.getElementById('audioSourceType');
-      recordingsOptGroup = document.getElementById('recordingsOptGroup');
-      savedRecordingsList = document.getElementById('savedRecordingsList');
-      voiceSelectDropdown = document.getElementById('voiceSelectDropdown');
-      customSpeechText = document.getElementById('customSpeechText');
-      customSpeechContainer = document.getElementById('customSpeechContainer');
+    if(dismissBtn) { dismissBtn.addEventListener('click', () => { if (alarmModal) alarmModal.classList.add('hidden'); stopSound(); if ('speechSynthesis' in window) window.speechSynthesis.cancel(); }); } 
+    if (snoozeBtn) { snoozeBtn.addEventListener('click', () => { if (alarmModal) alarmModal.classList.add('hidden'); stopSound(); if('speechSynthesis' in window) window.speechSynthesis.cancel(); const snoozeTime = new Date(Date.now() + 5 * 60000); alarms.push({ time: formatForDateTimeInput(snoozeTime), label: 'Snoozed Directive', audioType: 'custom-speech', speech: 'Snooze period completed. Take immediate action.' }); renderAlarms(); }); }
 
-      tabFemale = document.getElementById('tabFemale');
-      tabMale = document.getElementById('tabMale');
-      tabNature = document.getElementById('tabNature');
-      voiceDropdownContainer = document.getElementById('voiceDropdownContainer');
-      natureSoundsContainer = document.getElementById('natureSoundsContainer');
+    setInterval(updateClock, 1000); 
+    setInterval(checkAlarms, 1000); 
+    updateClock(); 
+    renderAlarms(); 
 
-      recordBtn = document.getElementById('recordBtn');
-      stopRecordBtn = document.getElementById('stopRecordBtn');
-      recordTimer = document.getElementById('recordTimer');
-      recordingStatus = document.getElementById('recordingStatus');
-      recordingSaveContainer = document.getElementById('recordingSaveContainer');
-      audioPreview = document.getElementById('audioPreview');
-      recordingTitleInput = document.getElementById('recordingTitle');
-      saveRecordingBtn = document.getElementById('saveRecordingBtn');
+    trackVisitor();
+} 
 
-      alarmModal = document.getElementById('alarmModal');
-      modalAlarmTime = document.getElementById('modalAlarmTime');
-      modalAlarmLabel = document.getElementById('modalAlarmLabel');
-      modalAudioTitle = document.getElementById('modalAudioTitle');
-      dismissBtn = document.getElementById('dismissBtn');
-      snoozeBtn = document.getElementById('snoozeBtn');
-
-      if (customSpeechText) customSpeechText.value = templates[1];
-
-      if (alarmTimeInput) {
-        const defaultTime = new Date(Date.now() + 15 * 60000);
-        alarmTimeInput.value = formatForDateTimeInput(defaultTime);
-      }
-
-      if (voiceSelectDropdown) {
-        voiceSelectDropdown.addEventListener('change', (e) => {
-          selectedVoice = allSystemVoices.find(v => v.name === e.target.value);
-        });
-      }
-
-      if ('speechSynthesis' in window) {
-        window.speechSynthesis.onvoiceschanged = loadAndFilterVoices;
-        loadAndFilterVoices();
-      }
-
-      if (audioSourceTypeSelect) {
-        audioSourceTypeSelect.addEventListener('change', (e) => {
-          if (e.target.value === 'custom-speech') {
-            if (customSpeechContainer) customSpeechContainer.classList.remove('hidden');
-          } else {
-            if (customSpeechContainer) customSpeechContainer.classList.add('hidden');
-          }
-        });
-      }
-
-      if (alarmForm) {
-        alarmForm.addEventListener('submit', (e) => {
-          e.preventDefault();
-          const timeVal = alarmTimeInput.value;
-          const labelVal = document.getElementById('alarmLabel').value || 'Executive Reminder';
-          const audioType = audioSourceTypeSelect.value;
-          const speechVal = customSpeechText ? customSpeechText.value : '';
-
-          if (!timeVal) return;
-
-          alarms.push({
-            time: timeVal,
-            label: labelVal,
-            audioType: audioType,
-            speech: speechVal,
-            triggered: false
-          });
-
-          localStorage.setItem('mindset_alarms', JSON.stringify(alarms));
-          renderAlarms();
-          alarmForm.reset();
-          const defaultTime = new Date(Date.now() + 15 * 60000);
-          alarmTimeInput.value = formatForDateTimeInput(defaultTime);
-        });
-      }
-
-      if (dismissBtn) {
-        dismissBtn.addEventListener('click', () => {
-          if (alarmModal) alarmModal.classList.add('hidden');
-          stopSound();
-          if ('speechSynthesis' in window) window.speechSynthesis.cancel();
-        });
-      }
-
-      if (snoozeBtn) {
-        snoozeBtn.addEventListener('click', () => {
-          if (alarmModal) alarmModal.classList.add('hidden');
-          stopSound();
-          if ('speechSynthesis' in window) window.speechSynthesis.cancel();
-          const snoozeTime = new Date(Date.now() + 5 * 60000);
-          alarms.push({
-            time: formatForDateTimeInput(snoozeTime),
-            label: 'Snoozed Directive',
-            audioType: 'custom-speech',
-            speech: 'Snooze period completed. Time to take action.',
-            triggered: false
-          });
-          localStorage.setItem('mindset_alarms', JSON.stringify(alarms));
-          renderAlarms();
-        });
-      }
-
-      updateClock();
-      setInterval(updateClock, 1000);
-
-      try {
-        await initDB();
-        await loadRecordingsFromDB();
-      } catch(e) {
-        console.error("Database initialization failed:", e);
-      }
-
-      renderAlarms();
-      setupRecorder();
-      setInterval(checkAlarms, 1000);
-    }
-
-    document.addEventListener('DOMContentLoaded', init);
-  </script>
-</body>
+window.addEventListener('DOMContentLoaded', init);
+</script> 
+</body> 
 </html>

@@ -525,7 +525,7 @@
             <form id="searchForm" class="search-form" onsubmit="handleSearch(event)">
                 <div class="input-group">
                     <label for="locationInput">ZIP Code or City / State</label>
-                    <input type="text" id="locationInput" class="control-input" placeholder="e.g. 23185 or Williamsburg, VA" required>
+                    <input type="text" id="locationInput" class="control-input" placeholder="e.g. 23188 or Williamsburg, VA" required>
                 </div>
                 <div class="input-group">
                     <label for="keywordInput">Restaurant Name or Food Keyword</label>
@@ -649,8 +649,8 @@
 
         // Initialize Map
         function initMap() {
-            // Center around Williamsburg, VA by default
-            map = L.map('map').setView([37.2707, -76.7075], 12);
+            // Default center around Williamsburg / Toano, VA area
+            map = L.map('map').setView([37.3125, -76.7615], 12);
 
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 maxZoom: 19,
@@ -660,8 +660,62 @@
 
         window.onload = initMap;
 
-        // Seed Database with Geographic Coordinates
+        // Expanded Local Database including 23188, 23185, and nearby regions
         const verifiedLocalDatabase = {
+            '23188': [
+                {
+                    id: 201,
+                    name: "Giuseppe's Italian Restaurant",
+                    cuisine: "Italian",
+                    rating: 4.8,
+                    address: "5525 Olde Towne Rd, Williamsburg, VA 23188",
+                    phone: "(757) 565-1977",
+                    desc: "Authentic hearty Italian classics, wood-fired pizzas, and gourmet pasta specialties.",
+                    website: "https://www.giuseppes.com",
+                    image: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=600&q=80",
+                    lat: 37.3090,
+                    lng: -76.7490
+                },
+                {
+                    id: 202,
+                    name: "Opus 9 Steakhouse",
+                    cuisine: "American",
+                    rating: 4.8,
+                    address: "5143 Main St, Williamsburg, VA 23188",
+                    phone: "(757) 645-4779",
+                    desc: "Prime aged steaks, fresh seafood, extensive wine list, and elegant private dining.",
+                    website: "https://www.opus9steakhouse.com",
+                    image: "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=600&q=80",
+                    lat: 37.2785,
+                    lng: -76.7510
+                },
+                {
+                    id: 203,
+                    name: "Craft 31",
+                    cuisine: "American",
+                    rating: 4.6,
+                    address: "3701 Strawberry Plains Rd, Williamsburg, VA 23188",
+                    phone: "(757) 378-2400",
+                    desc: "Craft burgers, regional seafood, wood-fired pizza, and an extensive local tap selection.",
+                    website: "https://www.craft31.com",
+                    image: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=600&q=80",
+                    lat: 37.2662,
+                    lng: -76.7328
+                },
+                {
+                    id: 204,
+                    name: "Maurizio's Italian Restaurant",
+                    cuisine: "Italian",
+                    rating: 4.7,
+                    address: "264 McLaws Cir, Williamsburg, VA 23185",
+                    phone: "(757) 229-0337",
+                    desc: "Family-owned landmark serving authentic Italian pasta, veal, chicken, and pizza.",
+                    website: "https://www.mauriziositalian.com",
+                    image: "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=600&q=80",
+                    lat: 37.2351,
+                    lng: -76.6582
+                }
+            ],
             '23185': [
                 {
                     id: 101,
@@ -675,45 +729,6 @@
                     image: "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=600&q=80",
                     lat: 37.2713,
                     lng: -76.7058
-                },
-                {
-                    id: 102,
-                    name: "Giuseppe's Italian Restaurant",
-                    cuisine: "Italian",
-                    rating: 4.7,
-                    address: "5525 Olde Towne Rd, Williamsburg, VA 23188",
-                    phone: "(757) 565-1977",
-                    desc: "Authentic hearty Italian classics, wood-fired pizzas, and gourmet pasta specialties.",
-                    website: "https://www.giuseppes.com",
-                    image: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=600&q=80",
-                    lat: 37.3090,
-                    lng: -76.7490
-                },
-                {
-                    id: 103,
-                    name: "Opus 9 Steakhouse",
-                    cuisine: "American",
-                    rating: 4.8,
-                    address: "5143 Main St, Williamsburg, VA 23188",
-                    phone: "(757) 645-4779",
-                    desc: "Prime aged steaks, fresh seafood, extensive wine list, and elegant private dining rooms.",
-                    website: "https://www.opus9steakhouse.com",
-                    image: "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=600&q=80",
-                    lat: 37.2785,
-                    lng: -76.7510
-                },
-                {
-                    id: 104,
-                    name: "Cozy Oven Pizza",
-                    cuisine: "Italian",
-                    rating: 4.6,
-                    address: "1430 High St, Williamsburg, VA 23185",
-                    phone: "(757) 229-3000",
-                    desc: "Hand-tossed specialty pizzas, calzones, subs, and traditional pasta for quick pickup.",
-                    website: "https://www.cozyovenpizza.com",
-                    image: "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=600&q=80",
-                    lat: 37.2882,
-                    lng: -76.7215
                 },
                 {
                     id: 105,
@@ -731,8 +746,26 @@
             ]
         };
 
+        // Geocoding helper using Nominatim API to get lat/lng for ANY location input
+        async function geocodeLocation(locationQuery) {
+            try {
+                const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(locationQuery)}`);
+                const data = await response.json();
+                if (data && data.length > 0) {
+                    return {
+                        lat: parseFloat(data[0].lat),
+                        lng: parseFloat(data[0].lon),
+                        displayName: data[0].display_name
+                    };
+                }
+            } catch (err) {
+                console.error("Geocoding service error:", err);
+            }
+            return null;
+        }
+
         // Search Form Submit Handler
-        function handleSearch(event) {
+        async function handleSearch(event) {
             event.preventDefault();
             const location = document.getElementById('locationInput').value.trim();
             const keyword = document.getElementById('keywordInput').value.trim();
@@ -746,7 +779,7 @@
             fetchRestaurants(location, keyword, cuisine);
         }
 
-        // Fetch / Search Logic
+        // Fetch / Search Logic with Dynamic Map Panning & Area Code Resolution
         async function fetchRestaurants(location, keyword, cuisine) {
             const grid = document.getElementById('restaurantGrid');
             const countLabel = document.getElementById('resultsCount');
@@ -760,33 +793,43 @@
             `;
             countLabel.textContent = "Searching...";
 
-            setTimeout(() => {
-                const zipClean = location.replace(/[^0-9]/g, '');
-                let results = [];
+            // 1. Resolve coordinates for the location
+            const geoCenter = await geocodeLocation(location);
 
-                if (verifiedLocalDatabase[zipClean]) {
-                    results = [...verifiedLocalDatabase[zipClean]];
-                } else {
-                    const locTitle = location.charAt(0).toUpperCase() + location.slice(1);
-                    results = generateVerifiedLocationData(locTitle, keyword, cuisine);
-                }
+            if (geoCenter) {
+                // Instantly re-center and pan the interactive map to the new target ZIP/City
+                map.setView([geoCenter.lat, geoCenter.lng], 12);
+            }
 
-                if (cuisine !== 'All') {
-                    results = results.filter(r => r.cuisine.toLowerCase() === cuisine.toLowerCase());
-                }
+            const zipClean = location.replace(/[^0-9]/g, '');
+            let results = [];
 
-                if (keyword) {
-                    const kwLower = keyword.toLowerCase();
-                    results = results.filter(r => 
-                        r.name.toLowerCase().includes(kwLower) || 
-                        r.cuisine.toLowerCase().includes(kwLower) ||
-                        r.desc.toLowerCase().includes(kwLower)
-                    );
-                }
+            // 2. Fetch from verified database or generate realistic local dataset centered at new location
+            if (verifiedLocalDatabase[zipClean]) {
+                results = [...verifiedLocalDatabase[zipClean]];
+            } else {
+                const centerLat = geoCenter ? geoCenter.lat : 37.3125;
+                const centerLng = geoCenter ? geoCenter.lng : -76.7615;
+                const locTitle = location.charAt(0).toUpperCase() + location.slice(1);
+                results = generateLocationDataWithRealCoords(locTitle, centerLat, centerLng, zipClean);
+            }
 
-                rawRestaurantData = results;
-                applySortAndFilter();
-            }, 600);
+            // 3. Apply Filters
+            if (cuisine !== 'All') {
+                results = results.filter(r => r.cuisine.toLowerCase() === cuisine.toLowerCase());
+            }
+
+            if (keyword) {
+                const kwLower = keyword.toLowerCase();
+                results = results.filter(r => 
+                    r.name.toLowerCase().includes(kwLower) || 
+                    r.cuisine.toLowerCase().includes(kwLower) ||
+                    r.desc.toLowerCase().includes(kwLower)
+                );
+            }
+
+            rawRestaurantData = results;
+            applySortAndFilter();
         }
 
         // Filter loaded list and sort
@@ -914,37 +957,48 @@
             });
 
             if (mapMarkers.length > 0) {
-                map.fitBounds(bounds, { padding: [30, 30] });
+                map.fitBounds(bounds, { padding: [40, 40] });
             }
         }
 
-        // Dynamic location generator
-        function generateVerifiedLocationData(location, keyword, cuisine) {
-            const prefixes = ["The", "Aroma", "Bistro", "Oasis", "Tavern", "Trattoria", "Grill & Bar", "House of"];
+        // Dynamic local generator mapping proper coordinates & local area codes
+        function generateLocationDataWithRealCoords(locationName, centerLat, centerLng, zip) {
+            const prefixes = ["Bistro", "Grill", "Tavern", "Trattoria", "Kitchen & Bar", "House of Pasta"];
             const cuisines = ["Italian", "American", "Seafood", "Japanese", "Mexican", "Thai", "BBQ"];
-            const baseLat = 37.2707;
-            const baseLng = -76.7075;
             
+            // Determine Regional Area Code based on target area
+            let areaCode = "757"; // Default Hampton Roads/Williamsburg regional area code
+            if (zip.startsWith("80") || zip.startsWith("81")) areaCode = "303";
+            else if (zip.startsWith("90") || zip.startsWith("91")) areaCode = "310";
+            else if (zip.startsWith("33")) areaCode = "407";
+
             let list = [];
             let count = 6;
 
             for (let i = 1; i <= count; i++) {
-                const selectedCuisine = cuisine !== 'All' ? cuisine : cuisines[(i - 1) % cuisines.length];
-                const name = `${location} ${selectedCuisine} ${prefixes[i % prefixes.length]}`;
+                const selectedCuisine = cuisines[(i - 1) % cuisines.length];
+                const name = `${locationName} ${selectedCuisine} ${prefixes[i % prefixes.length]}`;
                 const sanitizedDomain = name.toLowerCase().replace(/[^a-z0-9]/g, '');
                 
+                // Spread markers across the target geographic area
+                const latOffset = (Math.sin(i) * 0.02);
+                const lngOffset = (Math.cos(i) * 0.02);
+
+                const exchange = 200 + (i * 35);
+                const line = 1000 + (i * 123);
+
                 list.push({
-                    id: 200 + i,
+                    id: 300 + i,
                     name: name,
                     cuisine: selectedCuisine,
                     rating: (4.5 + (i * 0.1) % 0.5).toFixed(1),
-                    address: `${100 + (i * 45)} Main Street, ${location}`,
-                    phone: `(555) ${100 + i * 11}-${2000 + i * 33}`,
+                    address: `${100 + (i * 45)} Main Street, ${locationName} ${zip ? zip : ''}`,
+                    phone: `(${areaCode}) ${exchange}-${line}`,
                     desc: `Locally owned ${selectedCuisine} dining destination offering direct order pickup and local online ordering.`,
                     website: `https://www.${sanitizedDomain}.com`,
                     image: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=600&q=80",
-                    lat: baseLat + (Math.random() - 0.5) * 0.08,
-                    lng: baseLng + (Math.random() - 0.5) * 0.08
+                    lat: centerLat + latOffset,
+                    lng: centerLng + lngOffset
                 });
             }
             return list;

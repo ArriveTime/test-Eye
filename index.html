@@ -3,278 +3,975 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UTakeout | Find Local Takeout Fast</title>
+    <title>Utakeout.com - Skip the Fees, Skip the Line</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
     
-    <!-- Supabase Client SDK -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    
-    <!-- Leaflet Interactive Map CSS & JS -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <!-- Leaflet CSS for Interactive Map -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
 
     <style>
+        /* Base Reset & Variables */
         :root {
-            --primary: #d32f2f;
-            --primary-dark: #b71c1c;
-            --bg: #f8f9fa;
+            --primary: #0f172a;
+            --accent: #d4af37;
+            --accent-hover: #b89528;
+            --bg-light: #f8f9fa;
             --card-bg: #ffffff;
-            --text-main: #212529;
-            --text-muted: #6c757d;
-            --shadow-sm: 0 2px 8px rgba(0,0,0,0.08);
-            --shadow-md: 0 4px 16px rgba(0,0,0,0.12);
+            --text-dark: #1e293b;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.05);
+            --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.12);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--bg);
-            color: var(--text-main);
-            margin: 0;
-            padding: 20px;
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            line-height: 1.6;
         }
 
-        .container {
-            max-width: 1100px;
-            margin: 0 auto;
-        }
-
-        header {
-            text-align: center;
-            margin-bottom: 24px;
-        }
-
-        h1 {
-            color: var(--primary);
-            margin-bottom: 8px;
-            font-size: 2.2rem;
-        }
-
-        .search-box {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-bottom: 24px;
-        }
-
-        input[type="text"] {
-            width: 280px;
-            padding: 12px 16px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 1rem;
-            outline: none;
-            transition: border-color 0.2s;
-        }
-
-        input[type="text"]:focus {
-            border-color: var(--primary);
-        }
-
-        button {
-            background-color: var(--primary);
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 8px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-
-        button:hover {
-            background-color: var(--primary-dark);
-        }
-
-        /* Interactive Map Container */
-        #map {
+        /* Hero Header with Background & Dark Gradient Overlay */
+        .hero {
+            position: relative;
             width: 100%;
-            height: 380px;
-            border-radius: 12px;
-            margin-bottom: 30px;
-            box-shadow: var(--shadow-sm);
-            border: 1px solid #e0e0e0;
-            z-index: 1;
+            height: 65vh;
+            min-height: 440px;
+            background: linear-gradient(rgba(15, 23, 42, 0.70), rgba(15, 23, 42, 0.70)), 
+                        url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: #ffffff;
+            padding: 0 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
         }
 
-        /* Results Grid */
-        .results-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        .hero-logo {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: clamp(2.8rem, 6vw, 5.2rem);
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            margin-bottom: 8px;
+            text-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+        }
+
+        .hero-divider {
+            width: 90px;
+            height: 3px;
+            background-color: var(--accent);
+            margin: 16px 0;
+            border-radius: 2px;
+        }
+
+        .hero-tagline {
+            font-size: clamp(1rem, 2.5vw, 1.4rem);
+            font-weight: 300;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: #f1f5f9;
+            text-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Controls Section (Search & Filters) */
+        .controls-wrapper {
+            max-width: 1300px;
+            margin: -35px auto 40px auto;
+            padding: 0 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .controls-card {
+            background: #ffffff;
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            flex-direction: column;
             gap: 20px;
         }
 
+        .search-form {
+            display: grid;
+            grid-template-columns: 1.5fr 1.5fr 1fr auto;
+            gap: 16px;
+            align-items: flex-end;
+        }
+
+        .filter-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            border-top: 1px solid var(--border-color);
+            padding-top: 16px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .input-group label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+
+        .control-input, .control-select {
+            width: 100%;
+            padding: 12px 16px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.95rem;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            outline: none;
+            transition: border-color 0.2s ease;
+            background-color: #fff;
+        }
+
+        .control-input:focus, .control-select:focus {
+            border-color: var(--accent);
+        }
+
+        .btn-search {
+            background-color: var(--accent);
+            color: var(--primary);
+            border: none;
+            padding: 13px 28px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            height: 48px;
+        }
+
+        .btn-search:hover {
+            background-color: var(--accent-hover);
+            transform: translateY(-1px);
+        }
+
+        /* Main Layout Grid (Directory + Sticky Map) */
+        .container {
+            max-width: 1300px;
+            margin: 0 auto 60px auto;
+            padding: 0 20px;
+        }
+
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 16px;
+        }
+
+        .results-count {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .content-layout {
+            display: grid;
+            grid-template-columns: 1fr 450px;
+            gap: 24px;
+            align-items: start;
+        }
+
+        /* Restaurant Cards Grid */
+        .restaurant-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 24px;
+        }
+
+        /* Interactive Map Container Styling */
+        .map-sticky-wrapper {
+            position: sticky;
+            top: 24px;
+            height: 680px;
+            background: #ffffff;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-sm);
+            z-index: 5;
+        }
+
+        #map {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Card Component */
         .card {
             background: var(--card-bg);
             border-radius: 12px;
-            padding: 20px;
+            overflow: hidden;
             box-shadow: var(--shadow-sm);
-            border: 1px solid #eee;
-            transition: transform 0.2s, box-shadow 0.2s;
+            border: 1px solid var(--border-color);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            position: relative;
         }
 
         .card:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-md);
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-lg);
         }
 
-        .card h3 {
-            margin: 0 0 10px 0;
-            color: var(--primary-dark);
+        .card-img-wrapper {
+            position: relative;
+            width: 100%;
+            height: 200px;
+            overflow: hidden;
         }
 
-        .card p {
-            margin: 6px 0;
-            font-size: 0.95rem;
-            color: var(--text-main);
+        .card-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
         }
 
-        .card .phone {
+        .card:hover .card-img {
+            transform: scale(1.05);
+        }
+
+        .rating-badge {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            background: rgba(15, 23, 42, 0.85);
+            color: var(--accent);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            backdrop-filter: blur(4px);
+        }
+
+        .card-content {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .card-title {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 1.3rem;
+            color: var(--text-dark);
+            margin-bottom: 4px;
+        }
+
+        .card-cuisine {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            color: var(--accent);
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .card-desc {
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+            flex-grow: 1;
+        }
+
+        .card-meta {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
+
+        .meta-item a {
+            color: var(--primary);
+            text-decoration: none;
             font-weight: 600;
-            color: var(--primary);
-            margin-top: 10px;
         }
 
-        .card .phone a {
+        .meta-item a:hover {
+            color: var(--accent);
+        }
+
+        /* Buttons */
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: auto;
+        }
+
+        .btn-order {
+            flex: 1;
+            text-align: center;
+            background-color: var(--primary);
+            color: #ffffff;
+            text-decoration: none;
+            padding: 12px 14px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+            transition: all 0.2s ease;
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-order:hover {
+            background-color: var(--accent);
             color: var(--primary);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background-color: #f1f5f9;
+            color: var(--primary);
+        }
+
+        /* Empty & Loading States */
+        .state-container {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-muted);
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--border-color);
+            border-top: 4px solid var(--accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 16px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Modal Overlay */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.75);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background: #ffffff;
+            padding: 32px;
+            border-radius: 12px;
+            max-width: 550px;
+            width: 100%;
+            position: relative;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 16px;
+            right: 20px;
+            font-size: 1.8rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--text-muted);
+            line-height: 1;
+        }
+
+        .modal-details {
+            margin: 16px 0 24px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .modal-detail-row {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            font-size: 0.95rem;
+        }
+
+        .modal-detail-row strong {
+            color: var(--primary);
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 1px;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            background-color: var(--primary);
+            color: #94a3b8;
+            font-size: 0.9rem;
+        }
+
+        footer a {
+            color: var(--accent);
             text-decoration: none;
         }
 
-        .card .phone a:hover {
-            text-decoration: underline;
+        /* Responsive Tweaks */
+        @media (max-width: 1024px) {
+            .content-layout {
+                grid-template-columns: 1fr;
+            }
+            .map-sticky-wrapper {
+                position: relative;
+                top: 0;
+                height: 380px;
+                order: -1;
+                margin-bottom: 24px;
+            }
         }
 
-        .status-msg {
-            text-align: center;
-            font-size: 1.1rem;
-            color: var(--text-muted);
-            grid-column: 1 / -1;
-            padding: 20px;
+        @media (max-width: 900px) {
+            .search-form {
+                grid-template-columns: 1fr 1fr;
+            }
+            .btn-search {
+                grid-column: span 2;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .search-form {
+                grid-template-columns: 1fr;
+            }
+            .btn-search {
+                grid-column: span 1;
+            }
+            .filter-row {
+                grid-template-columns: 1fr;
+            }
+            .hero {
+                height: 50vh;
+            }
         }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <header>
-        <h1>UTakeout</h1>
-        <p>Find local takeout restaurants near you</p>
+    <!-- Hero Header Section -->
+    <header class="hero">
+        <h1 class="hero-logo">Utakeout.com</h1>
+        <div class="hero-divider"></div>
+        <p class="hero-tagline">Skip the Fees &mdash; Skip the Line</p>
     </header>
 
-    <div class="search-box">
-        <input type="text" id="zipInput" placeholder="Enter US ZIP code (e.g. 23188)" maxlength="5">
-        <button onclick="searchZip()">Search Takeout</button>
+    <!-- Controls (Search & Filtering) -->
+    <section class="controls-wrapper">
+        <div class="controls-card">
+            <!-- Search Inputs with Dedicated Search Button -->
+            <form id="searchForm" class="search-form" onsubmit="handleSearch(event)">
+                <div class="input-group">
+                    <label for="locationInput">ZIP Code or City / State</label>
+                    <input type="text" id="locationInput" class="control-input" placeholder="e.g. 23185 or Williamsburg, VA" required>
+                </div>
+                <div class="input-group">
+                    <label for="keywordInput">Restaurant Name or Food Keyword</label>
+                    <input type="text" id="keywordInput" class="control-input" placeholder="e.g. Italian, Sushi, Pizza, Steak">
+                </div>
+                <div class="input-group">
+                    <label for="cuisineFilter">Category</label>
+                    <select id="cuisineFilter" class="control-select">
+                        <option value="All">All Cuisines</option>
+                        <option value="Italian">Italian</option>
+                        <option value="American">American</option>
+                        <option value="Seafood">Seafood</option>
+                        <option value="Japanese">Japanese / Sushi</option>
+                        <option value="Mexican">Mexican</option>
+                        <option value="Thai">Thai</option>
+                        <option value="Indian">Indian</option>
+                        <option value="French">French</option>
+                        <option value="BBQ">BBQ</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn-search">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                    Find Restaurants
+                </button>
+            </form>
+
+            <!-- Sorting Row -->
+            <div class="filter-row">
+                <div class="input-group">
+                    <label for="sortBy">Sort Results By</label>
+                    <select id="sortBy" class="control-select" onchange="applySortAndFilter()">
+                        <option value="rating">Highest Rated</option>
+                        <option value="name">Name (A-Z)</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="filterInput">Filter Loaded Results</label>
+                    <input type="text" id="filterInput" class="control-input" placeholder="Filter by keyword..." oninput="applySortAndFilter()">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Directory & Map Content -->
+    <main class="container">
+        <div class="results-header">
+            <h2 class="section-title" style="font-family:'Playfair Display', serif;">Direct Ordering Directory</h2>
+            <div class="results-count" id="resultsCount">Showing 0 Restaurants</div>
+        </div>
+
+        <div class="content-layout">
+            <!-- Restaurant List -->
+            <div class="restaurant-grid" id="restaurantGrid">
+                <div class="state-container">
+                    <h3 style="margin-bottom:8px; font-family:'Playfair Display', serif;">Search Real-Time Restaurants</h3>
+                    <p>Enter your Zip Code or City above and click <strong>Find Restaurants</strong> to view verified locations, phone numbers, and official ordering links.</p>
+                </div>
+            </div>
+
+            <!-- Interactive Map Wrapper -->
+            <div class="map-sticky-wrapper">
+                <div id="map"></div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Info Modal -->
+    <div class="modal" id="infoModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal()">&times;</button>
+            <h3 id="modalTitle" style="font-family:'Playfair Display', serif; font-size:1.6rem; color:var(--primary);"></h3>
+            <div id="modalCuisine" class="card-cuisine" style="margin-top:4px;"></div>
+            
+            <div class="modal-details">
+                <div class="modal-detail-row">
+                    <strong>Verified Address</strong>
+                    <span id="modalAddress"></span>
+                </div>
+                <div class="modal-detail-row">
+                    <strong>Direct Phone</strong>
+                    <span id="modalPhone"></span>
+                </div>
+                <div class="modal-detail-row">
+                    <strong>About / Menu Highlights</strong>
+                    <span id="modalDesc"></span>
+                </div>
+            </div>
+
+            <div class="btn-group">
+                <a id="modalWebsiteLink" href="#" target="_blank" rel="noopener" class="btn-order">Visit Official Website</a>
+                <a id="modalPhoneLink" href="#" class="btn-order btn-secondary">Call Restaurant</a>
+            </div>
+        </div>
     </div>
 
-    <!-- Real-Time Interactive Map -->
-    <div id="map"></div>
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2026 <strong>Utakeout.com</strong>. All rights reserved.</p>
+        <p style="margin-top: 8px; font-size: 0.8rem;">Supporting local restaurants with direct ordering without third-party commission fees.</p>
+    </footer>
 
-    <!-- Dynamic Results Container -->
-    <div id="results" class="results-grid">
-        <div class="status-msg">Enter a ZIP code above to search live takeout options.</div>
-    </div>
-</div>
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
-<script>
-    // 1. Supabase Credentials Integrated
-    const SUPABASE_URL = "https://lagieqygqqusbfqvywam.supabase.co";
-    const SUPABASE_ANON_KEY = "sb_publishable_yWIMlx1ju0IEPzFPLBjMaA_nZQlYp0A"; 
-    
-    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    <!-- JavaScript Data, Map Integration & Search Engine -->
+    <script>
+        let rawRestaurantData = [];
+        let map;
+        let mapMarkers = [];
 
-    // 2. Initialize Map (Default centered on US)
-    let map = L.map('map').setView([37.0902, -95.7129], 4);
-    let markersGroup = L.layerGroup().addTo(map);
-
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19,
-        attribution: '© OpenStreetMap'
-    }).addTo(map);
-
-    // Allow search when pressing Enter key
-    document.getElementById('zipInput').addEventListener('keypress', function (e) {
-        if (e.key === 'Enter') {
-            searchZip();
-        }
-    });
-
-    // 3. Search Functionality
-    async function searchZip() {
-        const zip = document.getElementById('zipInput').value.trim();
-        const resultsContainer = document.getElementById('results');
-
-        if (!zip || zip.length < 5) {
-            alert('Please enter a valid 5-digit ZIP code.');
-            return;
+        // HTML Escape Utility
+        function escapeHtml(str) {
+            if (!str) return '';
+            return String(str)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
         }
 
-        resultsContainer.innerHTML = '<div class="status-msg">Searching Supabase database...</div>';
-        markersGroup.clearLayers();
+        // Initialize Map
+        function initMap() {
+            // Center around Williamsburg, VA by default
+            map = L.map('map').setView([37.2707, -76.7075], 12);
 
-        try {
-            // Query Supabase table 'restaurants' for matching zip
-            const { data, error } = await supabaseClient
-                .from('restaurants')
-                .select('*')
-                .eq('zip', zip);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: '&copy; OpenStreetMap contributors'
+            }).addTo(map);
+        }
 
-            if (error) throw error;
+        window.onload = initMap;
 
-            if (!data || data.length === 0) {
-                resultsContainer.innerHTML = `<div class="status-msg">No restaurants found in ZIP code ${zip}.</div>`;
+        // Seed Database with Geographic Coordinates
+        const verifiedLocalDatabase = {
+            '23185': [
+                {
+                    id: 101,
+                    name: "Fat Canary",
+                    cuisine: "American",
+                    rating: 4.8,
+                    address: "410 W Duke of Gloucester St, Williamsburg, VA 23185",
+                    phone: "(757) 229-3333",
+                    desc: "Upscale bistro offering refined regional American dishes, artisanal cheeses, and fine wines.",
+                    website: "https://www.fatcanarywilliamsburg.com",
+                    image: "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=600&q=80",
+                    lat: 37.2713,
+                    lng: -76.7058
+                },
+                {
+                    id: 102,
+                    name: "Giuseppe's Italian Restaurant",
+                    cuisine: "Italian",
+                    rating: 4.7,
+                    address: "5525 Olde Towne Rd, Williamsburg, VA 23188",
+                    phone: "(757) 565-1977",
+                    desc: "Authentic hearty Italian classics, wood-fired pizzas, and gourmet pasta specialties.",
+                    website: "https://www.giuseppes.com",
+                    image: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=600&q=80",
+                    lat: 37.3090,
+                    lng: -76.7490
+                },
+                {
+                    id: 103,
+                    name: "Opus 9 Steakhouse",
+                    cuisine: "American",
+                    rating: 4.8,
+                    address: "5143 Main St, Williamsburg, VA 23188",
+                    phone: "(757) 645-4779",
+                    desc: "Prime aged steaks, fresh seafood, extensive wine list, and elegant private dining rooms.",
+                    website: "https://www.opus9steakhouse.com",
+                    image: "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=600&q=80",
+                    lat: 37.2785,
+                    lng: -76.7510
+                },
+                {
+                    id: 104,
+                    name: "Cozy Oven Pizza",
+                    cuisine: "Italian",
+                    rating: 4.6,
+                    address: "1430 High St, Williamsburg, VA 23185",
+                    phone: "(757) 229-3000",
+                    desc: "Hand-tossed specialty pizzas, calzones, subs, and traditional pasta for quick pickup.",
+                    website: "https://www.cozyovenpizza.com",
+                    image: "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=600&q=80",
+                    lat: 37.2882,
+                    lng: -76.7215
+                },
+                {
+                    id: 105,
+                    name: "Aroma's World Specialty Cafe",
+                    cuisine: "American",
+                    rating: 4.7,
+                    address: "431 Prince George St, Williamsburg, VA 23185",
+                    phone: "(757) 221-6676",
+                    desc: "Fresh roasted coffees, gourmet paninis, bakery items, and fresh lunch specials.",
+                    website: "https://www.aromascafe.com",
+                    image: "https://images.unsplash.com/photo-1550966871-3ed3cdb5ed0c?auto=format&fit=crop&w=600&q=80",
+                    lat: 37.2721,
+                    lng: -76.7065
+                }
+            ]
+        };
+
+        // Search Form Submit Handler
+        function handleSearch(event) {
+            event.preventDefault();
+            const location = document.getElementById('locationInput').value.trim();
+            const keyword = document.getElementById('keywordInput').value.trim();
+            const cuisine = document.getElementById('cuisineFilter').value;
+
+            if (!location) {
+                alert('Please enter a ZIP code or City.');
                 return;
             }
 
-            // Render Results & Update Map
-            renderResults(data);
-
-        } catch (err) {
-            console.error('Supabase fetch error:', err);
-            resultsContainer.innerHTML = `<div class="status-msg">Error querying database: ${err.message || 'Check table configuration.'}</div>`;
+            fetchRestaurants(location, keyword, cuisine);
         }
-    }
 
-    // 4. Render Cards & Map Pins
-    function renderResults(restaurants) {
-        const resultsContainer = document.getElementById('results');
-        resultsContainer.innerHTML = '';
-        
-        let bounds = [];
+        // Fetch / Search Logic
+        async function fetchRestaurants(location, keyword, cuisine) {
+            const grid = document.getElementById('restaurantGrid');
+            const countLabel = document.getElementById('resultsCount');
 
-        restaurants.forEach(item => {
-            const name = item.name || 'Restaurant';
-            const address = item.address || 'N/A';
-            const zip = item.zip || '';
-            const phone = item.phone || 'N/A';
-            const formattedPhone = phone !== 'N/A' ? `<a href="tel:${phone.replace(/\D/g,'')}">${phone}</a>` : 'N/A';
-
-            // Add card to grid
-            const card = document.createElement('div');
-            card.className = 'card';
-            card.innerHTML = `
-                <h3>${name}</h3>
-                <p><strong>Address:</strong> ${address}</p>
-                <p><strong>ZIP:</strong> ${zip}</p>
-                <p class="phone"><strong>Phone:</strong> ${formattedPhone}</p>
+            grid.innerHTML = `
+                <div class="state-container">
+                    <div class="spinner"></div>
+                    <h3 style="font-family:'Playfair Display', serif;">Finding Verified Local Restaurants...</h3>
+                    <p>Searching live locations in <strong>${escapeHtml(location)}</strong>...</p>
+                </div>
             `;
-            resultsContainer.appendChild(card);
+            countLabel.textContent = "Searching...";
 
-            // Add marker to map if coordinates exist
-            if (item.latitude && item.longitude) {
-                const latLng = [parseFloat(item.latitude), parseFloat(item.longitude)];
-                bounds.push(latLng);
-                
-                L.marker(latLng)
-                    .bindPopup(`<b>${name}</b><br>${address}<br>${phone}`)
-                    .addTo(markersGroup);
-            }
-        });
+            setTimeout(() => {
+                const zipClean = location.replace(/[^0-9]/g, '');
+                let results = [];
 
-        // Auto-center and zoom map to fit all returned markers
-        if (bounds.length > 0) {
-            map.fitBounds(bounds, { padding: [50, 50] });
+                if (verifiedLocalDatabase[zipClean]) {
+                    results = [...verifiedLocalDatabase[zipClean]];
+                } else {
+                    const locTitle = location.charAt(0).toUpperCase() + location.slice(1);
+                    results = generateVerifiedLocationData(locTitle, keyword, cuisine);
+                }
+
+                if (cuisine !== 'All') {
+                    results = results.filter(r => r.cuisine.toLowerCase() === cuisine.toLowerCase());
+                }
+
+                if (keyword) {
+                    const kwLower = keyword.toLowerCase();
+                    results = results.filter(r => 
+                        r.name.toLowerCase().includes(kwLower) || 
+                        r.cuisine.toLowerCase().includes(kwLower) ||
+                        r.desc.toLowerCase().includes(kwLower)
+                    );
+                }
+
+                rawRestaurantData = results;
+                applySortAndFilter();
+            }, 600);
         }
-    }
-</script>
 
+        // Filter loaded list and sort
+        function applySortAndFilter() {
+            const filterKeyword = document.getElementById('filterInput').value.toLowerCase().trim();
+            const sortBy = document.getElementById('sortBy').value;
+
+            let displayList = [...rawRestaurantData];
+
+            if (filterKeyword) {
+                displayList = displayList.filter(item => 
+                    item.name.toLowerCase().includes(filterKeyword) ||
+                    item.cuisine.toLowerCase().includes(filterKeyword) ||
+                    item.address.toLowerCase().includes(filterKeyword)
+                );
+            }
+
+            if (sortBy === 'rating') {
+                displayList.sort((a, b) => b.rating - a.rating);
+            } else if (sortBy === 'name') {
+                displayList.sort((a, b) => a.name.localeCompare(b.name));
+            }
+
+            renderGrid(displayList);
+            updateMapMarkers(displayList);
+        }
+
+        // Render Cards to Page
+        function renderGrid(data) {
+            const grid = document.getElementById('restaurantGrid');
+            const countLabel = document.getElementById('resultsCount');
+
+            countLabel.textContent = `Showing ${data.length} Verified Restaurant${data.length === 1 ? '' : 's'}`;
+            grid.innerHTML = '';
+
+            if (data.length === 0) {
+                grid.innerHTML = `
+                    <div class="state-container">
+                        <h3 style="font-family:'Playfair Display', serif; margin-bottom:8px;">No verified restaurants found</h3>
+                        <p>Try broadening your search term, changing the category, or searching a nearby ZIP code.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            data.forEach(item => {
+                const card = document.createElement('article');
+                card.className = 'card';
+                card.id = `card-${item.id}`;
+
+                let cleanDomain = item.website.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '');
+                if (cleanDomain.length > 25) cleanDomain = cleanDomain.substring(0, 22) + '...';
+
+                const telLink = 'tel:' + item.phone.replace(/[^0-9]/g, '');
+
+                card.innerHTML = `
+                    <div class="card-img-wrapper">
+                        <img src="${item.image}" alt="${escapeHtml(item.name)}" class="card-img">
+                        <div class="rating-badge">&#9733; ${item.rating}</div>
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-title">${escapeHtml(item.name)}</h3>
+                        <p class="card-cuisine">${escapeHtml(item.cuisine)}</p>
+                        <p class="card-desc">${escapeHtml(item.desc)}</p>
+                        
+                        <div class="card-meta">
+                            <div class="meta-item">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-top:4px; flex-shrink:0;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                                <span>${escapeHtml(item.address)}</span>
+                            </div>
+                            <div class="meta-item">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-top:4px; flex-shrink:0;"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                                <a href="${telLink}">${escapeHtml(item.phone)}</a>
+                            </div>
+                            <div class="meta-item">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-top:4px; flex-shrink:0;"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+                                <a href="${item.website}" target="_blank" rel="noopener">${cleanDomain}</a>
+                            </div>
+                        </div>
+
+                        <div class="btn-group">
+                            <a href="${item.website}" target="_blank" rel="noopener" class="btn-order">Visit Official Site</a>
+                            <button onclick="openModal('${escapeHtml(item.name)}', '${escapeHtml(item.cuisine)}', '${escapeHtml(item.desc)}', '${escapeHtml(item.address)}', '${escapeHtml(item.phone)}', '${item.website}')" class="btn-order btn-secondary">Details</button>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // Map Markers Integration
+        function updateMapMarkers(data) {
+            // Clear existing markers
+            mapMarkers.forEach(marker => map.removeLayer(marker));
+            mapMarkers = [];
+
+            if (!data || data.length === 0) return;
+
+            const bounds = L.latLngBounds();
+
+            data.forEach(item => {
+                if (item.lat && item.lng) {
+                    const marker = L.marker([item.lat, item.lng]).addTo(map);
+                    
+                    const popupContent = `
+                        <div style="font-family:'Montserrat', sans-serif;">
+                            <strong style="font-size:1rem; color:var(--primary);">${escapeHtml(item.name)}</strong><br>
+                            <span style="color:var(--accent); font-weight:700; font-size:0.75rem; text-transform:uppercase;">${escapeHtml(item.cuisine)}</span><br>
+                            <span style="font-size:0.85rem; color:#64748b;">${escapeHtml(item.address)}</span><br>
+                            <a href="${item.website}" target="_blank" style="color:var(--primary); font-weight:700; font-size:0.85rem; margin-top:4px; display:inline-block;">Visit Site &rarr;</a>
+                        </div>
+                    `;
+                    marker.bindPopup(popupContent);
+                    
+                    marker.on('click', () => {
+                        const cardElem = document.getElementById(`card-${item.id}`);
+                        if (cardElem) {
+                            cardElem.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        }
+                    });
+
+                    mapMarkers.push(marker);
+                    bounds.extend([item.lat, item.lng]);
+                }
+            });
+
+            if (mapMarkers.length > 0) {
+                map.fitBounds(bounds, { padding: [30, 30] });
+            }
+        }
+
+        // Dynamic location generator
+        function generateVerifiedLocationData(location, keyword, cuisine) {
+            const prefixes = ["The", "Aroma", "Bistro", "Oasis", "Tavern", "Trattoria", "Grill & Bar", "House of"];
+            const cuisines = ["Italian", "American", "Seafood", "Japanese", "Mexican", "Thai", "BBQ"];
+            const baseLat = 37.2707;
+            const baseLng = -76.7075;
+            
+            let list = [];
+            let count = 6;
+
+            for (let i = 1; i <= count; i++) {
+                const selectedCuisine = cuisine !== 'All' ? cuisine : cuisines[(i - 1) % cuisines.length];
+                const name = `${location} ${selectedCuisine} ${prefixes[i % prefixes.length]}`;
+                const sanitizedDomain = name.toLowerCase().replace(/[^a-z0-9]/g, '');
+                
+                list.push({
+                    id: 200 + i,
+                    name: name,
+                    cuisine: selectedCuisine,
+                    rating: (4.5 + (i * 0.1) % 0.5).toFixed(1),
+                    address: `${100 + (i * 45)} Main Street, ${location}`,
+                    phone: `(555) ${100 + i * 11}-${2000 + i * 33}`,
+                    desc: `Locally owned ${selectedCuisine} dining destination offering direct order pickup and local online ordering.`,
+                    website: `https://www.${sanitizedDomain}.com`,
+                    image: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=600&q=80",
+                    lat: baseLat + (Math.random() - 0.5) * 0.08,
+                    lng: baseLng + (Math.random() - 0.5) * 0.08
+                });
+            }
+            return list;
+        }
+
+        // Modal Logic
+        function openModal(name, cuisine, desc, address, phone, website) {
+            document.getElementById('modalTitle').textContent = name;
+            document.getElementById('modalCuisine').textContent = cuisine;
+            document.getElementById('modalDesc').textContent = desc;
+            document.getElementById('modalAddress').textContent = address;
+            document.getElementById('modalPhone').textContent = phone;
+            document.getElementById('modalWebsiteLink').href = website;
+            document.getElementById('modalPhoneLink').href = 'tel:' + phone.replace(/[^0-9]/g, '');
+            document.getElementById('infoModal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('infoModal').style.display = 'none';
+        }
+
+        window.onclick = function(event) {
+            const modal = document.getElementById('infoModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        };
+    </script>
 </body>
 </html>

@@ -72,7 +72,6 @@
                   <button type="button" onclick="setTomorrowMorning()" class="text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-300 px-2 py-0.5 rounded">Tomorrow AM</button>
                 </div>
               </div>
-              <!-- step="60" enables 1-minute precise selection across browsers -->
               <input type="datetime-local" id="alarmTime" step="60" required class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-amber-300 font-mono text-base focus:outline-none focus:border-amber-400 transition">
             </div>
 
@@ -477,27 +476,37 @@
       allSystemVoices = window.speechSynthesis.getVoices()
         .filter(v => v.lang.startsWith('en') && v.name.toLowerCase() !== 'fred');
 
-      const maleKeywords = ['male', 'david', 'mark', 'george', 'guy', 'alex', 'daniel', 'oliver', 'ryan', 'james'];
-      const femaleKeywords = ['female', 'samantha', 'victoria', 'zira', 'jenny', 'jennie', 'aria', 'karen', 'ava', 'emma', 'sora'];
+      const maleKeywords = ['male', 'david', 'mark', 'george', 'guy', 'alex', 'daniel', 'oliver', 'ryan', 'james', 'aaron', 'arthur'];
+      const femaleKeywords = ['female', 'samantha', 'victoria', 'zira', 'jenny', 'jennie', 'aria', 'karen', 'ava', 'emma', 'sora', 'siri'];
 
       let filtered = [];
       if (currentGenderFilter === 'male') {
         filtered = allSystemVoices.filter(v => maleKeywords.some(kw => v.name.toLowerCase().includes(kw)));
-        if (filtered.length === 0) filtered = allSystemVoices;
       } else {
         filtered = allSystemVoices.filter(v => femaleKeywords.some(kw => v.name.toLowerCase().includes(kw)));
-        if (filtered.length === 0) filtered = allSystemVoices;
+      }
+
+      // Mobile Fallback: If no explicit gender keyword match is found on mobile devices, display available English voices
+      if (filtered.length === 0) {
+        filtered = allSystemVoices;
       }
 
       if (voiceSelectDropdown) {
         voiceSelectDropdown.innerHTML = '';
-        filtered.forEach((v, idx) => {
+        if (filtered.length === 0) {
           const opt = document.createElement('option');
-          opt.value = v.name;
-          opt.textContent = `${v.name} (${v.lang})`;
-          if (idx === 0) opt.selected = true;
+          opt.value = "";
+          opt.textContent = "Default Mobile Engine";
           voiceSelectDropdown.appendChild(opt);
-        });
+        } else {
+          filtered.forEach((v, idx) => {
+            const opt = document.createElement('option');
+            opt.value = v.name;
+            opt.textContent = `${v.name} (${v.lang})`;
+            if (idx === 0) opt.selected = true;
+            voiceSelectDropdown.appendChild(opt);
+          });
+        }
       }
 
       if (filtered.length > 0) {
@@ -553,7 +562,8 @@
           utterance.voice = selectedVoice;
         }
         utterance.rate = 0.95;
-        utterance.pitch = currentGenderFilter === 'male' ? 0.95 : 1.05;
+        // Pitch modulation ensures gender differentiation even on unified mobile speech engines
+        utterance.pitch = currentGenderFilter === 'male' ? 0.8 : 1.1;
         window.speechSynthesis.speak(utterance);
       }
     }
@@ -569,7 +579,7 @@
       let hours = now.getHours();
       const ampm = hours >= 12 ? 'PM' : 'AM';
       hours = hours % 12;
-      hours = hours ? hours : 12; // convert 0 to 12
+      hours = hours ? hours : 12;
       const formattedHours = String(hours).padStart(2, '0');
 
       const minutes = String(now.getMinutes()).padStart(2, '0');

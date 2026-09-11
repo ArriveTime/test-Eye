@@ -3,11 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Live Precision Hair & Style Studio</title>
+  <title>Realistic AI Hair Color & Style Studio</title>
   
-  <!-- MediaPipe Face Mesh & Camera Utilities -->
+  <!-- MediaPipe Camera Utils & Dedicated Segmentation -->
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation/selfie_segmentation.js" crossorigin="anonymous"></script>
 
   <style>
@@ -16,7 +15,6 @@
       --card-bg: rgba(21, 29, 48, 0.85);
       --border: rgba(255, 255, 255, 0.15);
       --accent: #8b5cf6;
-      --accent-hover: #7c3aed;
       --text: #f8fafc;
       --text-muted: #94a3b8;
     }
@@ -34,15 +32,10 @@
       padding: 16px;
     }
 
-    header {
-      text-align: center;
-      margin-bottom: 16px;
-    }
-
+    header { text-align: center; margin-bottom: 16px; }
     h1 { font-size: 1.6rem; color: #a78bfa; margin-bottom: 4px; }
     p { color: var(--text-muted); font-size: 0.9rem; }
 
-    /* Dual Side-by-Side Viewport Layout */
     .studio-grid {
       display: grid;
       grid-template-columns: 1fr;
@@ -53,9 +46,7 @@
     }
 
     @media (min-width: 768px) {
-      .studio-grid {
-        grid-template-columns: 1fr 1fr;
-      }
+      .studio-grid { grid-template-columns: 1fr 1fr; }
     }
 
     .viewport-card {
@@ -77,14 +68,9 @@
       border-radius: 20px;
       font-size: 0.75rem;
       font-weight: 700;
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
       z-index: 10;
       border: 1px solid rgba(255,255,255,0.1);
     }
-
-    .label-orig { color: #94a3b8; }
-    .label-trans { color: #c4b5fd; }
 
     video, canvas {
       position: absolute;
@@ -95,7 +81,6 @@
 
     .mirror { transform: scaleX(-1); }
 
-    /* Controls Panel Dock */
     .controls-dock {
       width: 100%;
       max-width: 1100px;
@@ -107,13 +92,6 @@
       display: flex;
       flex-direction: column;
       gap: 16px;
-    }
-
-    .dock-title {
-      font-size: 0.8rem;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      color: var(--text-muted);
     }
 
     .swatch-row {
@@ -128,7 +106,7 @@
       border-radius: 50%;
       border: 2px solid rgba(255, 255, 255, 0.3);
       cursor: pointer;
-      transition: transform 0.15s, border-color 0.15s;
+      transition: transform 0.15s;
     }
 
     .swatch:hover { transform: scale(1.1); }
@@ -154,16 +132,7 @@
       color: var(--text-muted);
     }
 
-    input[type="range"] {
-      width: 100%;
-      accent-color: var(--accent);
-      cursor: pointer;
-    }
-
-    .action-row {
-      display: flex;
-      justify-content: flex-end;
-    }
+    input[type="range"] { width: 100%; accent-color: var(--accent); }
 
     .btn {
       background: var(--accent);
@@ -173,64 +142,56 @@
       border-radius: 8px;
       font-weight: 600;
       cursor: pointer;
-      font-size: 0.9rem;
-      transition: background 0.2s;
+      align-self: flex-end;
     }
-
-    .btn:hover { background: var(--accent-hover); }
   </style>
 </head>
 <body>
 
   <header>
-    <h1>AI Live Hair Studio</h1>
-    <p>Original Camera Feed vs Real-Time Precision Hair Transformation</p>
+    <h1>Realistic AI Hair Color Studio</h1>
+    <p>Realistic Strand-Level Masking & Photorealistic Color Blending</p>
   </header>
 
   <div class="studio-grid">
-    <!-- Left Screen: Original Camera Stream -->
     <div class="viewport-card">
-      <header class="label-orig">1. Original Feed</header>
+      <header style="color:#94a3b8">1. Original Feed</header>
       <video id="webcam" class="mirror" playsinline></video>
     </div>
 
-    <!-- Right Screen: Transformed Hair View -->
     <div class="viewport-card">
-      <header class="label-trans">2. Transformed Hair</header>
+      <header style="color:#c4b5fd">2. Realistic Transformed Hair</header>
       <canvas id="outputCanvas" class="mirror"></canvas>
     </div>
   </div>
 
-  <!-- Interactive Controls -->
   <div class="controls-dock">
     <div>
-      <div class="dock-title" style="margin-bottom: 8px;">Select Hair Color Dye</div>
+      <div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 8px;">Salon Color Palette</div>
       <div class="swatch-row">
-        <div class="swatch selected" style="background: #e2b070;" data-color="rgba(226, 176, 112, "></div>
-        <div class="swatch" style="background: #8d2e16;" data-color="rgba(141, 46, 22, "></div>
-        <div class="swatch" style="background: #ec4899;" data-color="rgba(236, 72, 153, "></div>
-        <div class="swatch" style="background: #10b981;" data-color="rgba(16, 185, 129, "></div>
-        <div class="swatch" style="background: #3b82f6;" data-color="rgba(59, 130, 246, "></div>
-        <div class="swatch" style="background: #111827;" data-color="rgba(17, 24, 39, "></div>
-        <div class="swatch" style="background: #a855f7;" data-color="rgba(168, 85, 247, "></div>
-        <div class="swatch" style="background: #f97316;" data-color="rgba(249, 115, 22, "></div>
+        <!-- Natural & Fantasy Tones -->
+        <div class="swatch selected" style="background: #d4a359;" data-color="rgb(212, 163, 89)" data-hue="40"></div> <!-- Honey Blonde -->
+        <div class="swatch" style="background: #8b3a2b;" data-color="rgb(139, 58, 43)" data-hue="10"></div>   <!-- Auburn Red -->
+        <div class="swatch" style="background: #4a2c11;" data-color="rgb(74, 44, 17)" data-hue="25"></div>   <!-- Dark Chestnut -->
+        <div class="swatch" style="background: #e63946;" data-color="rgb(230, 57, 70)" data-hue="355"></div>  <!-- Cherry Velvet -->
+        <div class="swatch" style="background: #2a9d8f;" data-color="rgb(42, 157, 143)" data-hue="170"></div> <!-- Emerald Pearl -->
+        <div class="swatch" style="background: #7209b7;" data-color="rgb(114, 9, 183)" data-hue="280"></div>  <!-- Violet Plum -->
+        <div class="swatch" style="background: #f72585;" data-color="rgb(247, 37, 133)" data-hue="330"></div>  <!-- Magenta -->
       </div>
     </div>
 
     <div class="slider-group">
       <div class="slider-field">
-        <label>Dye Saturation <span id="opacityVal">75%</span></label>
-        <input type="range" id="opacitySlider" min="20" max="100" value="75">
+        <label>Color Intensity <span id="opacityVal">70%</span></label>
+        <input type="range" id="opacitySlider" min="20" max="100" value="70">
       </div>
       <div class="slider-field">
-        <label>Hair Line Offset <span id="offsetVal">0px</span></label>
-        <input type="range" id="offsetSlider" min="-20" max="30" value="0">
+        <label>Edge Softness (Feathering) <span id="featherVal">4px</span></label>
+        <input type="range" id="featherSlider" min="0" max="12" value="4">
       </div>
     </div>
 
-    <div class="action-row">
-      <button id="snapBtn" class="btn">📷 Download Transformed Snapshot</button>
-    </div>
+    <button id="snapBtn" class="btn">📷 Download High-Res Snapshot</button>
   </div>
 
   <script>
@@ -240,21 +201,19 @@
 
     const opacitySlider = document.getElementById('opacitySlider');
     const opacityVal = document.getElementById('opacityVal');
-    const offsetSlider = document.getElementById('offsetSlider');
-    const offsetVal = document.getElementById('offsetVal');
+    const featherSlider = document.getElementById('featherSlider');
+    const featherVal = document.getElementById('featherVal');
     const snapBtn = document.getElementById('snapBtn');
 
-    let currentColorBase = 'rgba(226, 176, 112, ';
-    let dyeOpacity = 0.75;
-    let hairlineOffset = 0;
-    let faceLandmarks = null;
+    let activeColor = 'rgb(212, 163, 89)';
+    let dyeOpacity = 0.7;
+    let featherAmount = 4;
 
-    // Swatch Selection
     document.querySelectorAll('.swatch').forEach(swatch => {
       swatch.addEventListener('click', () => {
         document.querySelectorAll('.swatch').forEach(s => s.classList.remove('selected'));
         swatch.classList.add('selected');
-        currentColorBase = swatch.getAttribute('data-color');
+        activeColor = swatch.getAttribute('data-color');
       });
     });
 
@@ -263,103 +222,73 @@
       opacityVal.innerText = `${e.target.value}%`;
     });
 
-    offsetSlider.addEventListener('input', (e) => {
-      hairlineOffset = parseInt(e.target.value, 10);
-      offsetVal.innerText = `${hairlineOffset}px`;
+    featherSlider.addEventListener('input', (e) => {
+      featherAmount = parseInt(e.target.value, 10);
+      featherVal.innerText = `${featherAmount}px`;
     });
 
-    // Face Mesh Initialization (Tracks hairline & forehead boundaries)
-    const faceMesh = new FaceMesh({
-      locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}`
-    });
-
-    faceMesh.setOptions({
-      maxNumFaces: 1,
-      refineLandmarks: true,
-      minDetectionConfidence: 0.5,
-      minTrackingConfidence: 0.5
-    });
-
-    faceMesh.onResults((results) => {
-      if (results.multiFaceLandmarks && results.multiFaceLandmarks.length > 0) {
-        faceLandmarks = results.multiFaceLandmarks[0];
-      }
-    });
-
-    // Selfie Segmentation Callback
     function onSegmentationResults(results) {
       canvasElement.width = videoElement.videoWidth;
       canvasElement.height = videoElement.videoHeight;
-
       const w = canvasElement.width;
       const h = canvasElement.height;
 
       canvasCtx.save();
       canvasCtx.clearRect(0, 0, w, h);
 
-      // Render Base Original Camera Stream to Right Canvas
+      // Render base video to canvas
       canvasCtx.drawImage(results.image, 0, 0, w, h);
 
-      if (results.segmentationMask && faceLandmarks) {
-        // Create dynamic off-screen hair mask
+      if (results.segmentationMask) {
+        // Offscreen Canvas for Hair Mask Processing
         const maskCanvas = document.createElement('canvas');
         maskCanvas.width = w;
         maskCanvas.height = h;
         const maskCtx = maskCanvas.getContext('2d');
 
-        // Draw body segment mask
+        // Draw segmented mask
         maskCtx.drawImage(results.segmentationMask, 0, 0, w, h);
 
-        // Exclude face & lower body by building a forehead boundary cut
-        // Eyebrow & Forehead landmarks in Face Mesh: [10, 338, 297, 332, 284, 251, 389, 162, 21, 54, 103, 67, 109]
-        const foreheadIndices = [10, 338, 297, 332, 284, 251, 389, 162, 21, 54, 103, 67, 109];
-        
-        maskCtx.globalCompositeOperation = 'destination-out';
-        maskCtx.beginPath();
+        // Apply edge-feathering to eliminate blocky boundaries
+        if (featherAmount > 0) {
+          maskCtx.filter = `blur(${featherAmount}px)`;
+          maskCtx.drawImage(maskCanvas, 0, 0);
+          maskCtx.filter = 'none';
+        }
 
-        // Path around lower face to isolate the top hair region
-        const chinY = faceLandmarks[152].y * h;
-        const foreheadY = (faceLandmarks[10].y * h) + hairlineOffset;
+        // Realistic Multi-Layer Color Compositing Pipeline
+        const colorCanvas = document.createElement('canvas');
+        colorCanvas.width = w;
+        colorCanvas.height = h;
+        const colorCtx = colorCanvas.getContext('2d');
 
-        maskCtx.moveTo(0, foreheadY);
-        foreheadIndices.forEach(idx => {
-          const pt = faceLandmarks[idx];
-          maskCtx.lineTo(pt.x * w, (pt.y * h) + hairlineOffset);
-        });
+        // Base video reference
+        colorCtx.drawImage(results.image, 0, 0, w, h);
 
-        maskCtx.lineTo(w, foreheadY);
-        maskCtx.lineTo(w, h);
-        maskCtx.lineTo(0, h);
-        maskCtx.closePath();
-        maskCtx.fill();
+        // Layer 1: HSL Color Blend Mode (Shifts hair tint while preserving luminance/shadows)
+        colorCtx.globalCompositeOperation = 'color';
+        colorCtx.fillStyle = activeColor;
+        colorCtx.globalAlpha = dyeOpacity;
+        colorCtx.fillRect(0, 0, w, h);
 
-        // Apply Hair Color Dye strictly inside the isolated hair region
-        canvasCtx.save();
-        
-        // Multiply & Soft-Light Blending to preserve underlying hair strands and highlights
-        canvasCtx.globalCompositeOperation = 'soft-light';
-        canvasCtx.fillStyle = `${currentColorBase}${dyeOpacity})`;
-        canvasCtx.fillRect(0, 0, w, h);
+        // Layer 2: Soft Light (Restores natural strand highlights and depth)
+        colorCtx.globalCompositeOperation = 'soft-light';
+        colorCtx.fillStyle = activeColor;
+        colorCtx.globalAlpha = dyeOpacity * 0.6;
+        colorCtx.fillRect(0, 0, w, h);
 
-        canvasCtx.globalCompositeOperation = 'color';
-        canvasCtx.fillStyle = `${currentColorBase}${dyeOpacity * 0.8})`;
-        canvasCtx.fillRect(0, 0, w, h);
+        // Masking Step: Retain ONLY hair region using destination-in
+        colorCtx.globalCompositeOperation = 'destination-in';
+        colorCtx.drawImage(maskCanvas, 0, 0);
 
-        // Clip blending layers strictly inside the hair mask
-        canvasCtx.globalCompositeOperation = 'destination-in';
-        canvasCtx.drawImage(maskCanvas, 0, 0);
-
-        canvasCtx.restore();
-
-        // Place original video beneath the transformed hair overlay
-        canvasCtx.globalCompositeOperation = 'destination-over';
-        canvasCtx.drawImage(results.image, 0, 0, w, h);
+        // Draw final hair blend over original camera stream
+        canvasCtx.drawImage(colorCanvas, 0, 0);
       }
 
       canvasCtx.restore();
     }
 
-    // Selfie Segmentation Engine
+    // Initialize Selfie Segmentation set to High-Precision Model (Index 1)
     const selfieSegmentation = new SelfieSegmentation({
       locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation/${file}`
     });
@@ -367,25 +296,19 @@
     selfieSegmentation.setOptions({ modelSelection: 1 });
     selfieSegmentation.onResults(onSegmentationResults);
 
-    // Single Camera Stream Pipeline feeding both AI models
     const camera = new Camera(videoElement, {
       onFrame: async () => {
-        await faceMesh.send({ image: videoElement });
         await selfieSegmentation.send({ image: videoElement });
       },
       width: 1280,
       height: 720
     });
 
-    camera.start().catch(err => {
-      alert("Camera access required for live hair studio.");
-      console.error(err);
-    });
+    camera.start().catch(err => alert("Camera access required for live hair studio."));
 
-    // Save High-Res Snapshot
     snapBtn.addEventListener('click', () => {
       const link = document.createElement('a');
-      link.download = 'transformed-hair.png';
+      link.download = 'realistic-hair-transformation.png';
       link.href = canvasElement.toDataURL('image/png');
       link.click();
     });

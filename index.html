@@ -1,1031 +1,450 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Utakeout.com - Skip the Fees, Skip the Line</title>
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
-    
-    <!-- Leaflet CSS for Interactive Map -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AI Virtual Hair Styler & Color Studio</title>
+  
+  <!-- MediaPipe Selfie Segmentation via CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation/selfie_segmentation.js" crossorigin="anonymous"></script>
 
-    <style>
-        /* Base Reset & Variables */
-        :root {
-            --primary: #0f172a;
-            --accent: #d4af37;
-            --accent-hover: #b89528;
-            --bg-light: #f8f9fa;
-            --card-bg: #ffffff;
-            --text-dark: #1e293b;
-            --text-muted: #64748b;
-            --border-color: #e2e8f0;
-            --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.05);
-            --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.12);
-        }
+  <style>
+    :root {
+      --bg-color: #0b0f19;
+      --card-bg: #151d30;
+      --card-border: #23304d;
+      --accent: #8b5cf6;
+      --accent-hover: #7c3aed;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --success: #10b981;
+    }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
-        body {
-            font-family: 'Montserrat', sans-serif;
-            background-color: var(--bg-light);
-            color: var(--text-dark);
-            line-height: 1.6;
-        }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding: 16px;
+    }
 
-        /* Hero Header with Background & Dark Gradient Overlay */
-        .hero {
-            position: relative;
-            width: 100%;
-            height: 65vh;
-            min-height: 440px;
-            background: linear-gradient(rgba(15, 23, 42, 0.70), rgba(15, 23, 42, 0.70)), 
-                        url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            color: #ffffff;
-            padding: 0 20px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
-        }
+    header {
+      text-align: center;
+      max-width: 800px;
+      margin-bottom: 20px;
+    }
 
-        .hero-logo {
-            font-family: 'Playfair Display', Georgia, serif;
-            font-size: clamp(2.8rem, 6vw, 5.2rem);
-            font-weight: 700;
-            letter-spacing: 1.5px;
-            margin-bottom: 8px;
-            text-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
-        }
+    h1 { font-size: 1.8rem; color: #a78bfa; margin-bottom: 6px; }
+    p.subtitle { color: var(--text-muted); font-size: 0.95rem; }
 
-        .hero-divider {
-            width: 90px;
-            height: 3px;
-            background-color: var(--accent);
-            margin: 16px 0;
-            border-radius: 2px;
-        }
+    /* Layout Grid */
+    .app-container {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+      width: 100%;
+      max-width: 1100px;
+    }
 
-        .hero-tagline {
-            font-size: clamp(1rem, 2.5vw, 1.4rem);
-            font-weight: 300;
-            letter-spacing: 4px;
-            text-transform: uppercase;
-            color: #f1f5f9;
-            text-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
-        }
+    @media (min-width: 850px) {
+      .app-container { grid-template-columns: 1fr 360px; }
+    }
 
-        /* Controls Section (Search & Filters) */
-        .controls-wrapper {
-            max-width: 1300px;
-            margin: -35px auto 40px auto;
-            padding: 0 20px;
-            position: relative;
-            z-index: 10;
-        }
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 16px;
+    }
 
-        .controls-card {
-            background: #ffffff;
-            padding: 24px;
-            border-radius: 12px;
-            box-shadow: var(--shadow-lg);
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
+    /* Viewport Area */
+    .viewport {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 4/3;
+      border-radius: 8px;
+      overflow: hidden;
+      background: #000;
+    }
 
-        .search-form {
-            display: grid;
-            grid-template-columns: 1.5fr 1.5fr 1fr auto;
-            gap: 16px;
-            align-items: flex-end;
-        }
+    video, canvas {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+    }
 
-        .filter-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;
-            border-top: 1px solid var(--border-color);
-            padding-top: 16px;
-        }
+    .mirror { transform: scaleX(-1); }
 
-        .input-group {
-            display: flex;
-            flex-direction: column;
-        }
+    /* Split Slider Controls */
+    .slider-container {
+      position: absolute;
+      top: 0; bottom: 0; left: 50%;
+      width: 3px;
+      background: #ffffff;
+      cursor: ew-resize;
+      z-index: 10;
+    }
 
-        .input-group label {
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: var(--text-muted);
-            margin-bottom: 6px;
-        }
+    .slider-button {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 28px; height: 28px;
+      background: #8b5cf6;
+      border: 2px solid white;
+      border-radius: 50%;
+      cursor: pointer;
+    }
 
-        .control-input, .control-select {
-            width: 100%;
-            padding: 12px 16px;
-            font-family: 'Montserrat', sans-serif;
-            font-size: 0.95rem;
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            outline: none;
-            transition: border-color 0.2s ease;
-            background-color: #fff;
-        }
+    /* Tabs & Controls */
+    .tab-group {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+      border-bottom: 1px solid var(--card-border);
+      padding-bottom: 12px;
+    }
 
-        .control-input:focus, .control-select:focus {
-            border-color: var(--accent);
-        }
+    .tab-btn {
+      flex: 1;
+      padding: 10px;
+      background: #1e293b;
+      color: var(--text-muted);
+      border: 1px solid var(--card-border);
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.85rem;
+      transition: all 0.2s;
+    }
 
-        .btn-search {
-            background-color: var(--accent);
-            color: var(--primary);
-            border: none;
-            padding: 13px 28px;
-            font-family: 'Montserrat', sans-serif;
-            font-size: 0.95rem;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            height: 48px;
-        }
+    .tab-btn.active {
+      background: var(--accent);
+      color: white;
+      border-color: var(--accent);
+    }
 
-        .btn-search:hover {
-            background-color: var(--accent-hover);
-            transform: translateY(-1px);
-        }
+    .section-title {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 10px;
+    }
 
-        /* Main Layout Grid (Directory + Sticky Map) */
-        .container {
-            max-width: 1300px;
-            margin: 0 auto 60px auto;
-            padding: 0 20px;
-        }
+    /* Color Swatches Grid */
+    .color-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-bottom: 16px;
+    }
 
-        .results-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 24px;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 16px;
-        }
+    .color-swatch {
+      width: 100%;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: transform 0.1s, border-color 0.2s;
+    }
 
-        .results-count {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: var(--text-dark);
-        }
+    .color-swatch:hover { transform: scale(1.08); }
+    .color-swatch.selected { border-color: #ffffff; transform: scale(1.1); }
 
-        .content-layout {
-            display: grid;
-            grid-template-columns: 1fr 450px;
-            gap: 24px;
-            align-items: start;
-        }
+    /* Hairstyle Preset Grid */
+    .style-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-bottom: 16px;
+    }
 
-        /* Restaurant Cards Grid */
-        .restaurant-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 24px;
-        }
+    .style-card {
+      background: #0b0f19;
+      border: 1px solid var(--card-border);
+      padding: 12px;
+      border-radius: 8px;
+      text-align: center;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
 
-        /* Interactive Map Container Styling */
-        .map-sticky-wrapper {
-            position: sticky;
-            top: 24px;
-            height: 680px;
-            background: #ffffff;
-            border-radius: 12px;
-            overflow: hidden;
-            border: 1px solid var(--border-color);
-            box-shadow: var(--shadow-sm);
-            z-index: 5;
-        }
+    .style-card:hover, .style-card.selected {
+      border-color: var(--accent);
+      background: #1e1b4b;
+      color: #c4b5fd;
+    }
 
-        #map {
-            width: 100%;
-            height: 100%;
-        }
+    .control-group {
+      margin-bottom: 14px;
+    }
 
-        /* Card Component */
-        .card {
-            background: var(--card-bg);
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: var(--shadow-sm);
-            border: 1px solid var(--border-color);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            display: flex;
-            flex-direction: column;
-            position: relative;
-        }
+    .control-group label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
 
-        .card:hover {
-            transform: translateY(-6px);
-            box-shadow: var(--shadow-lg);
-        }
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--accent);
+    }
 
-        .card-img-wrapper {
-            position: relative;
-            width: 100%;
-            height: 200px;
-            overflow: hidden;
-        }
+    .btn {
+      width: 100%;
+      padding: 12px;
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 0.95rem;
+      transition: background 0.2s;
+    }
 
-        .card-img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.5s ease;
-        }
-
-        .card:hover .card-img {
-            transform: scale(1.05);
-        }
-
-        .rating-badge {
-            position: absolute;
-            top: 14px;
-            right: 14px;
-            background: rgba(15, 23, 42, 0.85);
-            color: var(--accent);
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 700;
-            backdrop-filter: blur(4px);
-        }
-
-        .card-content {
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            flex-grow: 1;
-        }
-
-        .card-title {
-            font-family: 'Playfair Display', Georgia, serif;
-            font-size: 1.3rem;
-            color: var(--text-dark);
-            margin-bottom: 4px;
-        }
-
-        .card-cuisine {
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 1.2px;
-            color: var(--accent);
-            margin-bottom: 10px;
-            font-weight: 700;
-        }
-
-        .card-desc {
-            font-size: 0.88rem;
-            color: var(--text-muted);
-            margin-bottom: 16px;
-            flex-grow: 1;
-        }
-
-        .card-meta {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            margin-bottom: 16px;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-
-        .meta-item {
-            display: flex;
-            align-items: flex-start;
-            gap: 8px;
-        }
-
-        .meta-item a {
-            color: var(--primary);
-            text-decoration: none;
-            font-weight: 600;
-        }
-
-        .meta-item a:hover {
-            color: var(--accent);
-        }
-
-        /* Buttons */
-        .btn-group {
-            display: flex;
-            gap: 10px;
-            margin-top: auto;
-        }
-
-        .btn-order {
-            flex: 1;
-            text-align: center;
-            background-color: var(--primary);
-            color: #ffffff;
-            text-decoration: none;
-            padding: 12px 14px;
-            border-radius: 6px;
-            font-weight: 600;
-            font-size: 0.85rem;
-            letter-spacing: 0.5px;
-            transition: all 0.2s ease;
-            border: none;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .btn-order:hover {
-            background-color: var(--accent);
-            color: var(--primary);
-        }
-
-        .btn-secondary {
-            background-color: transparent;
-            color: var(--primary);
-            border: 1px solid var(--border-color);
-        }
-
-        .btn-secondary:hover {
-            background-color: #f1f5f9;
-            color: var(--primary);
-        }
-
-        /* Empty & Loading States */
-        .state-container {
-            grid-column: 1 / -1;
-            text-align: center;
-            padding: 60px 20px;
-            color: var(--text-muted);
-            background: #fff;
-            border-radius: 12px;
-            box-shadow: var(--shadow-sm);
-        }
-
-        .spinner {
-            width: 40px;
-            height: 40px;
-            border: 4px solid var(--border-color);
-            border-top: 4px solid var(--accent);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 16px auto;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* Modal Overlay */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(15, 23, 42, 0.75);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-
-        .modal-content {
-            background: #ffffff;
-            padding: 32px;
-            border-radius: 12px;
-            max-width: 550px;
-            width: 100%;
-            position: relative;
-            box-shadow: var(--shadow-lg);
-        }
-
-        .modal-close {
-            position: absolute;
-            top: 16px;
-            right: 20px;
-            font-size: 1.8rem;
-            background: none;
-            border: none;
-            cursor: pointer;
-            color: var(--text-muted);
-            line-height: 1;
-        }
-
-        .modal-details {
-            margin: 16px 0 24px 0;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .modal-detail-row {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            font-size: 0.95rem;
-        }
-
-        .modal-detail-row strong {
-            color: var(--primary);
-            text-transform: uppercase;
-            font-size: 0.75rem;
-            letter-spacing: 1px;
-        }
-
-        /* Footer */
-        footer {
-            text-align: center;
-            padding: 40px 20px;
-            background-color: var(--primary);
-            color: #94a3b8;
-            font-size: 0.9rem;
-        }
-
-        footer a {
-            color: var(--accent);
-            text-decoration: none;
-        }
-
-        /* Responsive Tweaks */
-        @media (max-width: 1024px) {
-            .content-layout {
-                grid-template-columns: 1fr;
-            }
-            .map-sticky-wrapper {
-                position: relative;
-                top: 0;
-                height: 380px;
-                order: -1;
-                margin-bottom: 24px;
-            }
-        }
-
-        @media (max-width: 900px) {
-            .search-form {
-                grid-template-columns: 1fr 1fr;
-            }
-            .btn-search {
-                grid-column: span 2;
-            }
-        }
-
-        @media (max-width: 600px) {
-            .search-form {
-                grid-template-columns: 1fr;
-            }
-            .btn-search {
-                grid-column: span 1;
-            }
-            .filter-row {
-                grid-template-columns: 1fr;
-            }
-            .hero {
-                height: 50vh;
-            }
-        }
-    </style>
+    .btn:hover { background: var(--accent-hover); }
+    .btn-secondary { background: #334155; margin-top: 8px; }
+    .btn-secondary:hover { background: #475569; }
+  </style>
 </head>
 <body>
 
-    <!-- Hero Header Section -->
-    <header class="hero">
-        <h1 class="hero-logo">Utakeout.com</h1>
-        <div class="hero-divider"></div>
-        <p class="hero-tagline">Skip the Fees &mdash; Skip the Line</p>
-    </header>
+  <header>
+    <h1>AI Virtual Hair Studio</h1>
+    <p class="subtitle">Real-Time Hair Color Dye & Generative Style Transformation</p>
+  </header>
 
-    <!-- Controls (Search & Filtering) -->
-    <section class="controls-wrapper">
-        <div class="controls-card">
-            <!-- Search Inputs with Dedicated Search Button -->
-            <form id="searchForm" class="search-form" onsubmit="handleSearch(event)">
-                <div class="input-group">
-                    <label for="locationInput">ZIP Code or City / State</label>
-                    <input type="text" id="locationInput" class="control-input" placeholder="e.g. 23188 or Williamsburg, VA" required>
-                </div>
-                <div class="input-group">
-                    <label for="keywordInput">Restaurant Name or Food Keyword</label>
-                    <input type="text" id="keywordInput" class="control-input" placeholder="e.g. Italian, Sushi, Pizza, Steak">
-                </div>
-                <div class="input-group">
-                    <label for="cuisineFilter">Category</label>
-                    <select id="cuisineFilter" class="control-select">
-                        <option value="All">All Cuisines</option>
-                        <option value="Italian">Italian</option>
-                        <option value="American">American</option>
-                        <option value="Seafood">Seafood</option>
-                        <option value="Japanese">Japanese / Sushi</option>
-                        <option value="Mexican">Mexican</option>
-                        <option value="Thai">Thai</option>
-                        <option value="Indian">Indian</option>
-                        <option value="French">French</option>
-                        <option value="BBQ">BBQ</option>
-                    </select>
-                </div>
-                <button type="submit" class="btn-search">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                    Find Restaurants
-                </button>
-            </form>
-
-            <!-- Sorting Row -->
-            <div class="filter-row">
-                <div class="input-group">
-                    <label for="sortBy">Sort Results By</label>
-                    <select id="sortBy" class="control-select" onchange="applySortAndFilter()">
-                        <option value="rating">Highest Rated</option>
-                        <option value="name">Name (A-Z)</option>
-                    </select>
-                </div>
-                <div class="input-group">
-                    <label for="filterInput">Filter Loaded Results</label>
-                    <input type="text" id="filterInput" class="control-input" placeholder="Filter by keyword..." oninput="applySortAndFilter()">
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Main Directory & Map Content -->
-    <main class="container">
-        <div class="results-header">
-            <h2 class="section-title" style="font-family:'Playfair Display', serif;">Direct Ordering Directory</h2>
-            <div class="results-count" id="resultsCount">Showing 0 Restaurants</div>
-        </div>
-
-        <div class="content-layout">
-            <!-- Restaurant List -->
-            <div class="restaurant-grid" id="restaurantGrid">
-                <div class="state-container">
-                    <h3 style="margin-bottom:8px; font-family:'Playfair Display', serif;">Search Real-Time Restaurants</h3>
-                    <p>Enter your Zip Code or City above and click <strong>Find Restaurants</strong> to view verified locations, phone numbers, and official ordering links.</p>
-                </div>
-            </div>
-
-            <!-- Interactive Map Wrapper -->
-            <div class="map-sticky-wrapper">
-                <div id="map"></div>
-            </div>
-        </div>
-    </main>
-
-    <!-- Info Modal -->
-    <div class="modal" id="infoModal">
-        <div class="modal-content">
-            <button class="modal-close" onclick="closeModal()">&times;</button>
-            <h3 id="modalTitle" style="font-family:'Playfair Display', serif; font-size:1.6rem; color:var(--primary);"></h3>
-            <div id="modalCuisine" class="card-cuisine" style="margin-top:4px;"></div>
-            
-            <div class="modal-details">
-                <div class="modal-detail-row">
-                    <strong>Verified Address</strong>
-                    <span id="modalAddress"></span>
-                </div>
-                <div class="modal-detail-row">
-                    <strong>Direct Phone</strong>
-                    <span id="modalPhone"></span>
-                </div>
-                <div class="modal-detail-row">
-                    <strong>About / Menu Highlights</strong>
-                    <span id="modalDesc"></span>
-                </div>
-            </div>
-
-            <div class="btn-group">
-                <a id="modalWebsiteLink" href="#" target="_blank" rel="noopener" class="btn-order">Visit Official Website</a>
-                <a id="modalPhoneLink" href="#" class="btn-order btn-secondary">Call Restaurant</a>
-            </div>
-        </div>
+  <div class="app-container">
+    <!-- Viewport Column -->
+    <div class="card">
+      <div class="viewport">
+        <video id="webcam" class="mirror" playsinline></video>
+        <canvas id="outputCanvas" class="mirror"></canvas>
+      </div>
+      <button id="snapBtn" class="btn btn-secondary">Download Styled Snapshot</button>
     </div>
 
-    <!-- Footer -->
-    <footer>
-        <p>&copy; 2026 <strong>Utakeout.com</strong>. All rights reserved.</p>
-        <p style="margin-top: 8px; font-size: 0.8rem;">Supporting local restaurants with direct ordering without third-party commission fees.</p>
-    </footer>
+    <!-- Control Panel Column -->
+    <div class="card">
+      <!-- Mode Tabs -->
+      <div class="tab-group">
+        <button id="tabColor" class="tab-btn active">1. Color Dye</button>
+        <button id="tabStyle" class="tab-btn">2. Style Generator</button>
+      </div>
 
-    <!-- Leaflet JS -->
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+      <!-- MODE 1: COLOR DYE CONTROLS -->
+      <div id="colorPanel">
+        <div class="section-title">Select Hair Color</div>
+        <div class="color-grid">
+          <div class="color-swatch selected" style="background: #e2b070;" data-color="rgba(226, 176, 112, " data-name="Blonde"></div>
+          <div class="color-swatch" style="background: #8d2e16;" data-color="rgba(141, 46, 22, " data-name="Auburn"></div>
+          <div class="color-swatch" style="background: #ec4899;" data-color="rgba(236, 72, 153, " data-name="Pink"></div>
+          <div class="color-swatch" style="background: #10b981;" data-color="rgba(16, 185, 129, " data-name="Emerald"></div>
+          <div class="color-swatch" style="background: #3b82f6;" data-color="rgba(59, 130, 246, " data-name="Cobalt"></div>
+          <div class="color-swatch" style="background: #111827;" data-color="rgba(17, 24, 39, " data-name="Jet Black"></div>
+          <div class="color-swatch" style="background: #a855f7;" data-color="rgba(168, 85, 247, " data-name="Purple"></div>
+          <div class="color-swatch" style="background: #f97316;" data-color="rgba(249, 115, 22, " data-name="Copper"></div>
+        </div>
 
-    <!-- JavaScript Data, Map Integration & Search Engine -->
-    <script>
-        let rawRestaurantData = [];
-        let map;
-        let mapMarkers = [];
+        <div class="control-group">
+          <label>Dye Intensity <span id="opacityVal">60%</span></label>
+          <input type="range" id="opacitySlider" min="10" max="90" value="60">
+        </div>
 
-        // HTML Escape Utility
-        function escapeHtml(str) {
-            if (!str) return '';
-            return String(str)
-                .replace(/&/g, "&amp;")
-                .replace(/</g, "&lt;")
-                .replace(/>/g, "&gt;")
-                .replace(/"/g, "&quot;")
-                .replace(/'/g, "&#039;");
-        }
+        <div class="control-group">
+          <label>Shine & Luminance <span id="shineVal">40%</span></label>
+          <input type="range" id="shineSlider" min="0" max="100" value="40">
+        </div>
+      </div>
 
-        // Initialize Map
-        function initMap() {
-            // Default center around Williamsburg / Toano, VA area
-            map = L.map('map').setView([37.3125, -76.7615], 12);
+      <!-- MODE 2: STYLE GENERATOR CONTROLS -->
+      <div id="stylePanel" style="display: none;">
+        <div class="section-title">Select Style Preset</div>
+        <div class="style-grid">
+          <div class="style-card selected" data-style="buzzcut">Buzz Cut</div>
+          <div class="style-card" data-style="longwavy">Long Wavy</div>
+          <div class="style-card" data-style="afro">Afro Volume</div>
+          <div class="style-card" data-style="bob">Chic Bob</div>
+          <div class="style-card" data-style="curlyfringe">Curly Fringe</div>
+          <div class="style-card" data-style="pixie">Short Pixie</div>
+        </div>
 
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                maxZoom: 19,
-                attribution: '&copy; OpenStreetMap contributors'
-            }).addTo(map);
-        }
+        <div class="control-group">
+          <label>Hair Volume Offset <span id="volVal">1.0x</span></label>
+          <input type="range" id="volSlider" min="5" max="20" value="10">
+        </div>
 
-        window.onload = initMap;
+        <button id="generateBtn" class="btn">Generate AI Hairstyle</button>
+      </div>
 
-        // Expanded Local Database including 23188, 23185, and nearby regions
-        const verifiedLocalDatabase = {
-            '23188': [
-                {
-                    id: 201,
-                    name: "Giuseppe's Italian Restaurant",
-                    cuisine: "Italian",
-                    rating: 4.8,
-                    address: "5525 Olde Towne Rd, Williamsburg, VA 23188",
-                    phone: "(757) 565-1977",
-                    desc: "Authentic hearty Italian classics, wood-fired pizzas, and gourmet pasta specialties.",
-                    website: "https://www.giuseppes.com",
-                    image: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=600&q=80",
-                    lat: 37.3090,
-                    lng: -76.7490
-                },
-                {
-                    id: 202,
-                    name: "Opus 9 Steakhouse",
-                    cuisine: "American",
-                    rating: 4.8,
-                    address: "5143 Main St, Williamsburg, VA 23188",
-                    phone: "(757) 645-4779",
-                    desc: "Prime aged steaks, fresh seafood, extensive wine list, and elegant private dining.",
-                    website: "https://www.opus9steakhouse.com",
-                    image: "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=600&q=80",
-                    lat: 37.2785,
-                    lng: -76.7510
-                },
-                {
-                    id: 203,
-                    name: "Craft 31",
-                    cuisine: "American",
-                    rating: 4.6,
-                    address: "3701 Strawberry Plains Rd, Williamsburg, VA 23188",
-                    phone: "(757) 378-2400",
-                    desc: "Craft burgers, regional seafood, wood-fired pizza, and an extensive local tap selection.",
-                    website: "https://www.craft31.com",
-                    image: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=600&q=80",
-                    lat: 37.2662,
-                    lng: -76.7328
-                },
-                {
-                    id: 204,
-                    name: "Maurizio's Italian Restaurant",
-                    cuisine: "Italian",
-                    rating: 4.7,
-                    address: "264 McLaws Cir, Williamsburg, VA 23185",
-                    phone: "(757) 229-0337",
-                    desc: "Family-owned landmark serving authentic Italian pasta, veal, chicken, and pizza.",
-                    website: "https://www.mauriziositalian.com",
-                    image: "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=600&q=80",
-                    lat: 37.2351,
-                    lng: -76.6582
-                }
-            ],
-            '23185': [
-                {
-                    id: 101,
-                    name: "Fat Canary",
-                    cuisine: "American",
-                    rating: 4.8,
-                    address: "410 W Duke of Gloucester St, Williamsburg, VA 23185",
-                    phone: "(757) 229-3333",
-                    desc: "Upscale bistro offering refined regional American dishes, artisanal cheeses, and fine wines.",
-                    website: "https://www.fatcanarywilliamsburg.com",
-                    image: "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=600&q=80",
-                    lat: 37.2713,
-                    lng: -76.7058
-                },
-                {
-                    id: 105,
-                    name: "Aroma's World Specialty Cafe",
-                    cuisine: "American",
-                    rating: 4.7,
-                    address: "431 Prince George St, Williamsburg, VA 23185",
-                    phone: "(757) 221-6676",
-                    desc: "Fresh roasted coffees, gourmet paninis, bakery items, and fresh lunch specials.",
-                    website: "https://www.aromascafe.com",
-                    image: "https://images.unsplash.com/photo-1550966871-3ed3cdb5ed0c?auto=format&fit=crop&w=600&q=80",
-                    lat: 37.2721,
-                    lng: -76.7065
-                }
-            ]
-        };
+    </div>
+  </div>
 
-        // Geocoding helper using Nominatim API to get lat/lng for ANY location input
-        async function geocodeLocation(locationQuery) {
-            try {
-                const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(locationQuery)}`);
-                const data = await response.json();
-                if (data && data.length > 0) {
-                    return {
-                        lat: parseFloat(data[0].lat),
-                        lng: parseFloat(data[0].lon),
-                        displayName: data[0].display_name
-                    };
-                }
-            } catch (err) {
-                console.error("Geocoding service error:", err);
-            }
-            return null;
-        }
+  <script>
+    const videoElement = document.getElementById('webcam');
+    const canvasElement = document.getElementById('outputCanvas');
+    const canvasCtx = canvasElement.getContext('2d');
 
-        // Search Form Submit Handler
-        async function handleSearch(event) {
-            event.preventDefault();
-            const location = document.getElementById('locationInput').value.trim();
-            const keyword = document.getElementById('keywordInput').value.trim();
-            const cuisine = document.getElementById('cuisineFilter').value;
+    // UI Controls
+    const tabColor = document.getElementById('tabColor');
+    const tabStyle = document.getElementById('tabStyle');
+    const colorPanel = document.getElementById('colorPanel');
+    const stylePanel = document.getElementById('stylePanel');
 
-            if (!location) {
-                alert('Please enter a ZIP code or City.');
-                return;
-            }
+    const opacitySlider = document.getElementById('opacitySlider');
+    const opacityVal = document.getElementById('opacityVal');
+    const shineSlider = document.getElementById('shineSlider');
+    const shineVal = document.getElementById('shineVal');
+    const volSlider = document.getElementById('volSlider');
+    const volVal = document.getElementById('volVal');
 
-            fetchRestaurants(location, keyword, cuisine);
-        }
+    const snapBtn = document.getElementById('snapBtn');
+    const generateBtn = document.getElementById('generateBtn');
 
-        // Fetch / Search Logic with Dynamic Map Panning & Area Code Resolution
-        async function fetchRestaurants(location, keyword, cuisine) {
-            const grid = document.getElementById('restaurantGrid');
-            const countLabel = document.getElementById('resultsCount');
+    // State
+    let activeMode = 'color'; // 'color' or 'style'
+    let currentColorBase = 'rgba(226, 176, 112, ';
+    let dyeOpacity = 0.6;
+    let selectedStyle = 'buzzcut';
 
-            grid.innerHTML = `
-                <div class="state-container">
-                    <div class="spinner"></div>
-                    <h3 style="font-family:'Playfair Display', serif;">Finding Verified Local Restaurants...</h3>
-                    <p>Searching live locations in <strong>${escapeHtml(location)}</strong>...</p>
-                </div>
-            `;
-            countLabel.textContent = "Searching...";
+    // Tab Switching
+    tabColor.addEventListener('click', () => {
+      activeMode = 'color';
+      tabColor.classList.add('active');
+      tabStyle.classList.remove('active');
+      colorPanel.style.display = 'block';
+      stylePanel.style.display = 'none';
+    });
 
-            // 1. Resolve coordinates for the location
-            const geoCenter = await geocodeLocation(location);
+    tabStyle.addEventListener('click', () => {
+      activeMode = 'style';
+      tabStyle.classList.add('active');
+      tabColor.classList.remove('active');
+      stylePanel.style.display = 'block';
+      colorPanel.style.display = 'none';
+    });
 
-            if (geoCenter) {
-                // Instantly re-center and pan the interactive map to the new target ZIP/City
-                map.setView([geoCenter.lat, geoCenter.lng], 12);
-            }
+    // Swatch Selection
+    document.querySelectorAll('.color-swatch').forEach(swatch => {
+      swatch.addEventListener('click', () => {
+        document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('selected'));
+        swatch.classList.add('selected');
+        currentColorBase = swatch.getAttribute('data-color');
+      });
+    });
 
-            const zipClean = location.replace(/[^0-9]/g, '');
-            let results = [];
+    // Style Selection
+    document.querySelectorAll('.style-card').forEach(card => {
+      card.addEventListener('click', () => {
+        document.querySelectorAll('.style-card').forEach(c => c.classList.remove('selected'));
+        card.classList.add('selected');
+        selectedStyle = card.getAttribute('data-style');
+      });
+    });
 
-            // 2. Fetch from verified database or generate realistic local dataset centered at new location
-            if (verifiedLocalDatabase[zipClean]) {
-                results = [...verifiedLocalDatabase[zipClean]];
-            } else {
-                const centerLat = geoCenter ? geoCenter.lat : 37.3125;
-                const centerLng = geoCenter ? geoCenter.lng : -76.7615;
-                const locTitle = location.charAt(0).toUpperCase() + location.slice(1);
-                results = generateLocationDataWithRealCoords(locTitle, centerLat, centerLng, zipClean);
-            }
+    // Slider Listeners
+    opacitySlider.addEventListener('input', (e) => {
+      dyeOpacity = e.target.value / 100;
+      opacityVal.innerText = `${e.target.value}%`;
+    });
 
-            // 3. Apply Filters
-            if (cuisine !== 'All') {
-                results = results.filter(r => r.cuisine.toLowerCase() === cuisine.toLowerCase());
-            }
+    shineSlider.addEventListener('input', (e) => {
+      shineVal.innerText = `${e.target.value}%`;
+    });
 
-            if (keyword) {
-                const kwLower = keyword.toLowerCase();
-                results = results.filter(r => 
-                    r.name.toLowerCase().includes(kwLower) || 
-                    r.cuisine.toLowerCase().includes(kwLower) ||
-                    r.desc.toLowerCase().includes(kwLower)
-                );
-            }
+    volSlider.addEventListener('input', (e) => {
+      volVal.innerText = `${(e.target.value / 10).toFixed(1)}x`;
+    });
 
-            rawRestaurantData = results;
-            applySortAndFilter();
-        }
+    // MediaPipe Callback
+    function onResults(results) {
+      canvasElement.width = videoElement.videoWidth;
+      canvasElement.height = videoElement.videoHeight;
 
-        // Filter loaded list and sort
-        function applySortAndFilter() {
-            const filterKeyword = document.getElementById('filterInput').value.toLowerCase().trim();
-            const sortBy = document.getElementById('sortBy').value;
+      canvasCtx.save();
+      canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
 
-            let displayList = [...rawRestaurantData];
+      // Draw Base Camera Image
+      canvasCtx.drawImage(results.image, 0, 0, canvasElement.width, canvasElement.height);
 
-            if (filterKeyword) {
-                displayList = displayList.filter(item => 
-                    item.name.toLowerCase().includes(filterKeyword) ||
-                    item.cuisine.toLowerCase().includes(filterKeyword) ||
-                    item.address.toLowerCase().includes(filterKeyword)
-                );
-            }
+      if (results.segmentationMask && activeMode === 'color') {
+        // Create an off-screen mask canvas for hair processing
+        const maskCanvas = document.createElement('canvas');
+        maskCanvas.width = canvasElement.width;
+        maskCanvas.height = canvasElement.height;
+        const maskCtx = maskCanvas.getContext('2d');
 
-            if (sortBy === 'rating') {
-                displayList.sort((a, b) => b.rating - a.rating);
-            } else if (sortBy === 'name') {
-                displayList.sort((a, b) => a.name.localeCompare(b.name));
-            }
+        // Draw segmentation mask
+        maskCtx.drawImage(results.segmentationMask, 0, 0, maskCanvas.width, maskCanvas.height);
 
-            renderGrid(displayList);
-            updateMapMarkers(displayList);
-        }
+        // Composite Color Dye
+        canvasCtx.globalCompositeOperation = 'soft-light';
+        canvasCtx.fillStyle = `${currentColorBase}${dyeOpacity})`;
+        canvasCtx.fillRect(0, 0, canvasElement.width, canvasElement.height);
 
-        // Render Cards to Page
-        function renderGrid(data) {
-            const grid = document.getElementById('restaurantGrid');
-            const countLabel = document.getElementById('resultsCount');
+        canvasCtx.globalCompositeOperation = 'destination-in';
+        canvasCtx.drawImage(maskCanvas, 0, 0);
 
-            countLabel.textContent = `Showing ${data.length} Verified Restaurant${data.length === 1 ? '' : 's'}`;
-            grid.innerHTML = '';
+        canvasCtx.restore();
 
-            if (data.length === 0) {
-                grid.innerHTML = `
-                    <div class="state-container">
-                        <h3 style="font-family:'Playfair Display', serif; margin-bottom:8px;">No verified restaurants found</h3>
-                        <p>Try broadening your search term, changing the category, or searching a nearby ZIP code.</p>
-                    </div>
-                `;
-                return;
-            }
+        // Redraw base video beneath blending layers
+        canvasCtx.globalCompositeOperation = 'destination-over';
+        canvasCtx.drawImage(results.image, 0, 0, canvasElement.width, canvasElement.height);
+      } else {
+        canvasCtx.restore();
+      }
+    }
 
-            data.forEach(item => {
-                const card = document.createElement('article');
-                card.className = 'card';
-                card.id = `card-${item.id}`;
+    // Initialize MediaPipe Selfie Segmentation
+    const selfieSegmentation = new SelfieSegmentation({
+      locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation/${file}`
+    });
 
-                let cleanDomain = item.website.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '');
-                if (cleanDomain.length > 25) cleanDomain = cleanDomain.substring(0, 22) + '...';
+    selfieSegmentation.setOptions({
+      modelSelection: 1, // 1 for landscape/high precision
+    });
 
-                const telLink = 'tel:' + item.phone.replace(/[^0-9]/g, '');
+    selfieSegmentation.onResults(onResults);
 
-                card.innerHTML = `
-                    <div class="card-img-wrapper">
-                        <img src="${item.image}" alt="${escapeHtml(item.name)}" class="card-img">
-                        <div class="rating-badge">&#9733; ${item.rating}</div>
-                    </div>
-                    <div class="card-content">
-                        <h3 class="card-title">${escapeHtml(item.name)}</h3>
-                        <p class="card-cuisine">${escapeHtml(item.cuisine)}</p>
-                        <p class="card-desc">${escapeHtml(item.desc)}</p>
-                        
-                        <div class="card-meta">
-                            <div class="meta-item">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-top:4px; flex-shrink:0;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-                                <span>${escapeHtml(item.address)}</span>
-                            </div>
-                            <div class="meta-item">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-top:4px; flex-shrink:0;"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
-                                <a href="${telLink}">${escapeHtml(item.phone)}</a>
-                            </div>
-                            <div class="meta-item">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-top:4px; flex-shrink:0;"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
-                                <a href="${item.website}" target="_blank" rel="noopener">${cleanDomain}</a>
-                            </div>
-                        </div>
+    // Initialize Camera
+    const camera = new Camera(videoElement, {
+      onFrame: async () => {
+        await selfieSegmentation.send({ image: videoElement });
+      },
+      width: 640,
+      height: 480
+    });
 
-                        <div class="btn-group">
-                            <a href="${item.website}" target="_blank" rel="noopener" class="btn-order">Visit Official Site</a>
-                            <button onclick="openModal('${escapeHtml(item.name)}', '${escapeHtml(item.cuisine)}', '${escapeHtml(item.desc)}', '${escapeHtml(item.address)}', '${escapeHtml(item.phone)}', '${item.website}')" class="btn-order btn-secondary">Details</button>
-                        </div>
-                    </div>
-                `;
-                grid.appendChild(card);
-            });
-        }
+    camera.start().catch(err => {
+      alert("Camera access required for live hair try-on.");
+      console.error(err);
+    });
 
-        // Map Markers Integration
-        function updateMapMarkers(data) {
-            // Clear existing markers
-            mapMarkers.forEach(marker => map.removeLayer(marker));
-            mapMarkers = [];
+    // Download Snapshot
+    snapBtn.addEventListener('click', () => {
+      const link = document.createElement('a');
+      link.download = 'my-new-hairstyle.png';
+      link.href = canvasElement.toDataURL();
+      link.click();
+    });
 
-            if (!data || data.length === 0) return;
-
-            const bounds = L.latLngBounds();
-
-            data.forEach(item => {
-                if (item.lat && item.lng) {
-                    const marker = L.marker([item.lat, item.lng]).addTo(map);
-                    
-                    const popupContent = `
-                        <div style="font-family:'Montserrat', sans-serif;">
-                            <strong style="font-size:1rem; color:var(--primary);">${escapeHtml(item.name)}</strong><br>
-                            <span style="color:var(--accent); font-weight:700; font-size:0.75rem; text-transform:uppercase;">${escapeHtml(item.cuisine)}</span><br>
-                            <span style="font-size:0.85rem; color:#64748b;">${escapeHtml(item.address)}</span><br>
-                            <a href="${item.website}" target="_blank" style="color:var(--primary); font-weight:700; font-size:0.85rem; margin-top:4px; display:inline-block;">Visit Site &rarr;</a>
-                        </div>
-                    `;
-                    marker.bindPopup(popupContent);
-                    
-                    marker.on('click', () => {
-                        const cardElem = document.getElementById(`card-${item.id}`);
-                        if (cardElem) {
-                            cardElem.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                        }
-                    });
-
-                    mapMarkers.push(marker);
-                    bounds.extend([item.lat, item.lng]);
-                }
-            });
-
-            if (mapMarkers.length > 0) {
-                map.fitBounds(bounds, { padding: [40, 40] });
-            }
-        }
-
-        // Dynamic local generator mapping proper coordinates & local area codes
-        function generateLocationDataWithRealCoords(locationName, centerLat, centerLng, zip) {
-            const prefixes = ["Bistro", "Grill", "Tavern", "Trattoria", "Kitchen & Bar", "House of Pasta"];
-            const cuisines = ["Italian", "American", "Seafood", "Japanese", "Mexican", "Thai", "BBQ"];
-            
-            // Determine Regional Area Code based on target area
-            let areaCode = "757"; // Default Hampton Roads/Williamsburg regional area code
-            if (zip.startsWith("80") || zip.startsWith("81")) areaCode = "303";
-            else if (zip.startsWith("90") || zip.startsWith("91")) areaCode = "310";
-            else if (zip.startsWith("33")) areaCode = "407";
-
-            let list = [];
-            let count = 6;
-
-            for (let i = 1; i <= count; i++) {
-                const selectedCuisine = cuisines[(i - 1) % cuisines.length];
-                const name = `${locationName} ${selectedCuisine} ${prefixes[i % prefixes.length]}`;
-                const sanitizedDomain = name.toLowerCase().replace(/[^a-z0-9]/g, '');
-                
-                // Spread markers across the target geographic area
-                const latOffset = (Math.sin(i) * 0.02);
-                const lngOffset = (Math.cos(i) * 0.02);
-
-                const exchange = 200 + (i * 35);
-                const line = 1000 + (i * 123);
-
-                list.push({
-                    id: 300 + i,
-                    name: name,
-                    cuisine: selectedCuisine,
-                    rating: (4.5 + (i * 0.1) % 0.5).toFixed(1),
-                    address: `${100 + (i * 45)} Main Street, ${locationName} ${zip ? zip : ''}`,
-                    phone: `(${areaCode}) ${exchange}-${line}`,
-                    desc: `Locally owned ${selectedCuisine} dining destination offering direct order pickup and local online ordering.`,
-                    website: `https://www.${sanitizedDomain}.com`,
-                    image: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=600&q=80",
-                    lat: centerLat + latOffset,
-                    lng: centerLng + lngOffset
-                });
-            }
-            return list;
-        }
-
-        // Modal Logic
-        function openModal(name, cuisine, desc, address, phone, website) {
-            document.getElementById('modalTitle').textContent = name;
-            document.getElementById('modalCuisine').textContent = cuisine;
-            document.getElementById('modalDesc').textContent = desc;
-            document.getElementById('modalAddress').textContent = address;
-            document.getElementById('modalPhone').textContent = phone;
-            document.getElementById('modalWebsiteLink').href = website;
-            document.getElementById('modalPhoneLink').href = 'tel:' + phone.replace(/[^0-9]/g, '');
-            document.getElementById('infoModal').style.display = 'flex';
-        }
-
-        function closeModal() {
-            document.getElementById('infoModal').style.display = 'none';
-        }
-
-        window.onclick = function(event) {
-            const modal = document.getElementById('infoModal');
-            if (event.target === modal) {
-                closeModal();
-            }
-        };
-    </script>
+    // AI Generation Simulator
+    generateBtn.addEventListener('click', () => {
+      alert(`AI Model Request: Generating '${selectedStyle}' style texture layer. In a production build, this captures a frame and sends it to a Replicate/Stable Diffusion API endpoint.`);
+    });
+  </script>
 </body>
 </html>

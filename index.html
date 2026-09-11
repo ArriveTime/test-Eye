@@ -3,20 +3,22 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Live Interactive Hair & Style Studio</title>
+  <title>Live Precision Hair & Style Studio</title>
   
-  <!-- MediaPipe Selfie Segmentation via CDN -->
+  <!-- MediaPipe Face Mesh & Camera Utilities -->
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation/selfie_segmentation.js" crossorigin="anonymous"></script>
 
   <style>
     :root {
       --bg: #0b0f19;
-      --overlay-bg: rgba(15, 23, 42, 0.75);
+      --card-bg: rgba(21, 29, 48, 0.85);
       --border: rgba(255, 255, 255, 0.15);
       --accent: #8b5cf6;
       --accent-hover: #7c3aed;
       --text: #f8fafc;
+      --text-muted: #94a3b8;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -28,30 +30,62 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
       min-height: 100vh;
-      padding: 12px;
-      overflow: hidden;
+      padding: 16px;
     }
 
-    /* Main Container */
-    .studio-window {
-      position: relative;
+    header {
+      text-align: center;
+      margin-bottom: 16px;
+    }
+
+    h1 { font-size: 1.6rem; color: #a78bfa; margin-bottom: 4px; }
+    p { color: var(--text-muted); font-size: 0.9rem; }
+
+    /* Dual Side-by-Side Viewport Layout */
+    .studio-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
       width: 100%;
-      max-width: 960px;
-      aspect-ratio: 16/9;
-      border-radius: 16px;
-      overflow: hidden;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
-      border: 1px solid var(--border);
+      max-width: 1100px;
+      margin-bottom: 20px;
+    }
+
+    @media (min-width: 768px) {
+      .studio-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .viewport-card {
+      position: relative;
       background: #000;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      aspect-ratio: 4/3;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
     }
 
-    @media (max-aspect-ratio: 16/9) {
-      .studio-window { aspect-ratio: 4/3; }
+    .viewport-card header {
+      position: absolute;
+      top: 10px; left: 12px;
+      background: rgba(0, 0, 0, 0.65);
+      backdrop-filter: blur(8px);
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      z-index: 10;
+      border: 1px solid rgba(255,255,255,0.1);
     }
 
-    /* Video & Canvas Elements */
+    .label-orig { color: #94a3b8; }
+    .label-trans { color: #c4b5fd; }
+
     video, canvas {
       position: absolute;
       top: 0; left: 0;
@@ -61,242 +95,141 @@
 
     .mirror { transform: scaleX(-1); }
 
-    /* Floating UI Overlay Header */
-    .overlay-header {
-      position: absolute;
-      top: 16px; left: 16px; right: 16px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      z-index: 20;
-      pointer-events: none;
-    }
-
-    .brand-badge {
-      background: var(--overlay-bg);
+    /* Controls Panel Dock */
+    .controls-dock {
+      width: 100%;
+      max-width: 1100px;
+      background: var(--card-bg);
       backdrop-filter: blur(12px);
-      padding: 8px 16px;
-      border-radius: 30px;
       border: 1px solid var(--border);
-      font-size: 0.9rem;
-      font-weight: 600;
-      color: #c4b5fd;
-      pointer-events: auto;
-    }
-
-    .top-actions {
-      display: flex;
-      gap: 10px;
-      pointer-events: auto;
-    }
-
-    .btn-pill {
-      background: var(--overlay-bg);
-      backdrop-filter: blur(12px);
-      color: var(--text);
-      border: 1px solid var(--border);
-      padding: 8px 16px;
-      border-radius: 30px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .btn-pill:hover, .btn-pill.active {
-      background: var(--accent);
-      border-color: var(--accent);
-    }
-
-    /* Floating Control Dock (Bottom Controls) */
-    .control-dock {
-      position: absolute;
-      bottom: 20px; left: 50%;
-      transform: translateX(-50%);
-      width: calc(100% - 32px);
-      max-width: 680px;
-      background: var(--overlay-bg);
-      backdrop-filter: blur(16px);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 16px;
-      z-index: 20;
+      border-radius: 16px;
+      padding: 18px;
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 16px;
     }
 
-    /* Swatches & Chips Row */
-    .dock-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      overflow-x: auto;
-      padding-bottom: 2px;
+    .dock-title {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
     }
 
-    .swatch-group {
+    .swatch-row {
       display: flex;
-      gap: 10px;
       align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
     }
 
     .swatch {
-      width: 32px;
-      height: 32px;
+      width: 36px; height: 36px;
       border-radius: 50%;
-      border: 2px solid rgba(255, 255, 255, 0.4);
+      border: 2px solid rgba(255, 255, 255, 0.3);
       cursor: pointer;
       transition: transform 0.15s, border-color 0.15s;
-      flex-shrink: 0;
     }
 
-    .swatch:hover { transform: scale(1.15); }
+    .swatch:hover { transform: scale(1.1); }
     .swatch.selected {
       border-color: #ffffff;
-      transform: scale(1.25);
-      box-shadow: 0 0 12px rgba(255, 255, 255, 0.6);
+      transform: scale(1.2);
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
     }
 
-    /* Range Sliders */
-    .slider-row {
+    .slider-group {
       display: flex;
-      gap: 16px;
-      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
     }
 
     .slider-field {
       flex: 1;
+      min-width: 200px;
       display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 0.75rem;
-      color: #cbd5e1;
+      flex-direction: column;
+      gap: 6px;
+      font-size: 0.8rem;
+      color: var(--text-muted);
     }
 
     input[type="range"] {
-      flex: 1;
+      width: 100%;
       accent-color: var(--accent);
       cursor: pointer;
     }
 
-    /* Mode Toggles */
-    .mode-switch {
+    .action-row {
       display: flex;
-      background: rgba(0, 0, 0, 0.4);
-      border-radius: 20px;
-      padding: 3px;
-      border: 1px solid var(--border);
+      justify-content: flex-end;
     }
 
-    .mode-btn {
-      padding: 6px 14px;
-      border-radius: 16px;
-      border: none;
-      background: transparent;
-      color: #94a3b8;
-      font-size: 0.8rem;
-      font-weight: 600;
-      cursor: pointer;
-    }
-
-    .mode-btn.active {
+    .btn {
       background: var(--accent);
       color: white;
-    }
-
-    /* Split Screen Divider Overlay */
-    .split-divider {
-      position: absolute;
-      top: 0; bottom: 0; left: 50%;
-      width: 2px;
-      background: rgba(255, 255, 255, 0.8);
-      box-shadow: 0 0 8px rgba(0,0,0,0.5);
-      z-index: 15;
-      display: none;
-      pointer-events: none;
-    }
-
-    .split-label {
-      position: absolute;
-      top: 60px;
-      background: rgba(0,0,0,0.6);
-      padding: 4px 10px;
-      border-radius: 12px;
-      font-size: 0.75rem;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
       font-weight: 600;
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
-      z-index: 15;
-      display: none;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: background 0.2s;
     }
 
-    .split-left { left: 20px; color: #94a3b8; }
-    .split-right { right: 20px; color: #c4b5fd; }
+    .btn:hover { background: var(--accent-hover); }
   </style>
 </head>
 <body>
 
-  <div class="studio-window">
-    <!-- Raw Webcam Feed -->
-    <video id="webcam" class="mirror" playsinline></video>
-    
-    <!-- Real-time Processing Canvas -->
-    <canvas id="outputCanvas" class="mirror"></canvas>
+  <header>
+    <h1>AI Live Hair Studio</h1>
+    <p>Original Camera Feed vs Real-Time Precision Hair Transformation</p>
+  </header>
 
-    <!-- Split-Screen Visual Indicators -->
-    <div id="splitDivider" class="split-divider"></div>
-    <div id="labelBefore" class="split-label split-left">Original</div>
-    <div id="labelAfter" class="split-label split-right">Transformed</div>
+  <div class="studio-grid">
+    <!-- Left Screen: Original Camera Stream -->
+    <div class="viewport-card">
+      <header class="label-orig">1. Original Feed</header>
+      <video id="webcam" class="mirror" playsinline></video>
+    </div>
 
-    <!-- Floating Top Header -->
-    <div class="overlay-header">
-      <div class="brand-badge">✨ Live Hair Studio</div>
-      <div class="top-actions">
-        <button id="splitBtn" class="btn-pill">Compare (Split Screen)</button>
-        <button id="snapBtn" class="btn-pill">📷 Snapshot</button>
+    <!-- Right Screen: Transformed Hair View -->
+    <div class="viewport-card">
+      <header class="label-trans">2. Transformed Hair</header>
+      <canvas id="outputCanvas" class="mirror"></canvas>
+    </div>
+  </div>
+
+  <!-- Interactive Controls -->
+  <div class="controls-dock">
+    <div>
+      <div class="dock-title" style="margin-bottom: 8px;">Select Hair Color Dye</div>
+      <div class="swatch-row">
+        <div class="swatch selected" style="background: #e2b070;" data-color="rgba(226, 176, 112, "></div>
+        <div class="swatch" style="background: #8d2e16;" data-color="rgba(141, 46, 22, "></div>
+        <div class="swatch" style="background: #ec4899;" data-color="rgba(236, 72, 153, "></div>
+        <div class="swatch" style="background: #10b981;" data-color="rgba(16, 185, 129, "></div>
+        <div class="swatch" style="background: #3b82f6;" data-color="rgba(59, 130, 246, "></div>
+        <div class="swatch" style="background: #111827;" data-color="rgba(17, 24, 39, "></div>
+        <div class="swatch" style="background: #a855f7;" data-color="rgba(168, 85, 247, "></div>
+        <div class="swatch" style="background: #f97316;" data-color="rgba(249, 115, 22, "></div>
       </div>
     </div>
 
-    <!-- Floating Bottom Control Dock -->
-    <div class="control-dock">
-      <!-- Row 1: Mode Switch & Color Swatches -->
-      <div class="dock-row">
-        <div class="mode-switch">
-          <button id="modeColor" class="mode-btn active">Color Dye</button>
-          <button id="modeStyle" class="mode-btn">AI Hairstyle</button>
-        </div>
-
-        <div id="colorSwatches" class="swatch-group">
-          <div class="swatch selected" style="background: #e2b070;" data-color="rgba(226, 176, 112, "></div>
-          <div class="swatch" style="background: #8d2e16;" data-color="rgba(141, 46, 22, "></div>
-          <div class="swatch" style="background: #ec4899;" data-color="rgba(236, 72, 153, "></div>
-          <div class="swatch" style="background: #10b981;" data-color="rgba(16, 185, 129, "></div>
-          <div class="swatch" style="background: #3b82f6;" data-color="rgba(59, 130, 246, "></div>
-          <div class="swatch" style="background: #111827;" data-color="rgba(17, 24, 39, "></div>
-          <div class="swatch" style="background: #a855f7;" data-color="rgba(168, 85, 247, "></div>
-        </div>
-
-        <div id="styleChips" class="swatch-group" style="display: none;">
-          <button class="btn-pill active" data-style="wavy">Long Wavy</button>
-          <button class="btn-pill" data-style="buzz">Buzz Cut</button>
-          <button class="btn-pill" data-style="bob">Chic Bob</button>
-          <button class="btn-pill" data-style="afro">Afro</button>
-        </div>
+    <div class="slider-group">
+      <div class="slider-field">
+        <label>Dye Saturation <span id="opacityVal">75%</span></label>
+        <input type="range" id="opacitySlider" min="20" max="100" value="75">
       </div>
-
-      <!-- Row 2: Live Adjustments Sliders -->
-      <div class="slider-row">
-        <div class="slider-field">
-          <span>Dye Intensity</span>
-          <input type="range" id="opacitySlider" min="20" max="95" value="70">
-        </div>
-        <div class="slider-field">
-          <span>Highlight Shine</span>
-          <input type="range" id="shineSlider" min="0" max="100" value="40">
-        </div>
+      <div class="slider-field">
+        <label>Hair Line Offset <span id="offsetVal">0px</span></label>
+        <input type="range" id="offsetSlider" min="-20" max="30" value="0">
       </div>
+    </div>
+
+    <div class="action-row">
+      <button id="snapBtn" class="btn">📷 Download Transformed Snapshot</button>
     </div>
   </div>
 
@@ -305,41 +238,16 @@
     const canvasElement = document.getElementById('outputCanvas');
     const canvasCtx = canvasElement.getContext('2d');
 
-    // Controls
-    const modeColor = document.getElementById('modeColor');
-    const modeStyle = document.getElementById('modeStyle');
-    const colorSwatches = document.getElementById('colorSwatches');
-    const styleChips = document.getElementById('styleChips');
-
-    const splitBtn = document.getElementById('splitBtn');
-    const splitDivider = document.getElementById('splitDivider');
-    const labelBefore = document.getElementById('labelBefore');
-    const labelAfter = document.getElementById('labelAfter');
-    const snapBtn = document.getElementById('snapBtn');
     const opacitySlider = document.getElementById('opacitySlider');
+    const opacityVal = document.getElementById('opacityVal');
+    const offsetSlider = document.getElementById('offsetSlider');
+    const offsetVal = document.getElementById('offsetVal');
+    const snapBtn = document.getElementById('snapBtn');
 
-    // State
-    let activeMode = 'color';
-    let isSplitView = false;
     let currentColorBase = 'rgba(226, 176, 112, ';
-    let dyeOpacity = 0.7;
-
-    // Toggle Modes
-    modeColor.addEventListener('click', () => {
-      activeMode = 'color';
-      modeColor.classList.add('active');
-      modeStyle.classList.remove('active');
-      colorSwatches.style.display = 'flex';
-      styleChips.style.display = 'none';
-    });
-
-    modeStyle.addEventListener('click', () => {
-      activeMode = 'style';
-      modeStyle.classList.add('active');
-      modeColor.classList.remove('active');
-      colorSwatches.style.display = 'none';
-      styleChips.style.display = 'flex';
-    });
+    let dyeOpacity = 0.75;
+    let hairlineOffset = 0;
+    let faceLandmarks = null;
 
     // Swatch Selection
     document.querySelectorAll('.swatch').forEach(swatch => {
@@ -350,21 +258,36 @@
       });
     });
 
-    // Toggle Split View
-    splitBtn.addEventListener('click', () => {
-      isSplitView = !isSplitView;
-      splitBtn.classList.toggle('active', isSplitView);
-      splitDivider.style.display = isSplitView ? 'block' : 'none';
-      labelBefore.style.display = isSplitView ? 'block' : 'none';
-      labelAfter.style.display = isSplitView ? 'block' : 'none';
-    });
-
     opacitySlider.addEventListener('input', (e) => {
       dyeOpacity = e.target.value / 100;
+      opacityVal.innerText = `${e.target.value}%`;
     });
 
-    // MediaPipe Processing Callback
-    function onResults(results) {
+    offsetSlider.addEventListener('input', (e) => {
+      hairlineOffset = parseInt(e.target.value, 10);
+      offsetVal.innerText = `${hairlineOffset}px`;
+    });
+
+    // Face Mesh Initialization (Tracks hairline & forehead boundaries)
+    const faceMesh = new FaceMesh({
+      locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}`
+    });
+
+    faceMesh.setOptions({
+      maxNumFaces: 1,
+      refineLandmarks: true,
+      minDetectionConfidence: 0.5,
+      minTrackingConfidence: 0.5
+    });
+
+    faceMesh.onResults((results) => {
+      if (results.multiFaceLandmarks && results.multiFaceLandmarks.length > 0) {
+        faceLandmarks = results.multiFaceLandmarks[0];
+      }
+    });
+
+    // Selfie Segmentation Callback
+    function onSegmentationResults(results) {
       canvasElement.width = videoElement.videoWidth;
       canvasElement.height = videoElement.videoHeight;
 
@@ -374,47 +297,61 @@
       canvasCtx.save();
       canvasCtx.clearRect(0, 0, w, h);
 
-      // Render Camera Feed
+      // Render Base Original Camera Stream to Right Canvas
       canvasCtx.drawImage(results.image, 0, 0, w, h);
 
-      if (results.segmentationMask && activeMode === 'color') {
-        // Create an offscreen buffer for the hair mask blending
+      if (results.segmentationMask && faceLandmarks) {
+        // Create dynamic off-screen hair mask
         const maskCanvas = document.createElement('canvas');
         maskCanvas.width = w;
         maskCanvas.height = h;
         const maskCtx = maskCanvas.getContext('2d');
 
-        // Draw segment mask
+        // Draw body segment mask
         maskCtx.drawImage(results.segmentationMask, 0, 0, w, h);
 
-        // Calculate clip boundary if Split View is active
-        const renderWidth = isSplitView ? w / 2 : w;
-        const startX = isSplitView ? w / 2 : 0;
+        // Exclude face & lower body by building a forehead boundary cut
+        // Eyebrow & Forehead landmarks in Face Mesh: [10, 338, 297, 332, 284, 251, 389, 162, 21, 54, 103, 67, 109]
+        const foreheadIndices = [10, 338, 297, 332, 284, 251, 389, 162, 21, 54, 103, 67, 109];
+        
+        maskCtx.globalCompositeOperation = 'destination-out';
+        maskCtx.beginPath();
 
+        // Path around lower face to isolate the top hair region
+        const chinY = faceLandmarks[152].y * h;
+        const foreheadY = (faceLandmarks[10].y * h) + hairlineOffset;
+
+        maskCtx.moveTo(0, foreheadY);
+        foreheadIndices.forEach(idx => {
+          const pt = faceLandmarks[idx];
+          maskCtx.lineTo(pt.x * w, (pt.y * h) + hairlineOffset);
+        });
+
+        maskCtx.lineTo(w, foreheadY);
+        maskCtx.lineTo(w, h);
+        maskCtx.lineTo(0, h);
+        maskCtx.closePath();
+        maskCtx.fill();
+
+        // Apply Hair Color Dye strictly inside the isolated hair region
         canvasCtx.save();
-        if (isSplitView) {
-          canvasCtx.beginPath();
-          canvasCtx.rect(startX, 0, renderWidth, h);
-          canvasCtx.clip();
-        }
-
-        // Soft Color Composite Layer
+        
+        // Multiply & Soft-Light Blending to preserve underlying hair strands and highlights
         canvasCtx.globalCompositeOperation = 'soft-light';
         canvasCtx.fillStyle = `${currentColorBase}${dyeOpacity})`;
         canvasCtx.fillRect(0, 0, w, h);
 
-        // Multiply Layer for depth
-        canvasCtx.globalCompositeOperation = 'multiply';
-        canvasCtx.fillStyle = `${currentColorBase}${dyeOpacity * 0.5})`;
+        canvasCtx.globalCompositeOperation = 'color';
+        canvasCtx.fillStyle = `${currentColorBase}${dyeOpacity * 0.8})`;
         canvasCtx.fillRect(0, 0, w, h);
 
-        // Restrict transformation strictly to hair mask
+        // Clip blending layers strictly inside the hair mask
         canvasCtx.globalCompositeOperation = 'destination-in';
         canvasCtx.drawImage(maskCanvas, 0, 0);
 
         canvasCtx.restore();
 
-        // Layer unedited camera base underneath
+        // Place original video beneath the transformed hair overlay
         canvasCtx.globalCompositeOperation = 'destination-over';
         canvasCtx.drawImage(results.image, 0, 0, w, h);
       }
@@ -422,17 +359,18 @@
       canvasCtx.restore();
     }
 
-    // Initialize MediaPipe Segmentation Engine
+    // Selfie Segmentation Engine
     const selfieSegmentation = new SelfieSegmentation({
       locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation/${file}`
     });
 
     selfieSegmentation.setOptions({ modelSelection: 1 });
-    selfieSegmentation.onResults(onResults);
+    selfieSegmentation.onResults(onSegmentationResults);
 
-    // Initialize Camera Feed
+    // Single Camera Stream Pipeline feeding both AI models
     const camera = new Camera(videoElement, {
       onFrame: async () => {
+        await faceMesh.send({ image: videoElement });
         await selfieSegmentation.send({ image: videoElement });
       },
       width: 1280,
@@ -440,14 +378,14 @@
     });
 
     camera.start().catch(err => {
-      alert("Please allow camera access to use the live hair studio.");
+      alert("Camera access required for live hair studio.");
       console.error(err);
     });
 
-    // Save Snapshot
+    // Save High-Res Snapshot
     snapBtn.addEventListener('click', () => {
       const link = document.createElement('a');
-      link.download = 'hair-transformation.png';
+      link.download = 'transformed-hair.png';
       link.href = canvasElement.toDataURL('image/png');
       link.click();
     });

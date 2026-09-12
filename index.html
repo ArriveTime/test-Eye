@@ -74,7 +74,7 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator { filter: invert
                         <optgroup label="Your Saved Voice Recordings" id="recordingsOptGroup"> 
                         </optgroup> 
                     </select> 
-                </div>
+                </div> 
                 <!-- Custom Speech Script Box --> 
                 <div id="customSpeechContainer" class="space-y-2 bg-slate-950 p-4 border border-slate-800 rounded-xl"> 
                     <div class="flex items-center justify-between"> 
@@ -547,6 +547,345 @@ window.deleteCustomRecording = async function(id) {
 function loadAndFilterVoices() { 
     if (!('speechSynthesis' in window)) return; 
     allSystemVoices = window.speechSynthesis.getVoices().filter(v => v.lang.startsWith('en') && v.name.toLowerCase() !== 'fred'); 
+    const maleKeywords = ['male', 'david', 'mark', 'george', 'guy', 'alex', 'daniel', 'oliver', 'ryan', 'james', 'brian', 'john', 'robert', 'thomas', 'richard', 'charles', 'joseph', 'christopher', 'paul', 'donald', 'kenneth', 'steven', 'edward', 'ronald', 'anthony', 'kevin', 'jason', 'jeffrey', 'gary', 'frank', 'scott', 'eric'];
+    const femaleKeywords = ['female', 'zira', 'hazel', 'susan', 'cathy', 'victoria', 'karen', 'moira', 'fiona', 'tessa', 'samantha', 'vicki', 'allison', 'ava', 'amelia', 'anna', 'aria', 'audrey', 'charlotte', 'clara', 'elena', 'emily', 'emma', 'eva', 'grace', 'hannah', 'isabella', 'julia', 'lily', 'lucia', 'lucy', 'mia', 'natalie', 'olivia', 'penelope', 'ruby', 'sofia', 'sophia', 'stella', 'zoe'];
+    
+    if (voiceSelectDropdown) {
+        voiceSelectDropdown.innerHTML = '';
+        let filtered = allSystemVoices.filter(v => {
+            const name = v.name.toLowerCase();
+            if (currentGenderFilter === 'female') {
+                return femaleKeywords.some(k => name.includes(k)) || (!maleKeywords.some(k => name.includes(k)) && !name.includes('male'));
+            } else if (currentGenderFilter === 'male') {
+                return maleKeywords.some(k => name.includes(k)) || name.includes('male');
+            }
+            return true;
+        });
+        if (filtered.length === 0) filtered = allSystemVoices;
+        filtered.forEach((v) => {
+            const opt = document.createElement('option');
+            opt.value = v.name;
+            opt.textContent = `${v.name} (${v.lang})`;
+            voiceSelectDropdown.appendChild(opt);
+        });
+        if (filtered.length > 0) selectedVoice = filtered[0];
+    }
+}
+
+window.setGenderFilter = function(gender) {
+    currentGenderFilter = gender;
+    if (tabFemale) tabFemale.className = gender === 'female' ? "py-1.5 rounded-md bg-amber-500/20 text-amber-400 border border-amber-500/30" : "py-1.5 rounded-md text-slate-400 hover:text-slate-200";
+    if (tabMale) tabMale.className = gender === 'male' ? "py-1.5 rounded-md bg-amber-500/20 text-amber-400 border border-amber-500/30" : "py-1.5 rounded-md text-slate-400 hover:text-slate-200";
+    if (tabNature) tabNature.className = gender === 'nature' ? "py-1.5 rounded-md bg-amber-500/20 text-amber-400 border border-amber-500/30" : "py-1.5 rounded-md text-slate-400 hover:text-slate-200";
+    
+    if (voiceDropdownContainer && natureSoundsContainer) {
+        if (gender === 'nature') {
+            voiceDropdownContainer.classList.add('hidden');
+            natureSoundsContainer.classList.remove('hidden');
+        } else {
+            voiceDropdownContainer.classList.remove('hidden');
+            natureSoundsContainer.classList.add('hidden');
+            loadAndFilterVoices();
+        }
+    }
+};
+
+window.testSelectedVoice = function() {
+    if (!('speechSynthesis' in window)) return;
+    window.speechSynthesis.cancel();
+    const text = customSpeechText && customSpeechText.value ? customSpeechText.value : "Set your mind for success with UpOnTimes.com";
+    const utter = new SpeechSynthesisUtterance(text);
+    if (voiceSelectDropdown && voiceSelectDropdown.value) {
+        const match = allSystemVoices.find(v => v.name === voiceSelectDropdown.value);
+        if (match) utter.voice = match;
+    }
+    window.speechSynthesis.speak(utter);
+};
+
+window.loadTemplate = function(id) {
+    if (templates[id] && customSpeechText) {
+        customSpeechText.value = templates[id];
+    }
+};
+
+window.previewCurrentCustomMessage = function() {
+    window.testSelectedVoice();
+};
+
+document.addEventListener('DOMContentLoaded', async () => {
+    liveClockEl = document.getElementById('liveClock');
+    alarmForm = document.getElementById('alarmForm');
+    alarmTimeInput = document.getElementById('alarmTime');
+    alarmListEl = document.getElementById('alarmList');
+    alarmCountBadge = document.getElementById('alarmCountBadge');
+    audioSourceTypeSelect = document.getElementById('audioSourceType');
+    recordingsOptGroup = document.getElementById('recordingsOptGroup');
+    savedRecordingsList = document.getElementById('savedRecordingsList');
+    voiceSelectDropdown = document.getElementById('voiceSelectDropdown');
+    customSpeechText = document.getElementById('customSpeechText');
+    customSpeechContainer = document.getElementById('customSpeechContainer');
+    tabFemale = document.getElementById('tabFemale');
+    tabMale = document.getElementById('tabMale');
+    tabNature = document.getElementById('tabNature');
+    voiceDropdownContainer = document.getElementById('voiceDropdownContainer');
+    natureSoundsContainer = document.getElementById('natureSoundsContainer');
+    recordBtn = document.getElementById('recordBtn');
+    stopRecordBtn = document.getElementById('stopRecordBtn');
+    recordTimer = document.getElementById('recordTimer');
+    recordingStatus = document.getElementById('recordingStatus');
+    recordingSaveContainer = document.getElementById('recordingSaveContainer');
+    audioPreview = document.getElementById('audioPreview');
+    recordingTitleInput = document.getElementById('recordingTitle');
+    saveRecordingBtn = document.getElementById('saveRecordingBtn');
+    alarmModal = document.getElementById('alarmModal');
+    modalAlarmTime = document.getElementById('modalAlarmTime');
+    modalAlarmLabel = document.getElementById('modalAlarmLabel');
+    modalAudioTitle = document.getElementById('modalAudioTitle');
+    dismissBtn = document.getElementById('dismissBtn');
+    snoozeBtn = document.getElementById('snoozeBtn');
+
+    if (alarmTimeInput) {
+        const defaultTarget = new Date(Date.now() + 5 * 60000);
+        alarmTimeInput.value = formatForDateTimeInput(defaultTarget);
+    }
+
+    try {
+        await initDB();
+        await refreshSavedRecordingsList();
+    } catch(e) {
+        console.error("DB Init Error:", e);
+    }
+
+    if ('speechSynthesis' in window) {
+        window.speechSynthesis.onvoiceschanged = loadAndFilterVoices;
+        loadAndFilterVoices();
+    }
+
+    setInterval(() => {
+        const now = new Date();
+        if (liveClockEl) {
+            liveClockEl.textContent = now.toLocaleDateString() + ' ' + now.toLocaleTimeString();
+        }
+        checkAlarms(now);
+    }, 1000);
+
+    renderAlarms();
+
+    if (alarmForm) {
+        alarmForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const timeVal = alarmTimeInput.value;
+            const labelVal = document.getElementById('alarmLabel').value;
+            const audioSource = audioSourceTypeSelect ? audioSourceTypeSelect.value : 'custom-speech';
+            const customText = customSpeechText ? customSpeechText.value : '';
+
+            if (!timeVal || !labelVal) {
+                alert('Please provide both date/time and an objective label.');
+                return;
+            }
+
+            const newAlarm = {
+                id: Date.now(),
+                time: timeVal,
+                label: labelVal,
+                audioSource: audioSource,
+                customText: customText,
+                active: true
+            };
+
+            alarms.push(newAlarm);
+            localStorage.setItem('mindset_alarms', JSON.stringify(alarms));
+            renderAlarms();
+            alarmForm.reset();
+            if (alarmTimeInput) {
+                const defaultTarget = new Date(Date.now() + 5 * 60000);
+                alarmTimeInput.value = formatForDateTimeInput(defaultTarget);
+            }
+        });
+    }
+
+    if (dismissBtn) {
+        dismissBtn.addEventListener('click', () => {
+            stopSound();
+            if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+            if (alarmModal) alarmModal.classList.add('hidden');
+            activeTriggeredAlarm = null;
+        });
+    }
+
+    if (snoozeBtn) {
+        snoozeBtn.addEventListener('click', () => {
+            stopSound();
+            if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+            if (alarmModal) alarmModal.classList.add('hidden');
+            if (activeTriggeredAlarm) {
+                const snoozeTime = new Date(Date.now() + 5 * 60000);
+                activeTriggeredAlarm.time = formatForDateTimeInput(snoozeTime);
+                localStorage.setItem('mindset_alarms', JSON.stringify(alarms));
+                renderAlarms();
+            }
+            activeTriggeredAlarm = null;
+        });
+    }
+
+    if (recordBtn && stopRecordBtn) {
+        recordBtn.addEventListener('click', async () => {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                mediaRecorder = new MediaRecorder(stream);
+                audioChunks = [];
+                mediaRecorder.ondataavailable = event => {
+                    if (event.data.size > 0) audioChunks.push(event.data);
+                };
+                mediaRecorder.onstop = () => {
+                    currentRecordedBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                    const audioUrl = URL.createObjectURL(currentRecordedBlob);
+                    if (audioPreview) audioPreview.src = audioUrl;
+                    if (recordingSaveContainer) recordingSaveContainer.classList.remove('hidden');
+                };
+                mediaRecorder.start();
+                recordSeconds = 0;
+                if (recordTimer) recordTimer.textContent = "00:00";
+                recordInterval = setInterval(() => {
+                    recordSeconds++;
+                    const mins = String(Math.floor(recordSeconds / 60)).padStart(2, '0');
+                    const secs = String(recordSeconds % 60).padStart(2, '0');
+                    if (recordTimer) recordTimer.textContent = `${mins}:${secs}`;
+                }, 1000);
+
+                recordBtn.disabled = true;
+                recordBtn.classList.add('opacity-50');
+                stopRecordBtn.disabled = false;
+                stopRecordBtn.classList.remove('bg-slate-800', 'text-slate-500', 'cursor-not-allowed');
+                stopRecordBtn.classList.add('bg-amber-500', 'text-slate-950', 'hover:bg-amber-400');
+                if (recordingStatus) recordingStatus.textContent = "Recording in progress...";
+            } catch(err) {
+                alert('Microphone access denied or not supported.');
+            }
+        });
+
+        stopRecordBtn.addEventListener('click', () => {
+            if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+                mediaRecorder.stop();
+                mediaRecorder.stream.getTracks().forEach(track => track.stop());
+            }
+            clearInterval(recordInterval);
+            recordBtn.disabled = false;
+            recordBtn.classList.remove('opacity-50');
+            stopRecordBtn.disabled = true;
+            stopRecordBtn.classList.add('bg-slate-800', 'text-slate-500', 'cursor-not-allowed');
+            stopRecordBtn.classList.remove('bg-amber-500', 'text-slate-950', 'hover:bg-amber-400');
+            if (recordingStatus) recordingStatus.textContent = "Recording complete. Review and save below.";
+        });
+    }
+
+    if (saveRecordingBtn) {
+        saveRecordingBtn.addEventListener('click', async () => {
+            const title = recordingTitleInput && recordingTitleInput.value ? recordingTitleInput.value : `Recording ${new Date().toLocaleDateString()}`;
+            if (!currentRecordedBlob) return;
+            await saveRecordingToDB(title, currentRecordedBlob);
+            await refreshSavedRecordingsList();
+            if (recordingSaveContainer) recordingSaveContainer.classList.add('hidden');
+            if (recordingTitleInput) recordingTitleInput.value = '';
+            currentRecordedBlob = null;
+            if (recordingStatus) recordingStatus.textContent = "Click mic to start recording";
+        });
+    }
+});
+
+function renderAlarms() {
+    if (!alarmListEl) return;
+    if (alarms.length === 0) {
+        alarmListEl.innerHTML = `
+            <div class="text-center py-8 text-slate-500 border border-dashed border-slate-800 rounded-xl">
+                <i class="fa-solid fa-clock-rotate-left text-2xl mb-2 text-slate-600"></i>
+                <p>No active alarms set. Choose a date, time, and message above to schedule.</p>
+            </div>
+        `;
+        if (alarmCountBadge) alarmCountBadge.textContent = '0 Active';
+        return;
+    }
+
+    if (alarmCountBadge) alarmCountBadge.textContent = `${alarms.length} Active`;
+    alarmListEl.innerHTML = alarms.map(alarm => `
+        <div class="flex items-center justify-between p-3.5 bg-slate-950 border border-slate-800 rounded-xl">
+            <div>
+                <div class="font-mono text-amber-400 text-sm font-semibold">${new Date(alarm.time).toLocaleString()}</div>
+                <div class="text-xs text-slate-200 mt-0.5">${alarm.label}</div>
+            </div>
+            <div class="flex items-center space-x-3">
+                <button onclick="deleteAlarm(${alarm.id})" class="text-slate-500 hover:text-red-400 text-xs p-1"><i class="fa-solid fa-trash"></i></button>
+            </div>
+        </div>
+    `).join('');
+}
+
+window.deleteAlarm = function(id) {
+    alarms = alarms.filter(a => a.id !== id);
+    localStorage.setItem('mindset_alarms', JSON.stringify(alarms));
+    renderAlarms();
+};
+
+function checkAlarms(now) {
+    const nowString = formatForDateTimeInput(now);
+    alarms.forEach(alarm => {
+        if (alarm.active && alarm.time === nowString) {
+            alarm.active = false;
+            triggerAlarmModal(alarm);
+        }
+    });
+}
+
+function triggerAlarmModal(alarm) {
+    activeTriggeredAlarm = alarm;
+    if (modalAlarmTime) modalAlarmTime.textContent = new Date(alarm.time).toLocaleString();
+    if (modalAlarmLabel) modalAlarmLabel.textContent = alarm.label;
+    if (modalAudioTitle) modalAudioTitle.textContent = `Source: ${alarm.audioSource}`;
+    if (alarmModal) alarmModal.classList.remove('hidden');
+
+    if (alarm.audioSource.startsWith('sound-')) {
+        playSound(alarm.audioSource);
+    } else if (alarm.audioSource.startsWith('custom-rec-')) {
+        const recId = parseInt(alarm.audioSource.replace('custom-rec-', ''));
+        playCustomRecording(recId);
+    } else {
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel();
+            const utter = new SpeechSynthesisUtterance(alarm.customText || alarm.label);
+            if (voiceSelectDropdown && voiceSelectDropdown.value) {
+                const match = allSystemVoices.find(v => v.name === voiceSelectDropdown.value);
+                if (match) utter.voice = match;
+            }
+            window.speechSynthesis.speak(utter);
+        }
+    }
+}
+
+window.openPrivacyModal = function() {
+    const m = document.getElementById('privacyModal');
+    if (m) m.classList.remove('hidden');
+};
+window.closePrivacyModal = function() {
+    const m = document.getElementById('privacyModal');
+    if (m) m.classList.add('hidden');
+};
+window.openAdminModal = function() {
+    const m = document.getElementById('adminModal');
+    if (m) m.classList.remove('hidden');
+};
+window.closeAdminModal = function() {
+    const m = document.getElementById('adminModal');
+    if (m) m.classList.add('hidden');
+};
+window.authenticateAdmin = function() {
+    const pass = document.getElementById('adminPasswordInput').value;
+    if (pass === 'admin123' || pass === 'success') {
+        document.getElementById('adminAuthContainer').classList.add('hidden');
+        document.getElementById('adminTableContainer').classList.remove('hidden');
+    } else {
+        document.getElementById('adminAuthError').classList.remove('hidden');
+    }
+};
 </script> 
 </body> 
 </html>

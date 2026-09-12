@@ -865,10 +865,10 @@ function startGPS() {
     (pos) => {
       myLat = pos.coords.latitude;
       myLng = pos.coords.longitude;
-      const accuracy = Math.round(pos.coords.accuracy);
+      const accuracy = Math.round(pos.coords.accuracy * 3.28084); // meters to feet for US display if desired, or keep meters
 
       document.getElementById('myCoords').textContent = `${myLat.toFixed(4)}, ${myLng.toFixed(4)}`;
-      document.getElementById('myAccuracy').textContent = `Accuracy: ±${accuracy}m`;
+      document.getElementById('myAccuracy').textContent = `Accuracy: ±${accuracy}ft`;
 
       updateMyMarkerOnMap();
       syncMyDataToFirebase();
@@ -1006,9 +1006,9 @@ function renderLists() {
     let etaMinutes = 0;
 
     if (destinationLatLng && p.lat && p.lng) {
-      const distKm = getDistanceFromLatLonInKm(p.lat, p.lng, destinationLatLng[0], destinationLatLng[1]);
-      etaMinutes = Math.max(1, Math.round((distKm / 40) * 60));
-      etaText = `${etaMinutes} min away (${distKm.toFixed(1)} km)`;
+      const distMiles = getDistanceFromLatLonInMiles(p.lat, p.lng, destinationLatLng[0], destinationLatLng[1]);
+      etaMinutes = Math.max(1, Math.round((distMiles / 25) * 60)); // assuming ~25 mph avg city/local speed
+      etaText = `${etaMinutes} min away (${distMiles.toFixed(1)} mi)`;
     }
 
     const div = document.createElement('div');
@@ -1039,12 +1039,12 @@ function selectPerson(id) {
   }
 
   if (destinationLatLng) {
-    const distKm = getDistanceFromLatLonInKm(p.lat, p.lng, destinationLatLng[0], destinationLatLng[1]);
-    const etaMins = Math.max(1, Math.round((distKm / 40) * 60));
+    const distMiles = getDistanceFromLatLonInMiles(p.lat, p.lng, destinationLatLng[0], destinationLatLng[1]);
+    const etaMins = Math.max(1, Math.round((distMiles / 25) * 60));
 
     document.getElementById('bannerName').textContent = `${p.emoji} ${p.name} is arriving`;
     document.getElementById('bannerEta').textContent = `${etaMins} minutes`;
-    document.getElementById('bannerSub').textContent = `Distance: ${distKm.toFixed(1)} km remaining`;
+    document.getElementById('bannerSub').textContent = `Distance: ${distMiles.toFixed(1)} miles remaining`;
     document.getElementById('arrivalBanner').classList.add('visible');
   }
 }
@@ -1052,8 +1052,8 @@ function selectPerson(id) {
 // ══════════════════════════════
 //  DISTANCE & ARRIVAL CHECKS
 // ══════════════════════════════
-function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
-  const R = 6371;
+function getDistanceFromLatLonInMiles(lat1, lon1, lat2, lon2) {
+  const R = 3958.8; // Radius of the earth in miles
   const dLat = deg2rad(lat2 - lat1);
   const dLon = deg2rad(lon2 - lon1);
   const a =
@@ -1074,8 +1074,8 @@ function checkArrivals() {
   Object.keys(people).forEach(id => {
     const p = people[id];
     if (!p.lat || !p.lng) return;
-    const distKm = getDistanceFromLatLonInKm(p.lat, p.lng, destinationLatLng[0], destinationLatLng[1]);
-    if (distKm < 0.15 && !p.notifiedArrival) {
+    const distMiles = getDistanceFromLatLonInMiles(p.lat, p.lng, destinationLatLng[0], destinationLatLng[1]);
+    if (distMiles < 0.1 && !p.notifiedArrival) { // within ~528 feet
       p.notifiedArrival = true;
       showToast(`🎉 ${p.name} has arrived at the destination!`);
       if (voiceNotificationsEnabled) {
@@ -1145,12 +1145,12 @@ setInterval(() => {
   }
 
   if (activeTarget && activeTarget.lat && activeTarget.lng) {
-    const distKm = getDistanceFromLatLonInKm(activeTarget.lat, activeTarget.lng, destinationLatLng[0], destinationLatLng[1]);
-    const etaMins = Math.max(1, Math.round((distKm / 40) * 60));
+    const distMiles = getDistanceFromLatLonInMiles(activeTarget.lat, activeTarget.lng, destinationLatLng[0], destinationLatLng[1]);
+    const etaMins = Math.max(1, Math.round((distMiles / 25) * 60));
     
     if (etaMins !== lastSpokenMinute) {
       lastSpokenMinute = etaMins;
-      const announcement = `Status update: ${activeTarget.name} is approximately ${etaMins} minutes away, at a distance of ${distKm.toFixed(1)} kilometers.`;
+      const announcement = `Status update: ${activeTarget.name} is approximately ${etaMins} minutes away, at a distance of ${distMiles.toFixed(1)} miles.`;
       speakText(announcement);
     }
   }

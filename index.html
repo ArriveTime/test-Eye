@@ -127,20 +127,20 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator { filter: invert
             <!-- Gender Category Tabs --> 
             <div class="grid grid-cols-3 gap-1.5 p-1 bg-slate-950 rounded-lg border border-slate-800 text-[11px] font-semibold"> 
                 <button id="tabFemale" type="button" onclick="setGenderFilter('female')" class="py-1.5 rounded-md bg-amber-500/20 text-amber-400 border border-amber-500/30"> 
-                    <i class="fa-solid fa-venus mr-1"></i> Female 
+                    <i class="fa-solid fa-venus mr-1"></i> Samantha 
                 </button> 
                 <button id="tabMale" type="button" onclick="setGenderFilter('male')" class="py-1.5 rounded-md text-slate-400 hover:text-slate-200"> 
-                    <i class="fa-solid fa-mars mr-1"></i> Male 
+                    <i class="fa-solid fa-mars mr-1"></i> Daniel 
                 </button> 
                 <button id="tabNature" type="button" onclick="setGenderFilter('nature')" class="py-1.5 rounded-md text-slate-400 hover:text-slate-200"> 
                     <i class="fa-solid fa-tree mr-1"></i> Sounds
                 </button> 
             </div> 
-            <div id="voiceDropdownContainer"> 
-                <label class="block text-xs text-slate-400 mb-1.5">Selected Voice Model:</label> 
-                <select id="voiceSelectDropdown" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-amber-400"> 
-                    <option value="">Detecting device voice engine...</option> 
-                </select> 
+            <div id="voiceInfoContainer"> 
+                <label class="block text-xs text-slate-400 mb-1.5">Active Voice Profile:</label> 
+                <div id="activeVoiceDisplay" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-amber-300 font-mono"> 
+                    Samantha (Female)
+                </div> 
                 <button type="button" onclick="testSelectedVoice()" class="w-full mt-3 bg-slate-800 hover:bg-slate-700 text-amber-400 border border-amber-500/30 py-2 rounded-lg text-xs font-medium transition flex items-center justify-center space-x-1.5"> 
                     <i class="fa-solid fa-circle-play"></i> <span>Test Selected Voice</span>
                 </button> 
@@ -318,7 +318,6 @@ let alarms = JSON.parse(localStorage.getItem('mindset_alarms') || '[]');
 let customAudioList = []; 
 let allSystemVoices = []; 
 let currentGenderFilter = 'female'; 
-let selectedVoice = null; 
 let activeTriggeredAlarm = null; 
 let currentPlayingAudio = null; 
 let db; 
@@ -348,13 +347,13 @@ let alarmCountBadge;
 let audioSourceTypeSelect; 
 let recordingsOptGroup; 
 let savedRecordingsList; 
-let voiceSelectDropdown; 
+let activeVoiceDisplay; 
 let customSpeechText; 
 let customSpeechContainer; 
 let tabFemale; 
 let tabMale; 
 let tabNature; 
-let voiceDropdownContainer; 
+let voiceInfoContainer; 
 let natureSoundsContainer; 
 let recordBtn; 
 let stopRecordBtn; 
@@ -546,29 +545,16 @@ window.deleteCustomRecording = async function(id) {
 /* Voice Synthesis Filter Controls */
 function loadAndFilterVoices() { 
     if (!('speechSynthesis' in window)) return; 
-    allSystemVoices = window.speechSynthesis.getVoices().filter(v => v.lang.startsWith('en') && v.name.toLowerCase() !== 'fred'); 
-    const maleKeywords = ['male', 'david', 'mark', 'george', 'guy', 'alex', 'daniel', 'oliver', 'ryan', 'james', 'brian', 'john', 'robert', 'thomas', 'richard', 'charles', 'joseph', 'christopher', 'paul', 'donald', 'kenneth', 'steven', 'edward', 'ronald', 'anthony', 'kevin', 'jason', 'jeffrey', 'gary', 'frank', 'scott', 'eric'];
-    const femaleKeywords = ['female', 'zira', 'hazel', 'susan', 'cathy', 'victoria', 'karen', 'moira', 'fiona', 'tessa', 'samantha', 'vicki', 'allison', 'ava', 'amelia', 'anna', 'aria', 'audrey', 'charlotte', 'clara', 'elena', 'emily', 'emma', 'eva', 'grace', 'hannah', 'isabella', 'julia', 'lily', 'lucia', 'lucy', 'mia', 'natalie', 'olivia', 'penelope', 'ruby', 'sofia', 'sophia', 'stella', 'zoe'];
-    
-    if (voiceSelectDropdown) {
-        voiceSelectDropdown.innerHTML = '';
-        let filtered = allSystemVoices.filter(v => {
-            const name = v.name.toLowerCase();
-            if (currentGenderFilter === 'female') {
-                return femaleKeywords.some(k => name.includes(k)) || (!maleKeywords.some(k => name.includes(k)) && !name.includes('male'));
-            } else if (currentGenderFilter === 'male') {
-                return maleKeywords.some(k => name.includes(k)) || name.includes('male');
-            }
-            return true;
-        });
-        if (filtered.length === 0) filtered = allSystemVoices;
-        filtered.forEach((v) => {
-            const opt = document.createElement('option');
-            opt.value = v.name;
-            opt.textContent = `${v.name} (${v.lang})`;
-            voiceSelectDropdown.appendChild(opt);
-        });
-        if (filtered.length > 0) selectedVoice = filtered[0];
+    allSystemVoices = window.speechSynthesis.getVoices().filter(v => v.lang.startsWith('en')); 
+    updateActiveVoiceDisplay();
+}
+
+function updateActiveVoiceDisplay() {
+    if (!activeVoiceDisplay) return;
+    if (currentGenderFilter === 'female') {
+        activeVoiceDisplay.textContent = "Samantha (Female - en-US)";
+    } else if (currentGenderFilter === 'male') {
+        activeVoiceDisplay.textContent = "Daniel (Male - en-GB)";
     }
 }
 
@@ -578,14 +564,14 @@ window.setGenderFilter = function(gender) {
     if (tabMale) tabMale.className = gender === 'male' ? "py-1.5 rounded-md bg-amber-500/20 text-amber-400 border border-amber-500/30" : "py-1.5 rounded-md text-slate-400 hover:text-slate-200";
     if (tabNature) tabNature.className = gender === 'nature' ? "py-1.5 rounded-md bg-amber-500/20 text-amber-400 border border-amber-500/30" : "py-1.5 rounded-md text-slate-400 hover:text-slate-200";
     
-    if (voiceDropdownContainer && natureSoundsContainer) {
+    if (voiceInfoContainer && natureSoundsContainer) {
         if (gender === 'nature') {
-            voiceDropdownContainer.classList.add('hidden');
+            voiceInfoContainer.classList.add('hidden');
             natureSoundsContainer.classList.remove('hidden');
         } else {
-            voiceDropdownContainer.classList.remove('hidden');
+            voiceInfoContainer.classList.remove('hidden');
             natureSoundsContainer.classList.add('hidden');
-            loadAndFilterVoices();
+            updateActiveVoiceDisplay();
         }
     }
 };
@@ -595,10 +581,21 @@ window.testSelectedVoice = function() {
     window.speechSynthesis.cancel();
     const text = customSpeechText && customSpeechText.value ? customSpeechText.value : "Set your mind for success with UpOnTimes.com";
     const utter = new SpeechSynthesisUtterance(text);
-    if (voiceSelectDropdown && voiceSelectDropdown.value) {
-        const match = allSystemVoices.find(v => v.name === voiceSelectDropdown.value);
-        if (match) utter.voice = match;
+    
+    const voices = window.speechSynthesis.getVoices();
+    let targetVoice = null;
+    
+    if (currentGenderFilter === 'female') {
+        targetVoice = voices.find(v => v.name.toLowerCase().includes('samantha') && v.lang.startsWith('en')) || 
+                      voices.find(v => (v.name.toLowerCase().includes('female') || v.name.toLowerCase().includes('zira') || v.name.toLowerCase().includes('victoria')) && v.lang.startsWith('en')) ||
+                      voices.find(v => v.lang.startsWith('en'));
+    } else if (currentGenderFilter === 'male') {
+        targetVoice = voices.find(v => v.name.toLowerCase().includes('daniel') && (v.lang === 'en-GB' || v.lang.startsWith('en'))) || 
+                      voices.find(v => (v.name.toLowerCase().includes('male') || v.name.toLowerCase().includes('oliver') || v.name.toLowerCase().includes('george') || v.name.toLowerCase().includes('david') || v.name.toLowerCase().includes('mark')) && v.lang.startsWith('en')) ||
+                      voices.find(v => v.lang.startsWith('en'));
     }
+    
+    if (targetVoice) utter.voice = targetVoice;
     window.speechSynthesis.speak(utter);
 };
 
@@ -621,13 +618,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     audioSourceTypeSelect = document.getElementById('audioSourceType');
     recordingsOptGroup = document.getElementById('recordingsOptGroup');
     savedRecordingsList = document.getElementById('savedRecordingsList');
-    voiceSelectDropdown = document.getElementById('voiceSelectDropdown');
+    activeVoiceDisplay = document.getElementById('activeVoiceDisplay');
     customSpeechText = document.getElementById('customSpeechText');
     customSpeechContainer = document.getElementById('customSpeechContainer');
     tabFemale = document.getElementById('tabFemale');
     tabMale = document.getElementById('tabMale');
     tabNature = document.getElementById('tabNature');
-    voiceDropdownContainer = document.getElementById('voiceDropdownContainer');
+    voiceInfoContainer = document.getElementById('voiceInfoContainer');
     natureSoundsContainer = document.getElementById('natureSoundsContainer');
     recordBtn = document.getElementById('recordBtn');
     stopRecordBtn = document.getElementById('stopRecordBtn');
@@ -690,6 +687,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 label: labelVal,
                 audioSource: audioSource,
                 customText: customText,
+                gender: currentGenderFilter,
                 active: true
             };
 
@@ -811,7 +809,7 @@ function renderAlarms() {
         <div class="flex items-center justify-between p-3.5 bg-slate-950 border border-slate-800 rounded-xl">
             <div>
                 <div class="font-mono text-amber-400 text-sm font-semibold">${new Date(alarm.time).toLocaleString()}</div>
-                <div class="text-xs text-slate-200 mt-0.5">${alarm.label}</div>
+                <div class="text-xs text-slate-200 mt-0.5">${alarm.label} <span class="text-[10px] text-slate-500 ml-2">(${alarm.gender === 'male' ? 'Daniel' : 'Samantha'})</span></div>
             </div>
             <div class="flex items-center space-x-3">
                 <button onclick="deleteAlarm(${alarm.id})" class="text-slate-500 hover:text-red-400 text-xs p-1"><i class="fa-solid fa-trash"></i></button>
@@ -840,7 +838,7 @@ function triggerAlarmModal(alarm) {
     activeTriggeredAlarm = alarm;
     if (modalAlarmTime) modalAlarmTime.textContent = new Date(alarm.time).toLocaleString();
     if (modalAlarmLabel) modalAlarmLabel.textContent = alarm.label;
-    if (modalAudioTitle) modalAudioTitle.textContent = `Source: ${alarm.audioSource}`;
+    if (modalAudioTitle) modalAudioTitle.textContent = `Source: ${alarm.audioSource} (${alarm.gender === 'male' ? 'Daniel' : 'Samantha'})`;
     if (alarmModal) alarmModal.classList.remove('hidden');
 
     if (alarm.audioSource.startsWith('sound-')) {
@@ -852,10 +850,18 @@ function triggerAlarmModal(alarm) {
         if ('speechSynthesis' in window) {
             window.speechSynthesis.cancel();
             const utter = new SpeechSynthesisUtterance(alarm.customText || alarm.label);
-            if (voiceSelectDropdown && voiceSelectDropdown.value) {
-                const match = allSystemVoices.find(v => v.name === voiceSelectDropdown.value);
-                if (match) utter.voice = match;
+            const voices = window.speechSynthesis.getVoices();
+            let targetVoice = null;
+            
+            if (alarm.gender === 'male') {
+                targetVoice = voices.find(v => v.name.toLowerCase().includes('daniel') && (v.lang === 'en-GB' || v.lang.startsWith('en'))) || 
+                              voices.find(v => (v.name.toLowerCase().includes('male') || v.name.toLowerCase().includes('oliver') || v.name.toLowerCase().includes('george') || v.name.toLowerCase().includes('david') || v.name.toLowerCase().includes('mark')) && v.lang.startsWith('en'));
+            } else {
+                targetVoice = voices.find(v => v.name.toLowerCase().includes('samantha') && v.lang.startsWith('en')) || 
+                              voices.find(v => (v.name.toLowerCase().includes('female') || v.name.toLowerCase().includes('zira') || v.name.toLowerCase().includes('victoria')) && v.lang.startsWith('en'));
             }
+            
+            if (targetVoice) utter.voice = targetVoice;
             window.speechSynthesis.speak(utter);
         }
     }

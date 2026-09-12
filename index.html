@@ -1,317 +1,552 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Realistic AI Hair Color & Style Studio</title>
-  
-  <!-- MediaPipe Camera Utils & Dedicated Segmentation -->
-  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation/selfie_segmentation.js" crossorigin="anonymous"></script>
+<!DOCTYPE html> 
+<html lang="en" class="h-full bg-slate-950 text-slate-100"> 
+<head> 
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+<title>UpOnTimes.com - Set your mind for success</title> 
+<script src="https://cdn.tailwindcss.com"></script> 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"> 
+<style> 
+@keyframes pulse-ring { 
+    0% { transform: scale(0.95); opacity: 0.8; } 
+    50% { transform: scale(1.05); opacity: 0.4; } 
+    100% { transform: scale(0.95); opacity: 0.8; } 
+} 
+.animate-pulse-ring { animation: pulse-ring 3s cubic-bezier(0.4, 0, 0.6, 1) infinite; } 
+.gold-gradient { background: linear-gradient(135deg, #d4af37 0%, #f3e5ab 50%, #aa7c11 100%); } 
+.gold-text { background: linear-gradient(135deg, #f3e5ab 0%, #d4af37 50%, #aa7c11 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; } 
+input[type="datetime-local"]::-webkit-calendar-picker-indicator { filter: invert(0.8) sepia(1) saturate(5) hue-rotate(5deg); cursor: pointer; } 
+</style> 
+</head> 
+<body class="h-full flex flex-col font-sans antialiased selection:bg-amber-500 selection:text-slate-950"> 
+<div class="flex-1 flex flex-col max-w-6xl w-full mx-auto p-4 md:p-6 lg:p-8 space-y-6"> 
+<!-- Header Navigation --> 
+<header class="flex items-center justify-between border-b border-slate-800 pb-4"> 
+    <div class="flex items-center space-x-3"> 
+        <div class="w-10 h-10 rounded-xl gold-gradient flex items-center justify-center text-slate-950 font-black text-xl shadow-lg shadow-amber-500/10"> 
+            <i class="fa-solid font-bold fa-clock"></i> 
+        </div> 
+        <div> 
+            <h1 class="text-xl md:text-2xl font-bold tracking-tight gold-text">UpOnTimes.com</h1> 
+            <p class="text-xs text-slate-400">Set your mind for success</p> 
+        </div> 
+    </div> 
+    <div id="liveClock" class="text-xl md:text-3xl font-mono font-semibold text-amber-400 tracking-wider"> 
+        --/--/---- --:--:-- --
+    </div> 
+</header> 
 
-  <style>
-    :root {
-      --bg: #0b0f19;
-      --card-bg: rgba(21, 29, 48, 0.85);
-      --border: rgba(255, 255, 255, 0.15);
-      --accent: #8b5cf6;
-      --text: #f8fafc;
-      --text-muted: #94a3b8;
-    }
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6 flex-1"> 
+    <!-- Column 1: Alarm Creation & Active Alarms --> 
+    <div class="lg:col-span-2 space-y-6"> 
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 md:p-6 shadow-xl"> 
+            <h2 class="text-lg font-semibold text-slate-200 mb-4 flex items-center space-x-2"> 
+                <i class="fa-solid fa-plus-circle text-amber-400"></i> 
+                <span>Set New Success Alarm / Reminder</span> 
+            </h2> 
+            <form id="alarmForm" class="space-y-4" novalidate> 
+                <div> 
+                    <div class="flex justify-between items-center mb-1"> 
+                        <label class="block text-xs uppercase tracking-wider text-slate-400">Date & Time (Pick Exact Minute or Use Quick Buttons)</label> 
+                        <div class="space-x-1"> 
+                            <button type="button" onclick="setQuickTime(15)" class="text-[10px] bg-slate-800 hover:bg-slate-700 text-amber-400 px-2 py-0.5 rounded border border-amber-500/20">+15 Mins</button> 
+                            <button type="button" onclick="setQuickTime(30)" class="text-[10px] bg-slate-800 hover:bg-slate-700 text-amber-400 px-2 py-0.5 rounded border border-amber-500/20">+30 Mins</button> 
+                            <button type="button" onclick="setQuickTime(60)" class="text-[10px] bg-slate-800 hover:bg-slate-700 text-amber-400 px-2 py-0.5 rounded border border-amber-500/20">+1 Hour</button> 
+                            <button type="button" onclick="setTomorrowMorning()" class="text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-300 px-2 py-0.5 rounded">Tomorrow AM</button> 
+                        </div> 
+                    </div> 
+                    <input type="datetime-local" id="alarmTime" step="60" required class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-amber-300 font-mono text-base focus:outline-none focus:border-amber-400 transition"> 
+                </div> 
+                <div> 
+                    <label class="block text-xs uppercase tracking-wider text-slate-400 mb-1">Objective / Label</label> 
+                    <input type="text" id="alarmLabel" placeholder="e.g. Q3 Sales Goal Review" required class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 placeholder-slate-600 focus:outline-none focus:border-amber-400 transition"> 
+                </div> 
+                <div> 
+                    <label class="block text-xs uppercase tracking-wider text-slate-400 mb-1">Audio Source</label> 
+                    <select id="audioSourceType" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-slate-200 focus:outline-none focus:border-amber-400 transition"> 
+                        <option value="custom-speech">🗣️ Custom AI Voice Message (Set Below)</option> 
+                        <optgroup label="Nature & Audio Soundscapes"> 
+                            <option value="sound-rain">🌧️ Gentle Rain Soundscape</option> 
+                            <option value="sound-stream">🌊 Babbling Stream Soundscape</option> 
+                            <option value="sound-birds">🎵 Song</option>
+                            <option value="sound-dog">🐶 Dog Bark (Realistic Recording)</option> 
+                        </optgroup> 
+                        <optgroup label="Your Saved Voice Recordings" id="recordingsOptGroup"> 
+                        </optgroup> 
+                    </select> 
+                </div>
+                <!-- Custom Speech Script Box --> 
+                <div id="customSpeechContainer" class="space-y-2 bg-slate-950 p-4 border border-slate-800 rounded-xl"> 
+                    <div class="flex items-center justify-between"> 
+                        <label class="block text-xs uppercase tracking-wider text-amber-400 font-semibold">Custom Voice Message Script</label> 
+                        <div class="space-x-1"> 
+                            <button type="button" onclick="loadTemplate(1)" class="text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-300 px-2 py-0.5 rounded">Morning Victory</button> 
+                            <button type="button" onclick="loadTemplate(2)" class="text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-300 px-2 py-0.5 rounded">Sales Target</button> 
+                            <button type="button" onclick="loadTemplate(3)" class="text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-300 px-2 py-0.5 rounded">Focus & Discipline</button> 
+                        </div> 
+                    </div> 
+                    <textarea id="customSpeechText" rows="3" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm text-slate-200 focus:outline-none focus:border-amber-400 placeholder-slate-600" placeholder="Type the exact motivational message you want spoken when this alarm triggers..."></textarea> 
+                    <div class="flex justify-end"> 
+                        <button type="button" onclick="previewCurrentCustomMessage()" class="text-xs text-amber-400 hover:text-amber-300 flex items-center space-x-1"> 
+                            <i class="fa-solid fa-volume-high"></i> 
+                            <span>Test Speak Message</span> 
+                        </button> 
+                    </div> 
+                </div> 
+                <button type="submit" class="w-full gold-gradient text-slate-950 font-bold py-3 rounded-lg shadow-md hover:brightness-110 active:scale-[0.99] transition flex items-center justify-center space-x-2"> 
+                    <i class="fa-solid fa-bell"></i> 
+                    <span>Activate Alarm</span> 
+                </button> 
+            </form> 
+        </div> 
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 md:p-6 shadow-xl"> 
+            <h2 class="text-lg font-semibold text-slate-200 mb-4 flex items-center justify-between"> 
+                <span class="flex items-center space-x-2"> 
+                    <i class="fa-solid fa-list-check text-amber-400"></i><span>Active Scheduled Alarms</span> 
+                </span> 
+                <span id="alarmCountBadge" class="text-xs bg-amber-500/10 text-amber-400 border border-amber-500/30 px-2.5 py-0.5 rounded-full font-mono">0 Active</span> 
+            </h2> 
+            <div id="alarmList" class="space-y-3"> 
+                <div class="text-center py-8 text-slate-500 border border-dashed border-slate-800 rounded-xl"> 
+                    <i class="fa-solid fa-clock-rotate-left text-2xl mb-2 text-slate-600"></i> 
+                    <p>No active alarms set. Choose a date, time, and message above to schedule.</p> 
+                </div> 
+            </div> 
+        </div> 
+    </div> 
 
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background-color: var(--bg);
-      color: var(--text);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      min-height: 100vh;
-      padding: 16px;
-    }
+    <!-- Column 2: Voice Studio, Voice Selector & Saved Library --> 
+    <div class="space-y-6"> 
+        <!-- AI Voice & Sound Preview Panel --> 
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 md:p-6 shadow-xl space-y-4"> 
+            <h2 class="text-lg font-semibold text-slate-200 flex items-center space-x-2"> 
+                <i class="fa-solid fa-sliders text-amber-400"></i> 
+                <span>Voices & Audio Studio</span> 
+            </h2> 
+            <!-- Gender Category Tabs --> 
+            <div class="grid grid-cols-3 gap-1.5 p-1 bg-slate-950 rounded-lg border border-slate-800 text-[11px] font-semibold"> 
+                <button id="tabFemale" type="button" onclick="setGenderFilter('female')" class="py-1.5 rounded-md bg-amber-500/20 text-amber-400 border border-amber-500/30"> 
+                    <i class="fa-solid fa-venus mr-1"></i> Female 
+                </button> 
+                <button id="tabMale" type="button" onclick="setGenderFilter('male')" class="py-1.5 rounded-md text-slate-400 hover:text-slate-200"> 
+                    <i class="fa-solid fa-mars mr-1"></i> Male 
+                </button> 
+                <button id="tabNature" type="button" onclick="setGenderFilter('nature')" class="py-1.5 rounded-md text-slate-400 hover:text-slate-200"> 
+                    <i class="fa-solid fa-tree mr-1"></i> Sounds
+                </button> 
+            </div> 
+            <div id="voiceDropdownContainer"> 
+                <label class="block text-xs text-slate-400 mb-1.5">Selected Voice Model:</label> 
+                <select id="voiceSelectDropdown" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-amber-400"> 
+                    <option value="">Detecting device voice engine...</option> 
+                </select> 
+                <button type="button" onclick="testSelectedVoice()" class="w-full mt-3 bg-slate-800 hover:bg-slate-700 text-amber-400 border border-amber-500/30 py-2 rounded-lg text-xs font-medium transition flex items-center justify-center space-x-1.5"> 
+                    <i class="fa-solid fa-circle-play"></i> <span>Test Selected Voice</span>
+                </button> 
+            </div> 
+            <!-- Nature & Audio Sounds Selector --> 
+            <div id="natureSoundsContainer" class="hidden space-y-2"> 
+                <label class="block text-xs text-slate-400 mb-1">Instant Sound Preview:</label> 
+                <div class="grid grid-cols-2 gap-2 text-xs"> 
+                    <button type="button" onclick="playSound('sound-rain')" class="p-2.5 bg-slate-950 border border-slate-800 hover:border-amber-400 rounded-lg text-slate-200 flex items-center space-x-2"> 
+                        <span>🌧️ Gentle Rain</span>
+                    </button> 
+                    <button type="button" onclick="playSound('sound-stream')" class="p-2.5 bg-slate-950 border border-slate-800 hover:border-amber-400 rounded-lg text-slate-200 flex items-center space-x-2"> 
+                        <span>🌊 Stream</span>
+                    </button> 
+                    <button type="button" onclick="playSound('sound-birds')" class="p-2.5 bg-slate-950 border border-slate-800 hover:border-amber-400 rounded-lg text-slate-200 flex items-center space-x-2"> 
+                        <span>🎵 Song</span> 
+                    </button>
+                    <button type="button" onclick="playSound('sound-dog')" class="p-2.5 bg-slate-950 border border-slate-800 hover:border-amber-400 rounded-lg text-slate-200 flex items-center space-x-2"> 
+                        <span>🐶 Dog Bark</span>
+                    </button> 
+                </div> 
+                <button type="button" onclick="stopSound()" class="w-full mt-2 bg-red-950/40 border border-red-800 text-red-300 py-1.5 rounded-lg text-xs"> 
+                    Stop Sound Preview 
+                </button> 
+            </div> 
+        </div> 
 
-    header { text-align: center; margin-bottom: 16px; }
-    h1 { font-size: 1.6rem; color: #a78bfa; margin-bottom: 4px; }
-    p { color: var(--text-muted); font-size: 0.9rem; }
+        <!-- Voice Recorder Studio --> 
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 md:p-6 shadow-xl"> 
+            <h2 class="text-lg font-semibold text-slate-200 mb-1 flex items-center space-x-2"> 
+                <i class="fa-solid fa-microphone text-amber-400"></i><span>Personal Voice Studio</span> 
+            </h2> 
+            <p class="text-xs text-slate-400 mb-4">Record your own spoken voice directive.</p> 
+            <div class="bg-slate-950 border border-slate-800 rounded-xl p-4 text-center space-y-3"> 
+                <div id="recordTimer" class="font-mono text-2xl text-slate-400">00:00</div> 
+                <div class="flex justify-center items-center space-x-3"> 
+                    <button type="button" id="recordBtn" class="w-12 h-12 rounded-full bg-red-600 hover:bg-red-500 text-white flex items-center justify-center shadow-lg transition active:scale-95"> 
+                        <i class="fa-solid fa-microphone text-lg"></i> 
+                    </button> 
+                    <button type="button" id="stopRecordBtn" disabled class="w-12 h-12 rounded-full bg-slate-800 text-slate-500 flex items-center justify-center transition cursor-not-allowed"> 
+                        <i class="fa-solid fa-square text-lg"></i>
+                    </button> 
+                </div> 
+                <div id="recordingStatus" class="text-xs text-slate-500 italic">Click mic to start recording</div>
+            </div> 
+            <div id="recordingSaveContainer" class="hidden mt-4 space-y-3 border-t border-slate-800 pt-4"> 
+                <audio id="audioPreview" controls class="w-full h-8 rounded-lg bg-slate-950"></audio> 
+                <input type="text" id="recordingTitle" placeholder="Memo Title (e.g., Morning Focus Goal)" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-amber-400"> 
+                <button type="button" id="saveRecordingBtn" class="w-full bg-slate-800 hover:bg-slate-700 text-amber-400 border border-amber-500/30 font-medium py-2 rounded-lg text-sm transition"> 
+                    Save Recording to Library 
+                </button> 
+            </div> 
+        </div>
 
-    .studio-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 16px;
-      width: 100%;
-      max-width: 1100px;
-      margin-bottom: 20px;
-    }
+        <!-- Saved Personal Voice Recordings List --> 
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 md:p-6 shadow-xl"> 
+            <h2 class="text-lg font-semibold text-slate-200 mb-3 flex items-center space-x-2"> 
+                <i class="fa-solid fa-folder-open text-amber-400"></i> 
+                <span>Your Saved Voice Recordings</span> 
+            </h2> 
+            <div id="savedRecordingsList" class="space-y-3"> 
+            </div> 
+        </div> 
+    </div> 
+</div> 
 
-    @media (min-width: 768px) {
-      .studio-grid { grid-template-columns: 1fr 1fr; }
-    }
-
-    .viewport-card {
-      position: relative;
-      background: #000;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      overflow: hidden;
-      aspect-ratio: 4/3;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-    }
-
-    .viewport-card header {
-      position: absolute;
-      top: 10px; left: 12px;
-      background: rgba(0, 0, 0, 0.65);
-      backdrop-filter: blur(8px);
-      padding: 4px 12px;
-      border-radius: 20px;
-      font-size: 0.75rem;
-      font-weight: 700;
-      z-index: 10;
-      border: 1px solid rgba(255,255,255,0.1);
-    }
-
-    video, canvas {
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      object-fit: cover;
-    }
-
-    .mirror { transform: scaleX(-1); }
-
-    .controls-dock {
-      width: 100%;
-      max-width: 1100px;
-      background: var(--card-bg);
-      backdrop-filter: blur(12px);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 18px;
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-
-    .swatch-row {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-
-    .swatch {
-      width: 36px; height: 36px;
-      border-radius: 50%;
-      border: 2px solid rgba(255, 255, 255, 0.3);
-      cursor: pointer;
-      transition: transform 0.15s;
-    }
-
-    .swatch:hover { transform: scale(1.1); }
-    .swatch.selected {
-      border-color: #ffffff;
-      transform: scale(1.2);
-      box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
-    }
-
-    .slider-group {
-      display: flex;
-      gap: 20px;
-      flex-wrap: wrap;
-    }
-
-    .slider-field {
-      flex: 1;
-      min-width: 200px;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      font-size: 0.8rem;
-      color: var(--text-muted);
-    }
-
-    input[type="range"] { width: 100%; accent-color: var(--accent); }
-
-    .btn {
-      background: var(--accent);
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 8px;
-      font-weight: 600;
-      cursor: pointer;
-      align-self: flex-end;
-    }
-  </style>
-</head>
-<body>
-
-  <header>
-    <h1>Realistic AI Hair Color Studio</h1>
-    <p>Realistic Strand-Level Masking & Photorealistic Color Blending</p>
-  </header>
-
-  <div class="studio-grid">
-    <div class="viewport-card">
-      <header style="color:#94a3b8">1. Original Feed</header>
-      <video id="webcam" class="mirror" playsinline></video>
-    </div>
-
-    <div class="viewport-card">
-      <header style="color:#c4b5fd">2. Realistic Transformed Hair</header>
-      <canvas id="outputCanvas" class="mirror"></canvas>
-    </div>
-  </div>
-
-  <div class="controls-dock">
+<footer class="border-t border-slate-800 pt-4 flex flex-col md:flex-row items-center justify-between text-xs text-slate-500 space-y-2 md:space-y-0"> 
     <div>
-      <div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 8px;">Salon Color Palette</div>
-      <div class="swatch-row">
-        <!-- Natural & Fantasy Tones -->
-        <div class="swatch selected" style="background: #d4a359;" data-color="rgb(212, 163, 89)" data-hue="40"></div> <!-- Honey Blonde -->
-        <div class="swatch" style="background: #8b3a2b;" data-color="rgb(139, 58, 43)" data-hue="10"></div>   <!-- Auburn Red -->
-        <div class="swatch" style="background: #4a2c11;" data-color="rgb(74, 44, 17)" data-hue="25"></div>   <!-- Dark Chestnut -->
-        <div class="swatch" style="background: #e63946;" data-color="rgb(230, 57, 70)" data-hue="355"></div>  <!-- Cherry Velvet -->
-        <div class="swatch" style="background: #2a9d8f;" data-color="rgb(42, 157, 143)" data-hue="170"></div> <!-- Emerald Pearl -->
-        <div class="swatch" style="background: #7209b7;" data-color="rgb(114, 9, 183)" data-hue="280"></div>  <!-- Violet Plum -->
-        <div class="swatch" style="background: #f72585;" data-color="rgb(247, 37, 133)" data-hue="330"></div>  <!-- Magenta -->
-      </div>
+        &copy; UpOnTimes.com &bull; Set your mind for success
     </div>
-
-    <div class="slider-group">
-      <div class="slider-field">
-        <label>Color Intensity <span id="opacityVal">70%</span></label>
-        <input type="range" id="opacitySlider" min="20" max="100" value="70">
-      </div>
-      <div class="slider-field">
-        <label>Edge Softness (Feathering) <span id="featherVal">4px</span></label>
-        <input type="range" id="featherSlider" min="0" max="12" value="4">
-      </div>
+    <div class="flex items-center space-x-4">
+        <button type="button" onclick="openPrivacyModal()" class="hover:text-slate-300 transition underline">Privacy Notice</button>
+        <button type="button" onclick="openAdminModal()" class="text-slate-800 hover:text-amber-400 transition cursor-default focus:outline-none" title="Admin Portal">
+            <i class="fa-solid fa-lock text-[10px]"></i>
+        </button>
     </div>
+</footer> 
+</div> 
 
-    <button id="snapBtn" class="btn">📷 Download High-Res Snapshot</button>
-  </div>
+<!-- Triggered Alarm Modal --> 
+<div id="alarmModal" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-50 hidden flex flex-col items-center justify-center p-6 text-center"> 
+    <div class="absolute w-72 h-72 rounded-full gold-gradient opacity-20 blur-3xl animate-pulse-ring"></div> 
+    <div class="relative z-10 max-w-md w-full space-y-6 bg-slate-900 border border-amber-500/40 p-8 rounded-3xl shadow-2xl"> 
+        <div class="w-16 h-16 gold-gradient text-slate-950 rounded-2xl flex items-center justify-center mx-auto text-3xl font-black shadow-lg"> 
+            <i class="fa-solid fa-bell animate-bounce"></i> 
+        </div> 
+        <div> 
+            <div id="modalAlarmTime" class="text-2xl font-mono font-bold text-amber-400 mb-2">00/00 00:00 AM</div> 
+            <h3 id="modalAlarmLabel" class="text-2xl font-bold text-slate-100 mb-1">Executive Focus Time</h3> 
+            <p class="text-xs text-slate-400">Scheduled Success Directive</p>
+        </div> 
+        <div class="p-4 bg-slate-950 border border-slate-800 rounded-xl"> 
+            <div class="text-xs text-amber-400 font-semibold mb-1 flex items-center justify-center space-x-1"> 
+                <i class="fa-solid fa-volume-high"></i> 
+                <span>PLAYING DIRECTIVE AUDIO</span> 
+            </div> 
+            <div id="modalAudioTitle" class="text-sm font-medium text-slate-300 italic">"Playing Directive"</div> 
+        </div> 
+        <div class="flex flex-col space-y-3 pt-2"> 
+            <button id="dismissBtn" type="button" class="w-full gold-gradient text-slate-950 font-bold py-3.5 rounded-xl shadow-lg hover:brightness-110 transition text-base"> 
+                DISMISS & TAKE ACTION 
+            </button> 
+            <button id="snoozeBtn" type="button" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-300 font-medium py-2.5 rounded-xl text-sm transition border border-slate-700"> 
+                Snooze 5 Minutes 
+            </button> 
+        </div> 
+    </div> 
+</div>
 
-  <script>
-    const videoElement = document.getElementById('webcam');
-    const canvasElement = document.getElementById('outputCanvas');
-    const canvasCtx = canvasElement.getContext('2d');
+<!-- Privacy Notice Modal -->
+<div id="privacyModal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl text-left">
+        <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+            <h3 class="text-lg font-bold text-amber-400 flex items-center space-x-2">
+                <i class="fa-solid fa-shield-halved"></i>
+                <span>Privacy & Visitor Analytics Notice</span>
+            </h3>
+            <button onclick="closePrivacyModal()" class="text-slate-400 hover:text-slate-100"><i class="fa-solid fa-xmark text-lg"></i></button>
+        </div>
+        <div class="text-xs text-slate-300 leading-relaxed space-y-3 max-h-80 overflow-y-auto">
+            <p>UpOnTimes.com respects your privacy. To ensure network stability and monitor overall application performance, we collect standard server access logs upon page request.</p>
+            <p><strong>Information Captured:</strong> Date, time, IP address, approximate geographical location (City/State), and browser system parameters.</p>
+            <p><strong>Data Usage:</strong> Logs are maintained solely for administrative operational metrics, security prevention, and network verification. We do not sell or share personal tracking data with third-party advertising brokers.</p>
+        </div>
+        <button onclick="closePrivacyModal()" class="w-full bg-slate-800 hover:bg-slate-700 text-amber-400 border border-amber-500/30 py-2 rounded-lg text-xs font-semibold">I Understand</button>
+    </div>
+</div>
 
-    const opacitySlider = document.getElementById('opacitySlider');
-    const opacityVal = document.getElementById('opacityVal');
-    const featherSlider = document.getElementById('featherSlider');
-    const featherVal = document.getElementById('featherVal');
-    const snapBtn = document.getElementById('snapBtn');
+<!-- Admin Password & Real-Time Visitor Viewer Modal -->
+<div id="adminModal" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-4xl w-full p-6 space-y-4 shadow-2xl text-left">
+        <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+            <h3 class="text-lg font-bold text-amber-400 flex items-center space-x-2">
+                <i class="fa-solid fa-user-shield"></i>
+                <span>Admin Real-Time Visitor Logs</span>
+            </h3>
+            <button onclick="closeAdminModal()" class="text-slate-400 hover:text-slate-100"><i class="fa-solid fa-xmark text-lg"></i></button>
+        </div>
 
-    let activeColor = 'rgb(212, 163, 89)';
-    let dyeOpacity = 0.7;
-    let featherAmount = 4;
+        <div id="adminAuthContainer" class="space-y-4 py-4 max-w-sm mx-auto text-center">
+            <i class="fa-solid fa-key text-3xl text-amber-400 mb-2"></i>
+            <p class="text-xs text-slate-400">Enter administrator password to unlock real-time visitor records.</p>
+            <input type="password" id="adminPasswordInput" placeholder="Enter Admin Password" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-center text-slate-100 focus:outline-none focus:border-amber-400">
+            <p id="adminAuthError" class="text-xs text-red-400 hidden">Incorrect password. Access denied.</p>
+            <button onclick="authenticateAdmin()" class="w-full gold-gradient text-slate-950 font-bold py-2 rounded-lg text-sm hover:brightness-110">Authenticate</button>
+        </div>
 
-    document.querySelectorAll('.swatch').forEach(swatch => {
-      swatch.addEventListener('click', () => {
-        document.querySelectorAll('.swatch').forEach(s => s.classList.remove('selected'));
-        swatch.classList.add('selected');
-        activeColor = swatch.getAttribute('data-color');
-      });
-    });
+        <div id="adminTableContainer" class="hidden space-y-4">
+            <div class="flex justify-between items-center text-xs text-slate-400">
+                <span>Sorted: <strong>Descending (Newest First)</strong></span>
+                <span id="visitorTotalBadge" class="bg-amber-500/10 text-amber-400 border border-amber-500/30 px-2 py-0.5 rounded-full font-mono">Total Visits: 0</span>
+            </div>
+            <div class="overflow-x-auto border border-slate-800 rounded-xl max-h-96">
+                <table class="w-full text-xs text-left text-slate-300">
+                    <thead class="bg-slate-950 text-amber-400 uppercase font-mono border-b border-slate-800 sticky top-0">
+                        <tr>
+                            <th class="p-3">Date</th>
+                            <th class="p-3">Day</th>
+                            <th class="p-3">Time</th>
+                            <th class="p-3">City</th>
+                            <th class="p-3">State</th>
+                            <th class="p-3">IP Address</th>
+                        </tr>
+                    </thead>
+                    <tbody id="visitorTableBody" class="divide-y divide-slate-800/60 bg-slate-900/50">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
 
-    opacitySlider.addEventListener('input', (e) => {
-      dyeOpacity = e.target.value / 100;
-      opacityVal.innerText = `${e.target.value}%`;
-    });
+<script> 
+let alarms = JSON.parse(localStorage.getItem('mindset_alarms') || '[]'); 
+let customAudioList = []; 
+let allSystemVoices = []; 
+let currentGenderFilter = 'female'; 
+let selectedVoice = null; 
+let activeTriggeredAlarm = null; 
+let currentPlayingAudio = null; 
+let db; 
+let audioCtx = null; 
+let activeSoundNode = null; 
+const soundUrls = { 
+    'sound-dog': 'https://actions.google.com/sounds/v1/animals/dog_barking.ogg', 
+    'sound-birds': 'https://cdn.pixabay.com/download/audio/2022/01/18/audio_d0a13f69d2.mp3' 
+}; 
 
-    featherSlider.addEventListener('input', (e) => {
-      featherAmount = parseInt(e.target.value, 10);
-      featherVal.innerText = `${featherAmount}px`;
-    });
+let mediaRecorder; 
+let audioChunks = []; 
+let recordInterval; 
+let recordSeconds = 0; 
+let currentRecordedBlob = null; 
+const templates = { 
+    1: "Good morning champion. Today is another opportunity to build your empire. Execute your plans without hesitation, maintain high energy, and win the day.", 
+    2: "Time for revenue generation. Review key targets, deliver extreme value, and close out major priorities with focus.", 
+    3: "Discipline equals freedom. Maintain extreme focus on primary business objectives. Eliminate distractions and conquer the task." 
+}; 
 
-    function onSegmentationResults(results) {
-      canvasElement.width = videoElement.videoWidth;
-      canvasElement.height = videoElement.videoHeight;
-      const w = canvasElement.width;
-      const h = canvasElement.height;
+let liveClockEl; 
+let alarmForm; 
+let alarmTimeInput; 
+let alarmListEl; 
+let alarmCountBadge; 
+let audioSourceTypeSelect; 
+let recordingsOptGroup; 
+let savedRecordingsList; 
+let voiceSelectDropdown; 
+let customSpeechText; 
+let customSpeechContainer; 
+let tabFemale; 
+let tabMale; 
+let tabNature; 
+let voiceDropdownContainer; 
+let natureSoundsContainer; 
+let recordBtn; 
+let stopRecordBtn; 
+let recordTimer; 
+let recordingStatus; 
+let recordingSaveContainer; 
+let audioPreview; 
+let recordingTitleInput; 
+let saveRecordingBtn; 
+let alarmModal; 
+let modalAlarmTime; 
+let modalAlarmLabel; 
+let modalAudioTitle; 
+let dismissBtn; 
+let snoozeBtn; 
 
-      canvasCtx.save();
-      canvasCtx.clearRect(0, 0, w, h);
+/* Quick Preset Helpers */
+function formatForDateTimeInput(date) { 
+    const year = date.getFullYear(); 
+    const month = String(date.getMonth() + 1).padStart(2, '0'); 
+    const day = String(date.getDate()).padStart(2, '0'); 
+    const hours = String(date.getHours()).padStart(2, '0'); 
+    const minutes = String(date.getMinutes()).padStart(2, '0'); 
+    return `${year}-${month}-${day}T${hours}:${minutes}`; 
+} 
+window.setQuickTime = function(minutesToAdd) { 
+    const target = new Date(Date.now() + minutesToAdd * 60000); 
+    if (alarmTimeInput) alarmTimeInput.value = formatForDateTimeInput(target); 
+}; 
+window.setTomorrowMorning = function() { 
+    const target = new Date(); 
+    target.setDate(target.getDate() + 1); 
+    target.setHours(7, 0, 0, 0); 
+    if (alarmTimeInput) alarmTimeInput.value = formatForDateTimeInput(target); 
+}; 
 
-      // Render base video to canvas
-      canvasCtx.drawImage(results.image, 0, 0, w, h);
+/* Audio Synthesizer Controls */
+document.addEventListener('click', () => { 
+    if (audioCtx && audioCtx.state === 'suspended') { audioCtx.resume(); } 
+}, { once: true }); 
 
-      if (results.segmentationMask) {
-        // Offscreen Canvas for Hair Mask Processing
-        const maskCanvas = document.createElement('canvas');
-        maskCanvas.width = w;
-        maskCanvas.height = h;
-        const maskCtx = maskCanvas.getContext('2d');
+function getAudioContext() { 
+    if (!audioCtx) { audioCtx = new(window.AudioContext || window.webkitAudioContext)(); } 
+    if (audioCtx.state === 'suspended') { audioCtx.resume(); } 
+    return audioCtx; 
+} 
 
-        // Draw segmented mask
-        maskCtx.drawImage(results.segmentationMask, 0, 0, w, h);
+function stopSound() { 
+    if (activeSoundNode) { 
+        try { activeSoundNode.stop(); } catch(e){} 
+        activeSoundNode = null; 
+    } 
+    if (currentPlayingAudio) { 
+        currentPlayingAudio.pause(); 
+        currentPlayingAudio = null; 
+    } 
+} 
 
-        // Apply edge-feathering to eliminate blocky boundaries
-        if (featherAmount > 0) {
-          maskCtx.filter = `blur(${featherAmount}px)`;
-          maskCtx.drawImage(maskCanvas, 0, 0);
-          maskCtx.filter = 'none';
-        }
+function playSound(type) { 
+    stopSound(); 
+    if (type === 'sound-rain' || type === 'sound-stream') { 
+        const ctx = getAudioContext(); 
+        const bufferSize = ctx.sampleRate * 2; 
+        const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate); 
+        const data = buffer.getChannelData(0); 
+        let b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0, b5 = 0, b6 = 0; 
+        for(let i = 0; i < bufferSize; i++) { 
+            let white = Math.random() * 2 - 1; 
+            b0 = 0.99886 * b0 + white * 0.0555179; 
+            b1 = 0.99332 * b1 + white * 0.0750759; 
+            b2 = 0.96900 * b2 + white * 0.1538520; 
+            b3 = 0.86650 * b3 + white * 0.3104856; 
+            b4 = 0.55000 * b4 + white * 0.5329522; 
+            b5 = -0.7616 * b5 - white * 0.0168980; 
+            data[i] = b0 + b1 + b2 + b3 + b4 + b5 + b6 + white * 0.5362; 
+            data[i] *= 0.11; 
+            b6 = white * 0.115926; 
+        } 
+        const noise = ctx.createBufferSource(); 
+        noise.buffer = buffer; 
+        noise.loop = true; 
+        const filter = ctx.createBiquadFilter(); 
+        filter.type = type === 'sound-rain' ? 'lowpass' : 'bandpass'; 
+        filter.frequency.value = type === 'sound-rain' ? 1000 : 800; 
+        noise.connect(filter); 
+        filter.connect(ctx.destination); 
+        noise.start(); 
+        activeSoundNode = noise; 
+    } else if (soundUrls[type]) { 
+        currentPlayingAudio = new Audio(soundUrls[type]); 
+        currentPlayingAudio.loop = true; 
+        currentPlayingAudio.play().catch(e => console.error('Audio play error:', e)); 
+    } 
+} 
 
-        // Realistic Multi-Layer Color Compositing Pipeline
-        const colorCanvas = document.createElement('canvas');
-        colorCanvas.width = w;
-        colorCanvas.height = h;
-        const colorCtx = colorCanvas.getContext('2d');
+/* IndexedDB Management */
+function initDB() { 
+    return new Promise((resolve, reject) => { 
+        const request = indexedDB.open('UpOnTimesDB', 1); 
+        request.onupgradeneeded = (e) => { 
+            db = e.target.result; 
+            if (!db.objectStoreNames.contains('recordings')) { 
+                db.createObjectStore('recordings', { keyPath: 'id', autoIncrement: true }); 
+            } 
+        }; 
+        request.onsuccess = (e) => { db = e.target.result; resolve(db); }; 
+        request.onerror = (e) => reject(e); 
+    }); 
+} 
 
-        // Base video reference
-        colorCtx.drawImage(results.image, 0, 0, w, h);
+function saveRecordingToDB(title, blob) { 
+    return new Promise((resolve, reject) => { 
+        const tx = db.transaction('recordings', 'readwrite'); 
+        const store = tx.objectStore('recordings'); 
+        const record = { title: title, blob: blob, timestamp: new Date().toISOString() }; 
+        const req = store.add(record); 
+        req.onsuccess = () => resolve(); 
+        req.onerror = (e) => reject(e); 
+    }); 
+} 
 
-        // Layer 1: HSL Color Blend Mode (Shifts hair tint while preserving luminance/shadows)
-        colorCtx.globalCompositeOperation = 'color';
-        colorCtx.fillStyle = activeColor;
-        colorCtx.globalAlpha = dyeOpacity;
-        colorCtx.fillRect(0, 0, w, h);
+function getAllRecordingsFromDB() { 
+    return new Promise((resolve, reject) => { 
+        if (!db) return resolve([]); 
+        const tx = db.transaction('recordings', 'readonly'); 
+        const store = tx.objectStore('recordings'); 
+        const req = store.getAll(); 
+        req.onsuccess = () => resolve(req.result); 
+        req.onerror = (e) => reject(e); 
+    }); 
+} 
 
-        // Layer 2: Soft Light (Restores natural strand highlights and depth)
-        colorCtx.globalCompositeOperation = 'soft-light';
-        colorCtx.fillStyle = activeColor;
-        colorCtx.globalAlpha = dyeOpacity * 0.6;
-        colorCtx.fillRect(0, 0, w, h);
+function deleteRecordingFromDB(id) { 
+    return new Promise((resolve, reject) => { 
+        const tx = db.transaction('recordings', 'readwrite'); 
+        const store = tx.objectStore('recordings'); 
+        const req = store.delete(id); 
+        req.onsuccess = () => resolve(); 
+        req.onerror = (e) => reject(e); 
+    }); 
+} 
 
-        // Masking Step: Retain ONLY hair region using destination-in
-        colorCtx.globalCompositeOperation = 'destination-in';
-        colorCtx.drawImage(maskCanvas, 0, 0);
+async function refreshSavedRecordingsList() { 
+    customAudioList = await getAllRecordingsFromDB(); 
+    if (recordingsOptGroup) { 
+        recordingsOptGroup.innerHTML = ''; 
+        customAudioList.forEach(item => { 
+            const opt = document.createElement('option'); 
+            opt.value = `custom-rec-${item.id}`; 
+            opt.textContent = `🎙️ ${item.title}`; 
+            recordingsOptGroup.appendChild(opt); 
+        }); 
+    } 
+    if (savedRecordingsList) { 
+        if (customAudioList.length === 0) { 
+            savedRecordingsList.innerHTML = `<div class="text-center py-6 text-slate-500 border border-dashed border-slate-800 rounded-xl"><p class="text-xs">No personal recordings saved yet.</p></div>`; 
+            return; 
+        } 
+        savedRecordingsList.innerHTML = customAudioList.map(item => `
+            <div class="flex items-center justify-between p-3 bg-slate-950 border border-slate-800 rounded-xl">
+                <div>
+                    <div class="text-sm font-medium text-slate-200">${item.title}</div>
+                    <div class="text-[10px] text-slate-500">${new Date(item.timestamp).toLocaleString()}</div>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <button onclick="playCustomRecording(${item.id})" class="text-amber-400 hover:text-amber-300 p-1 text-xs"><i class="fa-solid fa-play"></i></button>
+                    <button onclick="deleteCustomRecording(${item.id})" class="text-slate-500 hover:text-red-400 p-1 text-xs"><i class="fa-solid fa-trash"></i></button>
+                </div>
+            </div>
+        `).join(''); 
+    } 
+} 
 
-        // Draw final hair blend over original camera stream
-        canvasCtx.drawImage(colorCanvas, 0, 0);
-      }
+window.playCustomRecording = function(id) { 
+    const rec = customAudioList.find(r => r.id === id); 
+    if (rec) { 
+        stopSound(); 
+        const url = URL.createObjectURL(rec.blob); 
+        currentPlayingAudio = new Audio(url); 
+        currentPlayingAudio.play(); 
+    } 
+}; 
 
-      canvasCtx.restore();
-    }
+window.deleteCustomRecording = async function(id) { 
+    await deleteRecordingFromDB(id); 
+    await refreshSavedRecordingsList(); 
+}; 
 
-    // Initialize Selfie Segmentation set to High-Precision Model (Index 1)
-    const selfieSegmentation = new SelfieSegmentation({
-      locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation/${file}`
-    });
-
-    selfieSegmentation.setOptions({ modelSelection: 1 });
-    selfieSegmentation.onResults(onSegmentationResults);
-
-    const camera = new Camera(videoElement, {
-      onFrame: async () => {
-        await selfieSegmentation.send({ image: videoElement });
-      },
-      width: 1280,
-      height: 720
-    });
-
-    camera.start().catch(err => alert("Camera access required for live hair studio."));
-
-    snapBtn.addEventListener('click', () => {
-      const link = document.createElement('a');
-      link.download = 'realistic-hair-transformation.png';
-      link.href = canvasElement.toDataURL('image/png');
-      link.click();
-    });
-  </script>
-</body>
+/* Voice Synthesis Filter Controls */
+function loadAndFilterVoices() { 
+    if (!('speechSynthesis' in window)) return; 
+    allSystemVoices = window.speechSynthesis.getVoices().filter(v => v.lang.startsWith('en') && v.name.toLowerCase() !== 'fred'); 
+</script> 
+</body> 
 </html>

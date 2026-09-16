@@ -71,11 +71,6 @@
                 radial-gradient(circle at 50% 20%, rgba(212,175,55,0.08), transparent 60%);
     border-bottom: 1px solid var(--border);
   }
-  .hero-branding-tag {
-    display: inline-flex; align-items: center; gap: 8px; font-family: 'Playfair Display', serif;
-    font-size: 1.2rem; font-weight: 700; color: #fff; margin-bottom: 12px;
-    background: rgba(212,175,55,0.08); border: 1px solid var(--border); padding: 6px 16px; border-radius: 30px;
-  }
   .hero-badge {
     display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px;
     background: rgba(212,175,55,0.1); border: 1px solid var(--border);
@@ -85,15 +80,19 @@
   .hero h1 {
     font-family: 'Playfair Display', serif; font-size: clamp(2.2rem, 5vw, 4.2rem);
     font-weight: 800; line-height: 1.15; margin-bottom: 14px;
-    background: linear-gradient(135deg, #fff 40%, var(--gold-light));
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    color: #fff;
   }
   .hero h1 span.gold-brand-line {
-    background: linear-gradient(135deg, var(--gold), var(--gold-light));
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    color: #fff;
     display: block;
     font-size: clamp(2.2rem, 5vw, 4.2rem);
     margin-bottom: 4px;
+  }
+  .hero h1 span.domain-subtitle {
+    color: #fff;
+    display: block;
+    font-size: clamp(2.2rem, 5vw, 4.2rem);
+    margin-top: 4px;
   }
   .hero p { color: var(--muted); font-size: 1rem; max-width: 620px; margin: 0 auto 24px; line-height: 1.6; }
 
@@ -314,6 +313,7 @@
     <div class="hero-badge">The Ultimate Washington, D.C. Super-Portal</div>
     <h1>
       <span class="gold-brand-line">Your Key to Washington, D.C.</span>
+      <span class="domain-subtitle">KeyToDC.com</span>
     </h1>
     <p>The definitive gateway connecting you to world-class real estate, power politics, breaking news, elite dining, historic monuments, and comprehensive capital travel resources.</p>
   </header>
@@ -333,31 +333,89 @@
         <h3>Food Critic's Corner</h3>
         <p>Michelin-starred restaurant directories, power-dining reviews, and direct links to elite capital culinary tables.</p>
       </a>
-      <div class="portal-card" onclick="alert('Navigating to Real Estate & Neighborhoods...')">
+      <a href="#realEstateSection" class="portal-card">
         <span class="portal-icon">🏡</span>
         <h3>Real Estate</h3>
         <p>Luxury properties, historic townhomes in Georgetown and Capitol Hill, rentals, and market valuation reports.</p>
-      </div>
-      <div class="portal-card" onclick="alert('Navigating to Historic Sites & Tours...')">
+      </a>
+      <a href="#mapSection" class="portal-card">
         <span class="portal-icon">🏛️</span>
         <h3>Monuments & Tours</h3>
         <p>White House visitor guides, U.S. Capitol tours, the complete Smithsonian complex, and national parks.</p>
-      </div>
-      <div class="portal-card" onclick="alert('Navigating to Education & Culture Hub...')">
+      </a>
+      <a href="#educationCultureSection" class="portal-card">
         <span class="portal-icon">🎓</span>
         <h3>Education & Culture</h3>
         <p>Guides to local universities (Georgetown, GWU, AU, Howard), museums, theaters, and performing arts.</p>
-      </div>
-      <div class="portal-card" onclick="alert('Navigating to Weather, Sports & Transit Hub...')">
+      </a>
+      <a href="#travelHub" class="portal-card">
         <span class="portal-icon">🏈</span>
         <h3>Weather, Sports & Transit</h3>
         <p>Live meteorological tracking, stadium schedules for D.C. sports teams, and real-time WMATA transit alerts.</p>
-      </div>
+      </a>
       <a href="#techTools" class="portal-card">
         <span class="portal-icon">⚡</span>
         <h3>Technology Tools</h3>
         <p>Explore cutting-edge digital platforms, real-time arrival systems, and intelligent capital software solutions like ArriveTime.com and 4ETA.com.</p>
       </a>
+    </div>
+
+    <!-- REAL ESTATE DEEP DIVE SECTION -->
+    <div class="travel-hub-section" id="realEstateSection">
+      <h2 class="section-title" style="margin-top:0;"><span>🏡</span> Real Estate & Neighborhoods</h2>
+      <p style="color:var(--muted);font-size:0.88rem;margin-bottom:18px;">Luxury properties, historic townhomes in Georgetown and Capitol Hill, rentals, and market valuation reports.</p>
+      <div class="travel-grid">
+        <div class="travel-item-card" style="background:var(--surface2);">
+          <div>
+            <div class="travel-item-title">Georgetown Historic Townhomes</div>
+            <div class="travel-item-desc">Exquisite federal-period architecture, cobblestone streets, and premier luxury estates in D.C.'s most storied neighborhood.</div>
+          </div>
+          <a href="#contact" class="travel-link-btn" style="margin-top:14px;">Inquire on Listings ↗</a>
+        </div>
+        <div class="travel-item-card" style="background:var(--surface2);">
+          <div>
+            <div class="travel-item-title">Capitol Hill Residences</div>
+            <div class="travel-item-desc">Prime Victorian townhomes and contemporary urban condos located minutes from the U.S. Capitol.</div>
+          </div>
+          <a href="#contact" class="travel-link-btn" style="margin-top:14px;">View Properties ↗</a>
+        </div>
+        <div class="travel-item-card" style="background:var(--surface2);">
+          <div>
+            <div class="travel-item-title">Market Valuation Reports</div>
+            <div class="travel-item-desc">Comprehensive quarterly data analytics covering D.C. luxury property trends, appraisals, and investment yields.</div>
+          </div>
+          <a href="#contact" class="travel-link-btn" style="margin-top:14px;">Request Report ↗</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- EDUCATION & CULTURE DEEP DIVE SECTION -->
+    <div class="travel-hub-section" id="educationCultureSection">
+      <h2 class="section-title" style="margin-top:0;"><span>🎓</span> Education & Culture Hub</h2>
+      <p style="color:var(--muted);font-size:0.88rem;margin-bottom:18px;">Guides to local universities (Georgetown, GWU, AU, Howard), museums, theaters, and performing arts.</p>
+      <div class="travel-grid">
+        <div class="travel-item-card" style="background:var(--surface2);">
+          <div>
+            <div class="travel-item-title">Georgetown University & GWU</div>
+            <div class="travel-item-desc">Academic excellence, campus visitor guides, and cultural events at D.C.'s premier institutions.</div>
+          </div>
+          <a href="https://www.georgetown.edu" class="travel-link-btn" target="_blank" style="margin-top:14px;">Georgetown Portal ↗</a>
+        </div>
+        <div class="travel-item-card" style="background:var(--surface2);">
+          <div>
+            <div class="travel-item-title">American University & Howard</div>
+            <div class="travel-item-desc">Explore historic campuses, lecture series, and vibrant student communities across the capital.</div>
+          </div>
+          <a href="https://www.american.edu" class="travel-link-btn" target="_blank" style="margin-top:14px;">AU Portal ↗</a>
+        </div>
+        <div class="travel-item-card" style="background:var(--surface2);">
+          <div>
+            <div class="travel-item-title">Smithsonian Museums & Theaters</div>
+            <div class="travel-item-desc">World-class galleries, performing arts at the Kennedy Center, and historic district theaters.</div>
+          </div>
+          <a href="https://www.si.edu" class="travel-link-btn" target="_blank" style="margin-top:14px;">Smithsonian Guide ↗</a>
+        </div>
+      </div>
     </div>
 
     <!-- TRAVEL DIRECTORY & LIVE FLIGHT BOARDS -->
@@ -462,7 +520,7 @@
     </div>
 
     <!-- INTERACTIVE MAP & EXPLORER -->
-    <h2 class="section-title" id="mapSection"><span>05.</span> Interactive D.C. Command Map</h2>
+    <h2 class="section-title" id="mapSection"><span>05.</span> Interactive D.C. Command Map & Monuments</h2>
     <div class="map-dashboard">
       <div id="map"></div>
       <div class="map-sidebar">

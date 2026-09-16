@@ -81,18 +81,29 @@
     font-family: 'Playfair Display', serif; font-size: clamp(2.2rem, 5vw, 4.2rem);
     font-weight: 800; line-height: 1.15; margin-bottom: 14px;
     color: #fff;
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
   }
   .hero h1 span.gold-brand-line {
-    color: #fff;
-    display: block;
+    background: linear-gradient(135deg, #fff 0%, #f3e5ab 40%, #d4af37 70%, #997815 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3em;
     font-size: clamp(2.2rem, 5vw, 4.2rem);
-    margin-bottom: 4px;
   }
   .hero h1 span.domain-subtitle {
     color: #fff;
     display: block;
     font-size: clamp(2.2rem, 5vw, 4.2rem);
-    margin-top: 4px;
+    font-weight: 800;
+  }
+  .hero-gold-key {
+    display: inline-block;
+    height: 0.85em;
+    width: auto;
+    vertical-align: middle;
+    filter: drop-shadow(0 2px 4px rgba(212,175,55,0.4));
   }
   .hero p { color: var(--muted); font-size: 1rem; max-width: 620px; margin: 0 auto 24px; line-height: 1.6; }
 
@@ -312,8 +323,11 @@
   <header class="hero">
     <div class="hero-badge">The Ultimate Washington, D.C. Super-Portal</div>
     <h1>
-      <span class="gold-brand-line">Your Key to Washington, D.C.</span>
-      <span class="domain-subtitle">KeyToDC.com</span>
+      <span class="gold-brand-line">
+        KeyToDC.com
+        <img src="https://images.unsplash.com/photo-1582139329536-e7284fece509?auto=format&fit=crop&w=120&q=80" alt="Gold Key" class="hero-gold-key" crossorigin="anonymous">
+      </span>
+      <span class="domain-subtitle">Your Key to Washington, D.C.</span>
     </h1>
     <p>The definitive gateway connecting you to world-class real estate, power politics, breaking news, elite dining, historic monuments, and comprehensive capital travel resources.</p>
   </header>

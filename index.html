@@ -98,18 +98,30 @@
             justify-content: center;
             align-items: center;
             gap: 12px;
-            margin-top: 10px;
+            margin-top: 12px;
+            flex-wrap: wrap;
         }
 
         .brand-pill {
             background: rgba(0, 240, 255, 0.08);
             border: 1px solid rgba(0, 240, 255, 0.25);
-            padding: 4px 12px;
+            padding: 6px 14px;
             border-radius: 20px;
             font-family: var(--font-head);
             font-size: 11px;
             color: var(--text-muted);
             letter-spacing: 0.8px;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .brand-pill:hover {
+            border-color: var(--primary-cyan);
+            box-shadow: 0 0 12px var(--primary-glow);
+            transform: translateY(-1px);
         }
 
         .brand-pill b {
@@ -284,7 +296,7 @@
             font-size: clamp(20px, 5.5vw, 24px);
             font-weight: 800;
             cursor: pointer;
-            transition: all 0.25 ease;
+            transition: all 0.25s ease;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -399,46 +411,6 @@
         .input-field:focus {
             border-color: var(--primary-cyan);
             box-shadow: 0 0 15px var(--primary-glow);
-        }
-
-        /* MAP PROVIDER QUICK LAUNCHERS */
-        .maps-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-            margin: 20px 0;
-        }
-
-        @media (min-width: 600px) {
-            .maps-grid { grid-template-columns: repeat(4, 1fr); }
-        }
-
-        .map-card {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 14px;
-            padding: 14px 10px;
-            text-align: center;
-            text-decoration: none;
-            color: #fff;
-            font-family: var(--font-head);
-            font-size: 13px;
-            font-weight: 700;
-            transition: all 0.2s ease;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .map-card:hover {
-            border-color: var(--primary-cyan);
-            box-shadow: 0 0 15px var(--primary-glow);
-            transform: translateY(-2px);
-        }
-
-        .map-icon {
-            font-size: 22px;
         }
 
         /* MARKETPLACE CONSOLE */
@@ -631,8 +603,12 @@
                 <div class="logo">Cab<span class="zero">0</span>.com</div>
                 <div class="tagline">Every Ride, Every Delivery, One Search</div>
                 <div class="sub-brands-row">
-                    <div class="brand-pill">Powered by <b>ArriveTime.com</b></div>
-                    <div class="brand-pill">Intelligence by <b>4ETA.com</b></div>
+                    <a href="https://arrivetime.com" target="_blank" rel="noopener" class="brand-pill">
+                        Powered by <b>ArriveTime.com</b> ↗
+                    </a>
+                    <a href="https://4eta.com" target="_blank" rel="noopener" class="brand-pill">
+                        Intelligence by <b>4ETA.com</b> ↗
+                    </a>
                 </div>
             </header>
 
@@ -660,7 +636,7 @@
             <button class="main-btn" onclick="goTo(1)">Search →</button>
         </div>
 
-        <!-- PAGE 1: LOCATIONS & MAPS -->
+        <!-- PAGE 1: LOCATIONS & SEARCH INPUT -->
         <div class="page" id="pg1">
             <button class="back-btn" onclick="goTo(0)">← Main Menu</button>
             <h2 style="font-family: var(--font-head); margin-bottom: 20px; font-size: clamp(22px, 5.5vw, 26px);">Enter Trip Details</h2>
@@ -675,27 +651,7 @@
                 <input type="text" id="dropoff-input" class="input-field" placeholder="Enter Destination or Venue Name...">
             </div>
 
-            <label style="font-family: var(--font-head); font-size: 14px; color: var(--primary-cyan); letter-spacing: 1px; display: block; margin-top: 24px;">Quick Map Route Launchers</label>
-            <div class="maps-grid">
-                <a href="https://maps.google.com" target="_blank" class="map-card">
-                    <span class="map-icon">🗺️</span>
-                    <span>Google Maps</span>
-                </a>
-                <a href="https://maps.apple.com" target="_blank" class="map-card">
-                    <span class="map-icon">🍏</span>
-                    <span>Apple Maps</span>
-                </a>
-                <a href="https://www.waze.com/live-map" target="_blank" class="map-card">
-                    <span class="map-icon">🚗</span>
-                    <span>Waze Live</span>
-                </a>
-                <a href="https://www.openstreetmap.org" target="_blank" class="map-card">
-                    <span class="map-icon">🌐</span>
-                    <span>OpenStreet</span>
-                </a>
-            </div>
-
-            <button class="main-btn" onclick="goTo(2)">Compare Providers →</button>
+            <button class="main-btn" style="margin-top: 10px;" onclick="goTo(2)">Compare Providers →</button>
         </div>
 
         <!-- PAGE 2: MARKETPLACE COMPARISON CONSOLE -->
@@ -715,7 +671,7 @@
         </div>
 
         <footer>
-            <p>Cab0.com is an independent search console powered by ArriveTime.com & 4ETA.com.</p>
+            <p>Cab0.com is an independent search console powered by <a href="https://arrivetime.com" target="_blank" rel="noopener">ArriveTime.com</a> &amp; <a href="https://4eta.com" target="_blank" rel="noopener">4ETA.com</a>.</p>
             <p style="margin-top: 8px;">
                 <a href="privacy.html">Privacy Policy</a> | 
                 <a href="terms.html">Terms of Service</a> | 
@@ -736,7 +692,7 @@
                 Total Global Visits Tracked: <span id="admin-total-count" style="color: var(--primary-cyan); font-weight: 800;">Loading...</span>
             </div>
 
-            <p style="margin-bottom: 12px; font-size: 13px; color: var(--text-muted);">Session Logs (Timestamp, Location & IP):</p>
+            <p style="margin-bottom: 12px; font-size: 13px; color: var(--text-muted);">Session Logs (Timestamp, Location &amp; IP):</p>
             <div class="log-container" id="admin-log-list"></div>
         </div>
     </div>

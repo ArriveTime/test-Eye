@@ -145,7 +145,7 @@
       padding: 8px;
       font-size: 0.85rem;
       overflow-y: auto;
-      height: 150px;
+      height: 140px;
       font-family: monospace;
     }
 
@@ -192,17 +192,26 @@
         <input type="text" id="city-input" placeholder="e.g. 23185 or Williamsburg" value="23185">
         <button onclick="loadCity()" style="margin-top: 8px;">Load Map Location</button>
 
-        <h3 style="margin-top:12px;">2. Player Setup</h3>
+        <h3 style="margin-top:12px;">2. Player & Voice Setup</h3>
         <input type="text" id="player-name" placeholder="Player Name" value="Explorer1">
-        <label>Transport Mode:</label>
+        
+        <label style="margin-top: 8px; display: block;">Voice Narrator Gender:</label>
+        <select id="voice-gender-select">
+          <option value="female">🎙️ Female Narrator Guide</option>
+          <option value="male">🎙️ Male Narrator Guide</option>
+        </select>
+
+        <label style="margin-top: 8px; display: block;">Transport Mode:</label>
         <select id="transport-select">
           <option value="walk">🚶 Walking (+0 bonus move)</option>
           <option value="bike">🚲 Bike (+1 bonus move)</option>
           <option value="car">🚗 Car (+2 bonus moves)</option>
         </select>
+        
         <label style="display: block; margin-top: 8px;">
           <input type="checkbox" id="dog-checkbox"> Bring Dog 🐕 (Must visit pet-friendly spots)
         </label>
+        
         <button class="btn-gold" onclick="startGame()" style="margin-top: 10px;">Start Game</button>
       </div>
 
@@ -237,9 +246,12 @@
         </ol>
       </div>
 
-      <!-- Log Window -->
+      <!-- Log Window & Voice Test -->
       <div class="card" style="display: flex; flex-direction: column;">
-        <h3>Activity Log</h3>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+          <h3 style="margin: 0;">Activity Log</h3>
+          <button onclick="testVoice()" style="width: auto; padding: 2px 8px; font-size: 0.75rem;">🔊 Test Voice</button>
+        </div>
         <div id="log"></div>
       </div>
 
@@ -254,7 +266,7 @@
     <div class="modal-content">
       <h2 id="modal-title">Location Name</h2>
       <p id="modal-type" style="color: var(--accent-gold); font-size: 0.9rem;"></p>
-      <p id="modal-description">You stand outside the door. Do you want to open it and search inside?</p>
+      <p id="modal-description">You stand outside the door. What would you like to do?</p>
       <div id="modal-actions" style="display: flex; flex-direction: column; gap: 8px;">
         <button class="btn-gold" onclick="openDoor()">🚪 Open Door & Search for Key</button>
         <button onclick="visitRestroomOrEat()">🍕 Spend 10 Tokens to Rest & Replenish Life</button>
@@ -270,6 +282,7 @@
     let locations = [];
     let gameActive = false;
     let movesRemaining = 0;
+    let availableVoices = [];
     
     // Player State
     let player = {
@@ -282,11 +295,57 @@
       dogHydration: 100,
       hasDog: false,
       transport: "walk",
+      voiceGender: "female",
       inJailTurns: 0,
       isStudyingTurns: 0
     };
 
     let goldenKeyLocation = null;
+
+    // Load Web Speech API Voices
+    function initVoices() {
+      if ('speechSynthesis' in window) {
+        availableVoices = window.speechSynthesis.getVoices();
+        window.speechSynthesis.onvoiceschanged = () => {
+          availableVoices = window.speechSynthesis.getVoices();
+        };
+      }
+    }
+    initVoices();
+
+    // Voice Voice Synthesis Engine
+    function speak(text) {
+      if (!('speechSynthesis' in window)) return;
+
+      window.speechSynthesis.cancel(); // Stop prior narration
+
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.rate = 1.0;
+      utterance.pitch = player.voiceGender === 'female' ? 1.2 : 0.8;
+
+      // Select appropriate voice based on gender choice
+      if (availableVoices.length > 0) {
+        const preferredVoice = availableVoices.find(voice => {
+          const name = voice.name.toLowerCase();
+          if (player.voiceGender === 'female') {
+            return name.includes('female') || name.includes('zira') || name.includes('samantha') || name.includes('victoria');
+          } else {
+            return name.includes('male') || name.includes('david') || name.includes('alex') || name.includes('george');
+          }
+        });
+
+        if (preferredVoice) {
+          utterance.voice = preferredVoice;
+        }
+      }
+
+      window.speechSynthesis.speak(utterance);
+    }
+
+    function testVoice() {
+      player.voiceGender = document.getElementById('voice-gender-select').value;
+      speak(`Hello! I am your ${player.voiceGender} narrator. I will guide you through your city quest!`);
+    }
 
     // Initialize Leaflet Map
     function initMap(lat = 37.2707, lng = -76.7075) {
@@ -301,16 +360,20 @@
 
     window.onload = () => {
       initMap();
-      log("Welcome to City Key Quest. Enter a City or ZIP code to set up your map.");
+      log("Welcome to City Key Quest. Select your voice narrator and city to begin.");
     };
 
-    function log(msg) {
+    function log(msg, autoSpeak = true) {
       const logDiv = document.getElementById('log');
       const entry = document.createElement('div');
       entry.className = 'log-entry';
       entry.innerText = `> ${msg}`;
       logDiv.appendChild(entry);
       logDiv.scrollTop = logDiv.scrollHeight;
+
+      if(autoSpeak && gameActive) {
+        speak(msg);
+      }
     }
 
     // Fetch Coordinates for City/ZIP via Nominatim API
@@ -318,7 +381,7 @@
       const query = document.getElementById('city-input').value;
       if(!query) return alert("Please enter a city or ZIP code");
 
-      log(`Searching for city/ZIP: ${query}...`);
+      log(`Searching for city or ZIP code ${query}`, false);
       try {
         const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`);
         const data = await response.json();
@@ -334,22 +397,18 @@
           
           userMarker = L.marker([lat, lon]).addTo(map).bindPopup("Home Base").openPopup();
           
-          // Generate real-world locations dynamically around city center
           fetchNearbyBusinesses(lat, lon);
-          log("Map center loaded successfully.");
+          log("Map location loaded successfully.", false);
         } else {
           alert("City/ZIP not found.");
         }
       } catch (err) {
-        log("Error finding city: " + err);
+        log("Error finding city: " + err, false);
       }
     }
 
     // Generate local places/businesses using Overpass API
     async function fetchNearbyBusinesses(lat, lng) {
-      log("Scanning local businesses, galleries, and spots...");
-      
-      // Query OpenStreetMap for local shops, amenities, tourism spots
       const query = `
         [out:json];
         (
@@ -368,7 +427,7 @@
         if(data.elements && data.elements.length > 0) {
           data.elements.forEach((el, index) => {
             if(el.tags && el.tags.name) {
-              const isPetFriendly = index % 2 === 0; // Simulated pet-friendly status
+              const isPetFriendly = index % 2 === 0;
               locations.push({
                 id: index,
                 name: el.tags.name,
@@ -376,36 +435,31 @@
                 lat: el.lat,
                 lng: el.lon,
                 petFriendly: isPetFriendly,
-                clue: `The Key is near latitude coordinate ${lat.toFixed(2)}.`
+                clue: `The Key is near latitude ${lat.toFixed(2)}.`
               });
             }
           });
         }
 
-        // Fallback standard locations if Overpass is quiet
         if (locations.length < 5) {
           locations = [
-            { id: 1, name: "City Art Gallery", type: "gallery", lat: lat + 0.003, lng: lng + 0.002, petFriendly: true, clue: "Key is near water or park." },
-            { id: 2, name: "Central Bistro & Bar", type: "restaurant", lat: lat - 0.002, lng: lng + 0.004, petFriendly: false, clue: "Key is south of the city center." },
+            { id: 1, name: "City Art Gallery", type: "gallery", lat: lat + 0.003, lng: lng + 0.002, petFriendly: true, clue: "Key is near water or a park." },
+            { id: 2, name: "Central Bistro", type: "restaurant", lat: lat - 0.002, lng: lng + 0.004, petFriendly: false, clue: "Key is south of the city center." },
             { id: 3, name: "History Museum", type: "museum", lat: lat + 0.005, lng: lng - 0.003, petFriendly: true, clue: "Look towards higher numbered streets." },
             { id: 4, name: "Community Academy", type: "school", lat: lat - 0.004, lng: lng - 0.002, petFriendly: false, clue: "Key lies near an eastern block." }
           ];
         }
 
-        // Randomly assign one location to hold the Golden Key
         const keyIndex = Math.floor(Math.random() * locations.length);
         goldenKeyLocation = locations[keyIndex].id;
 
-        // Render markers on map
         locations.forEach(loc => {
           const marker = L.marker([loc.lat, loc.lng]).addTo(map);
           marker.bindPopup(`<b>${loc.name}</b><br>Type: ${loc.type}<br><button onclick="interactWithLocation(${loc.id})">Enter Location</button>`);
         });
 
-        log(`Found ${locations.length} local places to explore!`);
-
       } catch (err) {
-        log("Generated simulated local businesses for gameplay.");
+        log("Loaded city businesses for exploration.", false);
       }
     }
 
@@ -415,6 +469,7 @@
       player.name = document.getElementById('player-name').value || "Explorer1";
       player.transport = document.getElementById('transport-select').value;
       player.hasDog = document.getElementById('dog-checkbox').checked;
+      player.voiceGender = document.getElementById('voice-gender-select').value;
 
       document.getElementById('setup-card').style.display = 'none';
       document.getElementById('game-controls').style.display = 'block';
@@ -427,7 +482,7 @@
 
       gameActive = true;
       updateUI();
-      log(`Game started for ${player.name}! Roll the die to begin searching.`);
+      log(`Welcome ${player.name}! I am your guide. Roll the die to begin exploring your city!`);
     }
 
     function rollDice() {
@@ -435,13 +490,13 @@
 
       if(player.inJailTurns > 0) {
         player.inJailTurns--;
-        log(`🚔 You are in Jail! Must wait turn. Turns remaining: ${player.inJailTurns}`);
+        log(`You are in Jail. You must wait turn. Turns remaining: ${player.inJailTurns}`);
         return;
       }
 
       if(player.isStudyingTurns > 0) {
         player.isStudyingTurns--;
-        log(`📚 You are currently studying to reveal clues! Skip turn. Turns remaining: ${player.isStudyingTurns}`);
+        log(`You are studying at school to reveal clues. Skipping turn.`);
         return;
       }
 
@@ -449,13 +504,12 @@
       let bonus = player.transport === 'car' ? 2 : player.transport === 'bike' ? 1 : 0;
       movesRemaining = roll + bonus;
 
-      log(`🎲 ${player.name} rolled a ${roll}! (+${bonus} ${player.transport} bonus) Total moves: ${movesRemaining}`);
+      log(`You rolled a ${roll}! You have ${movesRemaining} total moves.`);
       
       document.getElementById('roll-btn').disabled = true;
       document.getElementById('alley-btn').disabled = false;
       document.getElementById('moves-left-tag').innerText = `Moves: ${movesRemaining}`;
 
-      // Deplete life/stamina per roll
       drainLife(5);
     }
 
@@ -465,13 +519,17 @@
         player.dogHydration = Math.max(0, player.dogHydration - (amount * 1.5));
       }
 
+      if(player.health <= 20 && player.health > 0) {
+        speak("Warning: Your life stamina is getting low! Stop at a local business to eat and replenish.");
+      }
+
       if(player.health <= 0) {
-        log(`💀 You collapsed from fatigue! Sent back home base to recover.`);
+        log(`You collapsed from fatigue! Returning home to recover.`);
         resetToHome();
       }
 
       if(player.hasDog && player.dogHydration <= 0) {
-        log(`🐕 Your dog is too dehydrated to continue! Heading back home.`);
+        log(`Your dog is too thirsty to continue! Heading back home.`);
         resetToHome();
       }
 
@@ -493,6 +551,7 @@
 
     window.interactWithLocation = function(locId) {
       if(movesRemaining <= 0) {
+        speak("You need remaining moves from a dice roll to enter this place.");
         return alert("You need remaining moves from a dice roll to reach/enter this business!");
       }
 
@@ -501,14 +560,11 @@
 
       activeEncounterLoc = loc;
 
-      // Check pet friendly rule
       if(player.hasDog && !loc.petFriendly) {
-        log(`🚫 ${loc.name} is not pet-friendly! You can't enter with your dog.`);
-        alert("This business is not pet-friendly! Your dog cannot enter.");
+        log(`${loc.name} is not pet-friendly! Your dog cannot enter.`);
         return;
       }
 
-      // Move player marker to business
       userMarker.setLatLng([loc.lat, loc.lng]);
       movesRemaining--;
       player.points += 10;
@@ -520,12 +576,12 @@
         document.getElementById('alley-btn').disabled = true;
       }
 
-      // Show Encounter Modal
       document.getElementById('modal-title').innerText = loc.name;
       document.getElementById('modal-type').innerText = `Type: ${loc.type.toUpperCase()} | ${loc.petFriendly ? '🐾 Pet Friendly' : 'No Pets'}`;
       document.getElementById('dog-water-btn').style.display = player.hasDog ? 'block' : 'none';
       document.getElementById('encounter-modal').style.display = 'flex';
 
+      speak(`You arrived at ${loc.name}. Would you like to open the door and search inside, or rest and replenish?`);
       updateUI();
     };
 
@@ -533,52 +589,51 @@
       if(!activeEncounterLoc) return;
 
       if(activeEncounterLoc.id === goldenKeyLocation) {
-        alert(`🎉 CONGRATULATIONS! You opened the door at ${activeEncounterLoc.name} and found the GOLDEN KEY to the city! YOU WIN!`);
-        log(`🏆 ${player.name} FOUND THE GOLDEN KEY AT ${activeEncounterLoc.name}! GAME OVER!`);
+        log(`Congratulations! You opened the door at ${activeEncounterLoc.name} and found the GOLDEN KEY! You win!`);
         player.points += 500;
         gameActive = false;
       } else {
-        alert(`No Golden Key here! Clue found behind the door:\n\n"${activeEncounterLoc.clue}"`);
-        log(`Searched ${activeEncounterLoc.name}. Clue revealed: ${activeEncounterLoc.clue}`);
+        log(`No key behind this door. Here is your clue: ${activeEncounterLoc.clue}`);
       }
       closeModal();
     }
 
     function visitRestroomOrEat() {
-      if(player.tokens < 10) return alert("Not enough tokens!");
+      if(player.tokens < 10) {
+        speak("You don't have enough tokens to buy food.");
+        return alert("Not enough tokens!");
+      }
       player.tokens -= 10;
       player.health = Math.min(100, player.health + 40);
-      log(`🍕 Stopped to rest/eat. Life restored to ${player.health}%.`);
+      log(`You stopped to rest and eat. Life restored to ${player.health} percent.`);
       updateUI();
       closeModal();
     }
 
     function hydrateDog() {
       player.dogHydration = 100;
-      log(`🐕 Gave your dog fresh water! Hydration restored to 100%.`);
+      log(`You gave your dog fresh water! Dog hydration fully restored.`);
       updateUI();
       closeModal();
     }
 
     function studyAtSchool() {
       player.isStudyingTurns = 1;
-      log(`📚 You enrolled to study at location. Next roll skipped, but key distance estimated.`);
-      alert(`Studying... The Golden Key is located at location ID: ${goldenKeyLocation}`);
+      log(`You enrolled to study. You skip your next turn, but learn useful clues.`);
       closeModal();
     }
 
     function takeDarkAlleyShortcut() {
       if(movesRemaining <= 0) return;
 
-      log(`🕶️ Taking a dark alley shortcut...`);
       const risk = Math.random();
 
       if(risk < 0.4) {
-        log(`😱 You were mugged/robbed in the shadows by rival players! Sent back home and lost 20 tokens.`);
+        log(`You were ambushed in a dark alley! You lost 20 tokens and were sent home.`);
         player.tokens = Math.max(0, player.tokens - 20);
         resetToHome();
       } else {
-        log(`⚡ Shortcut successful! Gained +2 free moves across the city.`);
+        log(`Shortcut successful! You gained two extra moves.`);
         movesRemaining += 2;
         document.getElementById('moves-left-tag').innerText = `Moves: ${movesRemaining}`;
       }

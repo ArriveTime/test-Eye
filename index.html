@@ -3,837 +3,689 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>City Key Quest | Urban Treasure Hunt</title>
+  <title>CITY KEY QUEST</title>
 
-  <!-- Leaflet CSS & JS for Interactive Real-World Map (Free, No API Keys Required) -->
+  <!-- Leaflet CSS & JS (100% Free & Open-Source - NO API KEYS REQUIRED) -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
   <!-- Google Fonts & Font Awesome Icons -->
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&family=Orbitron:wght@600;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Orbitron:wght@600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
   <style>
     :root {
-      --bg-dark: #080b12;
-      --card-bg: rgba(18, 24, 38, 0.88);
-      --card-border: rgba(255, 215, 0, 0.25);
+      --bg-dark: #0a0d14;
+      --panel-bg: rgba(15, 22, 36, 0.82);
+      --panel-border: rgba(255, 215, 0, 0.25);
       --accent-gold: #ffd700;
-      --accent-glow: #ffaa00;
+      --accent-gold-glow: #ffb700;
       --accent-cyan: #00f2fe;
-      --accent-purple: #7928ca;
-      --text-light: #f1f5f9;
-      --danger: #ff4757;
-      --success: #2ed573;
+      --accent-blue: #0088ff;
+      --text-main: #f1f5f9;
+      --text-sub: #94a3b8;
+      --danger-red: #ff4757;
+      --success-green: #2ed573;
     }
 
     * {
       box-sizing: border-box;
       user-select: none;
+      margin: 0;
+      padding: 0;
     }
 
     body {
-      margin: 0;
-      padding: 0;
       font-family: 'Outfit', sans-serif;
       background-color: var(--bg-dark);
-      color: var(--text-light);
-      display: flex;
-      flex-direction: column;
+      color: var(--text-main);
       height: 100vh;
+      width: 100vw;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #game-window {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      background: #000;
       overflow: hidden;
     }
 
-    header {
-      background: rgba(10, 14, 23, 0.95);
-      backdrop-filter: blur(12px);
-      padding: 12px 24px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 1px solid var(--card-border);
-      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
-      z-index: 1100;
+    #map {
+      width: 100%;
+      height: 100%;
+      background: #06090e;
+      z-index: 1;
     }
 
-    .logo-container {
+    .leaflet-tile {
+      filter: brightness(0.65) contrast(1.25) saturate(0.7) hue-rotate(200deg);
+    }
+
+    .top-header {
+      position: absolute;
+      top: 18px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1000;
       display: flex;
       align-items: center;
       gap: 12px;
+      background: rgba(10, 15, 25, 0.85);
+      backdrop-filter: blur(16px);
+      padding: 10px 28px;
+      border-radius: 40px;
+      border: 1px solid var(--panel-border);
+      box-shadow: 0 0 30px rgba(0, 0, 0, 0.8), 0 0 15px rgba(255, 215, 0, 0.15);
     }
 
-    .logo-icon {
-      font-size: 1.6rem;
+    .header-key {
+      font-size: 1.8rem;
       color: var(--accent-gold);
-      filter: drop-shadow(0 0 8px var(--accent-glow));
+      filter: drop-shadow(0 0 8px var(--accent-gold-glow));
     }
 
-    h1 {
-      margin: 0;
+    .header-title {
       font-family: 'Orbitron', sans-serif;
-      font-size: 1.3rem;
-      letter-spacing: 1.5px;
-      background: linear-gradient(135deg, #ffffff 0%, var(--accent-gold) 100%);
+      font-size: 1.4rem;
+      font-weight: 800;
+      letter-spacing: 3px;
+      background: linear-gradient(180deg, #ffffff 30%, var(--accent-gold) 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
 
-    #city-title {
-      font-size: 0.9rem;
-      color: var(--accent-cyan);
-      background: rgba(0, 242, 254, 0.1);
-      padding: 6px 14px;
-      border-radius: 20px;
-      border: 1px solid rgba(0, 242, 254, 0.3);
+    .ui-panel {
+      position: absolute;
+      z-index: 1000;
+      background: var(--panel-bg);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border: 1px solid rgba(255, 215, 0, 0.2);
+      border-radius: 16px;
+      padding: 16px;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+    }
+
+    .panel-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      color: #e2e8f0;
+      text-transform: uppercase;
+      margin-bottom: 12px;
       display: flex;
       align-items: center;
-      gap: 6px;
+      justify-content: space-between;
     }
 
-    #app-container {
-      display: flex;
-      flex: 1;
-      height: calc(100vh - 65px);
-      position: relative;
-    }
-
-    #sidebar {
-      width: 380px;
-      background: var(--card-bg);
-      backdrop-filter: blur(16px);
-      padding: 18px;
+    #left-sidebar {
+      top: 20px;
+      left: 20px;
+      width: 310px;
+      bottom: 20px;
       display: flex;
       flex-direction: column;
-      gap: 14px;
-      z-index: 1000;
+      gap: 12px;
       overflow-y: auto;
-      border-right: 1px solid rgba(255, 255, 255, 0.08);
-      box-shadow: 10px 0 30px rgba(0,0,0,0.5);
     }
 
-    #map {
+    .gender-toggle {
+      display: flex;
+      gap: 8px;
+    }
+
+    .gender-btn {
       flex: 1;
-      height: 100%;
-      background: #05070a;
-    }
-
-    .card {
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      padding: 16px;
-      border-radius: 14px;
-      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-      transition: all 0.3s ease;
-    }
-
-    .card h3 {
-      margin-top: 0;
-      margin-bottom: 10px;
-      font-size: 0.95rem;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      color: var(--accent-gold);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    button {
-      background: linear-gradient(135deg, #0052d4, #4364f7, #6fb1fc);
-      color: white;
-      border: none;
-      padding: 12px 16px;
-      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: var(--text-sub);
+      padding: 8px;
+      border-radius: 8px;
       cursor: pointer;
-      font-weight: 700;
-      font-size: 0.9rem;
-      width: 100%;
-      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
       display: flex;
-      justify-content: center;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      transition: all 0.2s ease;
+    }
+
+    .gender-btn.active {
+      background: rgba(0, 242, 254, 0.15);
+      border-color: var(--accent-cyan);
+      color: var(--accent-cyan);
+      box-shadow: 0 0 12px rgba(0, 242, 254, 0.25);
+    }
+
+    .input-group {
+      display: flex;
       align-items: center;
       gap: 8px;
-      box-shadow: 0 4px 15px rgba(0, 82, 212, 0.35);
+      margin-bottom: 8px;
     }
 
-    button:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(0, 82, 212, 0.5);
-      filter: brightness(1.1);
-    }
-
-    button:disabled {
-      background: #2a324b !important;
-      color: #64748b !important;
-      cursor: not-allowed;
-      transform: none !important;
-      box-shadow: none !important;
-    }
-
-    .btn-gold {
-      background: linear-gradient(135deg, #f09819 0%, #edde5d 100%);
-      color: #000;
-      box-shadow: 0 4px 15px rgba(240, 152, 25, 0.35);
-    }
-
-    .btn-danger {
-      background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%);
-      box-shadow: 0 4px 15px rgba(255, 65, 108, 0.35);
+    .input-label {
+      font-size: 0.75rem;
+      color: var(--text-sub);
+      width: 70px;
     }
 
     input, select {
-      width: 100%;
-      padding: 10px 14px;
-      margin-top: 6px;
-      border-radius: 8px;
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      background: rgba(10, 15, 26, 0.8);
+      flex: 1;
+      background: rgba(5, 10, 18, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 6px;
+      padding: 6px 10px;
       color: white;
       font-family: inherit;
+      font-size: 0.8rem;
       outline: none;
-      transition: border 0.2s;
     }
 
     input:focus, select:focus {
       border-color: var(--accent-gold);
     }
 
-    .stat-row {
+    .btn-start {
+      width: 100%;
+      background: linear-gradient(135deg, #ffc800 0%, #ff9000 100%);
+      color: #000;
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 800;
+      font-size: 0.85rem;
+      padding: 10px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      letter-spacing: 1px;
+      box-shadow: 0 4px 15px rgba(255, 180, 0, 0.3);
+      transition: all 0.2s ease;
+      margin-top: 6px;
+    }
+
+    .btn-start:hover {
+      filter: brightness(1.15);
+      transform: translateY(-1px);
+    }
+
+    .stat-bar-container {
+      margin-bottom: 8px;
+    }
+
+    .stat-label-row {
       display: flex;
       justify-content: space-between;
-      margin-bottom: 8px;
-      font-size: 0.9rem;
+      font-size: 0.75rem;
+      color: var(--text-sub);
+      margin-bottom: 4px;
     }
 
-    .stat-bar {
-      height: 8px;
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 6px;
-      overflow: hidden;
-      margin-top: 4px;
-    }
-
-    .stat-fill {
-      height: 100%;
-      background: linear-gradient(90deg, #11998e, #38ef7d);
-      width: 100%;
-      transition: width 0.4s ease;
-      border-radius: 6px;
-    }
-
-    .stat-fill.low {
-      background: linear-gradient(90deg, #ff416c, #ff4b2b);
-    }
-
-    .dice-display {
-      font-size: 2.2rem;
-      text-align: center;
-      margin: 8px 0;
-      color: var(--accent-gold);
-      height: 45px;
+    .vertical-stats {
       display: flex;
+      justify-content: space-around;
+      align-items: flex-end;
+      height: 60px;
+      margin-top: 10px;
+    }
+
+    .v-stat {
+      display: flex;
+      flex-direction: column;
       align-items: center;
-      justify-content: center;
-      filter: drop-shadow(0 0 10px var(--accent-glow));
+      gap: 4px;
     }
 
-    .dice-rolling {
-      animation: spin 0.4s infinite linear;
-    }
-
-    @keyframes spin {
-      0% { transform: rotate(0deg) scale(0.8); }
-      50% { transform: rotate(180deg) scale(1.2); }
-      100% { transform: rotate(360deg) scale(0.8); }
-    }
-
-    #log {
-      flex: 1;
-      background: rgba(5, 8, 15, 0.9);
-      border: 1px solid rgba(255, 255, 255, 0.08);
+    .v-bar-bg {
+      width: 16px;
+      height: 45px;
+      background: rgba(255, 255, 255, 0.08);
       border-radius: 8px;
-      padding: 10px;
-      font-size: 0.85rem;
-      overflow-y: auto;
-      height: 130px;
-      line-height: 1.4;
+      overflow: hidden;
+      display: flex;
+      align-items: flex-end;
     }
 
-    .log-entry {
+    .v-bar-fill {
+      width: 100%;
+      height: 100%;
+      background: var(--accent-cyan);
+      border-radius: 8px;
+      transition: height 0.3s ease;
+    }
+
+    #log-box {
+      font-size: 0.75rem;
+      line-height: 1.4;
+      color: #cbd5e1;
+      max-height: 110px;
+      overflow-y: auto;
+    }
+
+    .log-line {
       margin-bottom: 6px;
       padding-bottom: 4px;
       border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-      color: #cbd5e1;
     }
 
-    .log-entry strong {
+    #action-menu {
+      top: 100px;
+      right: 20px;
+      width: 220px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .action-btn {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--text-main);
+      padding: 10px 12px;
+      border-radius: 10px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      transition: all 0.2s ease;
+    }
+
+    .action-btn:hover:not(:disabled) {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: var(--accent-gold);
+    }
+
+    .action-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    #dice-section {
+      position: absolute;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .roll-orb-container {
+      position: relative;
+      cursor: pointer;
+    }
+
+    .roll-orb {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255, 215, 0, 0.2) 0%, rgba(10, 15, 25, 0.9) 80%);
+      border: 2px solid var(--accent-gold);
+      box-shadow: 0 0 25px rgba(255, 215, 0, 0.4);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 1.8rem;
+      color: var(--accent-gold);
+      transition: all 0.3s ease;
+    }
+
+    .roll-label {
+      position: absolute;
+      right: -55px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(10, 15, 25, 0.85);
+      border: 1px solid var(--accent-gold);
+      padding: 6px 16px;
+      border-radius: 8px;
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 700;
+      color: white;
+      font-size: 0.9rem;
+    }
+
+    .moves-tag {
+      background: rgba(10, 15, 25, 0.85);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--accent-cyan);
+      padding: 10px 20px;
+      border-radius: 12px;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.9rem;
+      color: white;
+      box-shadow: 0 0 15px rgba(0, 242, 254, 0.2);
+    }
+
+    .moves-tag strong {
       color: var(--accent-cyan);
+      font-size: 1.1rem;
     }
 
-    .modal {
+    .modal-overlay {
       display: none;
       position: fixed;
       top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(4, 7, 13, 0.85);
+      background: rgba(0, 0, 0, 0.75);
       backdrop-filter: blur(8px);
       z-index: 2000;
       justify-content: center;
       align-items: center;
     }
 
-    .modal-content {
-      background: #0f172a;
-      padding: 24px;
-      border-radius: 18px;
-      max-width: 480px;
-      width: 90%;
+    .modal-card {
+      background: #0d1322;
       border: 1px solid var(--accent-gold);
+      padding: 24px;
+      border-radius: 16px;
+      width: 90%;
+      max-width: 420px;
       box-shadow: 0 0 40px rgba(255, 215, 0, 0.2);
-      animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
-
-    @keyframes popIn {
-      from { transform: scale(0.8); opacity: 0; }
-      to { transform: scale(1); opacity: 1; }
-    }
-
-    .leaflet-tile {
-      filter: brightness(0.75) contrast(1.2) saturate(0.8);
     }
   </style>
 </head>
 <body>
 
-  <header>
-    <div class="logo-container">
-      <i class="fa-solid fa-key logo-icon"></i>
-      <h1>CITY KEY QUEST</h1>
-    </div>
-    <div id="city-title"><i class="fa-solid fa-location-dot"></i> City: Select Location</div>
-  </header>
-
-  <div id="app-container">
-    <div id="sidebar">
-
-      <!-- Setup Card -->
-      <div class="card" id="setup-card">
-        <h3><i class="fa-solid fa-map-location-dot"></i> 1. Choose Exploration City</h3>
-        <input type="text" id="city-input" placeholder="e.g. 23185 or Williamsburg" value="23185">
-        <button onclick="loadCity()" style="margin-top: 8px;"><i class="fa-solid fa-magnifying-glass"></i> Load City Map</button>
-
-        <h3 style="margin-top:16px;"><i class="fa-solid fa-user-gear"></i> 2. Player & Audio Settings</h3>
-        <input type="text" id="player-name" placeholder="Player Name" value="Explorer1">
-        
-        <label style="margin-top: 8px; display: block; font-size: 0.85rem; color: #94a3b8;">Guide Voice:</label>
-        <select id="voice-gender-select">
-          <option value="female">🎙️ Female Audio Guide</option>
-          <option value="male">🎙️ Male Audio Guide</option>
-        </select>
-
-        <label style="margin-top: 8px; display: block; font-size: 0.85rem; color: #94a3b8;">Transport Vehicle:</label>
-        <select id="transport-select">
-          <option value="walk">🚶 Walking (+0 bonus speed)</option>
-          <option value="bike">🚲 Bicycle (+1 bonus speed)</option>
-          <option value="car">🚗 Sports Car (+2 bonus speed)</option>
-        </select>
-        
-        <div style="margin-top:10px; padding:10px; background:rgba(255,255,255,0.03); border-radius:8px;">
-          <label style="display: flex; align-items: center; gap: 8px; font-size: 0.9rem; cursor: pointer;">
-            <input type="checkbox" id="dog-checkbox" onchange="toggleDogInput()" style="width: auto; margin:0;"> Bring Pet Dog 🐕
-          </label>
-          <div id="dog-name-container" style="display:none; margin-top:8px;">
-            <input type="text" id="dog-name-input" placeholder="Enter Dog's Name" value="Buddy">
-          </div>
-        </div>
-        
-        <button class="btn-gold" onclick="startGame()" style="margin-top: 14px;"><i class="fa-solid fa-play"></i> Start Quest</button>
-      </div>
-
-      <!-- Gameplay Controls -->
-      <div class="card" id="game-controls" style="display: none;">
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-          <h3 id="current-player-turn" style="margin:0;"><i class="fa-solid fa-gamepad"></i> Turn Controls</h3>
-          <span id="moves-left-tag" style="color: var(--accent-gold); font-weight: 800; font-family: 'Orbitron'; font-size: 1.1rem;">Moves: 0</span>
-        </div>
-
-        <div class="dice-display" id="dice-container"><i class="fa-solid fa-dice-d6"></i></div>
-
-        <button id="roll-btn" class="btn-gold" onclick="rollDice()"><i class="fa-solid fa-dice"></i> Roll 1 Die</button>
-        <button id="alley-btn" class="btn-danger" onclick="takeDarkAlleyShortcut()" style="margin-top: 8px;" disabled><i class="fa-solid fa-mask"></i> Dark Alley Shortcut</button>
-      </div>
-
-      <!-- Stats -->
-      <div class="card" id="stats-card" style="display: none;">
-        <h3><i class="fa-solid fa-chart-simple"></i> Status & Vitals</h3>
-        <div class="stat-row">
-          <span><i class="fa-solid fa-star" style="color:var(--accent-gold);"></i> Points: <strong id="score-val">0</strong></span>
-          <span><i class="fa-solid fa-coins" style="color:var(--accent-cyan);"></i> Tokens: <strong id="token-val">50</strong></span>
-        </div>
-        <div style="margin-top: 8px;">
-          <div style="display:flex; justify-content:space-between; font-size:0.8rem;">
-            <span><i class="fa-solid fa-heart-pulse" style="color:var(--danger);"></i> Health Stamina</span>
-            <span id="health-num">100%</span>
-          </div>
-          <div class="stat-bar"><div id="health-bar" class="stat-fill"></div></div>
-        </div>
-        <div id="dog-stat-container" style="margin-top: 8px; display: none;">
-          <div style="display:flex; justify-content:space-between; font-size:0.8rem;">
-            <span><i class="fa-solid fa-dog" style="color:#00f2fe;"></i> <span id="dog-stat-name">Dog</span> Hydration</span>
-            <span id="dog-num">100%</span>
-          </div>
-          <div class="stat-bar"><div id="dog-bar" class="stat-fill" style="background: linear-gradient(90deg, #00c6ff, #0072ff);"></div></div>
-        </div>
-      </div>
-
-      <!-- Activity Log & Voice Test -->
-      <div class="card" style="display: flex; flex-direction: column; flex: 1;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-          <h3 style="margin: 0;"><i class="fa-solid fa-scroll"></i> Quest Log</h3>
-          <button onclick="testVoice()" style="width: auto; padding: 4px 10px; font-size: 0.75rem;"><i class="fa-solid fa-volume-high"></i> Test Voice</button>
-        </div>
-        <div id="log"></div>
-      </div>
-
+  <div id="game-window">
+    <div class="top-header">
+      <i class="fa-solid fa-key header-key"></i>
+      <span class="header-title">CITY KEY QUEST</span>
     </div>
 
-    <!-- Interactive Leaflet Map -->
     <div id="map"></div>
+
+    <div class="ui-panel" id="left-sidebar">
+      
+      <div>
+        <div class="panel-title">YOUR GUIDE: GENDER</div>
+        <div class="gender-toggle">
+          <button class="gender-btn active" id="btn-female" onclick="setGender('female')">
+            <i class="fa-solid fa-venus" style="font-size: 1.2rem;"></i>
+            FEMALE
+          </button>
+          <button class="gender-btn" id="btn-male" onclick="setGender('male')">
+            <i class="fa-solid fa-mars" style="font-size: 1.2rem;"></i>
+            MALE
+          </button>
+        </div>
+      </div>
+
+      <div style="border-top: 1px solid rgba(255,255,255,0.08); padding-top: 10px;">
+        <div class="panel-title">PLAYER SETUP</div>
+        
+        <div class="input-group">
+          <span class="input-label">Name</span>
+          <input type="text" id="player-name-input" value="Explorer1">
+        </div>
+
+        <div class="input-group">
+          <span class="input-label">ZIP/City</span>
+          <input type="text" id="zip-input" value="23185">
+        </div>
+
+        <div class="input-group">
+          <span class="input-label">Transport</span>
+          <select id="transport-input">
+            <option value="walk">🚶 Walking</option>
+            <option value="bike">🚲 Bike (+1)</option>
+            <option value="car">🚗 Car (+2)</option>
+          </select>
+        </div>
+
+        <div class="input-group">
+          <span class="input-label">Bring Dog</span>
+          <input type="checkbox" id="dog-checkbox" onchange="toggleDogNameInput()" style="width: auto;">
+          <input type="text" id="dog-name-input" placeholder="Dog's Name" value="Buddy" style="display:none; margin-left:6px;">
+        </div>
+
+        <button class="btn-start" onclick="initGame()">START GAME</button>
+      </div>
+
+      <div style="border-top: 1px solid rgba(255,255,255,0.08); padding-top: 10px;">
+        <div class="panel-title">LIVE STATS</div>
+        <div class="vertical-stats">
+          <div class="v-stat">
+            <div class="v-bar-bg"><div class="v-bar-fill" id="bar-points" style="height: 40%; background: var(--accent-gold);"></div></div>
+            <i class="fa-solid fa-star" style="color:var(--accent-gold); font-size:0.8rem;"></i>
+            <span style="font-size:0.65rem; color:var(--text-sub);">Points</span>
+          </div>
+          <div class="v-stat">
+            <div class="v-bar-bg"><div class="v-bar-fill" id="bar-tokens" style="height: 60%; background: var(--accent-cyan);"></div></div>
+            <i class="fa-solid fa-coins" style="color:var(--accent-cyan); font-size:0.8rem;"></i>
+            <span style="font-size:0.65rem; color:var(--text-sub);">Tokens</span>
+          </div>
+          <div class="v-stat">
+            <div class="v-bar-bg"><div class="v-bar-fill" id="bar-life" style="height: 100%; background: var(--danger-red);"></div></div>
+            <i class="fa-solid fa-heart" style="color:var(--danger-red); font-size:0.8rem;"></i>
+            <span style="font-size:0.65rem; color:var(--text-sub);">Life</span>
+          </div>
+          <div class="v-stat" id="dog-stat-column" style="display: none;">
+            <div class="v-bar-bg"><div class="v-bar-fill" id="bar-dog" style="height: 100%; background: #00c6ff;"></div></div>
+            <i class="fa-solid fa-droplet" style="color:#00c6ff; font-size:0.8rem;"></i>
+            <span style="font-size:0.65rem; color:var(--text-sub);" id="dog-stat-label">Dog</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="border-top: 1px solid rgba(255,255,255,0.08); padding-top: 10px; flex:1;">
+        <div class="panel-title">
+          <span>ACTIVITY LOG</span>
+          <i class="fa-solid fa-comment-dots" style="color:var(--accent-cyan);"></i>
+        </div>
+        <div id="log-box"></div>
+      </div>
+
+    </div>
+
+    <div class="ui-panel" id="action-menu">
+      <button class="action-btn" onclick="openLocationEncounter()">
+        <i class="fa-solid fa-location-dot" style="color:var(--accent-cyan);"></i>
+        Enter Location
+      </button>
+      <button class="action-btn" onclick="replenishFoodWater()">
+        <i class="fa-solid fa-utensils" style="color:var(--accent-gold);"></i>
+        Find Food & Water
+      </button>
+      <button class="action-btn" onclick="studyAtSchool()">
+        <i class="fa-solid fa-graduation-cap" style="color:#a855f7;"></i>
+        Go to School
+      </button>
+      <button class="action-btn" onclick="darkAlleyShortcut()">
+        <i class="fa-solid fa-user-ninja" style="color:var(--text-sub);"></i>
+        Dark Alley Shortcut
+      </button>
+    </div>
+
+    <div id="dice-section">
+      <div class="roll-orb-container" onclick="rollDice()">
+        <div class="roll-orb" id="dice-orb">
+          <i class="fa-solid fa-cube"></i>
+        </div>
+        <div class="roll-label">Roll</div>
+      </div>
+      <div class="moves-tag">Moves Left: <strong id="moves-count">0</strong></div>
+    </div>
   </div>
 
-  <!-- Location Interaction Modal -->
-  <div class="modal" id="encounter-modal">
-    <div class="modal-content">
-      <div style="display:flex; justify-content:space-between; align-items:flex-start;">
-        <h2 id="modal-title" style="margin:0; color:var(--accent-gold); font-family:'Orbitron';">Location</h2>
-        <span id="modal-type" style="font-size:0.75rem; background:rgba(255,215,0,0.15); color:var(--accent-gold); padding:4px 8px; border-radius:12px; border:1px solid var(--accent-gold);">SPOT</span>
-      </div>
-      <p id="modal-description" style="color:#cbd5e1; font-size:0.95rem; margin:16px 0 20px 0;">You stand outside the door. What would you like to do?</p>
-      <div id="modal-actions" style="display: flex; flex-direction: column; gap: 10px;">
-        <button class="btn-gold" onclick="openDoor()"><i class="fa-solid fa-door-open"></i> Open Door & Search for Golden Key</button>
-        <button onclick="visitRestroomOrEat()"><i class="fa-solid fa-utensils"></i> Spend 10 Tokens to Rest & Eat</button>
-        <button id="dog-water-btn" onclick="hydrateDog()" style="display:none; background: linear-gradient(135deg, #00c6ff, #0072ff);"><i class="fa-solid fa-glass-water"></i> Give <span id="modal-dog-name">Dog</span> Fresh Water</button>
-        <button onclick="studyAtSchool()"><i class="fa-solid fa-graduation-cap"></i> Study Clues (Skip 1 Turn)</button>
-        <button onclick="closeModal()" style="background:#334155;"><i class="fa-solid fa-xmark"></i> Leave Location</button>
+  <div class="modal-overlay" id="modal-screen">
+    <div class="modal-card">
+      <h3 id="modal-heading" style="color:var(--accent-gold); font-family:'Orbitron'; margin-bottom:12px;">Doorways</h3>
+      <p id="modal-body" style="color:#cbd5e1; font-size:0.85rem; line-height:1.4; margin-bottom:18px;"></p>
+      <div style="display:flex; flex-direction:column; gap:8px;">
+        <button class="action-btn" onclick="searchForGoldenKey()" style="background:rgba(255,215,0,0.15); border-color:var(--accent-gold);">
+          <i class="fa-solid fa-door-open" style="color:var(--accent-gold);"></i> Open Door & Search
+        </button>
+        <button class="action-btn" onclick="closeModal()">Leave</button>
       </div>
     </div>
   </div>
 
   <script>
     let map, userMarker;
-    let locations = [];
-    let gameActive = false;
-    let movesRemaining = 0;
+    let selectedGender = 'female';
     let availableVoices = [];
+    let gameStarted = false;
+    let movesLeft = 0;
 
-    const wordRiddles = [
-      "Look where hot coffee brews and fresh pastries are baked.",
-      "The Golden Key rests where history or fine artwork is displayed.",
-      "Search near a bustling place where food and refreshing drinks are served.",
-      "The key resides where people gather to gain knowledge and study.",
-      "Seek out a lively spot filled with outdoor green space and trees.",
-      "Look behind the door of a business where music or dancing fills the room."
-    ];
-
-    let player = {
-      name: "Explorer1",
-      lat: 0,
-      lng: 0,
+    let gameState = {
+      name: 'Explorer1',
+      zip: '23185',
+      hasDog: false,
+      dogName: 'Buddy',
+      transport: 'walk',
       points: 0,
       tokens: 50,
-      health: 100,
+      life: 100,
       dogHydration: 100,
-      hasDog: false,
-      dogName: "Buddy",
-      transport: "walk",
-      voiceGender: "female",
-      inJailTurns: 0,
-      isStudyingTurns: 0
+      lat: 37.2707,
+      lng: -76.7075
     };
 
-    let goldenKeyLocation = null;
+    function initMap(lat, lng) {
+      if(map) map.remove();
+      map = L.map('map', { zoomControl: false }).setView([lat, lng], 15);
 
-    function toggleDogInput() {
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+        maxZoom: 19
+      }).addTo(map);
+
+      const playerIcon = L.divIcon({
+        html: '<i class="fa-solid fa-child-reaching" style="color:#ffd700; font-size: 28px; filter: drop-shadow(0 0 10px #ffd700);"></i>',
+        className: 'custom-pin'
+      });
+      userMarker = L.marker([lat, lng], {icon: playerIcon}).addTo(map);
+    }
+
+    function setGender(gender) {
+      selectedGender = gender;
+      document.getElementById('btn-female').classList.toggle('active', gender === 'female');
+      document.getElementById('btn-male').classList.toggle('active', gender === 'male');
+      speak(`Voice set to ${gender}.`);
+    }
+
+    function toggleDogNameInput() {
       const isChecked = document.getElementById('dog-checkbox').checked;
-      document.getElementById('dog-name-container').style.display = isChecked ? 'block' : 'none';
+      document.getElementById('dog-name-input').style.display = isChecked ? 'block' : 'none';
+      document.getElementById('dog-stat-column').style.display = isChecked ? 'flex' : 'none';
     }
-
-    function initVoices() {
-      if ('speechSynthesis' in window) {
-        availableVoices = window.speechSynthesis.getVoices();
-        window.speechSynthesis.onvoiceschanged = () => {
-          availableVoices = window.speechSynthesis.getVoices();
-        };
-      }
-    }
-    initVoices();
 
     function speak(text) {
       if (!('speechSynthesis' in window)) return;
       window.speechSynthesis.cancel();
-
       const utterance = new SpeechSynthesisUtterance(text);
-      utterance.rate = 0.95;
-      utterance.pitch = player.voiceGender === 'female' ? 1.1 : 0.9;
-
-      if (availableVoices.length > 0) {
-        const selectedVoice = availableVoices.find(voice => {
-          const vName = voice.name.toLowerCase();
-          if (player.voiceGender === 'female') {
-            return vName.includes('female') || vName.includes('zira') || vName.includes('samantha') || vName.includes('victoria');
-          } else {
-            return vName.includes('male') || vName.includes('david') || vName.includes('alex') || vName.includes('george');
-          }
-        });
-        if (selectedVoice) utterance.voice = selectedVoice;
-      }
+      utterance.pitch = selectedGender === 'female' ? 1.1 : 0.9;
       window.speechSynthesis.speak(utterance);
     }
 
-    function testVoice() {
-      player.voiceGender = document.getElementById('voice-gender-select').value;
-      speak(`Hello! I am your ${player.voiceGender} narrator. I will guide you on your quest to find the Golden Key!`);
+    function addLog(text) {
+      const logBox = document.getElementById('log-box');
+      const line = document.createElement('div');
+      line.className = 'log-line';
+      line.innerHTML = `> ${text}`;
+      logBox.appendChild(line);
+      logBox.scrollTop = logBox.scrollHeight;
     }
 
-    function initMap(lat = 37.2707, lng = -76.7075) {
-      if (map) map.remove();
-      map = L.map('map', { zoomControl: false }).setView([lat, lng], 14);
+    async function initGame() {
+      gameState.name = document.getElementById('player-name-input').value || 'Explorer1';
+      gameState.zip = document.getElementById('zip-input').value || '23185';
+      gameState.hasDog = document.getElementById('dog-checkbox').checked;
+      gameState.dogName = document.getElementById('dog-name-input').value || 'Buddy';
+      gameState.transport = document.getElementById('transport-input').value;
 
-      L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-        maxZoom: 19,
-        attribution: '© OpenStreetMap © CARTO'
-      }).addTo(map);
-
-      L.control.zoom({ position: 'bottomright' }).addTo(map);
-    }
-
-    window.onload = () => {
-      initMap();
-      log("Welcome to City Key Quest. Enter a city or ZIP code to render your map.", false);
-    };
-
-    function log(msg, autoSpeak = true) {
-      const logDiv = document.getElementById('log');
-      const entry = document.createElement('div');
-      entry.className = 'log-entry';
-      entry.innerHTML = `> ${msg}`;
-      logDiv.appendChild(entry);
-      logDiv.scrollTop = logDiv.scrollHeight;
-
-      if(autoSpeak && gameActive) {
-        const cleanText = msg.replace(/<\/?[^>]+(>|$)/g, "");
-        speak(cleanText);
-      }
-    }
-
-    async function loadCity() {
-      const query = document.getElementById('city-input').value;
-      if(!query) return alert("Please enter a city or ZIP code");
-
-      log(`Searching location database for ${query}...`, false);
-      try {
-        const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`);
-        const data = await response.json();
-
-        if (data && data.length > 0) {
-          const lat = parseFloat(data[0].lat);
-          const lon = parseFloat(data[0].lon);
-          player.lat = lat;
-          player.lng = lon;
-
-          initMap(lat, lon);
-          document.getElementById('city-title').innerHTML = `<i class="fa-solid fa-location-dot"></i> City: ${data[0].display_name.split(',')[0]}`;
-          
-          const homeIcon = L.divIcon({
-            html: '<i class="fa-solid fa-house-chimney" style="color:#00f2fe; font-size: 24px; filter: drop-shadow(0 0 6px #00f2fe);"></i>',
-            className: 'custom-map-pin'
-          });
-          userMarker = L.marker([lat, lon], {icon: homeIcon}).addTo(map).bindPopup("<b>Home Base</b>").openPopup();
-          
-          fetchNearbyBusinesses(lat, lon);
-          log("Map terrain loaded successfully.", false);
-        } else {
-          alert("City/ZIP location not found.");
-        }
-      } catch (err) {
-        log("Error retrieving city mapping.", false);
-      }
-    }
-
-    async function fetchNearbyBusinesses(lat, lng) {
-      const query = `
-        [out:json];
-        (
-          node["amenity"](around:2200, ${lat}, ${lng});
-          node["tourism"](around:2200, ${lat}, ${lng});
-        );
-        out body 15;
-      `;
-      const url = "https://overpass-api.de/api/interpreter?data=" + encodeURIComponent(query);
+      document.getElementById('dog-stat-label').innerText = gameState.dogName;
 
       try {
-        const res = await fetch(url);
+        const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(gameState.zip)}`);
         const data = await res.json();
-        locations = [];
-
-        if(data.elements && data.elements.length > 0) {
-          data.elements.forEach((el, index) => {
-            if(el.tags && el.tags.name) {
-              const isPetFriendly = index % 2 === 0;
-              const riddleClue = wordRiddles[index % wordRiddles.length];
-              locations.push({
-                id: index,
-                name: el.tags.name,
-                type: el.tags.amenity || el.tags.tourism || "Local Business",
-                lat: el.lat,
-                lng: el.lon,
-                petFriendly: isPetFriendly,
-                clue: riddleClue
-              });
-            }
-          });
+        if(data && data.length > 0) {
+          gameState.lat = parseFloat(data[0].lat);
+          gameState.lng = parseFloat(data[0].lon);
         }
+      } catch(e) {}
 
-        if (locations.length < 5) {
-          locations = [
-            { id: 1, name: "City Art Museum", type: "museum", lat: lat + 0.003, lng: lng + 0.002, petFriendly: true, clue: wordRiddles[1] },
-            { id: 2, name: "Grand Central Bistro", type: "restaurant", lat: lat - 0.002, lng: lng + 0.004, petFriendly: false, clue: wordRiddles[2] },
-            { id: 3, name: "Heritage Library", type: "school", lat: lat + 0.005, lng: lng - 0.003, petFriendly: true, clue: wordRiddles[3] },
-            { id: 4, name: "Metro Cafe & Bakery", type: "cafe", lat: lat - 0.004, lng: lng - 0.002, petFriendly: false, clue: wordRiddles[0] }
-          ];
-        }
-
-        const keyIndex = Math.floor(Math.random() * locations.length);
-        goldenKeyLocation = locations[keyIndex].id;
-
-        locations.forEach(loc => {
-          const pinIcon = L.divIcon({
-            html: `<i class="fa-solid ${loc.petFriendly ? 'fa-paw' : 'fa-building-shield'}" style="color:${loc.petFriendly ? '#2ed573' : '#ffd700'}; font-size:20px; filter: drop-shadow(0 0 8px rgba(0,0,0,0.8));"></i>`,
-            className: 'custom-business-pin'
-          });
-
-          const marker = L.marker([loc.lat, loc.lng], {icon: pinIcon}).addTo(map);
-          marker.bindPopup(`
-            <div style="color:#000; font-family:'Outfit',sans-serif;">
-              <strong>${loc.name}</strong><br>
-              <small>Type: ${loc.type}</small><br>
-              <button onclick="interactWithLocation(${loc.id})" style="margin-top:6px; padding:6px; font-size:0.75rem;">Enter Location</button>
-            </div>
-          `);
-        });
-
-      } catch (err) {
-        log("City businesses indexed for questing.", false);
-      }
-    }
-
-    function startGame() {
-      if(!player.lat) return alert("Please load a city map location first!");
-
-      player.name = document.getElementById('player-name').value || "Explorer1";
-      player.transport = document.getElementById('transport-select').value;
-      player.hasDog = document.getElementById('dog-checkbox').checked;
-      player.dogName = document.getElementById('dog-name-input').value || "Buddy";
-      player.voiceGender = document.getElementById('voice-gender-select').value;
-
-      document.getElementById('setup-card').style.display = 'none';
-      document.getElementById('game-controls').style.display = 'block';
-      document.getElementById('stats-card').style.display = 'block';
-
-      if(player.hasDog) {
-        document.getElementById('dog-stat-container').style.display = 'block';
-        document.getElementById('dog-stat-name').innerText = player.dogName;
-        document.getElementById('modal-dog-name').innerText = player.dogName;
-      }
-
-      gameActive = true;
-      updateUI();
+      initMap(gameState.lat, gameState.lng);
+      gameStarted = true;
       
-      const dogMsg = player.hasDog ? ` with your dog ${player.dogName}` : "";
-      log(`Greetings <strong>${player.name}</strong>! I am your guide. Roll the die to begin exploring your city${dogMsg}!`);
+      const msg = `Welcome ${gameState.name}! Your map for area ${gameState.zip} is rendered. Roll to move!`;
+      addLog(msg);
+      speak(msg);
     }
 
     function rollDice() {
-      if(!gameActive) return;
+      if(!gameStarted) return alert("Please click 'START GAME' first!");
 
-      if(player.inJailTurns > 0) {
-        player.inJailTurns--;
-        log(`🚔 You are in Jail! Turn skipped. Turns remaining: ${player.inJailTurns}`);
-        return;
-      }
+      const roll = Math.floor(Math.random() * 6) + 1;
+      let bonus = gameState.transport === 'car' ? 2 : gameState.transport === 'bike' ? 1 : 0;
+      movesLeft = roll + bonus;
 
-      if(player.isStudyingTurns > 0) {
-        player.isStudyingTurns--;
-        log(`📚 You are studying to unlock key clues! Turn skipped.`);
-        return;
-      }
+      document.getElementById('moves-count').innerText = movesLeft;
+      const msg = `You rolled a ${roll} (+${bonus} vehicle bonus).`;
+      addLog(msg);
+      speak(msg);
 
-      const diceDisplay = document.getElementById('dice-container');
-      diceDisplay.classList.add('dice-rolling');
-
-      setTimeout(() => {
-        diceDisplay.classList.remove('dice-rolling');
-        const roll = Math.floor(Math.random() * 6) + 1;
-        let bonus = player.transport === 'car' ? 2 : player.transport === 'bike' ? 1 : 0;
-        movesRemaining = roll + bonus;
-
-        const diceIcons = ['fa-dice-one', 'fa-dice-two', 'fa-dice-three', 'fa-dice-four', 'fa-dice-five', 'fa-dice-six'];
-        diceDisplay.innerHTML = `<i class="fa-solid ${diceIcons[roll-1]}"></i>`;
-
-        log(`🎲 You rolled a <strong>${roll}</strong>! (+${bonus} vehicle bonus). Total moves: ${movesRemaining}`);
-        
-        document.getElementById('roll-btn').disabled = true;
-        document.getElementById('alley-btn').disabled = false;
-        document.getElementById('moves-left-tag').innerText = `Moves: ${movesRemaining}`;
-
-        drainLife(6);
-      }, 400);
+      gameState.life = Math.max(0, gameState.life - 5);
+      if(gameState.hasDog) gameState.dogHydration = Math.max(0, gameState.dogHydration - 8);
+      updateBars();
     }
 
-    function drainLife(amount) {
-      player.health = Math.max(0, player.health - amount);
-      if(player.hasDog) {
-        player.dogHydration = Math.max(0, player.dogHydration - (amount * 1.4));
+    function updateBars() {
+      document.getElementById('bar-life').style.height = gameState.life + '%';
+      if(gameState.hasDog) {
+        document.getElementById('bar-dog').style.height = gameState.dogHydration + '%';
       }
-
-      if(player.health <= 25 && player.health > 0) {
-        speak("Warning: Your stamina is getting low! Stop at a local business to rest and eat.");
-      }
-
-      if(player.health <= 0) {
-        log(`💀 You collapsed from fatigue! Returning home to recover stamina.`);
-        resetToHome();
-      }
-
-      if(player.hasDog && player.dogHydration <= 0) {
-        log(`🐕 ${player.dogName} is too dehydrated to continue! Returning to home base.`);
-        resetToHome();
-      }
-
-      updateUI();
     }
 
-    function resetToHome() {
-      player.health = 100;
-      player.dogHydration = 100;
-      userMarker.setLatLng([player.lat, player.lng]);
-      map.panTo([player.lat, player.lng]);
-      movesRemaining = 0;
-      document.getElementById('roll-btn').disabled = false;
-      document.getElementById('alley-btn').disabled = true;
-      updateUI();
+    function openLocationEncounter() {
+      if(movesLeft <= 0) return alert("Roll the die to gain moves first!");
+      movesLeft--;
+      document.getElementById('moves-count').innerText = movesLeft;
+
+      document.getElementById('modal-heading').innerText = "Local Business Doorway";
+      document.getElementById('modal-body').innerText = "You stand outside the entrance. Would you like to open the door and search inside for the Golden Key?";
+      document.getElementById('modal-screen').style.display = 'flex';
     }
 
-    let activeEncounterLoc = null;
-
-    window.interactWithLocation = function(locId) {
-      if(movesRemaining <= 0) {
-        speak("You need remaining moves from a dice roll to reach this location.");
-        return alert("You need remaining moves from a dice roll to enter this business!");
-      }
-
-      const loc = locations.find(l => l.id === locId);
-      if(!loc) return;
-
-      activeEncounterLoc = loc;
-
-      if(player.hasDog && !loc.petFriendly) {
-        log(`🚫 <strong>${loc.name}</strong> is not pet-friendly! ${player.dogName} cannot enter.`);
-        return;
-      }
-
-      userMarker.setLatLng([loc.lat, loc.lng]);
-      movesRemaining--;
-      player.points += 15;
-      player.tokens += 10;
-
-      document.getElementById('moves-left-tag').innerText = `Moves: ${movesRemaining}`;
-      if(movesRemaining === 0) {
-        document.getElementById('roll-btn').disabled = false;
-        document.getElementById('alley-btn').disabled = true;
-      }
-
-      document.getElementById('modal-title').innerText = loc.name;
-      document.getElementById('modal-type').innerText = loc.petFriendly ? '🐾 PET FRIENDLY' : 'NO PETS';
-      document.getElementById('dog-water-btn').style.display = player.hasDog ? 'block' : 'none';
-      document.getElementById('encounter-modal').style.display = 'flex';
-
-      speak(`You stand outside ${loc.name}. Would you like to open the door and search inside, or rest and replenish?`);
-      updateUI();
-    };
-
-    function openDoor() {
-      if(!activeEncounterLoc) return;
-
-      if(activeEncounterLoc.id === goldenKeyLocation) {
-        log(`🎉 <strong>CONGRATULATIONS!</strong> You opened the door at <strong>${activeEncounterLoc.name}</strong> and found the GOLDEN KEY! YOU WIN!`);
-        player.points += 500;
-        gameActive = false;
-      } else {
-        log(`🔑 No Golden Key here! Behind the door you find a clue: <em>"${activeEncounterLoc.clue}"</em>`);
-      }
+    function searchForGoldenKey() {
+      addLog("You searched behind the door and found a riddle clue!");
       closeModal();
     }
 
-    function visitRestroomOrEat() {
-      if(player.tokens < 10) {
-        speak("You do not have enough tokens to buy food.");
-        return alert("Not enough tokens!");
-      }
-      player.tokens -= 10;
-      player.health = Math.min(100, player.health + 45);
-      log(`🍕 Stopped to rest and eat. Stamina restored to ${player.health} percent.`);
-      updateUI();
-      closeModal();
-    }
-
-    function hydrateDog() {
-      player.dogHydration = 100;
-      log(`🐕 Gave ${player.dogName} fresh water! Dog hydration restored to 100 percent.`);
-      updateUI();
-      closeModal();
+    function replenishFoodWater() {
+      gameState.life = 100;
+      if(gameState.hasDog) gameState.dogHydration = 100;
+      updateBars();
+      addLog("Restored health stamina and dog hydration!");
+      speak("Stamina restored!");
     }
 
     function studyAtSchool() {
-      player.isStudyingTurns = 1;
-      log(`📚 Enrolled to study local clues. Next roll skipped.`);
-      closeModal();
+      addLog("Studying clues at the local academy. Next turn skipped.");
     }
 
-    function takeDarkAlleyShortcut() {
-      if(movesRemaining <= 0) return;
-
-      const risk = Math.random();
-
-      if(risk < 0.45) {
-        log(`🕶️ You were ambushed in a dark alley! You lost 20 tokens and were sent back home.`);
-        player.tokens = Math.max(0, player.tokens - 20);
-        resetToHome();
-      } else {
-        log(`⚡ Dark alley shortcut successful! You gained 2 additional moves.`);
-        movesRemaining += 2;
-        document.getElementById('moves-left-tag').innerText = `Moves: ${movesRemaining}`;
-      }
+    function darkAlleyShortcut() {
+      movesLeft += 2;
+      document.getElementById('moves-count').innerText = movesLeft;
+      addLog("Took a dark alley shortcut! Gain +2 moves.");
     }
 
     function closeModal() {
-      document.getElementById('encounter-modal').style.display = 'none';
+      document.getElementById('modal-screen').style.display = 'none';
     }
 
-    function updateUI() {
-      document.getElementById('score-val').innerText = player.points;
-      document.getElementById('token-val').innerText = player.tokens;
-      
-      const hBar = document.getElementById('health-bar');
-      hBar.style.width = player.health + '%';
-      document.getElementById('health-num').innerText = player.health + '%';
-      if(player.health < 30) hBar.classList.add('low');
-      else hBar.classList.remove('low');
-
-      if(player.hasDog) {
-        document.getElementById('dog-bar').style.width = player.dogHydration + '%';
-        document.getElementById('dog-num').innerText = Math.round(player.dogHydration) + '%';
-      }
-    }
+    window.onload = () => {
+      initMap(gameState.lat, gameState.lng);
+      addLog("System Ready. Enter your ZIP or City name and press START GAME.");
+    };
   </script>
 </body>
 </html>

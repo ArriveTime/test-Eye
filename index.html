@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>City Key Quest | Urban Treasure Hunt</title>
 
-  <!-- Leaflet CSS & JS for Interactive Real-World Map -->
+  <!-- Leaflet CSS & JS for Interactive Real-World Map (Free, No API Keys Required) -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
@@ -16,7 +16,7 @@
   <style>
     :root {
       --bg-dark: #080b12;
-      --card-bg: rgba(18, 24, 38, 0.85);
+      --card-bg: rgba(18, 24, 38, 0.88);
       --card-border: rgba(255, 215, 0, 0.25);
       --accent-gold: #ffd700;
       --accent-glow: #ffaa00;
@@ -44,9 +44,8 @@
       overflow: hidden;
     }
 
-    /* Modern Glassmorphic Header */
     header {
-      background: rgba(10, 14, 23, 0.9);
+      background: rgba(10, 14, 23, 0.95);
       backdrop-filter: blur(12px);
       padding: 12px 24px;
       display: flex;
@@ -98,7 +97,6 @@
       position: relative;
     }
 
-    /* Glass Side Panel */
     #sidebar {
       width: 380px;
       background: var(--card-bg);
@@ -119,7 +117,6 @@
       background: #05070a;
     }
 
-    /* Sleek Cards */
     .card {
       background: rgba(255, 255, 255, 0.03);
       border: 1px solid rgba(255, 255, 255, 0.08);
@@ -201,7 +198,6 @@
       border-color: var(--accent-gold);
     }
 
-    /* Stats & Bars */
     .stat-row {
       display: flex;
       justify-content: space-between;
@@ -229,7 +225,6 @@
       background: linear-gradient(90deg, #ff416c, #ff4b2b);
     }
 
-    /* Dice Container Animation */
     .dice-display {
       font-size: 2.2rem;
       text-align: center;
@@ -252,7 +247,6 @@
       100% { transform: rotate(360deg) scale(0.8); }
     }
 
-    /* Custom Scrollable Log */
     #log {
       flex: 1;
       background: rgba(5, 8, 15, 0.9);
@@ -276,7 +270,6 @@
       color: var(--accent-cyan);
     }
 
-    /* Modal Overlay */
     .modal {
       display: none;
       position: fixed;
@@ -304,7 +297,6 @@
       to { transform: scale(1); opacity: 1; }
     }
 
-    /* Map Custom Dark Styling */
     .leaflet-tile {
       filter: brightness(0.75) contrast(1.2) saturate(0.8);
     }
@@ -345,9 +337,14 @@
           <option value="car">🚗 Sports Car (+2 bonus speed)</option>
         </select>
         
-        <label style="display: flex; align-items: center; gap: 8px; margin-top: 10px; font-size: 0.9rem; cursor: pointer;">
-          <input type="checkbox" id="dog-checkbox" style="width: auto; margin:0;"> Bring Pet Dog 🐕 (Requires hydration stops)
-        </label>
+        <div style="margin-top:10px; padding:10px; background:rgba(255,255,255,0.03); border-radius:8px;">
+          <label style="display: flex; align-items: center; gap: 8px; font-size: 0.9rem; cursor: pointer;">
+            <input type="checkbox" id="dog-checkbox" onchange="toggleDogInput()" style="width: auto; margin:0;"> Bring Pet Dog 🐕
+          </label>
+          <div id="dog-name-container" style="display:none; margin-top:8px;">
+            <input type="text" id="dog-name-input" placeholder="Enter Dog's Name" value="Buddy">
+          </div>
+        </div>
         
         <button class="btn-gold" onclick="startGame()" style="margin-top: 14px;"><i class="fa-solid fa-play"></i> Start Quest</button>
       </div>
@@ -381,7 +378,7 @@
         </div>
         <div id="dog-stat-container" style="margin-top: 8px; display: none;">
           <div style="display:flex; justify-content:space-between; font-size:0.8rem;">
-            <span><i class="fa-solid fa-dog" style="color:#00f2fe;"></i> Dog Hydration</span>
+            <span><i class="fa-solid fa-dog" style="color:#00f2fe;"></i> <span id="dog-stat-name">Dog</span> Hydration</span>
             <span id="dog-num">100%</span>
           </div>
           <div class="stat-bar"><div id="dog-bar" class="stat-fill" style="background: linear-gradient(90deg, #00c6ff, #0072ff);"></div></div>
@@ -414,7 +411,7 @@
       <div id="modal-actions" style="display: flex; flex-direction: column; gap: 10px;">
         <button class="btn-gold" onclick="openDoor()"><i class="fa-solid fa-door-open"></i> Open Door & Search for Golden Key</button>
         <button onclick="visitRestroomOrEat()"><i class="fa-solid fa-utensils"></i> Spend 10 Tokens to Rest & Eat</button>
-        <button id="dog-water-btn" onclick="hydrateDog()" style="display:none; background: linear-gradient(135deg, #00c6ff, #0072ff);"><i class="fa-solid fa-glass-water"></i> Give Dog Fresh Water (Pet Friendly)</button>
+        <button id="dog-water-btn" onclick="hydrateDog()" style="display:none; background: linear-gradient(135deg, #00c6ff, #0072ff);"><i class="fa-solid fa-glass-water"></i> Give <span id="modal-dog-name">Dog</span> Fresh Water</button>
         <button onclick="studyAtSchool()"><i class="fa-solid fa-graduation-cap"></i> Study Clues (Skip 1 Turn)</button>
         <button onclick="closeModal()" style="background:#334155;"><i class="fa-solid fa-xmark"></i> Leave Location</button>
       </div>
@@ -428,7 +425,6 @@
     let movesRemaining = 0;
     let availableVoices = [];
 
-    // Clue Pool (Text & Riddle Based)
     const wordRiddles = [
       "Look where hot coffee brews and fresh pastries are baked.",
       "The Golden Key rests where history or fine artwork is displayed.",
@@ -447,6 +443,7 @@
       health: 100,
       dogHydration: 100,
       hasDog: false,
+      dogName: "Buddy",
       transport: "walk",
       voiceGender: "female",
       inJailTurns: 0,
@@ -455,7 +452,11 @@
 
     let goldenKeyLocation = null;
 
-    // Load Speech Synthesis Engine
+    function toggleDogInput() {
+      const isChecked = document.getElementById('dog-checkbox').checked;
+      document.getElementById('dog-name-container').style.display = isChecked ? 'block' : 'none';
+    }
+
     function initVoices() {
       if ('speechSynthesis' in window) {
         availableVoices = window.speechSynthesis.getVoices();
@@ -466,33 +467,25 @@
     }
     initVoices();
 
-    // Natural Speech Synthesis Audio Engine
     function speak(text) {
       if (!('speechSynthesis' in window)) return;
-
-      window.speechSynthesis.cancel(); // Stop overlap
+      window.speechSynthesis.cancel();
 
       const utterance = new SpeechSynthesisUtterance(text);
-      utterance.rate = 0.95; // Natural human speech cadence
+      utterance.rate = 0.95;
       utterance.pitch = player.voiceGender === 'female' ? 1.1 : 0.9;
 
       if (availableVoices.length > 0) {
-        // Prioritize natural sounding system voices
         const selectedVoice = availableVoices.find(voice => {
           const vName = voice.name.toLowerCase();
-          const isNatural = vName.includes('natural') || vName.includes('google') || vName.includes('premium') || vName.includes('siri');
           if (player.voiceGender === 'female') {
-            return (vName.includes('female') || vName.includes('zira') || vName.includes('samantha') || vName.includes('victoria') || vName.includes('karen')) && (isNatural || true);
+            return vName.includes('female') || vName.includes('zira') || vName.includes('samantha') || vName.includes('victoria');
           } else {
-            return (vName.includes('male') || vName.includes('david') || vName.includes('alex') || vName.includes('george') || vName.includes('daniel')) && (isNatural || true);
+            return vName.includes('male') || vName.includes('david') || vName.includes('alex') || vName.includes('george');
           }
         });
-
-        if (selectedVoice) {
-          utterance.voice = selectedVoice;
-        }
+        if (selectedVoice) utterance.voice = selectedVoice;
       }
-
       window.speechSynthesis.speak(utterance);
     }
 
@@ -501,7 +494,6 @@
       speak(`Hello! I am your ${player.voiceGender} narrator. I will guide you on your quest to find the Golden Key!`);
     }
 
-    // Initialize Map with Custom Dark CartoDB Tiles
     function initMap(lat = 37.2707, lng = -76.7075) {
       if (map) map.remove();
       map = L.map('map', { zoomControl: false }).setView([lat, lng], 14);
@@ -528,13 +520,11 @@
       logDiv.scrollTop = logDiv.scrollHeight;
 
       if(autoSpeak && gameActive) {
-        // Clean HTML tags for voice synthesis output
         const cleanText = msg.replace(/<\/?[^>]+(>|$)/g, "");
         speak(cleanText);
       }
     }
 
-    // Load City via Nominatim OpenStreetMap API
     async function loadCity() {
       const query = document.getElementById('city-input').value;
       if(!query) return alert("Please enter a city or ZIP code");
@@ -553,7 +543,6 @@
           initMap(lat, lon);
           document.getElementById('city-title').innerHTML = `<i class="fa-solid fa-location-dot"></i> City: ${data[0].display_name.split(',')[0]}`;
           
-          // Home Marker
           const homeIcon = L.divIcon({
             html: '<i class="fa-solid fa-house-chimney" style="color:#00f2fe; font-size: 24px; filter: drop-shadow(0 0 6px #00f2fe);"></i>',
             className: 'custom-map-pin'
@@ -570,7 +559,6 @@
       }
     }
 
-    // Retrieve Real Places via Overpass API
     async function fetchNearbyBusinesses(lat, lng) {
       const query = `
         [out:json];
@@ -605,7 +593,6 @@
           });
         }
 
-        // Fallback Spots
         if (locations.length < 5) {
           locations = [
             { id: 1, name: "City Art Museum", type: "museum", lat: lat + 0.003, lng: lng + 0.002, petFriendly: true, clue: wordRiddles[1] },
@@ -618,7 +605,6 @@
         const keyIndex = Math.floor(Math.random() * locations.length);
         goldenKeyLocation = locations[keyIndex].id;
 
-        // Render Custom Map Pin Graphics
         locations.forEach(loc => {
           const pinIcon = L.divIcon({
             html: `<i class="fa-solid ${loc.petFriendly ? 'fa-paw' : 'fa-building-shield'}" style="color:${loc.petFriendly ? '#2ed573' : '#ffd700'}; font-size:20px; filter: drop-shadow(0 0 8px rgba(0,0,0,0.8));"></i>`,
@@ -646,6 +632,7 @@
       player.name = document.getElementById('player-name').value || "Explorer1";
       player.transport = document.getElementById('transport-select').value;
       player.hasDog = document.getElementById('dog-checkbox').checked;
+      player.dogName = document.getElementById('dog-name-input').value || "Buddy";
       player.voiceGender = document.getElementById('voice-gender-select').value;
 
       document.getElementById('setup-card').style.display = 'none';
@@ -654,11 +641,15 @@
 
       if(player.hasDog) {
         document.getElementById('dog-stat-container').style.display = 'block';
+        document.getElementById('dog-stat-name').innerText = player.dogName;
+        document.getElementById('modal-dog-name').innerText = player.dogName;
       }
 
       gameActive = true;
       updateUI();
-      log(`Greetings <strong>${player.name}</strong>! I am your guide. Roll the die to begin exploring your city!`);
+      
+      const dogMsg = player.hasDog ? ` with your dog ${player.dogName}` : "";
+      log(`Greetings <strong>${player.name}</strong>! I am your guide. Roll the die to begin exploring your city${dogMsg}!`);
     }
 
     function rollDice() {
@@ -672,11 +663,10 @@
 
       if(player.isStudyingTurns > 0) {
         player.isStudyingTurns--;
-        log(`📚 You are currently studying at school to unlock key clues! Turn skipped.`);
+        log(`📚 You are studying to unlock key clues! Turn skipped.`);
         return;
       }
 
-      // Dice Animation
       const diceDisplay = document.getElementById('dice-container');
       diceDisplay.classList.add('dice-rolling');
 
@@ -715,7 +705,7 @@
       }
 
       if(player.hasDog && player.dogHydration <= 0) {
-        log(`🐕 Your dog is too dehydrated to continue! Returning to home base.`);
+        log(`🐕 ${player.dogName} is too dehydrated to continue! Returning to home base.`);
         resetToHome();
       }
 
@@ -747,7 +737,7 @@
       activeEncounterLoc = loc;
 
       if(player.hasDog && !loc.petFriendly) {
-        log(`🚫 <strong>${loc.name}</strong> is not pet-friendly! Your dog cannot enter.`);
+        log(`🚫 <strong>${loc.name}</strong> is not pet-friendly! ${player.dogName} cannot enter.`);
         return;
       }
 
@@ -798,7 +788,7 @@
 
     function hydrateDog() {
       player.dogHydration = 100;
-      log(`🐕 Gave your dog fresh water! Dog hydration restored to 100 percent.`);
+      log(`🐕 Gave ${player.dogName} fresh water! Dog hydration restored to 100 percent.`);
       updateUI();
       closeModal();
     }

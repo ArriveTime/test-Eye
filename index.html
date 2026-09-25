@@ -3,31 +3,26 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Cab0.com — Every Ride, Every Delivery, One Search.">
-<meta name="theme-color" content="#050914">
 
 <title>Cab0.com — Every Ride, Every Delivery, One Search</title>
 
+<meta name="description" content="Cab0.com — Compare rides, prices and ETAs in one search.">
+
 <style>
 :root{
-    --bg:#050914;
-    --bg2:#081426;
-    --panel:rgba(12,22,40,.80);
-    --panel2:rgba(16,30,52,.94);
-    --line:rgba(140,190,255,.18);
-
-    --text:#f7fbff;
-    --muted:#91a4bd;
-
-    --cyan:#5cecff;
-    --blue:#6b8cff;
-    --violet:#a56bff;
-    --green:#55e6a5;
-    --gold:#ffd66b;
-
-    --shadow:0 24px 70px rgba(0,0,0,.35);
-    --radius:24px;
-    --max:1180px;
+    --bg:#f5f7fa;
+    --white:#ffffff;
+    --dark:#101828;
+    --text:#182230;
+    --muted:#667085;
+    --line:#e4e7ec;
+    --blue:#1769ff;
+    --blue-dark:#0b4fd1;
+    --green:#079455;
+    --gold:#d99b00;
+    --red:#d92d20;
+    --shadow:0 12px 35px rgba(16,24,40,.10);
+    --radius:18px;
 }
 
 *{
@@ -36,51 +31,26 @@
     padding:0;
 }
 
-html{
-    scroll-behavior:smooth;
-}
-
 body{
-    min-height:100vh;
-    color:var(--text);
     font-family:
         Inter,
-        ui-sans-serif,
-        system-ui,
         -apple-system,
         BlinkMacSystemFont,
         "Segoe UI",
+        Arial,
         sans-serif;
 
-    background:
-        radial-gradient(
-            circle at 15% 10%,
-            rgba(92,236,255,.12),
-            transparent 28%
-        ),
-        radial-gradient(
-            circle at 85% 20%,
-            rgba(165,107,255,.14),
-            transparent 30%
-        ),
-        linear-gradient(
-            135deg,
-            var(--bg),
-            var(--bg2) 55%,
-            #050b18
-        );
-
-    overflow-x:hidden;
+    background:var(--bg);
+    color:var(--text);
 }
 
 a{
-    color:inherit;
     text-decoration:none;
+    color:inherit;
 }
 
 button,
-input,
-select{
+input{
     font:inherit;
 }
 
@@ -88,1481 +58,838 @@ button{
     cursor:pointer;
 }
 
-.container{
-    width:min(
-        var(--max),
-        calc(100% - 36px)
-    );
-    margin:auto;
-}
+/* ==============================
+   HEADER
+============================== */
 
-/* =========================================
-   BACKGROUND GLOW
-========================================= */
-
-.glow-orb{
-    position:fixed;
-    width:380px;
-    height:380px;
-    border-radius:50%;
-    filter:blur(90px);
-    opacity:.14;
-    pointer-events:none;
-    z-index:-1;
-}
-
-.orb1{
-    background:var(--cyan);
-    top:-180px;
-    left:-120px;
-}
-
-.orb2{
-    background:var(--violet);
-    right:-160px;
-    top:360px;
-}
-
-/* =========================================
-   NAVIGATION
-========================================= */
-
-nav{
+header{
+    background:var(--white);
+    border-bottom:1px solid var(--line);
     position:sticky;
     top:0;
-    z-index:50;
-
-    background:rgba(5,9,20,.72);
-    backdrop-filter:blur(18px);
-
-    border-bottom:1px solid var(--line);
+    z-index:100;
 }
 
-.nav-inner{
-    height:74px;
+.nav{
+    max-width:1180px;
+    margin:auto;
+    height:70px;
+    padding:0 20px;
 
     display:flex;
     align-items:center;
     justify-content:space-between;
-
-    gap:20px;
 }
 
-.brand{
+.logo{
+    font-size:28px;
     font-weight:900;
-    font-size:25px;
     letter-spacing:-1.5px;
 }
 
-.brand span{
-    color:var(--cyan);
+.logo span{
+    color:var(--blue);
 }
 
 .nav-links{
     display:flex;
+    gap:25px;
     align-items:center;
-    gap:24px;
+}
 
-    color:#b7c6d9;
+.nav-links a{
     font-size:14px;
-}
-
-.nav-links a:hover{
-    color:#fff;
-}
-
-.nav-cta{
-    padding:11px 17px;
-
-    border:1px solid rgba(92,236,255,.35);
-    border-radius:999px;
-
-    background:rgba(92,236,255,.08);
-
-    color:#fff;
-    font-weight:700;
-}
-
-/* =========================================
-   HERO
-========================================= */
-
-.hero{
-    padding:40px 0 35px;
-}
-
-/* =========================================
-   WOZNIAK FOCAL POINT
-========================================= */
-
-.woz-focus{
-    position:relative;
-
-    max-width:920px;
-    margin:0 auto 45px;
-
-    padding:28px 30px 25px;
-
-    text-align:center;
-
-    border:1px solid rgba(255,214,107,.38);
-    border-radius:26px;
-
-    background:
-        linear-gradient(
-            135deg,
-            rgba(255,214,107,.08),
-            rgba(165,107,255,.10),
-            rgba(92,236,255,.06)
-        );
-
-    box-shadow:
-        0 0 45px rgba(165,107,255,.12),
-        inset 0 0 35px rgba(92,236,255,.035);
-
-    overflow:hidden;
-}
-
-.woz-focus:before{
-    content:"";
-
-    position:absolute;
-    top:0;
-    left:10%;
-    right:10%;
-
-    height:2px;
-
-    background:
-        linear-gradient(
-            90deg,
-            transparent,
-            var(--gold),
-            var(--cyan),
-            var(--violet),
-            transparent
-        );
-
-    box-shadow:
-        0 0 18px rgba(92,236,255,.6);
-}
-
-.woz-badge{
-    display:inline-block;
-
-    padding:7px 15px;
-
-    margin-bottom:13px;
-
-    border-radius:999px;
-
-    background:rgba(255,214,107,.10);
-    border:1px solid rgba(255,214,107,.28);
-
-    color:var(--gold);
-
-    font-size:11px;
-    font-weight:900;
-
-    letter-spacing:1.5px;
-    text-transform:uppercase;
-}
-
-.woz-quote{
-    position:relative;
-    z-index:2;
-
-    font-size:
-        clamp(
-            19px,
-            3.3vw,
-            29px
-        );
-
-    line-height:1.4;
-
-    font-weight:700;
-    font-style:italic;
-
-    color:#fff;
-
-    text-shadow:
-        0 3px 20px rgba(0,0,0,.5);
-}
-
-.woz-name{
-    margin-top:13px;
-
-    color:var(--cyan);
-
-    font-size:16px;
-    font-weight:900;
-
-    letter-spacing:1px;
-}
-
-.woz-title{
-    margin-top:3px;
-
-    color:var(--muted);
-
-    font-size:13px;
+    color:#475467;
     font-weight:600;
 }
 
-/* =========================================
-   HERO GRID
-========================================= */
-
-.hero-grid{
-    display:grid;
-
-    grid-template-columns:
-        1.02fr
-        .98fr;
-
-    gap:46px;
-
-    align-items:center;
+.nav-links a:hover{
+    color:var(--blue);
 }
 
-.eyebrow{
-    display:inline-flex;
-    gap:9px;
-    align-items:center;
-
-    border:1px solid rgba(92,236,255,.25);
-
-    background:rgba(92,236,255,.07);
-
-    border-radius:999px;
-
-    padding:8px 13px;
-
-    color:#bdefff;
-
-    font-size:12px;
-    font-weight:800;
-
-    letter-spacing:.5px;
+.nav-button{
+    background:var(--blue);
+    color:white!important;
+    padding:11px 17px;
+    border-radius:10px;
 }
 
-.dot{
-    width:7px;
-    height:7px;
+/* ==============================
+   MAIN
+============================== */
 
-    border-radius:50%;
-
-    background:var(--green);
-
-    box-shadow:
-        0 0 14px var(--green);
+main{
+    max-width:1180px;
+    margin:auto;
+    padding:25px 20px 70px;
 }
 
-h1{
-    font-size:
-        clamp(
-            48px,
-            7vw,
-            86px
-        );
+/* ==============================
+   WOZNIAK QUOTE
+============================== */
 
-    line-height:.94;
-
-    letter-spacing:-5px;
-
-    margin:20px 0;
-}
-
-.gradient-text{
+.woz{
     background:
         linear-gradient(
-            100deg,
-            #fff 20%,
-            var(--cyan) 52%,
-            #b994ff 85%
+            110deg,
+            #101828,
+            #182c50
         );
 
-    -webkit-background-clip:text;
-    background-clip:text;
+    color:white;
 
-    color:transparent;
+    border-radius:18px;
+
+    padding:18px 25px;
+
+    text-align:center;
+
+    margin-bottom:22px;
+
+    box-shadow:var(--shadow);
 }
 
-.hero-copy{
-    max-width:650px;
-
-    color:#a9b8ca;
-
+.woz-quote{
     font-size:18px;
-
-    line-height:1.65;
+    font-weight:600;
+    line-height:1.4;
+    font-style:italic;
 }
 
-.hero-actions{
-    display:flex;
-    gap:12px;
-
-    flex-wrap:wrap;
-
-    margin-top:28px;
+.woz-name{
+    margin-top:6px;
+    font-size:13px;
+    color:#b9d2ff;
+    font-weight:700;
 }
 
-.btn{
-    border:0;
+/* ==============================
+   HERO
+============================== */
 
-    border-radius:15px;
-
-    padding:14px 20px;
-
-    font-weight:800;
-
-    transition:.2s;
-
-    display:inline-flex;
-
-    align-items:center;
-    justify-content:center;
-
-    gap:8px;
+.hero{
+    text-align:center;
+    padding:18px 0 30px;
 }
 
-.btn-primary{
-    background:
-        linear-gradient(
-            100deg,
-            var(--cyan),
-            #7c9dff
-        );
-
-    color:#04101b;
-
-    box-shadow:
-        0 12px 36px
-        rgba(92,236,255,.18);
-}
-
-.btn-secondary{
-    background:rgba(255,255,255,.045);
-
-    border:1px solid var(--line);
-
-    color:#fff;
-}
-
-.btn:hover{
-    transform:translateY(-2px);
-    filter:brightness(1.06);
-}
-
-/* =========================================
-   FUTURISTIC GLOBAL VISUAL
-========================================= */
-
-.hero-visual{
-    min-height:430px;
-
-    border:1px solid var(--line);
-
-    border-radius:32px;
-
-    background:
-        linear-gradient(
-            180deg,
-            rgba(255,255,255,.06),
-            rgba(255,255,255,.015)
-        ),
-        radial-gradient(
-            circle at 50% 40%,
-            rgba(92,236,255,.13),
-            transparent 32%
-        );
-
-    box-shadow:var(--shadow);
-
-    position:relative;
-
-    overflow:hidden;
-}
-
-.hero-visual:before{
-    content:"";
-
-    position:absolute;
-    inset:0;
-
-    background-image:
-        linear-gradient(
-            rgba(120,170,220,.07) 1px,
-            transparent 1px
-        ),
-        linear-gradient(
-            90deg,
-            rgba(120,170,220,.07) 1px,
-            transparent 1px
-        );
-
-    background-size:42px 42px;
-
-    mask-image:
-        linear-gradient(
-            to bottom,
-            black,
-            transparent
-        );
-}
-
-.globe{
-    position:absolute;
-
-    width:290px;
-    height:290px;
-
-    border:1px solid
-        rgba(92,236,255,.35);
-
-    border-radius:50%;
-
-    left:50%;
-    top:47%;
-
-    transform:
-        translate(-50%,-50%);
-
-    box-shadow:
-        inset 0 0 55px
-        rgba(92,236,255,.08),
-
-        0 0 55px
-        rgba(92,236,255,.08);
-}
-
-.globe:before,
-.globe:after{
-    content:"";
-
-    position:absolute;
-
-    inset:18%;
-
-    border:1px solid
-        rgba(165,107,255,.25);
-
-    border-radius:50%;
-}
-
-.globe:after{
-    inset:0 31%;
-
-    border-radius:50%;
-}
-
-.route{
-    position:absolute;
-
-    height:2px;
-
-    background:
-        linear-gradient(
-            90deg,
-            transparent,
-            var(--cyan),
-            transparent
-        );
-
-    transform-origin:left center;
-
-    box-shadow:
-        0 0 12px var(--cyan);
-}
-
-.r1{
-    width:260px;
-    left:18%;
-    top:43%;
-    transform:rotate(-14deg);
-}
-
-.r2{
-    width:300px;
-    left:47%;
-    top:54%;
-    transform:rotate(20deg);
-}
-
-.r3{
-    width:210px;
-    left:34%;
-    top:66%;
-    transform:rotate(-31deg);
-}
-
-.pin{
-    position:absolute;
-
-    width:12px;
-    height:12px;
-
-    border-radius:50%;
-
-    background:var(--cyan);
-
-    box-shadow:
-        0 0 20px var(--cyan);
-}
-
-.p1{
-    left:19%;
-    top:40%;
-}
-
-.p2{
-    left:77%;
-    top:55%;
-}
-
-.p3{
-    left:34%;
-    top:65%;
-}
-
-.float-card{
-    position:absolute;
-
-    padding:12px 14px;
-
-    border:1px solid var(--line);
-
-    border-radius:15px;
-
-    background:
-        rgba(7,15,29,.8);
-
-    backdrop-filter:blur(12px);
-
-    box-shadow:
-        0 15px 35px
-        rgba(0,0,0,.25);
-}
-
-.float-card strong{
-    display:block;
-    font-size:14px;
-}
-
-.float-card small{
-    color:var(--muted);
-}
-
-.fc1{
-    left:20px;
-    top:24px;
-}
-
-.fc2{
-    right:20px;
-    bottom:24px;
-}
-
-.fc3{
-    right:28px;
-    top:100px;
-}
-
-/* =========================================
-   SECTIONS
-========================================= */
-
-.section{
-    padding:48px 0;
-}
-
-.section-head{
-    display:flex;
-
-    justify-content:space-between;
-
-    align-items:end;
-
-    gap:20px;
-
-    margin-bottom:20px;
-}
-
-.section h2{
+.hero h1{
     font-size:
-        clamp(
-            28px,
-            4vw,
-            42px
-        );
+        clamp(38px,6vw,64px);
 
-    letter-spacing:-1.8px;
+    line-height:1;
+
+    letter-spacing:-3px;
+
+    color:var(--dark);
 }
 
-.section-intro{
-    color:var(--muted);
+.hero h1 span{
+    color:var(--blue);
+}
 
+.hero p{
     max-width:650px;
-
-    line-height:1.6;
-
-    margin-top:8px;
+    margin:15px auto 0;
+    color:var(--muted);
+    font-size:17px;
 }
 
-/* =========================================
-   SEARCH
-========================================= */
+/* ==============================
+   SEARCH BOX
+============================== */
 
-.search-panel{
-    border:1px solid var(--line);
-
-    background:var(--panel);
-
-    backdrop-filter:blur(18px);
-
-    border-radius:28px;
-
-    padding:20px;
-
+.search-card{
+    background:white;
+    border-radius:22px;
     box-shadow:var(--shadow);
+    padding:22px;
+    border:1px solid var(--line);
 }
 
-.search-tabs{
-    display:flex;
-
-    gap:8px;
-
-    overflow:auto;
-
-    padding-bottom:12px;
-}
-
-.tab{
-    white-space:nowrap;
-
-    border:1px solid transparent;
-
-    background:
-        rgba(255,255,255,.045);
-
-    color:#aebdd0;
-
-    padding:10px 15px;
-
-    border-radius:999px;
-
+.search-title{
+    font-size:20px;
     font-weight:800;
-}
-
-.tab.active{
-    background:
-        rgba(92,236,255,.12);
-
-    border-color:
-        rgba(92,236,255,.32);
-
-    color:#fff;
+    margin-bottom:17px;
 }
 
 .search-grid{
     display:grid;
-
-    grid-template-columns:
-        1fr
-        1fr
-        auto;
-
-    gap:10px;
+    grid-template-columns:1fr 1fr 160px;
+    gap:12px;
 }
 
 .field{
     position:relative;
 }
 
-.field input,
-.field select{
-    width:100%;
-
-    height:58px;
-
-    border:1px solid var(--line);
-
-    background:
-        rgba(0,0,0,.2);
-
-    color:#fff;
-
-    border-radius:15px;
-
-    padding:0 15px;
-
-    outline:none;
+.field-label{
+    display:block;
+    font-size:11px;
+    font-weight:800;
+    color:#667085;
+    text-transform:uppercase;
+    letter-spacing:.6px;
+    margin:0 0 6px 3px;
 }
 
-.field input:focus,
-.field select:focus{
-    border-color:
-        rgba(92,236,255,.6);
+input{
+    width:100%;
+    height:58px;
+    border:1px solid #d0d5dd;
+    border-radius:12px;
+    padding:0 15px;
+    outline:none;
+    color:var(--text);
+    background:white;
+}
 
+input:focus{
+    border-color:var(--blue);
     box-shadow:
         0 0 0 3px
-        rgba(92,236,255,.08);
+        rgba(23,105,255,.10);
 }
 
-.field label{
-    display:block;
-
-    font-size:11px;
-
-    color:#7890aa;
-
-    text-transform:uppercase;
-
-    letter-spacing:1px;
-
-    margin:0 0 7px 4px;
-
-    font-weight:800;
-}
-
-.search-btn{
+.search-button{
     height:58px;
-    min-width:150px;
+    border:0;
+    border-radius:12px;
+    background:var(--blue);
+    color:white;
+    font-weight:800;
+    font-size:15px;
 }
 
-/* =========================================
-   QUICK FEATURES
-========================================= */
+.search-button:hover{
+    background:var(--blue-dark);
+}
 
-.quick-grid{
-    display:grid;
+/* ==============================
+   QUICK OPTIONS
+============================== */
 
-    grid-template-columns:
-        repeat(4,1fr);
-
-    gap:12px;
+.quick-options{
+    display:flex;
+    gap:9px;
+    margin-top:14px;
+    flex-wrap:wrap;
 }
 
 .quick{
     border:1px solid var(--line);
-
-    background:
-        rgba(255,255,255,.035);
-
-    border-radius:20px;
-
-    padding:18px;
-
-    transition:.2s;
+    background:#f9fafb;
+    padding:9px 13px;
+    border-radius:10px;
+    font-size:13px;
+    font-weight:700;
+    color:#475467;
 }
 
 .quick:hover{
-    transform:translateY(-3px);
-
-    border-color:
-        rgba(92,236,255,.35);
-
-    background:
-        rgba(92,236,255,.055);
+    border-color:var(--blue);
+    color:var(--blue);
 }
 
-.icon{
+/* ==============================
+   RESULTS
+============================== */
+
+.results{
+    margin-top:25px;
+    display:none;
+}
+
+.results.visible{
+    display:block;
+}
+
+.results-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:end;
+    gap:15px;
+    margin-bottom:13px;
+}
+
+.results-header h2{
+    font-size:25px;
+    letter-spacing:-.7px;
+}
+
+.results-header p{
+    color:var(--muted);
+    font-size:13px;
+}
+
+.sort{
+    border:1px solid var(--line);
+    background:white;
+    border-radius:9px;
+    padding:9px 12px;
+    font-size:13px;
+    font-weight:700;
+}
+
+/* ==============================
+   HIGHLIGHTS
+============================== */
+
+.highlights{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+    margin-bottom:13px;
+}
+
+.highlight{
+    background:white;
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:14px 17px;
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.highlight-icon{
     width:38px;
     height:38px;
-
-    border-radius:12px;
-
-    background:
-        rgba(92,236,255,.1);
-
+    border-radius:10px;
     display:grid;
     place-items:center;
-
-    margin-bottom:13px;
-
-    font-size:19px;
+    font-size:18px;
+    background:#eef4ff;
 }
 
-.quick strong{
+.highlight strong{
     display:block;
-    margin-bottom:5px;
-}
-
-.quick span{
-    color:var(--muted);
-
-    font-size:13px;
-
-    line-height:1.45;
-}
-
-/* =========================================
-   FEATURES
-========================================= */
-
-.feature-grid{
-    display:grid;
-
-    grid-template-columns:
-        repeat(3,1fr);
-
-    gap:14px;
-}
-
-.feature{
-    padding:22px;
-
-    border:1px solid var(--line);
-
-    border-radius:22px;
-
-    background:
-        rgba(255,255,255,.03);
-}
-
-.feature h3{
-    margin:13px 0 8px;
-}
-
-.feature p{
-    color:var(--muted);
-
-    line-height:1.55;
-
     font-size:14px;
 }
 
-/* =========================================
-   ECOSYSTEM
-========================================= */
+.highlight span{
+    color:var(--muted);
+    font-size:12px;
+}
 
-.brands{
+/* ==============================
+   RIDE CARD
+============================== */
+
+.ride-list{
+    display:grid;
+    gap:10px;
+}
+
+.ride{
+    position:relative;
+
+    background:white;
+
+    border:1px solid var(--line);
+
+    border-radius:17px;
+
+    padding:18px;
+
     display:grid;
 
     grid-template-columns:
-        1fr 1fr;
-
-    gap:16px;
-}
-
-.brand-card{
-    border:1px solid var(--line);
-
-    border-radius:25px;
-
-    padding:25px;
-
-    background:
-        linear-gradient(
-            135deg,
-            rgba(92,236,255,.07),
-            rgba(165,107,255,.06)
-        );
-
-    display:flex;
-
-    justify-content:space-between;
-
-    gap:20px;
+        1.5fr
+        .8fr
+        .8fr
+        150px;
 
     align-items:center;
+
+    gap:15px;
+
+    transition:.18s;
 }
 
-.brand-card .name{
-    font-size:25px;
+.ride:hover{
+    border-color:#b7c9ed;
+    box-shadow:0 6px 20px rgba(16,24,40,.07);
+}
+
+.ride.featured{
+    border:2px solid var(--blue);
+}
+
+.badge{
+    position:absolute;
+    top:-10px;
+    left:16px;
+
+    background:var(--blue);
+
+    color:white;
+
+    padding:4px 9px;
+
+    border-radius:7px;
+
+    font-size:10px;
 
     font-weight:900;
 
-    letter-spacing:-1px;
-}
+    text-transform:uppercase;
 
-.brand-card p{
-    color:var(--muted);
-
-    margin-top:6px;
-
-    line-height:1.5;
-}
-
-.brand-card .learn{
-    color:var(--cyan);
-
-    font-weight:800;
-
-    white-space:nowrap;
-}
-
-/* =========================================
-   RESULTS
-========================================= */
-
-.results{
-    display:none;
-
-    margin-top:16px;
-}
-
-.results.show{
-    display:block;
-}
-
-.result{
-    display:grid;
-
-    grid-template-columns:
-        1fr
-        auto
-        auto;
-
-    align-items:center;
-
-    gap:16px;
-
-    border:1px solid var(--line);
-
-    background:
-        rgba(255,255,255,.035);
-
-    padding:16px;
-
-    border-radius:18px;
-
-    margin-bottom:9px;
+    letter-spacing:.4px;
 }
 
 .provider{
     display:flex;
-
     align-items:center;
-
-    gap:12px;
+    gap:13px;
 }
 
 .provider-logo{
-    width:42px;
-    height:42px;
+    width:48px;
+    height:48px;
 
     border-radius:13px;
-
-    background:
-        linear-gradient(
-            135deg,
-            #162942,
-            #243d61
-        );
 
     display:grid;
     place-items:center;
 
+    color:white;
+
+    font-size:18px;
     font-weight:900;
+
+    background:#111827;
 }
 
-.result small{
+.uber{
+    background:#111;
+}
+
+.lyft{
+    background:#ff3b8d;
+}
+
+.taxi{
+    background:#eab308;
+    color:#111;
+}
+
+.provider-name{
+    font-size:16px;
+    font-weight:850;
+}
+
+.ride-type{
     color:var(--muted);
-}
-
-.eta{
-    color:var(--green);
-
-    font-weight:900;
-}
-
-.price{
-    font-weight:900;
-
-    font-size:17px;
-}
-
-.demo-note{
-    color:#8295ac;
-
     font-size:12px;
-
-    margin-top:10px;
+    margin-top:3px;
 }
 
-/* =========================================
-   FOOTER
-========================================= */
+.ride-info label{
+    display:block;
+    color:#98a2b3;
+    font-size:10px;
+    font-weight:800;
+    text-transform:uppercase;
+    margin-bottom:3px;
+}
 
-footer{
-    margin-top:50px;
+.ride-info strong{
+    font-size:15px;
+}
 
-    border-top:1px solid var(--line);
+.fast{
+    color:var(--green)!important;
+}
 
-    padding:30px 0 45px;
+.cheap{
+    color:var(--gold)!important;
+}
 
-    color:#778ba3;
+.book{
+    display:block;
+    text-align:center;
+
+    padding:12px 15px;
+
+    background:var(--blue);
+
+    color:white;
+
+    border-radius:10px;
 
     font-size:13px;
 
-    line-height:1.7;
+    font-weight:850;
 }
 
-.footer-grid{
+.book:hover{
+    background:var(--blue-dark);
+}
+
+.book.disabled{
+    background:#98a2b3;
+}
+
+/* ==============================
+   NOTICE
+============================== */
+
+.api-notice{
+    margin-top:14px;
+
+    background:#fffaeb;
+
+    border:1px solid #fedf89;
+
+    border-radius:12px;
+
+    padding:12px 14px;
+
+    color:#7a5b00;
+
+    font-size:12px;
+
+    line-height:1.5;
+}
+
+/* ==============================
+   DAILY LINKS
+============================== */
+
+.services{
+    margin-top:35px;
+}
+
+.services h2{
+    font-size:24px;
+    margin-bottom:14px;
+}
+
+.service-grid{
+    display:grid;
+    grid-template-columns:
+        repeat(3,1fr);
+    gap:12px;
+}
+
+.service{
+    background:white;
+    border:1px solid var(--line);
+    border-radius:15px;
+    padding:19px;
+}
+
+.service-icon{
+    font-size:24px;
+    margin-bottom:10px;
+}
+
+.service h3{
+    font-size:16px;
+}
+
+.service p{
+    color:var(--muted);
+    font-size:13px;
+    line-height:1.5;
+    margin-top:5px;
+}
+
+/* ==============================
+   ECOSYSTEM
+============================== */
+
+.ecosystem{
+    margin-top:35px;
+}
+
+.ecosystem h2{
+    font-size:24px;
+    margin-bottom:14px;
+}
+
+.eco-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+}
+
+.eco{
+    background:white;
+    border:1px solid var(--line);
+    border-radius:15px;
+    padding:20px;
+
     display:flex;
-
     justify-content:space-between;
+    align-items:center;
+    gap:15px;
+}
 
-    gap:25px;
+.eco-name{
+    font-size:20px;
+    font-weight:900;
+}
 
+.eco p{
+    color:var(--muted);
+    font-size:13px;
+    margin-top:4px;
+}
+
+.eco-link{
+    color:var(--blue);
+    font-weight:800;
+    font-size:13px;
+    white-space:nowrap;
+}
+
+/* ==============================
+   FOOTER
+============================== */
+
+footer{
+    background:#101828;
+    color:#98a2b3;
+    padding:35px 20px;
+}
+
+.footer-inner{
+    max-width:1180px;
+    margin:auto;
+
+    display:flex;
+    justify-content:space-between;
+    gap:20px;
     flex-wrap:wrap;
+}
+
+.footer-logo{
+    color:white;
+    font-size:20px;
+    font-weight:900;
 }
 
 .footer-links{
     display:flex;
-
-    gap:18px;
-
+    gap:20px;
     flex-wrap:wrap;
 }
 
 .footer-links a:hover{
-    color:#fff;
+    color:white;
 }
 
-/* =========================================
-   TOAST
-========================================= */
+/* ==============================
+   MOBILE
+============================== */
 
-.toast{
-    position:fixed;
-
-    left:50%;
-    bottom:25px;
-
-    transform:
-        translate(-50%,20px);
-
-    opacity:0;
-
-    pointer-events:none;
-
-    background:#0d1c31;
-
-    border:1px solid
-        rgba(92,236,255,.3);
-
-    padding:12px 17px;
-
-    border-radius:999px;
-
-    box-shadow:var(--shadow);
-
-    transition:.25s;
-
-    z-index:100;
-}
-
-.toast.show{
-    opacity:1;
-
-    transform:
-        translate(-50%,0);
-}
-
-/* =========================================
-   RESPONSIVE
-========================================= */
-
-@media(max-width:900px){
-
-    .hero-grid{
-        grid-template-columns:1fr;
-    }
-
-    .hero-visual{
-        min-height:360px;
-    }
-
-    .quick-grid{
-        grid-template-columns:
-            repeat(2,1fr);
-    }
-
-    .feature-grid{
-        grid-template-columns:
-            1fr 1fr;
-    }
-}
-
-@media(max-width:650px){
-
-    .container{
-        width:
-            min(
-                var(--max),
-                calc(100% - 24px)
-            );
-    }
+@media(max-width:800px){
 
     .nav-links{
         display:none;
-    }
-
-    .nav-inner{
-        height:64px;
-    }
-
-    .hero{
-        padding-top:25px;
-    }
-
-    .woz-focus{
-        padding:23px 17px;
-        margin-bottom:32px;
-    }
-
-    h1{
-        letter-spacing:-3px;
-    }
-
-    .hero-visual{
-        min-height:300px;
-    }
-
-    .globe{
-        width:210px;
-        height:210px;
     }
 
     .search-grid{
         grid-template-columns:1fr;
     }
 
-    .search-btn{
+    .search-button{
         width:100%;
     }
 
-    .quick-grid,
-    .feature-grid,
-    .brands{
+    .highlights{
         grid-template-columns:1fr;
     }
 
-    .section{
-        padding:35px 0;
+    .ride{
+        grid-template-columns:
+            1fr 1fr;
+
+        gap:13px;
     }
 
-    .section-head{
+    .provider{
+        grid-column:1 / -1;
+    }
+
+    .ride-info{
+        grid-column:auto;
+    }
+
+    .book{
+        grid-column:1 / -1;
+    }
+
+    .service-grid,
+    .eco-grid{
+        grid-template-columns:1fr;
+    }
+
+}
+
+@media(max-width:500px){
+
+    main{
+        padding-left:12px;
+        padding-right:12px;
+    }
+
+    .hero h1{
+        letter-spacing:-2px;
+    }
+
+    .woz{
+        padding:16px;
+    }
+
+    .woz-quote{
+        font-size:15px;
+    }
+
+    .search-card{
+        padding:15px;
+    }
+
+    .results-header{
         display:block;
     }
 
-    .result{
-        grid-template-columns:
-            1fr auto;
+    .sort{
+        margin-top:10px;
     }
 
-    .result .price{
-        grid-column:2;
-        grid-row:1;
+    .ride{
+        padding:15px;
     }
 
-    .result .eta{
-        grid-column:1;
-        grid-row:2;
-    }
 }
 
-@media(prefers-reduced-motion:reduce){
+/* ==============================
+   TOAST
+============================== */
 
-    *{
-        scroll-behavior:auto!important;
-        transition:none!important;
-    }
+.toast{
+    position:fixed;
+    bottom:25px;
+    left:50%;
+
+    transform:
+        translate(-50%,20px);
+
+    opacity:0;
+
+    background:#101828;
+    color:white;
+
+    padding:12px 18px;
+
+    border-radius:10px;
+
+    font-size:13px;
+
+    pointer-events:none;
+
+    transition:.2s;
+
+    z-index:500;
+}
+
+.toast.show{
+    opacity:1;
+    transform:
+        translate(-50%,0);
 }
 </style>
 </head>
 
 <body>
 
-<div class="glow-orb orb1"></div>
-<div class="glow-orb orb2"></div>
+<header>
 
+<div class="nav">
 
-<!-- =========================================
-     NAVIGATION
-========================================= -->
-
-<nav>
-
-<div class="container nav-inner">
-
-<a class="brand" href="#">
+<a href="#" class="logo">
     <span>Cab</span>0.com
 </a>
 
 <div class="nav-links">
 
-<a href="#search">Search</a>
+<a href="#compare">Compare Rides</a>
+<a href="#services">Services</a>
+<a href="#ecosystem">Cab0 Network</a>
 
-<a href="#features">Features</a>
-
-<a href="#ecosystem">Ecosystem</a>
-
-<a class="nav-cta" href="#search">
-    Get Started
+<a href="#compare" class="nav-button">
+    Find a Ride
 </a>
 
 </div>
 
 </div>
 
-</nav>
+</header>
 
 
 <main>
 
 
-<!-- =========================================
-     HERO
-========================================= -->
+<!-- ==============================
+     WOZNIAK ENDORSEMENT
+============================== -->
 
-<section class="hero">
-
-<div class="container">
-
-
-<!-- =========================================
-     STEVE WOZNIAK FOCAL POINT
-========================================= -->
-
-<div class="woz-focus">
-
-<div class="woz-badge">
-    ★ VISION FOR THE FUTURE ★
-</div>
+<section class="woz">
 
 <div class="woz-quote">
-    "Best of luck to you on this worthy venture, it's your turn"
+"Best of luck to you on this worthy venture, it's your turn"
 </div>
 
 <div class="woz-name">
-    Steve Wozniak
-</div>
-
-<div class="woz-title">
-    Co-Founder, Apple Computer
-</div>
-
-</div>
-
-
-<!-- =========================================
-     MAIN HERO
-========================================= -->
-
-<div class="hero-grid">
-
-
-<div>
-
-<div class="eyebrow">
-
-<span class="dot"></span>
-
-THE FUTURE OF EVERYDAY MOBILITY
-
-</div>
-
-
-<h1>
-
-Every Ride.<br>
-
-<span class="gradient-text">
-Every Delivery.
-</span>
-
-</h1>
-
-
-<p class="hero-copy">
-
-<strong style="color:#fff;">
-Every Ride, Every Delivery, One Search.
-</strong>
-
-<br><br>
-
-Cab0.com is being designed as a global mobility and delivery hub — helping people discover rides, deliveries, groceries and arrival intelligence from one simple place.
-
-</p>
-
-
-<div class="hero-actions">
-
-<a class="btn btn-primary" href="#search">
-    Start a Search →
-</a>
-
-<a
-class="btn btn-secondary"
-href="https://arrivetime.com"
-target="_blank"
-rel="noopener">
-
-    Explore ArriveTime
-
-</a>
-
-</div>
-
-</div>
-
-
-<!-- =========================================
-     FUTURISTIC VISUAL
-========================================= -->
-
-<div
-class="hero-visual"
-aria-label="Global mobility network illustration"
->
-
-<div class="globe"></div>
-
-<div class="route r1"></div>
-<div class="route r2"></div>
-<div class="route r3"></div>
-
-<div class="pin p1"></div>
-<div class="pin p2"></div>
-<div class="pin p3"></div>
-
-
-<div class="float-card fc1">
-
-<strong>
-    Live Movement
-</strong>
-
-<small>
-    Connected in one view
-</small>
-
-</div>
-
-
-<div class="float-card fc2">
-
-<strong>
-    ETA Intelligence
-</strong>
-
-<small>
-    Know when it arrives
-</small>
-
-</div>
-
-
-<div class="float-card fc3">
-
-<strong>
-    Global Ready
-</strong>
-
-<small>
-    Designed for every city
-</small>
-
-</div>
-
-</div>
-
-
-</div>
-
+Steve Wozniak · Co-Founder, Apple Computer
 </div>
 
 </section>
 
 
-<!-- =========================================
-     SEARCH
-========================================= -->
+<!-- ==============================
+     HERO
+============================== -->
 
-<section
-class="section"
-id="search"
->
+<section class="hero">
 
-<div class="container">
+<h1>
+Every Ride, Every Delivery,
+<span>One Search.</span>
+</h1>
 
-<div class="section-head">
-
-<div>
-
-<h2>
-    Your Daily Travel Console
-</h2>
-
-<p class="section-intro">
-
-Start with a destination.
-
-Cab0 can become the front door to rides, food, groceries and ETA information.
-
+<p>
+Compare your transportation options in one place —
+see the price, pickup time and trip time before you book.
 </p>
 
+</section>
+
+
+<!-- ==============================
+     SEARCH
+============================== -->
+
+<section class="search-card" id="compare">
+
+<div class="search-title">
+Where do you want to go?
 </div>
-
-</div>
-
-
-<div class="search-panel">
-
-
-<div
-class="search-tabs"
-role="tablist"
->
-
-<button
-class="tab active"
-data-mode="ride"
->
-🚕 Rides
-</button>
-
-<button
-class="tab"
-data-mode="delivery"
->
-🍔 Food
-</button>
-
-<button
-class="tab"
-data-mode="grocery"
->
-🛒 Groceries
-</button>
-
-<button
-class="tab"
-data-mode="eta"
->
-⏱ ETA
-</button>
-
-</div>
-
 
 <div class="search-grid">
 
-
 <div class="field">
 
-<label>
-    From
+<label class="field-label">
+Pickup
 </label>
 
 <input
-id="from"
-placeholder="Current location or address"
+id="pickup"
+placeholder="Current location"
 >
 
 </div>
@@ -1570,12 +897,12 @@ placeholder="Current location or address"
 
 <div class="field">
 
-<label>
-    To
+<label class="field-label">
+Destination
 </label>
 
 <input
-id="to"
+id="destination"
 placeholder="Where are you going?"
 >
 
@@ -1583,30 +910,215 @@ placeholder="Where are you going?"
 
 
 <button
-class="btn btn-primary search-btn"
-id="searchBtn"
+class="search-button"
+onclick="findRides()"
 >
-
-Compare →
-
+Compare Rides
 </button>
 
+</div>
+
+
+<div class="quick-options">
+
+<button
+class="quick"
+onclick="setDestination('Airport')"
+>
+✈️ Airport
+</button>
+
+<button
+class="quick"
+onclick="setDestination('Downtown')"
+>
+🏙️ Downtown
+</button>
+
+<button
+class="quick"
+onclick="setDestination('Home')"
+>
+🏠 Home
+</button>
+
+<button
+class="quick"
+onclick="setDestination('Work')"
+>
+💼 Work
+</button>
+
+</div>
+
+</section>
+
+
+<!-- ==============================
+     RESULTS
+============================== -->
+
+<section class="results" id="results">
+
+<div class="results-header">
+
+<div>
+
+<h2>
+Your Ride Options
+</h2>
+
+<p id="routeText">
+Compare available choices.
+</p>
+
+</div>
+
+<select
+class="sort"
+id="sort"
+onchange="sortRides()"
+>
+
+<option value="recommended">
+Recommended
+</option>
+
+<option value="cheap">
+Cheapest first
+</option>
+
+<option value="fast">
+Fastest pickup
+</option>
+
+</select>
+
+</div>
+
+
+<div class="highlights">
+
+<div class="highlight">
+
+<div class="highlight-icon">
+💰
+</div>
+
+<div>
+
+<strong id="cheapestText">
+Cheapest option
+</strong>
+
+<span id="cheapestDetail">
+Compare prices below
+</span>
+
+</div>
+
+</div>
+
+
+<div class="highlight">
+
+<div class="highlight-icon">
+⚡
+</div>
+
+<div>
+
+<strong id="fastestText">
+Fastest pickup
+</strong>
+
+<span id="fastestDetail">
+Compare ETAs below
+</span>
+
+</div>
+
+</div>
 
 </div>
 
 
 <div
-class="results"
-id="results"
+class="ride-list"
+id="rideList"
 ></div>
 
 
-<div class="demo-note">
+<div class="api-notice">
 
-Prototype interface: displayed provider prices and ETAs are demonstration data until live provider/API integrations are connected.
+<strong>Live pricing:</strong>
+The prices and ETAs shown in this prototype are sample comparison data.
+To make Cab0 show real-time prices and availability, the site will need live integrations with transportation providers or an authorized comparison API.
 
 </div>
 
+</section>
+
+
+<!-- ==============================
+     SERVICES
+============================== -->
+
+<section class="services" id="services">
+
+<h2>
+More Than Rides
+</h2>
+
+<div class="service-grid">
+
+<div class="service">
+
+<div class="service-icon">
+🍔
+</div>
+
+<h3>
+Food Delivery
+</h3>
+
+<p>
+Compare delivery options and connect customers with ordering services.
+</p>
+
+</div>
+
+
+<div class="service">
+
+<div class="service-icon">
+🛒
+</div>
+
+<h3>
+Grocery Delivery
+</h3>
+
+<p>
+Find grocery delivery and pickup options from participating services.
+</p>
+
+</div>
+
+
+<div class="service">
+
+<div class="service-icon">
+⏱️
+</div>
+
+<h3>
+Arrival Tracking
+</h3>
+
+<p>
+Connect Cab0 with arrival and ETA services so users know when something will arrive.
+</p>
 
 </div>
 
@@ -1615,290 +1127,21 @@ Prototype interface: displayed provider prices and ETAs are demonstration data u
 </section>
 
 
-<!-- =========================================
-     DAILY FEATURES
-========================================= -->
+<!-- ==============================
+     ECOSYSTEM
+============================== -->
 
-<section class="section">
-
-<div class="container">
-
-<div class="section-head">
-
-<div>
+<section class="ecosystem" id="ecosystem">
 
 <h2>
-    Make Cab0 Useful Every Day
+The Cab0 Network
 </h2>
 
-<p class="section-intro">
-
-The opportunity is to turn Cab0 from a directory into a personal utility people return to every day.
-
-</p>
-
-</div>
-
-</div>
-
-
-<div class="quick-grid">
-
-
-<div class="quick">
-
-<div class="icon">
-📍
-</div>
-
-<strong>
-Use My Location
-</strong>
-
-<span>
-One tap to use the browser's location permission for nearby searches.
-</span>
-
-</div>
-
-
-<div class="quick">
-
-<div class="icon">
-🏠
-</div>
-
-<strong>
-Saved Places
-</strong>
-
-<span>
-Home, work, airport and favorite destinations for faster repeat searches.
-</span>
-
-</div>
-
-
-<div class="quick">
-
-<div class="icon">
-⏱
-</div>
-
-<strong>
-Arrival Alerts
-</strong>
-
-<span>
-Connect with ArriveTime to make "when will it arrive?" a core experience.
-</span>
-
-</div>
-
-
-<div class="quick">
-
-<div class="icon">
-🌎
-</div>
-
-<strong>
-Global Settings
-</strong>
-
-<span>
-City, language, currency, distance units and local provider discovery.
-</span>
-
-</div>
-
-
-</div>
-
-</div>
-
-</section>
-
-
-<!-- =========================================
-     FEATURES
-========================================= -->
-
-<section
-class="section"
-id="features"
->
-
-<div class="container">
-
-
-<div class="section-head">
-
-<div>
-
-<h2>
-    A Modern Cab0 Experience
-</h2>
-
-<p class="section-intro">
-
-Keep the futuristic identity, but make the product feel calm, fast and immediately understandable.
-
-</p>
-
-</div>
-
-</div>
-
-
-<div class="feature-grid">
-
-
-<div class="feature">
-
-<div class="icon">
-⚡
-</div>
-
-<h3>
-Instant First Action
-</h3>
-
-<p>
-Put the search box and destination at the center so people can immediately do something useful.
-</p>
-
-</div>
-
-
-<div class="feature">
-
-<div class="icon">
-🔎
-</div>
-
-<h3>
-Compare, Don't Just Link
-</h3>
-
-<p>
-Show provider availability, ETA, price and important information in a consistent comparison layout.
-</p>
-
-</div>
-
-
-<div class="feature">
-
-<div class="icon">
-🧠
-</div>
-
-<h3>
-ETA Intelligence
-</h3>
-
-<p>
-Use 4ETA.com as the intelligence layer and ArriveTime.com as the arrival experience.
-</p>
-
-</div>
-
-
-<div class="feature">
-
-<div class="icon">
-🔐
-</div>
-
-<h3>
-Privacy By Design
-</h3>
-
-<p>
-Ask for location only when needed and clearly explain why location information is requested.
-</p>
-
-</div>
-
-
-<div class="feature">
-
-<div class="icon">
-♿
-</div>
-
-<h3>
-Accessible Worldwide
-</h3>
-
-<p>
-Large touch targets, readable contrast, keyboard support and reduced-motion support.
-</p>
-
-</div>
-
-
-<div class="feature">
-
-<div class="icon">
-📱
-</div>
-
-<h3>
-App-Like Experience
-</h3>
-
-<p>
-Responsive cards and mobile navigation make the website feel like a polished application.
-</p>
-
-</div>
-
-
-</div>
-
-</div>
-
-</section>
-
-
-<!-- =========================================
-     CAB0 ECOSYSTEM
-========================================= -->
-
-<section
-class="section"
-id="ecosystem"
->
-
-<div class="container">
-
-
-<div class="section-head">
-
-<div>
-
-<h2>
-    The Cab0 Ecosystem
-</h2>
-
-<p class="section-intro">
-
-Cab0, ArriveTime and 4ETA can work together as one technology ecosystem.
-
-</p>
-
-</div>
-
-</div>
-
-
-<div class="brands">
+<div class="eco-grid">
 
 
 <a
-class="brand-card"
+class="eco"
 href="https://arrivetime.com"
 target="_blank"
 rel="noopener"
@@ -1906,7 +1149,7 @@ rel="noopener"
 
 <div>
 
-<div class="name">
+<div class="eco-name">
 ArriveTime.com
 </div>
 
@@ -1916,15 +1159,15 @@ Know when people and things will arrive.
 
 </div>
 
-<div class="learn">
-Explore ↗
+<div class="eco-link">
+Visit →
 </div>
 
 </a>
 
 
 <a
-class="brand-card"
+class="eco"
 href="https://4eta.com"
 target="_blank"
 rel="noopener"
@@ -1932,18 +1175,18 @@ rel="noopener"
 
 <div>
 
-<div class="name">
+<div class="eco-name">
 4ETA.com
 </div>
 
 <p>
-ETA intelligence for the connected world.
+ETA intelligence and arrival information.
 </p>
 
 </div>
 
-<div class="learn">
-Explore ↗
+<div class="eco-link">
+Visit →
 </div>
 
 </a>
@@ -1951,53 +1194,49 @@ Explore ↗
 
 </div>
 
-</div>
-
 </section>
-
 
 </main>
 
 
-<!-- =========================================
+<!-- ==============================
      FOOTER
-========================================= -->
+============================== -->
 
 <footer>
 
-<div class="container footer-grid">
+<div class="footer-inner">
 
 <div>
 
-© 2026 Cab0.com ·
+<div class="footer-logo">
+Cab0.com
+</div>
+
+<div>
 Every Ride, Every Delivery, One Search.
+</div>
 
 </div>
 
 
 <div class="footer-links">
 
-<a
-href="https://arrivetime.com"
-target="_blank"
-rel="noopener"
->
+<a href="https://arrivetime.com"
+target="_blank">
 ArriveTime.com
 </a>
 
-<a
-href="https://4eta.com"
-target="_blank"
-rel="noopener"
->
+<a href="https://4eta.com"
+target="_blank">
 4ETA.com
 </a>
 
-<a href="privacy.html">
+<a href="#">
 Privacy
 </a>
 
-<a href="terms.html">
+<a href="#">
 Terms
 </a>
 
@@ -2008,314 +1247,436 @@ Terms
 </footer>
 
 
-<div
-class="toast"
-id="toast"
-></div>
+<div class="toast" id="toast"></div>
 
-
-<!-- =========================================
-     JAVASCRIPT
-========================================= -->
 
 <script>
 
-const providerSets = {
+/* ==========================================
+   SAMPLE RIDE DATA
+   Replace these with LIVE API results later.
+========================================== */
 
-ride:[
+let rides = [
+
 {
-name:"Uber",
-initial:"U",
-eta:"4–8 min",
-price:"$12–$18",
-detail:"Rideshare"
+    provider:"Uber",
+    logo:"U",
+    logoClass:"uber",
+    type:"UberX",
+    pickup:4,
+    trip:22,
+    price:14,
+    booking:"https://m.uber.com/"
 },
 
 {
-name:"Lyft",
-initial:"L",
-eta:"5–9 min",
-price:"$11–$17",
-detail:"Rideshare"
+    provider:"Lyft",
+    logo:"L",
+    logoClass:"lyft",
+    type:"Lyft",
+    pickup:6,
+    trip:21,
+    price:12,
+    booking:"https://www.lyft.com/rider"
 },
 
 {
-name:"Taxi / Local",
-initial:"T",
-eta:"6–12 min",
-price:"$10–$16",
-detail:"Local option"
-}
-],
-
-delivery:[
-{
-name:"Food Delivery",
-initial:"F",
-eta:"20–35 min",
-price:"$2.49+",
-detail:"Delivery estimate"
-},
-
-{
-name:"Restaurant Pickup",
-initial:"P",
-eta:"15–25 min",
-price:"Varies",
-detail:"Pickup option"
-},
-
-{
-name:"Local Delivery",
-initial:"L",
-eta:"25–40 min",
-price:"Varies",
-detail:"Local option"
-}
-],
-
-grocery:[
-{
-name:"Grocery Delivery",
-initial:"G",
-eta:"30–60 min",
-price:"Varies",
-detail:"Same-day estimate"
-},
-
-{
-name:"Store Pickup",
-initial:"P",
-eta:"20–45 min",
-price:"Varies",
-detail:"Pickup option"
-},
-
-{
-name:"Local Market",
-initial:"M",
-eta:"Varies",
-price:"Varies",
-detail:"Local option"
-}
-],
-
-eta:[
-{
-name:"ArriveTime",
-initial:"A",
-eta:"Live arrival view",
-price:"Free",
-detail:"Arrival intelligence"
-},
-
-{
-name:"4ETA",
-initial:"4",
-eta:"ETA intelligence",
-price:"Explore",
-detail:"ETA platform"
+    provider:"Local Taxi",
+    logo:"T",
+    logoClass:"taxi",
+    type:"Taxi",
+    pickup:8,
+    trip:20,
+    price:16,
+    booking:"https://www.google.com/search?q=taxi+near+me"
 }
 
-]
-
-};
+];
 
 
-let mode = "ride";
+/* ==========================================
+   SET DESTINATION
+========================================== */
 
+function setDestination(place){
 
-/* =========================================
-   TAB SWITCHING
-========================================= */
+    document.getElementById(
+        "destination"
+    ).value = place;
 
-const tabs =
-document.querySelectorAll(".tab");
-
-
-tabs.forEach(tab => {
-
-tab.addEventListener(
-"click",
-() => {
-
-tabs.forEach(t =>
-t.classList.remove("active")
-);
-
-tab.classList.add("active");
-
-mode =
-tab.dataset.mode;
-
-document
-.getElementById("results")
-.classList.remove("show");
-
-}
-);
-
-});
-
-
-/* =========================================
-   SEARCH
-========================================= */
-
-document
-.getElementById("searchBtn")
-.addEventListener(
-"click",
-() => {
-
-const from =
-document
-.getElementById("from")
-.value
-.trim();
-
-const to =
-document
-.getElementById("to")
-.value
-.trim();
-
-
-if(!to){
-
-showToast(
-"Enter a destination to begin."
-);
-
-document
-.getElementById("to")
-.focus();
-
-return;
+    document.getElementById(
+        "destination"
+    ).focus();
 
 }
 
 
-if(!from){
+/* ==========================================
+   FIND RIDES
+========================================== */
 
-document
-.getElementById("from")
-.value =
-"Current location";
+function findRides(){
 
-}
+    const pickup =
+        document
+        .getElementById("pickup")
+        .value
+        .trim();
 
-
-renderResults();
-
-}
-);
-
-
-/* =========================================
-   RESULTS
-========================================= */
-
-function renderResults(){
-
-const list =
-providerSets[mode];
+    const destination =
+        document
+        .getElementById("destination")
+        .value
+        .trim();
 
 
-document
-.getElementById("results")
-.innerHTML =
+    if(!destination){
 
-list.map(
-provider => `
+        showToast(
+            "Please enter a destination."
+        );
 
-<div class="result">
+        document
+        .getElementById("destination")
+        .focus();
 
-<div class="provider">
-
-<div class="provider-logo">
-${provider.initial}
-</div>
-
-<div>
-
-<strong>
-${provider.name}
-</strong>
-
-<br>
-
-<small>
-${provider.detail}
-</small>
-
-</div>
-
-</div>
+        return;
+    }
 
 
-<div class="eta">
-${provider.eta}
-</div>
+    const pickupText =
+        pickup || "Current location";
 
 
-<div class="price">
-${provider.price}
-</div>
-
-</div>
-
-`
-).join("");
+    document.getElementById(
+        "routeText"
+    ).textContent =
+        pickupText +
+        " → " +
+        destination;
 
 
-document
-.getElementById("results")
-.classList.add("show");
+    document.getElementById(
+        "results"
+    ).classList.add("visible");
 
 
-document
-.getElementById("results")
-.scrollIntoView({
+    updateHighlights();
 
-behavior:"smooth",
+    renderRides();
 
-block:"nearest"
 
-});
+    document.getElementById(
+        "results"
+    ).scrollIntoView({
+        behavior:"smooth",
+        block:"start"
+    });
 
 }
 
 
-/* =========================================
+/* ==========================================
+   RENDER RIDES
+========================================== */
+
+function renderRides(){
+
+    const list =
+        document.getElementById(
+            "rideList"
+        );
+
+
+    let sorted =
+        [...rides];
+
+
+    const sort =
+        document.getElementById(
+            "sort"
+        ).value;
+
+
+    if(sort === "cheap"){
+
+        sorted.sort(
+            (a,b) =>
+            a.price - b.price
+        );
+
+    }
+
+
+    if(sort === "fast"){
+
+        sorted.sort(
+            (a,b) =>
+            a.pickup - b.pickup
+        );
+
+    }
+
+
+    if(sort === "recommended"){
+
+        sorted.sort(
+            (a,b) =>
+            (a.price + a.pickup) -
+            (b.price + b.pickup)
+        );
+
+    }
+
+
+    const cheapest =
+        Math.min(
+            ...rides.map(
+                ride => ride.price
+            )
+        );
+
+
+    const fastest =
+        Math.min(
+            ...rides.map(
+                ride => ride.pickup
+            )
+        );
+
+
+    list.innerHTML =
+        sorted.map(
+            ride => {
+
+                let badge = "";
+
+
+                if(
+                    ride.price === cheapest
+                ){
+
+                    badge =
+                    `<div class="badge">
+                        Cheapest
+                    </div>`;
+
+                }
+
+
+                else if(
+                    ride.pickup === fastest
+                ){
+
+                    badge =
+                    `<div class="badge">
+                        Fastest pickup
+                    </div>`;
+
+                }
+
+
+                const priceClass =
+                    ride.price === cheapest
+                    ? "cheap"
+                    : "";
+
+
+                const pickupClass =
+                    ride.pickup === fastest
+                    ? "fast"
+                    : "";
+
+
+                return `
+
+                <div class="ride
+                    ${
+                        ride.price === cheapest
+                        || ride.pickup === fastest
+                        ? "featured"
+                        : ""
+                    }">
+
+                    ${badge}
+
+                    <div class="provider">
+
+                        <div
+                            class="provider-logo
+                            ${ride.logoClass}"
+                        >
+                            ${ride.logo}
+                        </div>
+
+                        <div>
+
+                            <div class="provider-name">
+                                ${ride.provider}
+                            </div>
+
+                            <div class="ride-type">
+                                ${ride.type}
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="ride-info">
+
+                        <label>
+                            Pickup
+                        </label>
+
+                        <strong
+                            class="${pickupClass}"
+                        >
+                            ${ride.pickup} min
+                        </strong>
+
+                    </div>
+
+
+                    <div class="ride-info">
+
+                        <label>
+                            Est. Price
+                        </label>
+
+                        <strong
+                            class="${priceClass}"
+                        >
+                            $${ride.price}
+                        </strong>
+
+                        <div class="ride-type">
+                            ${ride.trip} min trip
+                        </div>
+
+                    </div>
+
+
+                    <a
+                        class="book"
+                        href="${ride.booking}"
+                        target="_blank"
+                        rel="noopener"
+                    >
+                        Book Ride →
+                    </a>
+
+                </div>
+
+                `;
+
+            }
+        ).join("");
+
+}
+
+
+/* ==========================================
+   HIGHLIGHTS
+========================================== */
+
+function updateHighlights(){
+
+    const cheapest =
+        rides.reduce(
+            (a,b) =>
+            a.price < b.price ? a : b
+        );
+
+
+    const fastest =
+        rides.reduce(
+            (a,b) =>
+            a.pickup < b.pickup ? a : b
+        );
+
+
+    document.getElementById(
+        "cheapestText"
+    ).textContent =
+        "Cheapest: " +
+        cheapest.provider;
+
+
+    document.getElementById(
+        "cheapestDetail"
+    ).textContent =
+        "$" +
+        cheapest.price +
+        " estimated fare";
+
+
+    document.getElementById(
+        "fastestText"
+    ).textContent =
+        "Fastest pickup: " +
+        fastest.provider;
+
+
+    document.getElementById(
+        "fastestDetail"
+    ).textContent =
+        fastest.pickup +
+        " minute estimated pickup";
+
+}
+
+
+/* ==========================================
+   SORT
+========================================== */
+
+function sortRides(){
+
+    renderRides();
+
+}
+
+
+/* ==========================================
    TOAST
-========================================= */
+========================================== */
 
 function showToast(message){
 
-const toast =
-document.getElementById("toast");
-
-toast.textContent =
-message;
-
-toast.classList.add("show");
+    const toast =
+        document.getElementById(
+            "toast"
+        );
 
 
-clearTimeout(
-window.__toast
-);
+    toast.textContent =
+        message;
 
 
-window.__toast =
-setTimeout(
-() => {
+    toast.classList.add(
+        "show"
+    );
 
-toast.classList.remove("show");
 
-},
-2400
-);
+    clearTimeout(
+        window.toastTimer
+    );
+
+
+    window.toastTimer =
+        setTimeout(
+            () => {
+
+                toast.classList.remove(
+                    "show"
+                );
+
+            },
+            2500
+        );
 
 }
 

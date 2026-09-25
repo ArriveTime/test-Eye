@@ -1,141 +1,325 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
 
 <title>CITY KEY QUEST // NEXUS</title>
+
+
+<!-- =========================================================
+     FREE MAP SYSTEM
+     Leaflet = free/open-source map interface
+     OpenStreetMap = map data
+     No Google / Mapbox / MapTiler API key required
+========================================================= -->
 
 <link rel="stylesheet"
       href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
+
+<!-- =========================================================
+     FONTS
+========================================================= -->
+
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Orbitron:wght@500;600;700;800;900&display=swap"
       rel="stylesheet">
+
+
+<!-- =========================================================
+     ICONS
+========================================================= -->
 
 <link rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
+
 <style>
 
+/* =========================================================
+   GLOBAL DESIGN
+========================================================= */
+
 :root {
-    --bg: #02050b;
-    --panel: rgba(5, 12, 24, .88);
-    --panel2: rgba(8, 18, 34, .94);
 
-    --cyan: #00f6ff;
-    --blue: #168cff;
-    --gold: #ffd400;
-    --green: #20ff91;
-    --red: #ff3159;
-    --purple: #a855ff;
-    --orange: #ff8a00;
+    --bg:
+        #02050b;
 
-    --text: #eef7ff;
-    --muted: #7e95ad;
+    --panel:
+        rgba(5, 12, 24, .90);
 
-    --border: rgba(0,246,255,.20);
-    --shadow: 0 0 35px rgba(0,246,255,.12);
+    --panel2:
+        rgba(8, 18, 34, .95);
+
+    --cyan:
+        #00f6ff;
+
+    --blue:
+        #168cff;
+
+    --gold:
+        #ffd400;
+
+    --green:
+        #20ff91;
+
+    --red:
+        #ff3159;
+
+    --purple:
+        #a855ff;
+
+    --orange:
+        #ff8a00;
+
+    --text:
+        #eef7ff;
+
+    --muted:
+        #7e95ad;
+
+    --border:
+        rgba(0,246,255,.20);
+
+    --shadow:
+        0 0 35px rgba(0,246,255,.12);
 }
+
 
 * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    user-select: none;
+
+    box-sizing:
+        border-box;
+
+    margin:
+        0;
+
+    padding:
+        0;
+
+    user-select:
+        none;
 }
+
+
+html,
+body {
+
+    width:
+        100%;
+
+    height:
+        100%;
+
+    overflow:
+        hidden;
+}
+
 
 body {
-    width: 100vw;
-    height: 100vh;
-    overflow: hidden;
 
-    font-family: 'Outfit', sans-serif;
+    font-family:
+        'Outfit',
+        sans-serif;
 
-    color: var(--text);
+    color:
+        var(--text);
 
     background:
-        radial-gradient(circle at 50% 50%, #07162b 0%, #02050b 65%);
+        radial-gradient(
+            circle at 50% 50%,
+            #07162b 0%,
+            #02050b 65%
+        );
 }
+
 
 button,
 input,
 select {
-    font-family: inherit;
+
+    font-family:
+        inherit;
 }
+
 
 button {
-    cursor: pointer;
+
+    cursor:
+        pointer;
 }
+
+
+/* =========================================================
+   MAIN GAME WINDOW
+========================================================= */
 
 #game-window {
-    position: relative;
-    width: 100vw;
-    height: 100vh;
-    overflow: hidden;
+
+    position:
+        relative;
+
+    width:
+        100vw;
+
+    height:
+        100vh;
+
+    overflow:
+        hidden;
+
+    background:
+        #02050b;
 }
+
+
+/* =========================================================
+   MAP
+========================================================= */
 
 #map {
-    position: absolute;
-    inset: 0;
-    z-index: 1;
-    background: #02050a;
+
+    position:
+        absolute;
+
+    inset:
+        0;
+
+    z-index:
+        1;
+
+    background:
+        #02050a;
 }
 
+
+/*
+   Futuristic visual treatment for the
+   OpenStreetMap tiles.
+*/
+
 .leaflet-tile {
+
     filter:
-        brightness(.42)
-        contrast(1.35)
+        brightness(.48)
+        contrast(1.25)
         saturate(.65)
         hue-rotate(175deg);
 }
 
-/* ========================================
-   FUTURISTIC HEADER
-======================================== */
+
+/*
+   OpenStreetMap attribution.
+   This should remain visible because
+   OpenStreetMap requires attribution.
+*/
+
+.leaflet-control-attribution {
+
+    background:
+        rgba(2,8,18,.88) !important;
+
+    color:
+        #7e95ad !important;
+
+    font-size:
+        9px !important;
+}
+
+
+.leaflet-control-attribution a {
+
+    color:
+        var(--cyan) !important;
+}
+
+
+/* =========================================================
+   TOP HEADER
+========================================================= */
 
 .top-header {
-    position: absolute;
-    top: 16px;
-    left: 50%;
-    transform: translateX(-50%);
 
-    z-index: 1000;
+    position:
+        absolute;
 
-    display: flex;
-    align-items: center;
-    gap: 13px;
+    top:
+        16px;
 
-    padding: 11px 30px;
+    left:
+        50%;
 
-    border: 1px solid rgba(0,246,255,.32);
-    border-radius: 50px;
+    transform:
+        translateX(-50%);
 
-    background: rgba(3,10,20,.88);
+    z-index:
+        1000;
 
-    backdrop-filter: blur(18px);
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        13px;
+
+    padding:
+        11px 30px;
+
+    border:
+        1px solid rgba(0,246,255,.32);
+
+    border-radius:
+        50px;
+
+    background:
+        rgba(3,10,20,.90);
+
+    backdrop-filter:
+        blur(18px);
 
     box-shadow:
         0 0 30px rgba(0,246,255,.12),
         inset 0 0 20px rgba(0,246,255,.03);
+
+    white-space:
+        nowrap;
 }
 
+
 .header-key {
-    color: var(--gold);
-    font-size: 1.6rem;
+
+    color:
+        var(--gold);
+
+    font-size:
+        1.6rem;
 
     filter:
         drop-shadow(0 0 8px var(--gold));
 }
 
+
 .header-title {
-    font-family: Orbitron, sans-serif;
 
-    font-size: 1.25rem;
-    font-weight: 900;
+    font-family:
+        Orbitron,
+        sans-serif;
 
-    letter-spacing: 4px;
+    font-size:
+        1.25rem;
+
+    font-weight:
+        900;
+
+    letter-spacing:
+        4px;
 
     background:
         linear-gradient(
@@ -145,100 +329,217 @@ button {
             var(--gold)
         );
 
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    -webkit-background-clip:
+        text;
+
+    -webkit-text-fill-color:
+        transparent;
 }
+
 
 .header-status {
-    font-family: Orbitron;
-    font-size: .58rem;
-    color: var(--green);
-    letter-spacing: 1px;
+
+    font-family:
+        Orbitron,
+        sans-serif;
+
+    font-size:
+        .58rem;
+
+    color:
+        var(--green);
+
+    letter-spacing:
+        1px;
 }
 
-/* ========================================
-   GENERIC PANELS
-======================================== */
+
+/* =========================================================
+   STATUS CHIP
+========================================================= */
+
+.status-chip {
+
+    position:
+        absolute;
+
+    top:
+        78px;
+
+    left:
+        50%;
+
+    transform:
+        translateX(-50%);
+
+    z-index:
+        1000;
+
+    padding:
+        6px 13px;
+
+    border-radius:
+        20px;
+
+    background:
+        rgba(3,10,20,.90);
+
+    border:
+        1px solid var(--green);
+
+    color:
+        var(--green);
+
+    font-family:
+        Orbitron,
+        sans-serif;
+
+    font-size:
+        .56rem;
+
+    letter-spacing:
+        1px;
+
+    box-shadow:
+        0 0 12px rgba(32,255,145,.12);
+}
+
+
+/* =========================================================
+   GENERIC PANEL
+========================================================= */
 
 .ui-panel {
-    position: absolute;
-    z-index: 1000;
+
+    position:
+        absolute;
+
+    z-index:
+        1000;
 
     background:
         linear-gradient(
             145deg,
-            rgba(8,20,37,.92),
-            rgba(2,8,18,.90)
+            rgba(8,20,37,.94),
+            rgba(2,8,18,.92)
         );
 
-    border: 1px solid var(--border);
+    border:
+        1px solid var(--border);
 
-    backdrop-filter: blur(18px);
+    backdrop-filter:
+        blur(18px);
 
-    border-radius: 15px;
+    border-radius:
+        15px;
 
     box-shadow:
         0 20px 60px rgba(0,0,0,.65),
         inset 0 0 25px rgba(0,246,255,.025);
 }
 
+
 .panel-title {
-    font-family: Orbitron, sans-serif;
-    font-size: .67rem;
-    font-weight: 800;
 
-    letter-spacing: 1.8px;
+    font-family:
+        Orbitron,
+        sans-serif;
 
-    color: #c9e9ff;
+    font-size:
+        .67rem;
 
-    text-transform: uppercase;
+    font-weight:
+        800;
 
-    margin-bottom: 10px;
+    letter-spacing:
+        1.8px;
 
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    color:
+        #c9e9ff;
+
+    text-transform:
+        uppercase;
+
+    margin-bottom:
+        10px;
+
+    display:
+        flex;
+
+    justify-content:
+        space-between;
+
+    align-items:
+        center;
 }
 
-/* ========================================
-   LEFT HUD
-======================================== */
+
+/* =========================================================
+   LEFT SIDEBAR
+========================================================= */
 
 #left-sidebar {
-    top: 18px;
-    left: 18px;
-    bottom: 18px;
 
-    width: 325px;
+    top:
+        18px;
 
-    padding: 15px;
+    left:
+        18px;
 
-    overflow-y: auto;
+    bottom:
+        18px;
 
-    display: flex;
-    flex-direction: column;
-    gap: 13px;
+    width:
+        325px;
+
+    padding:
+        15px;
+
+    overflow-y:
+        auto;
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    gap:
+        13px;
 }
+
 
 #left-sidebar::-webkit-scrollbar {
-    width: 4px;
+
+    width:
+        4px;
 }
+
 
 #left-sidebar::-webkit-scrollbar-thumb {
-    background: var(--cyan);
-    border-radius: 10px;
+
+    background:
+        var(--cyan);
+
+    border-radius:
+        10px;
 }
 
-/* ========================================
-   POINTS HUD
-======================================== */
+
+/* =========================================================
+   POINTS CORE
+========================================================= */
 
 .points-core {
-    padding: 15px;
 
-    border-radius: 12px;
+    padding:
+        15px;
 
-    border: 1px solid rgba(255,212,0,.28);
+    border-radius:
+        12px;
+
+    border:
+        1px solid rgba(255,212,0,.28);
 
     background:
         radial-gradient(
@@ -251,205 +552,358 @@ button {
         inset 0 0 25px rgba(255,212,0,.025);
 }
 
+
 .points-label {
-    color: var(--muted);
 
-    font-family: Orbitron;
-    font-size: .58rem;
+    color:
+        var(--muted);
 
-    letter-spacing: 2px;
+    font-family:
+        Orbitron,
+        sans-serif;
+
+    font-size:
+        .58rem;
+
+    letter-spacing:
+        2px;
 }
 
+
 .points-number {
-    margin-top: 3px;
 
-    font-family: Orbitron;
-    font-size: 2rem;
-    font-weight: 900;
+    margin-top:
+        3px;
 
-    color: var(--gold);
+    font-family:
+        Orbitron,
+        sans-serif;
+
+    font-size:
+        2rem;
+
+    font-weight:
+        900;
+
+    color:
+        var(--gold);
 
     text-shadow:
         0 0 15px rgba(255,212,0,.55);
 
-    transition: transform .15s;
+    transition:
+        transform .15s;
 }
+
 
 .points-number.pulse {
-    transform: scale(1.08);
+
+    transform:
+        scale(1.08);
 }
+
 
 .points-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
 
-    gap: 7px;
+    display:
+        grid;
 
-    margin-top: 10px;
+    grid-template-columns:
+        1fr 1fr;
+
+    gap:
+        7px;
+
+    margin-top:
+        10px;
 }
+
 
 .mini-stat {
-    padding: 8px;
 
-    border-radius: 8px;
+    padding:
+        8px;
 
-    background: rgba(255,255,255,.035);
+    border-radius:
+        8px;
 
-    border: 1px solid rgba(255,255,255,.06);
+    background:
+        rgba(255,255,255,.035);
+
+    border:
+        1px solid rgba(255,255,255,.06);
 }
+
 
 .mini-label {
-    color: var(--muted);
-    font-size: .57rem;
-    text-transform: uppercase;
+
+    color:
+        var(--muted);
+
+    font-size:
+        .57rem;
+
+    text-transform:
+        uppercase;
 }
+
 
 .mini-value {
-    margin-top: 2px;
 
-    font-family: Orbitron;
-    font-size: .9rem;
+    margin-top:
+        2px;
 
-    color: white;
+    font-family:
+        Orbitron,
+        sans-serif;
+
+    font-size:
+        .9rem;
+
+    color:
+        white;
 }
 
-/* ========================================
-   CAREER BADGE
-======================================== */
+
+/* =========================================================
+   CAREER
+========================================================= */
 
 .career-badge {
-    display: flex;
-    align-items: center;
-    gap: 10px;
 
-    padding: 10px;
+    display:
+        flex;
 
-    border-radius: 10px;
+    align-items:
+        center;
 
-    background: rgba(0,246,255,.05);
+    gap:
+        10px;
 
-    border: 1px solid rgba(0,246,255,.12);
+    padding:
+        10px;
+
+    border-radius:
+        10px;
+
+    background:
+        rgba(0,246,255,.05);
+
+    border:
+        1px solid rgba(0,246,255,.12);
 }
 
+
 .career-icon {
-    width: 35px;
-    height: 35px;
 
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    width:
+        35px;
 
-    border-radius: 9px;
+    height:
+        35px;
 
-    background: rgba(0,246,255,.10);
+    display:
+        flex;
 
-    color: var(--cyan);
+    justify-content:
+        center;
+
+    align-items:
+        center;
+
+    border-radius:
+        9px;
+
+    background:
+        rgba(0,246,255,.10);
+
+    color:
+        var(--cyan);
 
     box-shadow:
         0 0 15px rgba(0,246,255,.12);
 }
 
+
 .career-name {
-    font-family: Orbitron;
-    font-size: .72rem;
-    font-weight: 800;
+
+    font-family:
+        Orbitron,
+        sans-serif;
+
+    font-size:
+        .72rem;
+
+    font-weight:
+        800;
 }
+
 
 .career-status {
-    color: var(--muted);
-    font-size: .65rem;
+
+    color:
+        var(--muted);
+
+    font-size:
+        .65rem;
 }
 
-/* ========================================
-   SETUP
-======================================== */
+
+/* =========================================================
+   GENDER
+========================================================= */
 
 .gender-toggle {
-    display: flex;
-    gap: 7px;
+
+    display:
+        flex;
+
+    gap:
+        7px;
 }
+
 
 .gender-btn {
-    flex: 1;
 
-    padding: 8px;
+    flex:
+        1;
 
-    color: var(--muted);
+    padding:
+        8px;
 
-    background: rgba(255,255,255,.035);
+    color:
+        var(--muted);
 
-    border: 1px solid rgba(255,255,255,.08);
+    background:
+        rgba(255,255,255,.035);
 
-    border-radius: 8px;
+    border:
+        1px solid rgba(255,255,255,.08);
+
+    border-radius:
+        8px;
+
+    transition:
+        .2s;
 }
 
+
 .gender-btn.active {
-    color: var(--cyan);
 
-    border-color: var(--cyan);
+    color:
+        var(--cyan);
 
-    background: rgba(0,246,255,.09);
+    border-color:
+        var(--cyan);
+
+    background:
+        rgba(0,246,255,.09);
 
     box-shadow:
         0 0 14px rgba(0,246,255,.14);
 }
 
-.input-group {
-    display: flex;
-    align-items: center;
-    gap: 7px;
 
-    margin-bottom: 7px;
+/* =========================================================
+   INPUTS
+========================================================= */
+
+.input-group {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        7px;
+
+    margin-bottom:
+        7px;
 }
+
 
 .input-label {
-    width: 65px;
 
-    color: var(--muted);
+    width:
+        65px;
 
-    font-size: .68rem;
+    color:
+        var(--muted);
+
+    font-size:
+        .68rem;
 }
+
 
 input,
 select {
-    flex: 1;
 
-    min-width: 0;
+    flex:
+        1;
 
-    color: white;
+    min-width:
+        0;
 
-    background: rgba(0,0,0,.45);
+    color:
+        white;
 
-    border: 1px solid rgba(255,255,255,.10);
+    background:
+        rgba(0,0,0,.45);
 
-    border-radius: 6px;
+    border:
+        1px solid rgba(255,255,255,.10);
 
-    padding: 7px 8px;
+    border-radius:
+        6px;
 
-    outline: none;
+    padding:
+        7px 8px;
+
+    outline:
+        none;
 }
+
 
 input:focus,
 select:focus {
-    border-color: var(--cyan);
+
+    border-color:
+        var(--cyan);
+
+    box-shadow:
+        0 0 10px rgba(0,246,255,.08);
 }
 
-/* ========================================
-   BUTTONS
-======================================== */
+
+/* =========================================================
+   MAIN BUTTON
+========================================================= */
 
 .btn-main {
-    width: 100%;
 
-    padding: 10px;
+    width:
+        100%;
 
-    border: 0;
-    border-radius: 8px;
+    padding:
+        10px;
 
-    color: #001018;
+    border:
+        0;
 
-    font-family: Orbitron;
-    font-weight: 900;
+    border-radius:
+        8px;
+
+    color:
+        #001018;
+
+    font-family:
+        Orbitron,
+        sans-serif;
+
+    font-weight:
+        900;
 
     background:
         linear-gradient(
@@ -460,161 +914,253 @@ select:focus {
 
     box-shadow:
         0 0 18px rgba(0,246,255,.20);
+
+    transition:
+        .2s;
 }
+
 
 .btn-main:hover {
-    filter: brightness(1.15);
+
+    filter:
+        brightness(1.15);
+
+    transform:
+        translateY(-1px);
 }
 
-/* ========================================
+
+/* =========================================================
    LIVE BARS
-======================================== */
+========================================================= */
 
 .stat-bar {
-    margin-bottom: 8px;
+
+    margin-bottom:
+        8px;
 }
+
 
 .stat-row {
-    display: flex;
-    justify-content: space-between;
 
-    color: var(--muted);
+    display:
+        flex;
 
-    font-size: .68rem;
+    justify-content:
+        space-between;
 
-    margin-bottom: 4px;
+    color:
+        var(--muted);
+
+    font-size:
+        .68rem;
+
+    margin-bottom:
+        4px;
 }
+
 
 .bar-bg {
-    height: 7px;
 
-    overflow: hidden;
+    height:
+        7px;
 
-    border-radius: 20px;
+    overflow:
+        hidden;
 
-    background: rgba(255,255,255,.06);
+    border-radius:
+        20px;
+
+    background:
+        rgba(255,255,255,.06);
 }
+
 
 .bar-fill {
-    height: 100%;
 
-    width: 100%;
+    height:
+        100%;
 
-    border-radius: inherit;
+    width:
+        100%;
 
-    transition: width .3s;
+    border-radius:
+        inherit;
+
+    transition:
+        width .3s;
 }
 
-/* ========================================
+
+/* =========================================================
    ACTIVITY LOG
-======================================== */
+========================================================= */
 
 #log-box {
-    max-height: 150px;
 
-    overflow-y: auto;
+    max-height:
+        150px;
 
-    color: #b8cadb;
+    overflow-y:
+        auto;
 
-    font-size: .68rem;
-    line-height: 1.45;
+    color:
+        #b8cadb;
+
+    font-size:
+        .68rem;
+
+    line-height:
+        1.45;
 }
 
+
 .log-line {
-    padding: 6px 0;
+
+    padding:
+        6px 0;
 
     border-bottom:
         1px solid rgba(255,255,255,.04);
 }
 
-/* ========================================
+
+/* =========================================================
    RIGHT ACTION MENU
-======================================== */
+========================================================= */
 
 #action-menu {
-    top: 105px;
-    right: 18px;
 
-    width: 235px;
+    top:
+        105px;
 
-    padding: 12px;
+    right:
+        18px;
 
-    display: flex;
-    flex-direction: column;
-    gap: 7px;
+    width:
+        235px;
+
+    padding:
+        12px;
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    gap:
+        7px;
 }
+
 
 .action-btn {
-    width: 100%;
 
-    display: flex;
-    align-items: center;
-    gap: 10px;
+    width:
+        100%;
 
-    padding: 10px;
+    display:
+        flex;
 
-    border-radius: 9px;
+    align-items:
+        center;
 
-    color: var(--text);
+    gap:
+        10px;
 
-    background: rgba(255,255,255,.035);
+    padding:
+        10px;
 
-    border: 1px solid rgba(255,255,255,.08);
+    border-radius:
+        9px;
 
-    font-size: .72rem;
+    color:
+        var(--text);
 
-    transition: .2s;
+    background:
+        rgba(255,255,255,.035);
+
+    border:
+        1px solid rgba(255,255,255,.08);
+
+    font-size:
+        .72rem;
+
+    transition:
+        .2s;
 }
+
 
 .action-btn:hover {
-    border-color: var(--cyan);
 
-    background: rgba(0,246,255,.08);
+    border-color:
+        var(--cyan);
 
-    transform: translateX(-2px);
+    background:
+        rgba(0,246,255,.08);
+
+    transform:
+        translateX(-2px);
 }
 
-.action-btn.danger:hover {
-    border-color: var(--red);
 
-    background: rgba(255,49,89,.08);
-}
-
-/* ========================================
+/* =========================================================
    BOTTOM HUD
-======================================== */
+========================================================= */
 
 #bottom-hud {
-    position: absolute;
 
-    z-index: 1000;
+    position:
+        absolute;
 
-    bottom: 18px;
+    z-index:
+        1000;
 
-    left: 50%;
+    bottom:
+        18px;
 
-    transform: translateX(-50%);
+    left:
+        50%;
 
-    display: flex;
+    transform:
+        translateX(-50%);
 
-    align-items: center;
+    display:
+        flex;
 
-    gap: 15px;
+    align-items:
+        center;
+
+    gap:
+        15px;
 }
 
+
 .roll-orb {
-    width: 76px;
-    height: 76px;
 
-    border-radius: 50%;
+    width:
+        76px;
 
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    height:
+        76px;
 
-    color: var(--gold);
+    border-radius:
+        50%;
 
-    font-size: 1.7rem;
+    display:
+        flex;
+
+    justify-content:
+        center;
+
+    align-items:
+        center;
+
+    color:
+        var(--gold);
+
+    font-size:
+        1.7rem;
 
     background:
         radial-gradient(
@@ -623,72 +1169,108 @@ select:focus {
             rgba(3,10,20,.96) 70%
         );
 
-    border: 2px solid var(--gold);
+    border:
+        2px solid var(--gold);
 
     box-shadow:
         0 0 30px rgba(255,212,0,.28);
 
-    transition: .2s;
+    transition:
+        .2s;
 }
 
+
 .roll-orb:hover {
-    transform: scale(1.06);
+
+    transform:
+        scale(1.06);
 
     box-shadow:
         0 0 45px rgba(255,212,0,.45);
 }
 
+
 .moves-tag {
-    padding: 12px 18px;
 
-    border-radius: 10px;
+    padding:
+        12px 18px;
 
-    background: rgba(3,10,20,.90);
+    border-radius:
+        10px;
 
-    border: 1px solid var(--cyan);
+    background:
+        rgba(3,10,20,.90);
 
-    font-family: Orbitron;
+    border:
+        1px solid var(--cyan);
 
-    font-size: .75rem;
+    font-family:
+        Orbitron,
+        sans-serif;
+
+    font-size:
+        .75rem;
 }
+
 
 .moves-tag strong {
-    color: var(--cyan);
 
-    font-size: 1rem;
+    color:
+        var(--cyan);
+
+    font-size:
+        1rem;
 }
 
-/* ========================================
-   MODALS
-======================================== */
+
+/* =========================================================
+   MODAL
+========================================================= */
 
 .modal-overlay {
-    position: fixed;
 
-    inset: 0;
+    position:
+        fixed;
 
-    z-index: 3000;
+    inset:
+        0;
 
-    display: none;
+    z-index:
+        3000;
 
-    justify-content: center;
-    align-items: center;
+    display:
+        none;
 
-    background: rgba(0,0,0,.78);
+    justify-content:
+        center;
 
-    backdrop-filter: blur(12px);
+    align-items:
+        center;
+
+    background:
+        rgba(0,0,0,.78);
+
+    backdrop-filter:
+        blur(12px);
 }
 
+
 .modal-card {
-    width: min(94vw, 470px);
 
-    max-height: 85vh;
+    width:
+        min(94vw, 470px);
 
-    overflow-y: auto;
+    max-height:
+        85vh;
 
-    padding: 22px;
+    overflow-y:
+        auto;
 
-    border-radius: 16px;
+    padding:
+        22px;
+
+    border-radius:
+        16px;
 
     background:
         linear-gradient(
@@ -697,205 +1279,323 @@ select:focus {
             #030812
         );
 
-    border: 1px solid var(--cyan);
+    border:
+        1px solid var(--cyan);
 
     box-shadow:
         0 0 50px rgba(0,246,255,.16);
 }
 
+
 .modal-title {
-    font-family: Orbitron;
 
-    color: var(--cyan);
+    font-family:
+        Orbitron,
+        sans-serif;
 
-    margin-bottom: 10px;
+    color:
+        var(--cyan);
+
+    margin-bottom:
+        10px;
 }
+
 
 .modal-text {
-    color: #a9bdd0;
 
-    font-size: .78rem;
+    color:
+        #a9bdd0;
 
-    line-height: 1.5;
+    font-size:
+        .78rem;
 
-    margin-bottom: 15px;
+    line-height:
+        1.5;
+
+    margin-bottom:
+        15px;
 }
+
 
 .modal-grid {
-    display: grid;
 
-    grid-template-columns: 1fr 1fr;
+    display:
+        grid;
 
-    gap: 8px;
+    grid-template-columns:
+        1fr 1fr;
+
+    gap:
+        8px;
 }
+
 
 .option-btn {
-    padding: 11px;
 
-    border-radius: 9px;
+    padding:
+        11px;
 
-    color: white;
+    border-radius:
+        9px;
 
-    background: rgba(255,255,255,.04);
+    color:
+        white;
 
-    border: 1px solid rgba(255,255,255,.10);
+    background:
+        rgba(255,255,255,.04);
+
+    border:
+        1px solid rgba(255,255,255,.10);
+
+    transition:
+        .2s;
 }
+
 
 .option-btn:hover {
-    border-color: var(--cyan);
 
-    background: rgba(0,246,255,.08);
+    border-color:
+        var(--cyan);
+
+    background:
+        rgba(0,246,255,.08);
 }
 
-/* ========================================
-   STATUS CHIP
-======================================== */
 
-.status-chip {
-    position: absolute;
-
-    top: 78px;
-    left: 50%;
-
-    transform: translateX(-50%);
-
-    z-index: 1000;
-
-    padding: 6px 13px;
-
-    border-radius: 20px;
-
-    background: rgba(3,10,20,.90);
-
-    border: 1px solid var(--green);
-
-    color: var(--green);
-
-    font-family: Orbitron;
-
-    font-size: .56rem;
-
-    letter-spacing: 1px;
-}
-
-/* ========================================
+/* =========================================================
    MOBILE
-======================================== */
+========================================================= */
 
 @media(max-width:800px) {
 
     #left-sidebar {
-        width: 260px;
+
+        width:
+            260px;
+
     }
 
     #action-menu {
-        width: 190px;
+
+        width:
+            190px;
+
     }
 
     .header-title {
-        font-size: .9rem;
-        letter-spacing: 2px;
+
+        font-size:
+            .9rem;
+
+        letter-spacing:
+            2px;
+
+    }
+
+    .header-status {
+
+        display:
+            none;
+
+    }
+
+}
+
+
+@media(max-width:600px) {
+
+    #left-sidebar {
+
+        width:
+            230px;
+
+        left:
+            8px;
+
+        top:
+            8px;
+
+        bottom:
+            8px;
+
+    }
+
+    #action-menu {
+
+        right:
+            8px;
+
+        top:
+            90px;
+
+        width:
+            170px;
+
+    }
+
+    .top-header {
+
+        padding:
+            9px 15px;
+
+    }
+
+    .header-title {
+
+        font-size:
+            .72rem;
+
+    }
+
+    .status-chip {
+
+        display:
+            none;
+
     }
 
 }
 
 </style>
+
 </head>
+
 
 <body>
 
+
 <div id="game-window">
 
-    <div class="top-header">
 
-        <i class="fa-solid fa-key header-key"></i>
+<!-- =========================================================
+     HEADER
+========================================================= -->
 
-        <span class="header-title">
-            CITY KEY QUEST
-        </span>
+<div class="top-header">
 
-        <span class="header-status">
-            // NEXUS
-        </span>
+    <i class="fa-solid fa-key header-key"></i>
 
-    </div>
+    <span class="header-title">
+        CITY KEY QUEST
+    </span>
 
-    <div class="status-chip" id="protection-status">
-        ● OPEN WORLD
-    </div>
+    <span class="header-status">
+        // NEXUS
+    </span>
 
-    <div id="map"></div>
+</div>
 
 
-    <!-- =====================================
-         LEFT HUD
-    ====================================== -->
+<!-- =========================================================
+     STATUS
+========================================================= -->
 
-    <div class="ui-panel" id="left-sidebar">
+<div
+    class="status-chip"
+    id="protection-status">
 
-        <!-- POINTS -->
+    ● OPEN WORLD
 
-        <div class="points-core">
+</div>
 
-            <div class="points-label">
-                LIVE QUEST POINTS
+
+<!-- =========================================================
+     MAP
+========================================================= -->
+
+<div id="map"></div>
+
+
+<!-- =========================================================
+     LEFT SIDEBAR
+========================================================= -->
+
+<div
+    class="ui-panel"
+    id="left-sidebar">
+
+
+    <!-- LIVE POINTS -->
+
+    <div class="points-core">
+
+        <div class="points-label">
+            LIVE QUEST POINTS
+        </div>
+
+        <div
+            class="points-number"
+            id="points-display">
+
+            0
+
+        </div>
+
+
+        <div class="points-grid">
+
+            <div class="mini-stat">
+
+                <div class="mini-label">
+                    Reserve
+                </div>
+
+                <div
+                    class="mini-value"
+                    id="reserve-display">
+
+                    50
+
+                </div>
+
             </div>
 
-            <div class="points-number" id="points-display">
-                0
+
+            <div class="mini-stat">
+
+                <div class="mini-label">
+                    Clues
+                </div>
+
+                <div
+                    class="mini-value"
+                    id="clue-display">
+
+                    0
+
+                </div>
+
             </div>
 
-            <div class="points-grid">
 
-                <div class="mini-stat">
+            <div class="mini-stat">
 
-                    <div class="mini-label">
-                        Reserve
-                    </div>
+                <div class="mini-label">
+                    Time
+                </div>
 
-                    <div class="mini-value"
-                         id="reserve-display">
-                        50
-                    </div>
+                <div
+                    class="mini-value"
+                    id="time-display">
+
+                    00:00
 
                 </div>
 
-                <div class="mini-stat">
+            </div>
 
-                    <div class="mini-label">
-                        Clues
-                    </div>
 
-                    <div class="mini-value"
-                         id="clue-display">
-                        0
-                    </div>
+            <div class="mini-stat">
 
+                <div class="mini-label">
+                    Reports
                 </div>
 
-                <div class="mini-stat">
+                <div
+                    class="mini-value"
+                    id="crime-display">
 
-                    <div class="mini-label">
-                        Time
-                    </div>
-
-                    <div class="mini-value"
-                         id="time-display">
-                        00:00
-                    </div>
-
-                </div>
-
-                <div class="mini-stat">
-
-                    <div class="mini-label">
-                        Crimes
-                    </div>
-
-                    <div class="mini-value"
-                         id="crime-display">
-                        0
-                    </div>
+                    0
 
                 </div>
 
@@ -903,33 +1603,55 @@ select:focus {
 
         </div>
 
+    </div>
 
-        <!-- CAREER -->
 
-        <div>
+    <!-- CAREER -->
 
-            <div class="panel-title">
+    <div>
+
+        <div class="panel-title">
+
+            <span>
                 CAREER STATUS
+            </span>
+
+            <i
+                class="fa-solid fa-id-card"
+                style="color:var(--cyan)">
+            </i>
+
+        </div>
+
+
+        <div class="career-badge">
+
+            <div class="career-icon">
+
+                <i
+                    id="career-icon"
+                    class="fa-solid fa-user">
+                </i>
+
             </div>
 
-            <div class="career-badge">
 
-                <div class="career-icon">
-                    <i id="career-icon"
-                       class="fa-solid fa-user"></i>
+            <div>
+
+                <div
+                    class="career-name"
+                    id="career-name">
+
+                    CIVILIAN
+
                 </div>
 
-                <div>
 
-                    <div class="career-name"
-                         id="career-name">
-                        CIVILIAN
-                    </div>
+                <div
+                    class="career-status"
+                    id="career-status">
 
-                    <div class="career-status"
-                         id="career-status">
-                        Open World Player
-                    </div>
+                    Open World Player
 
                 </div>
 
@@ -937,373 +1659,428 @@ select:focus {
 
         </div>
 
+    </div>
 
-        <!-- PLAYER -->
 
-        <div style="
-            border-top:1px solid rgba(255,255,255,.07);
-            padding-top:10px;
-        ">
+    <!-- PLAYER PROFILE -->
 
-            <div class="panel-title">
-                PLAYER PROFILE
-            </div>
+    <div style="
+        border-top:1px solid rgba(255,255,255,.07);
+        padding-top:10px;
+    ">
 
-            <div class="gender-toggle">
+        <div class="panel-title">
 
-                <button
-                    class="gender-btn active"
-                    id="btn-female"
-                    onclick="setGender('female')">
+            PLAYER PROFILE
 
-                    <i class="fa-solid fa-venus"></i>
-                    FEMALE
+        </div>
 
-                </button>
 
-                <button
-                    class="gender-btn"
-                    id="btn-male"
-                    onclick="setGender('male')">
-
-                    <i class="fa-solid fa-mars"></i>
-                    MALE
-
-                </button>
-
-            </div>
-
-            <br>
-
-            <div class="input-group">
-
-                <span class="input-label">
-                    Name
-                </span>
-
-                <input
-                    id="player-name-input"
-                    value="Explorer1">
-
-            </div>
-
-            <div class="input-group">
-
-                <span class="input-label">
-                    ZIP/City
-                </span>
-
-                <input
-                    id="zip-input"
-                    value="23185">
-
-            </div>
-
-            <div class="input-group">
-
-                <span class="input-label">
-                    Transport
-                </span>
-
-                <select id="transport-input">
-
-                    <option value="walk">
-                        🚶 Walking
-                    </option>
-
-                    <option value="bike">
-                        🚲 Bike (+1)
-                    </option>
-
-                    <option value="car">
-                        🚗 Car (+2)
-                    </option>
-
-                </select>
-
-            </div>
+        <div class="gender-toggle">
 
             <button
-                class="btn-main"
-                onclick="initGame()">
+                class="gender-btn active"
+                id="btn-female"
+                onclick="setGender('female')">
 
-                INITIALIZE QUEST
+                <i class="fa-solid fa-venus"></i>
+
+                FEMALE
+
+            </button>
+
+
+            <button
+                class="gender-btn"
+                id="btn-male"
+                onclick="setGender('male')">
+
+                <i class="fa-solid fa-mars"></i>
+
+                MALE
 
             </button>
 
         </div>
 
 
-        <!-- VITALS -->
+        <br>
 
-        <div style="
-            border-top:1px solid rgba(255,255,255,.07);
-            padding-top:10px;
-        ">
 
-            <div class="panel-title">
-                PLAYER SYSTEMS
-            </div>
+        <div class="input-group">
 
-            <div class="stat-bar">
+            <span class="input-label">
+                Name
+            </span>
 
-                <div class="stat-row">
-
-                    <span>
-                        LIFE
-                    </span>
-
-                    <span id="life-text">
-                        100
-                    </span>
-
-                </div>
-
-                <div class="bar-bg">
-
-                    <div
-                        class="bar-fill"
-                        id="life-bar"
-                        style="
-                            width:100%;
-                            background:var(--red);
-                        ">
-                    </div>
-
-                </div>
-
-            </div>
-
-            <div class="stat-bar">
-
-                <div class="stat-row">
-
-                    <span>
-                        RESERVE
-                    </span>
-
-                    <span id="reserve-text">
-                        50
-                    </span>
-
-                </div>
-
-                <div class="bar-bg">
-
-                    <div
-                        class="bar-fill"
-                        id="reserve-bar"
-                        style="
-                            width:50%;
-                            background:var(--purple);
-                        ">
-                    </div>
-
-                </div>
-
-            </div>
-
-            <div class="stat-bar">
-
-                <div class="stat-row">
-
-                    <span>
-                        CAREER XP
-                    </span>
-
-                    <span id="career-xp-text">
-                        0
-                    </span>
-
-                </div>
-
-                <div class="bar-bg">
-
-                    <div
-                        class="bar-fill"
-                        id="career-xp-bar"
-                        style="
-                            width:0%;
-                            background:var(--cyan);
-                        ">
-                    </div>
-
-                </div>
-
-            </div>
+            <input
+                id="player-name-input"
+                value="Explorer1"
+                maxlength="20">
 
         </div>
 
 
-        <!-- LOG -->
+        <div class="input-group">
 
-        <div style="
-            border-top:1px solid rgba(255,255,255,.07);
-            padding-top:10px;
-            flex:1;
-        ">
+            <span class="input-label">
+                ZIP
+            </span>
 
-            <div class="panel-title">
-
-                <span>
-                    ACTIVITY STREAM
-                </span>
-
-                <i class="fa-solid fa-satellite-dish"
-                   style="color:var(--cyan)">
-                </i>
-
-            </div>
-
-            <div id="log-box"></div>
+            <input
+                id="zip-input"
+                value="23185"
+                maxlength="5"
+                inputmode="numeric"
+                placeholder="ZIP Code">
 
         </div>
+
+
+        <div class="input-group">
+
+            <span class="input-label">
+                Transport
+            </span>
+
+            <select id="transport-input">
+
+                <option value="walk">
+                    🚶 Walking
+                </option>
+
+                <option value="bike">
+                    🚲 Bike (+1)
+                </option>
+
+                <option value="car">
+                    🚗 Car (+2)
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <button
+            class="btn-main"
+            onclick="initGame()">
+
+            INITIALIZE QUEST
+
+        </button>
 
     </div>
 
 
-    <!-- =====================================
-         ACTION MENU
-    ====================================== -->
+    <!-- PLAYER SYSTEMS -->
 
-    <div class="ui-panel" id="action-menu">
+    <div style="
+        border-top:1px solid rgba(255,255,255,.07);
+        padding-top:10px;
+    ">
 
         <div class="panel-title">
-            WORLD ACTIONS
+
+            PLAYER SYSTEMS
+
         </div>
 
-        <button
-            class="action-btn"
-            onclick="openLocationEncounter()">
 
-            <i class="fa-solid fa-location-dot"
-               style="color:var(--cyan)">
-            </i>
+        <!-- LIFE -->
 
-            Enter Business / Location
+        <div class="stat-bar">
 
-        </button>
+            <div class="stat-row">
 
-        <button
-            class="action-btn"
-            onclick="openCareerCenter()">
+                <span>
+                    LIFE
+                </span>
 
-            <i class="fa-solid fa-building-columns"
-               style="color:var(--purple)">
-            </i>
+                <span id="life-text">
+                    100
+                </span>
 
-            Career & Education
+            </div>
 
-        </button>
 
-        <button
-            class="action-btn"
-            onclick="callPolice()">
+            <div class="bar-bg">
 
-            <i class="fa-solid fa-shield-halved"
-               style="color:var(--blue)">
-            </i>
+                <div
+                    class="bar-fill"
+                    id="life-bar"
+                    style="
+                        width:100%;
+                        background:var(--red);
+                    ">
+                </div>
 
-            Call Police
+            </div>
 
-        </button>
+        </div>
 
-        <button
-            class="action-btn"
-            onclick="hireLawyer()">
 
-            <i class="fa-solid fa-scale-balanced"
-               style="color:var(--gold)">
-            </i>
+        <!-- RESERVE -->
 
-            Hire Lawyer
+        <div class="stat-bar">
 
-        </button>
+            <div class="stat-row">
 
-        <button
-            class="action-btn"
-            onclick="openHideoutMenu()">
+                <span>
+                    RESERVE
+                </span>
 
-            <i class="fa-solid fa-eye-slash"
-               style="color:var(--purple)">
-            </i>
+                <span id="reserve-text">
+                    50
+                </span>
 
-            Hide / Evade Detection
+            </div>
 
-        </button>
 
-        <button
-            class="action-btn"
-            onclick="replenishFoodWater()">
+            <div class="bar-bg">
 
-            <i class="fa-solid fa-heart-pulse"
-               style="color:var(--green)">
-            </i>
+                <div
+                    class="bar-fill"
+                    id="reserve-bar"
+                    style="
+                        width:50%;
+                        background:var(--purple);
+                    ">
+                </div>
 
-            Restore Life
+            </div>
 
-        </button>
+        </div>
+
+
+        <!-- CAREER XP -->
+
+        <div class="stat-bar">
+
+            <div class="stat-row">
+
+                <span>
+                    CAREER XP
+                </span>
+
+                <span id="career-xp-text">
+                    0
+                </span>
+
+            </div>
+
+
+            <div class="bar-bg">
+
+                <div
+                    class="bar-fill"
+                    id="career-xp-bar"
+                    style="
+                        width:0%;
+                        background:var(--cyan);
+                    ">
+                </div>
+
+            </div>
+
+        </div>
 
     </div>
 
 
-    <!-- =====================================
-         BOTTOM HUD
-    ====================================== -->
+    <!-- ACTIVITY LOG -->
 
-    <div id="bottom-hud">
+    <div style="
+        border-top:1px solid rgba(255,255,255,.07);
+        padding-top:10px;
+        flex:1;
+    ">
 
-        <div
-            class="roll-orb"
-            onclick="rollDice()"
-            id="dice-orb">
+        <div class="panel-title">
 
-            <i class="fa-solid fa-cube"></i>
+            <span>
+                ACTIVITY STREAM
+            </span>
 
-        </div>
-
-        <div class="moves-tag">
-
-            MOVES:
-
-            <strong id="moves-count">
-                0
-            </strong>
+            <i
+                class="fa-solid fa-satellite-dish"
+                style="color:var(--cyan)">
+            </i>
 
         </div>
+
+
+        <div id="log-box"></div>
 
     </div>
 
 
-    <!-- =====================================
-         MODAL
-    ====================================== -->
+</div>
+
+
+<!-- =========================================================
+     RIGHT ACTION MENU
+========================================================= -->
+
+<div
+    class="ui-panel"
+    id="action-menu">
+
+
+    <div class="panel-title">
+
+        WORLD ACTIONS
+
+    </div>
+
+
+    <button
+        class="action-btn"
+        onclick="openLocationEncounter()">
+
+        <i
+            class="fa-solid fa-location-dot"
+            style="color:var(--cyan)">
+        </i>
+
+        Enter Business / Location
+
+    </button>
+
+
+    <button
+        class="action-btn"
+        onclick="openCareerCenter()">
+
+        <i
+            class="fa-solid fa-building-columns"
+            style="color:var(--purple)">
+        </i>
+
+        Career & Education
+
+    </button>
+
+
+    <button
+        class="action-btn"
+        onclick="callPolice()">
+
+        <i
+            class="fa-solid fa-shield-halved"
+            style="color:var(--blue)">
+        </i>
+
+        Call Police
+
+    </button>
+
+
+    <button
+        class="action-btn"
+        onclick="hireLawyer()">
+
+        <i
+            class="fa-solid fa-scale-balanced"
+            style="color:var(--gold)">
+        </i>
+
+        Hire Lawyer
+
+    </button>
+
+
+    <button
+        class="action-btn"
+        onclick="openHideoutMenu()">
+
+        <i
+            class="fa-solid fa-eye-slash"
+            style="color:var(--purple)">
+        </i>
+
+        Hide / Evade Detection
+
+    </button>
+
+
+    <button
+        class="action-btn"
+        onclick="replenishFoodWater()">
+
+        <i
+            class="fa-solid fa-heart-pulse"
+            style="color:var(--green)">
+        </i>
+
+        Restore Life
+
+    </button>
+
+</div>
+
+
+<!-- =========================================================
+     BOTTOM HUD
+========================================================= -->
+
+<div id="bottom-hud">
+
 
     <div
-        class="modal-overlay"
-        id="modal-screen">
+        class="roll-orb"
+        onclick="rollDice()"
+        id="dice-orb">
 
-        <div class="modal-card">
+        <i class="fa-solid fa-cube"></i>
 
-            <h2
-                class="modal-title"
-                id="modal-heading">
+    </div>
 
-                SYSTEM
 
-            </h2>
+    <div class="moves-tag">
 
-            <div
-                class="modal-text"
-                id="modal-body">
+        MOVES:
 
-            </div>
+        <strong id="moves-count">
+            0
+        </strong>
 
-            <div
-                class="modal-grid"
-                id="modal-actions">
+    </div>
 
-            </div>
+</div>
+
+
+<!-- =========================================================
+     MODAL
+========================================================= -->
+
+<div
+    class="modal-overlay"
+    id="modal-screen">
+
+
+    <div class="modal-card">
+
+
+        <h2
+            class="modal-title"
+            id="modal-heading">
+
+            SYSTEM
+
+        </h2>
+
+
+        <div
+            class="modal-text"
+            id="modal-body">
+
+        </div>
+
+
+        <div
+            class="modal-grid"
+            id="modal-actions">
 
         </div>
 
@@ -1312,213 +2089,580 @@ select:focus {
 </div>
 
 
+</div>
+
+
 <script>
 
 /* =========================================================
-   GAME STATE
+   GLOBAL VARIABLES
 ========================================================= */
 
-let map;
-let userMarker;
+let map = null;
 
-let selectedGender = 'female';
+let userMarker = null;
 
-let gameStarted = false;
+let selectedGender =
+    'female';
 
-let movesLeft = 0;
+let gameStarted =
+    false;
 
-let gameTimer = null;
+let movesLeft =
+    0;
 
-let jailTimer = null;
+let gameTimer =
+    null;
+
+let jailTimer =
+    null;
+
+
+/* =========================================================
+   PLAYER STATE
+========================================================= */
 
 let gameState = {
 
-    name: 'Explorer1',
+    name:
+        'Explorer1',
 
-    zip: '23185',
+    zip:
+        '23185',
 
-    transport: 'walk',
+    city:
+        '',
 
-    points: 0,
+    state:
+        '',
 
-    reservePoints: 50,
+    transport:
+        'walk',
 
-    clues: 0,
+    points:
+        0,
 
-    life: 100,
+    reservePoints:
+        50,
 
-    crimesWitnessed: 0,
+    clues:
+        0,
 
-    careerXP: 0,
+    life:
+        100,
 
-    career: 'civilian',
+    crimesWitnessed:
+        0,
 
-    education: null,
+    careerXP:
+        0,
 
-    protected: false,
+    career:
+        'civilian',
 
-    hidden: false,
+    education:
+        null,
 
-    hidingPlace: null,
+    protected:
+        false,
 
-    arrested: false,
+    hidden:
+        false,
 
-    jailSeconds: 0,
+    hidingPlace:
+        null,
 
-    lawyerHired: false,
+    arrested:
+        false,
 
-    academyLevel: 0,
+    jailSeconds:
+        0,
 
-    lawLevel: 0,
+    lawyerHired:
+        false,
 
-    collegeLevel: 0,
+    academyLevel:
+        0,
 
-    playSeconds: 0,
+    lawLevel:
+        0,
 
-    lat: 37.2707,
+    collegeLevel:
+        0,
 
-    lng: -76.7075
+    playSeconds:
+        0,
+
+    lat:
+        37.2707,
+
+    lng:
+        -76.7075
+
 };
 
 
 /* =========================================================
-   CAREER DATA
+   CAREER DEFINITIONS
 ========================================================= */
 
 const careers = {
 
     civilian: {
-        name: 'CIVILIAN',
-        icon: 'fa-user',
-        color: '#00f6ff'
+
+        name:
+            'CIVILIAN',
+
+        icon:
+            'fa-user',
+
+        color:
+            '#00f6ff'
+
     },
+
 
     policeStudent: {
-        name: 'POLICE ACADEMY',
-        icon: 'fa-shield-halved',
-        color: '#168cff'
+
+        name:
+            'POLICE ACADEMY',
+
+        icon:
+            'fa-shield-halved',
+
+        color:
+            '#168cff'
+
     },
+
 
     police: {
-        name: 'POLICE OFFICER',
-        icon: 'fa-shield-halved',
-        color: '#168cff'
+
+        name:
+            'POLICE OFFICER',
+
+        icon:
+            'fa-shield-halved',
+
+        color:
+            '#168cff'
+
     },
+
 
     lawStudent: {
-        name: 'LAW SCHOOL',
-        icon: 'fa-scale-balanced',
-        color: '#ffd400'
+
+        name:
+            'LAW SCHOOL',
+
+        icon:
+            'fa-scale-balanced',
+
+        color:
+            '#ffd400'
+
     },
+
 
     lawyer: {
-        name: 'LAWYER',
-        icon: 'fa-scale-balanced',
-        color: '#ffd400'
+
+        name:
+            'LAWYER',
+
+        icon:
+            'fa-scale-balanced',
+
+        color:
+            '#ffd400'
+
     },
 
+
     college: {
-        name: 'COLLEGE STUDENT',
-        icon: 'fa-graduation-cap',
-        color: '#a855ff'
+
+        name:
+            'COLLEGE STUDENT',
+
+        icon:
+            'fa-graduation-cap',
+
+        color:
+            '#a855ff'
+
     }
+
 };
 
 
 /* =========================================================
-   MAP
+   FREE OPENSTREETMAP INITIALIZATION
 ========================================================= */
 
 function initMap(lat, lng) {
 
+
+    /*
+       Remove previous map.
+    */
+
     if (map) {
+
         map.remove();
+
+        map =
+            null;
+
     }
 
-    map = L.map('map', {
-        zoomControl: false
-    }).setView([lat, lng], 15);
+
+    /*
+       Create Leaflet map.
+    */
+
+    map =
+        L.map(
+            'map',
+            {
+                zoomControl:
+                    false,
+
+                attributionControl:
+                    true
+            }
+        )
+        .setView(
+            [lat, lng],
+            15
+        );
+
+
+    /*
+       FREE OPENSTREETMAP TILE SERVER
+
+       No API key required.
+    */
 
     L.tileLayer(
-        'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
+
+        'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+
         {
-            maxZoom: 19
+
+            maxZoom:
+                19,
+
+            minZoom:
+                3,
+
+            attribution:
+                '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors'
+
         }
+
     ).addTo(map);
 
-    const playerIcon = L.divIcon({
 
-        html:
-        `<i
-            class="fa-solid fa-location-crosshairs"
-            style="
-                color:#00f6ff;
-                font-size:30px;
-                filter:
-                    drop-shadow(0 0 10px #00f6ff);
-            ">
-        </i>`,
+    /*
+       Futuristic player marker.
+    */
 
-        className: 'custom-pin'
+    const playerIcon =
+        L.divIcon({
 
-    });
+            html: `
+
+                <div style="
+                    width:42px;
+                    height:42px;
+
+                    display:flex;
+
+                    align-items:center;
+                    justify-content:center;
+
+                    border-radius:50%;
+
+                    background:
+                        rgba(0,246,255,.10);
+
+                    border:
+                        1px solid #00f6ff;
+
+                    box-shadow:
+                        0 0 12px #00f6ff,
+                        0 0 30px rgba(0,246,255,.45);
+                ">
+
+                    <i
+                        class="fa-solid fa-location-crosshairs"
+                        style="
+                            color:#00f6ff;
+                            font-size:22px;
+
+                            filter:
+                                drop-shadow(
+                                    0 0 6px #00f6ff
+                                );
+                        ">
+                    </i>
+
+                </div>
+
+            `,
+
+            className:
+                'custom-player-marker',
+
+            iconSize:
+                [42,42],
+
+            iconAnchor:
+                [21,21]
+
+        });
+
+
+    /*
+       Add player marker.
+    */
 
     userMarker =
         L.marker(
-            [lat, lng],
-            { icon: playerIcon }
-        ).addTo(map);
+
+            [lat,lng],
+
+            {
+                icon:
+                    playerIcon
+            }
+
+        )
+        .addTo(map);
+
+
+    /*
+       Add futuristic player
+       radar/area circle.
+    */
+
+    L.circle(
+
+        [lat,lng],
+
+        {
+
+            radius:
+                75,
+
+            color:
+                '#00f6ff',
+
+            weight:
+                1,
+
+            opacity:
+                .35,
+
+            fillColor:
+                '#00f6ff',
+
+            fillOpacity:
+                .04
+
+        }
+
+    ).addTo(map);
+
 }
 
 
 /* =========================================================
-   LOG
+   FREE ZIP CODE LOCATION LOOKUP
+========================================================= */
+
+async function getCoordinatesFromZip(zip) {
+
+
+    /*
+       Clean ZIP input.
+    */
+
+    const cleanZip =
+        String(zip)
+            .trim()
+            .replace(
+                /\s+/g,
+                ''
+            );
+
+
+    /*
+       U.S. ZIP validation.
+    */
+
+    if (
+        !/^\d{5}$/.test(cleanZip)
+    ) {
+
+        throw new Error(
+            'Please enter a valid 5-digit U.S. ZIP code.'
+        );
+
+    }
+
+
+    /*
+       Zippopotam.us
+       does not require an API key.
+    */
+
+    const response =
+        await fetch(
+
+            `https://api.zippopotam.us/us/${cleanZip}`
+
+        );
+
+
+    if (
+        !response.ok
+    ) {
+
+        throw new Error(
+            'ZIP code could not be located.'
+        );
+
+    }
+
+
+    const data =
+        await response.json();
+
+
+    if (
+        !data.places ||
+        !data.places.length
+    ) {
+
+        throw new Error(
+            'No location found for that ZIP code.'
+        );
+
+    }
+
+
+    const place =
+        data.places[0];
+
+
+    return {
+
+        lat:
+            parseFloat(
+                place.latitude
+            ),
+
+        lng:
+            parseFloat(
+                place.longitude
+            ),
+
+        city:
+            place['place name'],
+
+        state:
+            place['state abbreviation'],
+
+        stateName:
+            place.state
+
+    };
+
+}
+
+
+/* =========================================================
+   ACTIVITY LOG
 ========================================================= */
 
 function addLog(text) {
 
+
     const box =
-        document.getElementById('log-box');
+        document.getElementById(
+            'log-box'
+        );
+
 
     const line =
-        document.createElement('div');
+        document.createElement(
+            'div'
+        );
 
-    line.className = 'log-line';
 
-    line.innerHTML =
-        `<span style="color:var(--cyan)">
+    line.className =
+        'log-line';
+
+
+    line.innerHTML = `
+
+        <span style="
+            color:var(--cyan);
+        ">
             &gt;
-        </span> ${text}`;
+        </span>
 
-    box.appendChild(line);
+        ${text}
 
-    box.scrollTop = box.scrollHeight;
+    `;
+
+
+    box.appendChild(
+        line
+    );
+
+
+    box.scrollTop =
+        box.scrollHeight;
+
 }
 
 
 /* =========================================================
-   SPEECH
+   VOICE
 ========================================================= */
 
 function speak(text) {
 
-    if (!('speechSynthesis' in window)) {
+
+    if (
+        !('speechSynthesis' in window)
+    ) {
+
         return;
+
     }
+
 
     window.speechSynthesis.cancel();
 
+
     const utterance =
-        new SpeechSynthesisUtterance(text);
+        new SpeechSynthesisUtterance(
+            text
+        );
+
 
     utterance.pitch =
         selectedGender === 'female'
             ? 1.1
             : .9;
 
+
     window.speechSynthesis.speak(
         utterance
     );
+
 }
 
 
@@ -1528,21 +2672,32 @@ function speak(text) {
 
 function setGender(gender) {
 
-    selectedGender = gender;
+
+    selectedGender =
+        gender;
+
 
     document
-        .getElementById('btn-female')
-        .classList.toggle(
+        .getElementById(
+            'btn-female'
+        )
+        .classList
+        .toggle(
             'active',
             gender === 'female'
         );
 
+
     document
-        .getElementById('btn-male')
-        .classList.toggle(
+        .getElementById(
+            'btn-male'
+        )
+        .classList
+        .toggle(
             'active',
             gender === 'male'
         );
+
 }
 
 
@@ -1552,74 +2707,158 @@ function setGender(gender) {
 
 async function initGame() {
 
+
     gameState.name =
-        document.getElementById(
-            'player-name-input'
-        ).value || 'Explorer1';
+
+        document
+            .getElementById(
+                'player-name-input'
+            )
+            .value
+            .trim()
+            ||
+            'Explorer1';
+
 
     gameState.zip =
-        document.getElementById(
-            'zip-input'
-        ).value || '23185';
+
+        document
+            .getElementById(
+                'zip-input'
+            )
+            .value
+            .trim()
+            ||
+            '23185';
+
 
     gameState.transport =
-        document.getElementById(
-            'transport-input'
-        ).value;
+
+        document
+            .getElementById(
+                'transport-input'
+            )
+            .value;
+
+
+    /*
+       Try the free ZIP lookup.
+    */
 
     try {
 
-        const response =
-            await fetch(
-                `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(gameState.zip)}`
+        addLog(
+            `LOCATING ZIP CODE // ${gameState.zip}`
+        );
+
+
+        const location =
+            await getCoordinatesFromZip(
+                gameState.zip
             );
 
-        const data =
-            await response.json();
 
-        if (
-            data &&
-            data.length
-        ) {
+        gameState.lat =
+            location.lat;
 
-            gameState.lat =
-                parseFloat(data[0].lat);
 
-            gameState.lng =
-                parseFloat(data[0].lon);
+        gameState.lng =
+            location.lng;
 
-        }
 
-    } catch (error) {
+        gameState.city =
+            location.city;
+
+
+        gameState.state =
+            location.state;
+
 
         addLog(
-            'Location service unavailable. Using default map position.'
+
+            `LOCATION LOCKED // ${location.city}, ${location.state}`
+
+        );
+
+
+    } catch(error) {
+
+
+        /*
+           The game still works if the
+           ZIP service temporarily fails.
+        */
+
+        addLog(
+
+            `LOCATION LOOKUP FAILED // ${error.message}`
+
+        );
+
+
+        addLog(
+
+            'DEFAULT MAP LOCATION LOADED.'
+
         );
 
     }
 
+
+    /*
+       Initialize visual map.
+    */
+
     initMap(
+
         gameState.lat,
         gameState.lng
+
     );
 
-    gameStarted = true;
+
+    /*
+       Start game.
+    */
+
+    gameStarted =
+        true;
+
+
+    /*
+       Start live point timer.
+    */
 
     startLivePointSystem();
 
+
+    /*
+       Refresh interface.
+    */
+
     updateUI();
 
-    addLog(
-        `QUEST INITIALIZED // Welcome ${gameState.name}.`
-    );
 
     addLog(
-        'Live points accumulation is now active.'
+
+        `QUEST INITIALIZED // Welcome ${gameState.name}.`
+
     );
+
+
+    addLog(
+
+        'LIVE POINT ACCUMULATION ACTIVE.'
+
+    );
+
 
     speak(
+
         `Welcome ${gameState.name}. Quest initialized.`
+
     );
+
 }
 
 
@@ -1629,257 +2868,409 @@ async function initGame() {
 
 function startLivePointSystem() {
 
+
     if (gameTimer) {
-        clearInterval(gameTimer);
+
+        clearInterval(
+            gameTimer
+        );
+
     }
 
+
     gameTimer =
-        setInterval(() => {
 
-            if (!gameStarted) {
-                return;
-            }
+        setInterval(
 
-            /*
-             * Arrested players stop normal world
-             * point accumulation.
-             */
+            () => {
 
-            if (
-                gameState.arrested
-            ) {
-                return;
-            }
 
-            /*
-             * Education and normal open-world
-             * play both generate points.
-             */
+                if (
+                    !gameStarted
+                ) {
 
-            gameState.playSeconds++;
+                    return;
 
-            gameState.points += 1;
+                }
 
-            /*
-             * Reserve points slowly replenish
-             * while actively playing.
-             */
 
-            if (
-                gameState.reservePoints < 100
-            ) {
+                /*
+                   Players in jail don't earn
+                   normal open-world points.
+                */
 
-                gameState.reservePoints =
-                    Math.min(
-                        100,
-                        gameState.reservePoints + .1
-                    );
+                if (
+                    gameState.arrested
+                ) {
 
-            }
+                    return;
 
-            /*
-             * Career XP.
-             */
+                }
 
-            if (
-                gameState.education
-            ) {
 
-                gameState.careerXP += 1;
+                /*
+                   Every second of active
+                   gameplay adds one point.
+                */
 
-            }
+                gameState.playSeconds++;
 
-            updateUI();
+                gameState.points++;
 
-        }, 1000);
+
+                /*
+                   Reserve points gradually
+                   regenerate while playing.
+                */
+
+                if (
+                    gameState.reservePoints <
+                    100
+                ) {
+
+                    gameState.reservePoints =
+
+                        Math.min(
+
+                            100,
+
+                            gameState.reservePoints
+                            +
+                            0.1
+
+                        );
+
+                }
+
+
+                /*
+                   Students gain career XP.
+                */
+
+                if (
+                    gameState.education
+                ) {
+
+                    gameState.careerXP++;
+
+                }
+
+
+                updateUI();
+
+            },
+
+            1000
+
+        );
+
 }
 
 
 /* =========================================================
-   POINT AWARD
+   AWARD POINTS
 ========================================================= */
 
-function awardPoints(amount, reason) {
+function awardPoints(
+    amount,
+    reason
+) {
 
-    gameState.points += amount;
+
+    gameState.points +=
+        amount;
+
 
     const display =
         document.getElementById(
             'points-display'
         );
 
-    display.classList.remove('pulse');
+
+    display.classList.remove(
+        'pulse'
+    );
+
 
     void display.offsetWidth;
 
-    display.classList.add('pulse');
 
-    addLog(
-        `+${amount} POINTS // ${reason}`
+    display.classList.add(
+        'pulse'
     );
 
+
+    addLog(
+
+        `+${amount} POINTS // ${reason}`
+
+    );
+
+
     updateUI();
+
 }
 
 
 /* =========================================================
-   DICE
+   DICE / MOVEMENT
 ========================================================= */
 
 function rollDice() {
 
-    if (!gameStarted) {
+
+    if (
+        !gameStarted
+    ) {
 
         alert(
             'Initialize the quest first.'
         );
 
         return;
+
     }
 
-    if (gameState.arrested) {
+
+    if (
+        gameState.arrested
+    ) {
 
         alert(
             'You are currently in jail.'
         );
 
         return;
+
     }
 
-    if (gameState.hidden) {
+
+    if (
+        gameState.hidden
+    ) {
 
         alert(
             'You are hiding. Exit hiding first.'
         );
 
         return;
+
     }
+
 
     const roll =
         Math.floor(
             Math.random() * 6
         ) + 1;
 
-    const bonus =
-        gameState.transport === 'car'
-            ? 2
-            : gameState.transport === 'bike'
-                ? 1
-                : 0;
+
+    let bonus =
+        0;
+
+
+    if (
+        gameState.transport ===
+        'car'
+    ) {
+
+        bonus =
+            2;
+
+    } else if (
+        gameState.transport ===
+        'bike'
+    ) {
+
+        bonus =
+            1;
+
+    }
+
 
     movesLeft =
         roll + bonus;
 
+
     document
-        .getElementById('moves-count')
-        .innerText = movesLeft;
+        .getElementById(
+            'moves-count'
+        )
+        .innerText =
+        movesLeft;
+
 
     addLog(
-        `Movement roll: ${roll} + ${bonus} transport bonus.`
+
+        `MOVEMENT ROLL // ${roll} + ${bonus} transport bonus`
+
     );
 
-    /*
-     * Movement costs a small amount of life
-     * to retain the original survival mechanic.
-     */
 
-    if (!gameState.protected) {
+    /*
+       Protected education players
+       don't lose life from normal movement.
+    */
+
+    if (
+        !gameState.protected
+    ) {
 
         gameState.life =
+
             Math.max(
+
                 0,
-                gameState.life - 2
+
+                gameState.life -
+                2
+
             );
 
     }
 
+
     updateUI();
+
 }
 
 
 /* =========================================================
-   BUSINESS / CLUE
+   BUSINESS / LOCATION
 ========================================================= */
 
 function openLocationEncounter() {
 
-    if (!gameStarted) {
-        alert('Initialize the quest first.');
+
+    if (
+        !gameStarted
+    ) {
+
+        alert(
+            'Initialize the quest first.'
+        );
+
         return;
+
     }
 
-    if (movesLeft <= 0) {
+
+    if (
+        movesLeft <= 0
+    ) {
 
         alert(
             'Roll the movement system first.'
         );
 
         return;
+
     }
 
-    if (gameState.arrested) {
+
+    if (
+        gameState.arrested
+    ) {
 
         alert(
             'You cannot explore while incarcerated.'
         );
 
         return;
+
     }
+
 
     movesLeft--;
 
+
     document
-        .getElementById('moves-count')
-        .innerText = movesLeft;
+        .getElementById(
+            'moves-count'
+        )
+        .innerText =
+        movesLeft;
+
 
     showModal(
-        'LOCAL BUSINESS NODE',
-        `
-        You have reached a location.
 
-        Search the business for clues that may
-        contribute toward the Golden Key quest.
+        'LOCAL BUSINESS NODE',
+
+        `
+
+            You have reached a business
+            or local location.
+
+            Search the location for clues
+            that contribute toward the
+            Golden Key investigation.
+
         `,
+
         [
 
             {
-                text: 'SEARCH LOCATION',
-                action: searchForGoldenKey
+
+                text:
+                    'SEARCH LOCATION',
+
+                action:
+                    searchForGoldenKey
+
             },
 
             {
-                text: 'LEAVE',
-                action: closeModal
+
+                text:
+                    'LEAVE',
+
+                action:
+                    closeModal
+
             }
 
         ]
+
     );
+
 }
 
 
 /* =========================================================
-   CLUES
+   CLUE SYSTEM
 ========================================================= */
 
 function searchForGoldenKey() {
 
+
     gameState.clues++;
 
+
     const clueReward =
-        25 + Math.floor(
+
+        25 +
+        Math.floor(
             Math.random() * 26
         );
 
+
     awardPoints(
+
         clueReward,
+
         'LOCATION CLUE DISCOVERED'
+
     );
+
 
     addLog(
-        `Clue #${gameState.clues} added to investigation.`
+
+        `CLUE #${gameState.clues} ADDED TO INVESTIGATION`
+
     );
 
+
     closeModal();
+
 }
 
 
@@ -1889,52 +3280,82 @@ function searchForGoldenKey() {
 
 function openCareerCenter() {
 
-    if (gameState.arrested) {
+
+    if (
+        gameState.arrested
+    ) {
 
         alert(
             'Career services are unavailable while incarcerated.'
         );
 
         return;
+
     }
+
 
     showModal(
 
         'CAREER & EDUCATION NETWORK',
 
         `
-        Choose a career path.
 
-        Students are protected while actively attending
-        their educational program.
+            Choose your career path.
 
-        Education also generates career XP and points.
+            While actively enrolled in
+            Police Academy, Law School,
+            or College, your player is
+            protected from player-versus-player
+            harm and continues earning points.
+
         `,
 
         [
 
             {
-                text: 'POLICE ACADEMY',
-                action: enrollPoliceAcademy
+
+                text:
+                    'POLICE ACADEMY',
+
+                action:
+                    enrollPoliceAcademy
+
             },
 
             {
-                text: 'LAW SCHOOL',
-                action: enrollLawSchool
+
+                text:
+                    'LAW SCHOOL',
+
+                action:
+                    enrollLawSchool
+
             },
 
             {
-                text: 'COLLEGE',
-                action: enrollCollege
+
+                text:
+                    'COLLEGE',
+
+                action:
+                    enrollCollege
+
             },
 
             {
-                text: 'LEAVE',
-                action: closeModal
+
+                text:
+                    'LEAVE',
+
+                action:
+                    closeModal
+
             }
 
         ]
+
     );
+
 }
 
 
@@ -1944,103 +3365,164 @@ function openCareerCenter() {
 
 function enrollPoliceAcademy() {
 
+
     gameState.career =
         'policeStudent';
+
 
     gameState.education =
         'police';
 
-    gameState.protected = true;
+
+    gameState.protected =
+        true;
+
 
     updateProtection();
 
-    addLog(
-        'ENROLLED // Police Academy.'
-    );
 
     addLog(
-        'Training mode active. Player protection enabled.'
+        'ENROLLED // POLICE ACADEMY'
     );
+
+
+    addLog(
+        'EDUCATION PROTECTION ENABLED'
+    );
+
 
     showPoliceTraining();
 
+
     updateUI();
+
 }
 
 
 function showPoliceTraining() {
+
 
     showModal(
 
         'POLICE ACADEMY',
 
         `
-        TRAINING PROGRAM
 
-        Complete the fictional game-training
-        modules to progress toward graduation.
+            POLICE ACADEMY TRAINING
 
-        Training categories:
+            Complete all three fictional
+            game-training modules.
 
-        • Arrest procedure
-        • Defensive tactics
-        • Firearms safety
-        • Emergency response
+            Training categories:
+
+            • Arrest procedure
+            • Defensive tactics
+            • Firearms safety
+            • Emergency response
+
+            These are fictional game skills
+            and do not provide real-world
+            weapons instruction.
+
         `,
 
         [
 
             {
-                text: 'ARREST PROCEDURE',
-                action: () => completePoliceModule('arrest')
+
+                text:
+                    'ARREST PROCEDURE',
+
+                action:
+                    () =>
+                    completePoliceModule(
+                        'ARREST PROCEDURE'
+                    )
+
             },
 
             {
-                text: 'DEFENSIVE TACTICS',
-                action: () => completePoliceModule('defense')
+
+                text:
+                    'DEFENSIVE TACTICS',
+
+                action:
+                    () =>
+                    completePoliceModule(
+                        'DEFENSIVE TACTICS'
+                    )
+
             },
 
             {
-                text: 'FIREARMS SAFETY',
-                action: () => completePoliceModule('firearms')
+
+                text:
+                    'FIREARMS SAFETY',
+
+                action:
+                    () =>
+                    completePoliceModule(
+                        'FIREARMS SAFETY'
+                    )
+
             },
 
             {
-                text: 'GRADUATE',
-                action: graduatePolice
+
+                text:
+                    'GRADUATE',
+
+                action:
+                    graduatePolice
+
             }
 
         ]
+
     );
+
 }
 
 
-function completePoliceModule(module) {
+function completePoliceModule(
+    module
+) {
+
 
     gameState.academyLevel++;
 
-    gameState.careerXP += 50;
+
+    gameState.careerXP +=
+        50;
+
 
     awardPoints(
+
         40,
-        `Police Academy module completed: ${module}`
+
+        `POLICE ACADEMY // ${module}`
+
     );
+
 
     if (
         gameState.academyLevel >= 3
     ) {
 
         addLog(
-            'All Police Academy modules completed.'
+            'ALL POLICE ACADEMY MODULES COMPLETE'
         );
 
     }
 
+
     showPoliceTraining();
+
 }
 
 
 function graduatePolice() {
+
 
     if (
         gameState.academyLevel < 3
@@ -2051,31 +3533,44 @@ function graduatePolice() {
         );
 
         return;
+
     }
+
 
     gameState.career =
         'police';
 
+
     gameState.education =
         null;
+
 
     gameState.protected =
         false;
 
+
     awardPoints(
+
         150,
+
         'POLICE ACADEMY GRADUATION'
+
     );
 
+
     addLog(
-        'STATUS UPGRADED // POLICE OFFICER.'
+        'STATUS UPGRADED // POLICE OFFICER'
     );
+
 
     closeModal();
 
+
     updateProtection();
 
+
     updateUI();
+
 }
 
 
@@ -2085,88 +3580,146 @@ function graduatePolice() {
 
 function enrollLawSchool() {
 
+
     gameState.career =
         'lawStudent';
+
 
     gameState.education =
         'law';
 
-    gameState.protected = true;
+
+    gameState.protected =
+        true;
+
 
     updateProtection();
 
+
     addLog(
-        'ENROLLED // Law School.'
+        'ENROLLED // LAW SCHOOL'
     );
+
+
+    addLog(
+        'EDUCATION PROTECTION ENABLED'
+    );
+
 
     showLawTraining();
 
+
     updateUI();
+
 }
 
 
 function showLawTraining() {
+
 
     showModal(
 
         'LAW SCHOOL',
 
         `
-        LEGAL TRAINING PROGRAM
 
-        Complete the fictional legal-career
-        modules to qualify for graduation.
+            LEGAL TRAINING PROGRAM
 
-        Training categories:
+            Complete all three fictional
+            game-law modules.
 
-        • Criminal procedure
-        • Courtroom advocacy
-        • Client representation
+            • Criminal procedure
+            • Courtroom advocacy
+            • Client representation
+
         `,
 
         [
 
             {
-                text: 'CRIMINAL PROCEDURE',
-                action: () => completeLawModule('procedure')
+
+                text:
+                    'CRIMINAL PROCEDURE',
+
+                action:
+                    () =>
+                    completeLawModule(
+                        'CRIMINAL PROCEDURE'
+                    )
+
             },
 
             {
-                text: 'COURTROOM ADVOCACY',
-                action: () => completeLawModule('courtroom')
+
+                text:
+                    'COURTROOM ADVOCACY',
+
+                action:
+                    () =>
+                    completeLawModule(
+                        'COURTROOM ADVOCACY'
+                    )
+
             },
 
             {
-                text: 'CLIENT REPRESENTATION',
-                action: () => completeLawModule('representation')
+
+                text:
+                    'CLIENT REPRESENTATION',
+
+                action:
+                    () =>
+                    completeLawModule(
+                        'CLIENT REPRESENTATION'
+                    )
+
             },
 
             {
-                text: 'GRADUATE',
-                action: graduateLaw
+
+                text:
+                    'GRADUATE',
+
+                action:
+                    graduateLaw
+
             }
 
         ]
+
     );
+
 }
 
 
-function completeLawModule(module) {
+function completeLawModule(
+    module
+) {
+
 
     gameState.lawLevel++;
 
-    gameState.careerXP += 50;
+
+    gameState.careerXP +=
+        50;
+
 
     awardPoints(
+
         40,
-        `Law School module completed: ${module}`
+
+        `LAW SCHOOL // ${module}`
+
     );
 
+
     showLawTraining();
+
 }
 
 
 function graduateLaw() {
+
 
     if (
         gameState.lawLevel < 3
@@ -2177,31 +3730,44 @@ function graduateLaw() {
         );
 
         return;
+
     }
+
 
     gameState.career =
         'lawyer';
 
+
     gameState.education =
         null;
+
 
     gameState.protected =
         false;
 
+
     awardPoints(
+
         150,
+
         'LAW SCHOOL GRADUATION'
+
     );
 
+
     addLog(
-        'STATUS UPGRADED // LICENSED GAME LAWYER.'
+        'STATUS UPGRADED // GAME LAWYER'
     );
+
 
     closeModal();
 
+
     updateProtection();
 
+
     updateUI();
+
 }
 
 
@@ -2211,43 +3777,72 @@ function graduateLaw() {
 
 function enrollCollege() {
 
+
     gameState.career =
         'college';
+
 
     gameState.education =
         'college';
 
-    gameState.protected = true;
+
+    gameState.protected =
+        true;
+
 
     updateProtection();
 
-    addLog(
-        'ENROLLED // College.'
-    );
 
     awardPoints(
+
         20,
+
         'COLLEGE ENROLLMENT'
+
     );
+
+
+    addLog(
+        'ENROLLED // COLLEGE'
+    );
+
+
+    addLog(
+        'EDUCATION PROTECTION ENABLED'
+    );
+
 
     closeModal();
 
+
     updateUI();
+
 }
 
 
 /* =========================================================
-   POLICE
+   CALL POLICE
 ========================================================= */
 
 function callPolice() {
 
-    if (!gameStarted) {
-        return;
-    }
 
     if (
-        gameState.points < 25
+        !gameStarted
+    ) {
+
+        return;
+
+    }
+
+
+    const cost =
+        25;
+
+
+    if (
+        gameState.points <
+        cost
     ) {
 
         alert(
@@ -2255,101 +3850,159 @@ function callPolice() {
         );
 
         return;
+
     }
 
-    gameState.points -= 25;
+
+    gameState.points -=
+        cost;
+
 
     addLog(
-        'EMERGENCY CALL // Police dispatched.'
+        'EMERGENCY CALL // POLICE DISPATCHED'
     );
+
 
     showModal(
 
         'POLICE DISPATCH',
 
         `
-        Police response requested.
 
-        The response system has been activated
-        for this game location.
+            Police response requested.
+
+            Choose the type of fictional
+            game incident to report.
+
         `,
 
         [
 
             {
-                text: 'REPORT ASSAULT',
-                action: () => reportCrime('ASSAULT')
+
+                text:
+                    'REPORT ASSAULT',
+
+                action:
+                    () =>
+                    reportCrime(
+                        'ASSAULT'
+                    )
+
             },
 
             {
-                text: 'REPORT ROBBERY',
-                action: () => reportCrime('ROBBERY')
+
+                text:
+                    'REPORT ROBBERY',
+
+                action:
+                    () =>
+                    reportCrime(
+                        'ROBBERY'
+                    )
+
             },
 
             {
-                text: 'REPORT THEFT',
-                action: () => reportCrime('THEFT')
+
+                text:
+                    'REPORT THEFT',
+
+                action:
+                    () =>
+                    reportCrime(
+                        'THEFT'
+                    )
+
             },
 
             {
-                text: 'CLOSE',
-                action: closeModal
+
+                text:
+                    'CLOSE',
+
+                action:
+                    closeModal
+
             }
 
         ]
+
     );
 
+
     updateUI();
+
 }
 
 
 /* =========================================================
-   CRIME REPORT
+   REPORT CRIME
 ========================================================= */
 
-function reportCrime(type) {
+function reportCrime(
+    type
+) {
+
 
     gameState.crimesWitnessed++;
+
 
     addLog(
         `CRIME REPORTED // ${type}`
     );
 
+
     /*
-     * If the player is an officer,
-     * the game simulates an arrest opportunity.
-     */
+       If player is a police officer,
+       give them the officer response.
+    */
 
     if (
-        gameState.career === 'police'
+        gameState.career ===
+        'police'
     ) {
 
-        showOfficerResponse(type);
+        showOfficerResponse(
+            type
+        );
 
         return;
+
     }
+
 
     showModal(
 
         'POLICE RESPONSE',
 
         `
-        Dispatch has received your ${type}
-        report.
 
-        Officers are responding to the
-        simulated incident.
+            Dispatch received your
+            ${type} report.
+
+            Officers are responding to
+            the simulated game incident.
+
         `,
 
         [
 
             {
-                text: 'CLOSE',
-                action: closeModal
+
+                text:
+                    'CLOSE',
+
+                action:
+                    closeModal
+
             }
 
         ]
+
     );
+
 }
 
 
@@ -2357,67 +4010,104 @@ function reportCrime(type) {
    OFFICER RESPONSE
 ========================================================= */
 
-function showOfficerResponse(type) {
+function showOfficerResponse(
+    type
+) {
+
 
     showModal(
 
         'OFFICER RESPONSE',
 
         `
-        CRIME TYPE: ${type}
 
-        As a police officer you can now
-        initiate an in-game arrest.
+            INCIDENT TYPE:
 
-        This is a fictional game mechanic.
+            ${type}
+
+            As a certified game police
+            officer, you can initiate
+            the fictional arrest mechanic.
+
         `,
 
         [
 
             {
-                text: 'ARREST SUSPECT',
-                action: () => arrestSuspect(type)
+
+                text:
+                    'ARREST SUSPECT',
+
+                action:
+                    () =>
+                    arrestSuspect(
+                        type
+                    )
+
             },
 
             {
-                text: 'DISENGAGE',
-                action: closeModal
+
+                text:
+                    'DISENGAGE',
+
+                action:
+                    closeModal
+
             }
 
         ]
+
     );
+
 }
 
 
-function arrestSuspect(type) {
+function arrestSuspect(
+    type
+) {
 
-    gameState.careerXP += 30;
+
+    gameState.careerXP +=
+        30;
+
 
     awardPoints(
+
         75,
-        `Arrest completed // ${type}`
+
+        `ARREST COMPLETED // ${type}`
+
     );
+
 
     addLog(
         `SUSPECT ARRESTED // ${type}`
     );
 
+
     closeModal();
 
+
     updateUI();
+
 }
 
 
 /* =========================================================
-   LAWYER
+   HIRE LAWYER
 ========================================================= */
 
 function hireLawyer() {
 
-    const cost = 100;
+
+    const cost =
+        100;
+
 
     if (
-        gameState.points < cost
+        gameState.points <
+        cost
     ) {
 
         alert(
@@ -2425,108 +4115,174 @@ function hireLawyer() {
         );
 
         return;
+
     }
 
-    gameState.points -= cost;
 
-    gameState.lawyerHired = true;
+    gameState.points -=
+        cost;
+
+
+    gameState.lawyerHired =
+        true;
+
 
     addLog(
-        'LEGAL COUNSEL RETAINED.'
+        'LEGAL COUNSEL RETAINED'
     );
+
 
     showModal(
 
         'LEGAL COUNSEL',
 
         `
-        Your lawyer is now retained.
 
-        If you are arrested, your lawyer
-        can be used to reduce the simulated
-        jail sentence.
+            Your game lawyer is now retained.
+
+            If you are arrested, legal counsel
+            can reduce your simulated jail
+            sentence.
+
         `,
 
         [
 
             {
-                text: 'CLOSE',
-                action: closeModal
+
+                text:
+                    'CLOSE',
+
+                action:
+                    closeModal
+
             }
 
         ]
+
     );
 
+
     updateUI();
+
 }
 
 
 /* =========================================================
-   HIDEOUT SYSTEM
+   HIDING / EVASION
 ========================================================= */
 
 function openHideoutMenu() {
 
-    if (gameState.protected) {
+
+    if (
+        gameState.protected
+    ) {
 
         alert(
-            'You are protected while attending education.'
+            'You are already protected while attending education.'
         );
 
         return;
+
     }
 
-    if (gameState.hidden) {
+
+    if (
+        gameState.hidden
+    ) {
 
         exitHideout();
 
         return;
+
     }
+
 
     showModal(
 
         'EVASION NETWORK',
 
         `
-        You can temporarily hide from detection.
 
-        Hiding consumes reserve points from
-        your life reserve.
+            Hide temporarily from detection.
 
-        Available locations:
+            Hiding consumes reserve points.
+
+            Available locations:
+
         `,
 
         [
 
             {
-                text: 'TRASH CONTAINER',
-                action: () => enterHideout('TRASH CONTAINER', 5)
+
+                text:
+                    'TRASH CONTAINER',
+
+                action:
+                    () =>
+                    enterHideout(
+                        'TRASH CONTAINER',
+                        5
+                    )
+
             },
 
             {
-                text: 'ABANDONED BUILDING',
-                action: () => enterHideout('ABANDONED BUILDING', 10)
+
+                text:
+                    'ABANDONED BUILDING',
+
+                action:
+                    () =>
+                    enterHideout(
+                        'ABANDONED BUILDING',
+                        10
+                    )
+
             },
 
             {
-                text: 'DARK ALLEY',
-                action: () => enterHideout('DARK ALLEY', 7)
+
+                text:
+                    'DARK ALLEY',
+
+                action:
+                    () =>
+                    enterHideout(
+                        'DARK ALLEY',
+                        7
+                    )
+
             },
 
             {
-                text: 'CANCEL',
-                action: closeModal
+
+                text:
+                    'CANCEL',
+
+                action:
+                    closeModal
+
             }
 
         ]
+
     );
+
 }
 
 
-function enterHideout(place, cost) {
+function enterHideout(
+    place,
+    cost
+) {
+
 
     if (
-        gameState.reservePoints < cost
+        gameState.reservePoints <
+        cost
     ) {
 
         alert(
@@ -2534,51 +4290,63 @@ function enterHideout(place, cost) {
         );
 
         return;
+
     }
 
-    gameState.reservePoints -= cost;
 
-    gameState.hidden = true;
+    gameState.reservePoints -=
+        cost;
 
-    gameState.hidingPlace = place;
 
-    document
-        .getElementById(
-            'protection-status'
-        )
-        .innerText =
-        `● HIDDEN // ${place}`;
+    gameState.hidden =
+        true;
 
-    document
-        .getElementById(
-            'protection-status'
-        )
-        .style.color =
-        '#a855ff';
+
+    gameState.hidingPlace =
+        place;
+
 
     addLog(
-        `HIDDEN // ${place} // -${cost} reserve points`
+
+        `HIDDEN // ${place} // -${cost} RESERVE`
+
     );
+
 
     closeModal();
 
+
+    updateProtection();
+
+
     updateUI();
+
 }
 
 
 function exitHideout() {
 
-    gameState.hidden = false;
 
     addLog(
+
         `LEFT HIDEOUT // ${gameState.hidingPlace}`
+
     );
 
-    gameState.hidingPlace = null;
+
+    gameState.hidden =
+        false;
+
+
+    gameState.hidingPlace =
+        null;
+
 
     updateProtection();
 
+
     updateUI();
+
 }
 
 
@@ -2588,114 +4356,197 @@ function exitHideout() {
 
 function arrestPlayer() {
 
+
+    /*
+       Educational protection.
+    */
+
     if (
         gameState.protected
     ) {
 
         addLog(
-            'ARREST BLOCKED // Player is protected by education status.'
+            'ARREST BLOCKED // EDUCATION PROTECTION ACTIVE'
         );
 
         return;
+
     }
 
-    gameState.arrested = true;
 
-    gameState.jailSeconds = 120;
+    gameState.arrested =
+        true;
 
-    gameState.lawyerHired = false;
+
+    gameState.jailSeconds =
+        120;
+
+
+    /*
+       Current lawyer contract is consumed
+       when used for this arrest.
+    */
+
+    if (
+        gameState.lawyerHired
+    ) {
+
+        gameState.jailSeconds =
+            60;
+
+        gameState.lawyerHired =
+            false;
+
+        addLog(
+            'LEGAL COUNSEL ACTIVATED // JAIL SENTENCE REDUCED'
+        );
+
+    }
+
 
     addLog(
-        'PLAYER ARRESTED // Transported to game jail.'
+        'PLAYER ARRESTED // TRANSPORTED TO GAME JAIL'
     );
+
 
     startJailTimer();
 
+
     updateUI();
+
 }
 
 
 function startJailTimer() {
 
+
     if (jailTimer) {
-        clearInterval(jailTimer);
+
+        clearInterval(
+            jailTimer
+        );
+
     }
 
+
     jailTimer =
-        setInterval(() => {
 
-            if (
-                gameState.jailSeconds <= 0
-            ) {
+        setInterval(
 
-                releaseFromJail();
+            () => {
 
-                return;
-            }
 
-            gameState.jailSeconds--;
+                if (
+                    gameState.jailSeconds <=
+                    0
+                ) {
 
-            updateUI();
+                    releaseFromJail();
 
-        }, 1000);
+                    return;
+
+                }
+
+
+                gameState.jailSeconds--;
+
+
+                updateUI();
+
+            },
+
+            1000
+
+        );
+
 }
 
 
 function releaseFromJail() {
 
-    clearInterval(jailTimer);
 
-    gameState.arrested = false;
-
-    gameState.jailSeconds = 0;
-
-    addLog(
-        'RELEASED // Jail sentence completed.'
+    clearInterval(
+        jailTimer
     );
 
+
+    gameState.arrested =
+        false;
+
+
+    gameState.jailSeconds =
+        0;
+
+
+    addLog(
+        'RELEASED // JAIL SENTENCE COMPLETE'
+    );
+
+
     updateUI();
+
 }
 
 
 /* =========================================================
-   FOOD / LIFE
+   LIFE RESTORATION
 ========================================================= */
 
 function replenishFoodWater() {
 
-    if (gameState.points < 20) {
+
+    const cost =
+        20;
+
+
+    if (
+        gameState.points <
+        cost
+    ) {
 
         alert(
             'Restoration costs 20 points.'
         );
 
         return;
+
     }
 
-    gameState.points -= 20;
 
-    gameState.life = 100;
+    gameState.points -=
+        cost;
+
+
+    gameState.life =
+        100;
+
 
     addLog(
-        'LIFE SYSTEM RESTORED // -20 points'
+        'LIFE SYSTEM RESTORED // -20 POINTS'
     );
 
+
     updateUI();
+
 }
 
 
 /* =========================================================
-   PROTECTION
+   PROTECTION STATUS
 ========================================================= */
 
 function updateProtection() {
+
 
     const status =
         document.getElementById(
             'protection-status'
         );
 
-    if (gameState.hidden) {
+
+    if (
+        gameState.hidden
+    ) {
 
         status.innerText =
             `● HIDDEN // ${gameState.hidingPlace}`;
@@ -2704,9 +4555,13 @@ function updateProtection() {
             '#a855ff';
 
         return;
+
     }
 
-    if (gameState.protected) {
+
+    if (
+        gameState.protected
+    ) {
 
         status.innerText =
             '● EDUCATION PROTECTION ACTIVE';
@@ -2715,9 +4570,13 @@ function updateProtection() {
             '#20ff91';
 
         return;
+
     }
 
-    if (gameState.arrested) {
+
+    if (
+        gameState.arrested
+    ) {
 
         status.innerText =
             '● INCARCERATED';
@@ -2726,35 +4585,67 @@ function updateProtection() {
             '#ff3159';
 
         return;
+
     }
+
 
     status.innerText =
         '● OPEN WORLD';
 
     status.style.color =
         '#20ff91';
+
 }
 
 
 /* =========================================================
-   UI
+   UPDATE USER INTERFACE
 ========================================================= */
 
 function updateUI() {
+
+
+    /*
+       Points
+    */
 
     document
         .getElementById(
             'points-display'
         )
         .innerText =
-        Math.floor(gameState.points);
+        Math.floor(
+            gameState.points
+        );
+
+
+    /*
+       Reserve
+    */
 
     document
         .getElementById(
             'reserve-display'
         )
         .innerText =
-        Math.floor(gameState.reservePoints);
+        Math.floor(
+            gameState.reservePoints
+        );
+
+
+    document
+        .getElementById(
+            'reserve-text'
+        )
+        .innerText =
+        Math.floor(
+            gameState.reservePoints
+        );
+
+
+    /*
+       Clues
+    */
 
     document
         .getElementById(
@@ -2763,6 +4654,11 @@ function updateUI() {
         .innerText =
         gameState.clues;
 
+
+    /*
+       Crime reports
+    */
+
     document
         .getElementById(
             'crime-display'
@@ -2770,47 +4666,10 @@ function updateUI() {
         .innerText =
         gameState.crimesWitnessed;
 
-    document
-        .getElementById(
-            'reserve-text'
-        )
-        .innerText =
-        Math.floor(gameState.reservePoints);
 
-    document
-        .getElementById(
-            'life-text'
-        )
-        .innerText =
-        Math.floor(gameState.life);
-
-    document
-        .getElementById(
-            'career-xp-text'
-        )
-        .innerText =
-        Math.floor(gameState.careerXP);
-
-    document
-        .getElementById(
-            'life-bar'
-        )
-        .style.width =
-        `${gameState.life}%`;
-
-    document
-        .getElementById(
-            'reserve-bar'
-        )
-        .style.width =
-        `${gameState.reservePoints}%`;
-
-    document
-        .getElementById(
-            'career-xp-bar'
-        )
-        .style.width =
-        `${gameState.careerXP % 100}%`;
+    /*
+       Time
+    */
 
     document
         .getElementById(
@@ -2821,10 +4680,73 @@ function updateUI() {
             gameState.playSeconds
         );
 
+
+    /*
+       Life
+    */
+
+    document
+        .getElementById(
+            'life-text'
+        )
+        .innerText =
+        Math.floor(
+            gameState.life
+        );
+
+
+    document
+        .getElementById(
+            'life-bar'
+        )
+        .style.width =
+        `${gameState.life}%`;
+
+
+    /*
+       Reserve bar
+    */
+
+    document
+        .getElementById(
+            'reserve-bar'
+        )
+        .style.width =
+        `${gameState.reservePoints}%`;
+
+
+    /*
+       Career XP
+    */
+
+    document
+        .getElementById(
+            'career-xp-text'
+        )
+        .innerText =
+        Math.floor(
+            gameState.careerXP
+        );
+
+
+    document
+        .getElementById(
+            'career-xp-bar'
+        )
+        .style.width =
+        `${gameState.careerXP % 100}%`;
+
+
+    /*
+       Career information.
+    */
+
     const career =
         careers[
             gameState.career
-        ] || careers.civilian;
+        ] ||
+        careers.civilian;
+
 
     document
         .getElementById(
@@ -2833,70 +4755,91 @@ function updateUI() {
         .innerText =
         career.name;
 
-    document
-        .getElementById(
+
+    const careerIcon =
+        document.getElementById(
             'career-icon'
-        )
-        .className =
+        );
+
+
+    careerIcon.className =
         `fa-solid ${career.icon}`;
 
-    document
-        .getElementById(
-            'career-icon'
-        )
-        .style.color =
+
+    careerIcon.style.color =
         career.color;
+
 
     let status =
         'Open World Player';
+
 
     if (
         gameState.career ===
         'policeStudent'
     ) {
+
         status =
             `Academy Level ${gameState.academyLevel}/3`;
+
     }
+
 
     if (
         gameState.career ===
         'police'
     ) {
+
         status =
             'Certified Game Officer';
+
     }
+
 
     if (
         gameState.career ===
         'lawStudent'
     ) {
+
         status =
             `Law Level ${gameState.lawLevel}/3`;
+
     }
+
 
     if (
         gameState.career ===
         'lawyer'
     ) {
+
         status =
             'Licensed Game Lawyer';
+
     }
+
 
     if (
         gameState.career ===
         'college'
     ) {
+
         status =
             'College Student';
+
     }
 
-    if (gameState.arrested) {
+
+    if (
+        gameState.arrested
+    ) {
 
         status =
             `JAIL // ${formatTime(
                 gameState.jailSeconds
             )}`;
+
     }
+
 
     document
         .getElementById(
@@ -2905,29 +4848,47 @@ function updateUI() {
         .innerText =
         status;
 
+
     updateProtection();
+
 }
 
 
 /* =========================================================
-   TIME
+   TIME FORMAT
 ========================================================= */
 
-function formatTime(seconds) {
+function formatTime(
+    seconds
+) {
+
 
     const mins =
-        Math.floor(seconds / 60);
+        Math.floor(
+            seconds / 60
+        );
+
 
     const secs =
         seconds % 60;
 
+
     return (
-        String(mins).padStart(2,'0')
+
+        String(mins)
+            .padStart(2,'0')
+
         +
+
         ':'
+
         +
-        String(secs).padStart(2,'0')
+
+        String(secs)
+            .padStart(2,'0')
+
     );
+
 }
 
 
@@ -2941,12 +4902,14 @@ function showModal(
     actions = []
 ) {
 
+
     document
         .getElementById(
             'modal-heading'
         )
         .innerText =
         heading;
+
 
     document
         .getElementById(
@@ -2955,36 +4918,48 @@ function showModal(
         .innerHTML =
         body;
 
+
     const container =
         document.getElementById(
             'modal-actions'
         );
 
-    container.innerHTML = '';
+
+    container.innerHTML =
+        '';
+
 
     actions.forEach(
+
         action => {
+
 
             const button =
                 document.createElement(
                     'button'
                 );
 
+
             button.className =
                 'option-btn';
+
 
             button.innerText =
                 action.text;
 
+
             button.onclick =
                 action.action;
+
 
             container.appendChild(
                 button
             );
 
         }
+
     );
+
 
     document
         .getElementById(
@@ -2992,10 +4967,16 @@ function showModal(
         )
         .style.display =
         'flex';
+
 }
 
 
+/* =========================================================
+   CLOSE MODAL
+========================================================= */
+
 function closeModal() {
+
 
     document
         .getElementById(
@@ -3003,42 +4984,74 @@ function closeModal() {
         )
         .style.display =
         'none';
-}
-
-
-/* =========================================================
-   DEMO / TEST FUNCTION
-   Remove this before production.
-========================================================= */
-
-function demoArrest() {
-
-    arrestPlayer();
 
 }
 
 
 /* =========================================================
-   STARTUP
+   ESCAPE KEY CLOSES MODAL
 ========================================================= */
 
-window.onload = () => {
+document.addEventListener(
 
-    initMap(
-        gameState.lat,
-        gameState.lng
-    );
+    'keydown',
 
-    addLog(
-        'NEXUS SYSTEM ONLINE.'
-    );
+    function(event) {
 
-    addLog(
-        'Waiting for player initialization...'
-    );
+        if (
+            event.key ===
+            'Escape'
+        ) {
 
-    updateUI();
-};
+            closeModal();
+
+        }
+
+    }
+
+);
+
+
+/* =========================================================
+   INITIAL STARTUP
+========================================================= */
+
+window.onload =
+    function() {
+
+
+        /*
+           Show the default map before
+           the player starts.
+        */
+
+        initMap(
+
+            gameState.lat,
+            gameState.lng
+
+        );
+
+
+        addLog(
+            'NEXUS SYSTEM ONLINE'
+        );
+
+
+        addLog(
+            'FREE OPENSTREETMAP NAVIGATION READY'
+        );
+
+
+        addLog(
+            'ENTER ZIP CODE AND INITIALIZE QUEST'
+        );
+
+
+        updateUI();
+
+    };
+
 
 </script>
 

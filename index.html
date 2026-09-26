@@ -3,2532 +3,1186 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Cab0.com — Every Ride, Every Delivery, One Search</title>
-
-<meta name="description"
-content="Cab0.com — Compare rides, deliveries, ETAs and everyday travel services in one place.">
+<title>Cab0.com — Every Ride, Every Delivery, One Search.</title>
 
 <style>
-
-/* =========================================================
-   CAB0.COM
-   Every Ride, Every Delivery, One Search.
-   ========================================================= */
-
 :root{
-    --blue:#1769ff;
-    --blue2:#0b4fd1;
-    --navy:#101828;
-    --text:#182230;
-    --muted:#667085;
-    --light:#f5f7fa;
-    --white:#ffffff;
-    --line:#e4e7ec;
-    --green:#079455;
-    --gold:#c98b00;
-    --purple:#7a5af8;
-    --orange:#f79009;
-    --red:#d92d20;
-    --shadow:0 10px 30px rgba(16,24,40,.09);
-    --radius:18px;
+  --navy:#071a33;
+  --blue:#1769ff;
+  --blue2:#0d55d9;
+  --sky:#eef5ff;
+  --text:#122033;
+  --muted:#66758a;
+  --line:#e5ebf3;
+  --card:#ffffff;
+  --bg:#f6f9fc;
+  --green:#18a56b;
+  --shadow:0 12px 35px rgba(15,35,65,.08);
+  --radius:20px;
 }
 
-*{
-    box-sizing:border-box;
-    margin:0;
-    padding:0;
-}
+*{box-sizing:border-box}
 
 html{
-    scroll-behavior:smooth;
+  scroll-behavior:smooth;
 }
 
 body{
-    font-family:
-        Inter,
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        Arial,
-        sans-serif;
-
-    background:var(--light);
-    color:var(--text);
-}
-
-a{
-    color:inherit;
-    text-decoration:none;
+  margin:0;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+  color:var(--text);
+  background:var(--bg);
 }
 
 button,
 input,
 select{
-    font:inherit;
+  font:inherit;
 }
 
 button{
-    cursor:pointer;
+  cursor:pointer;
 }
 
+a{
+  color:inherit;
+  text-decoration:none;
+}
 
-/* =========================================================
-   HEADER
-   ========================================================= */
+/* HEADER */
 
 header{
-    position:sticky;
-    top:0;
-    z-index:100;
-
-    background:rgba(255,255,255,.94);
-    backdrop-filter:blur(14px);
-
-    border-bottom:1px solid var(--line);
+  background:#fff;
+  border-bottom:1px solid var(--line);
+  position:sticky;
+  top:0;
+  z-index:100;
 }
 
 .nav{
-    max-width:1200px;
-    height:68px;
-
-    margin:auto;
-    padding:0 20px;
-
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
+  max-width:1180px;
+  margin:auto;
+  padding:16px 22px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:20px;
 }
 
 .logo{
-    font-size:28px;
-    font-weight:950;
-    letter-spacing:-1.8px;
+  font-size:28px;
+  font-weight:900;
+  letter-spacing:-1.5px;
+  color:var(--navy);
 }
 
 .logo span{
-    color:var(--blue);
+  color:var(--blue);
 }
 
 .nav-links{
-    display:flex;
-    align-items:center;
-    gap:25px;
+  display:flex;
+  gap:8px;
 }
 
-.nav-links a{
-    font-size:14px;
-    color:#475467;
-    font-weight:700;
+.nav-btn{
+  border:0;
+  background:transparent;
+  color:var(--muted);
+  font-weight:700;
+  padding:10px 14px;
+  border-radius:12px;
 }
 
-.nav-links a:hover{
-    color:var(--blue);
+.nav-btn:hover{
+  background:var(--sky);
+  color:var(--blue);
 }
 
-.nav-cta{
-    background:var(--blue);
-    color:#fff!important;
+/* MAIN */
 
-    padding:10px 16px;
-    border-radius:10px;
+.container{
+  width:min(1180px,calc(100% - 32px));
+  margin:auto;
 }
 
-.mobile-menu{
-    display:none;
-}
-
-
-/* =========================================================
-   MAIN
-   ========================================================= */
-
-main{
-    max-width:1200px;
-    margin:auto;
-    padding:22px 20px 70px;
-}
-
-
-/* =========================================================
-   WOZNIAK FEATURE
-   ========================================================= */
+/* WOZ QUOTE */
 
 .woz{
-    background:
-        linear-gradient(
-            110deg,
-            #101828,
-            #19325d
-        );
-
-    color:white;
-
-    border-radius:18px;
-
-    padding:17px 22px;
-
-    text-align:center;
-
-    box-shadow:var(--shadow);
-
-    margin-bottom:23px;
+  margin:26px auto 0;
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:18px;
+  padding:17px 22px;
+  box-shadow:0 5px 20px rgba(15,35,65,.04);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:14px;
+  text-align:center;
 }
 
-.woz-quote{
-    font-size:17px;
-    line-height:1.45;
-    font-weight:650;
-    font-style:italic;
+.woz-mark{
+  width:36px;
+  height:36px;
+  border-radius:50%;
+  background:var(--navy);
+  color:#fff;
+  display:grid;
+  place-items:center;
+  font-weight:900;
+  flex:none;
 }
 
-.woz-name{
-    color:#b9d2ff;
-    font-size:12px;
-    font-weight:800;
-    margin-top:5px;
+.woz-text{
+  font-size:15px;
+  color:#3e4b5d;
 }
 
+.woz-text strong{
+  color:var(--navy);
+}
 
-/* =========================================================
-   HERO
-   ========================================================= */
+/* HERO */
 
 .hero{
-    text-align:center;
-    padding:13px 0 27px;
+  text-align:center;
+  padding:45px 10px 30px;
 }
 
 .hero h1{
-    font-size:
-        clamp(39px,6vw,66px);
-
-    line-height:.98;
-    letter-spacing:-3.5px;
-
-    color:var(--navy);
+  margin:0;
+  font-size:clamp(38px,6vw,70px);
+  line-height:1;
+  letter-spacing:-3px;
+  color:var(--navy);
 }
 
 .hero h1 span{
-    color:var(--blue);
+  color:var(--blue);
 }
 
 .hero p{
-    max-width:690px;
-
-    margin:15px auto 0;
-
-    color:var(--muted);
-
-    font-size:17px;
-    line-height:1.6;
+  margin:18px auto 0;
+  color:var(--muted);
+  font-size:18px;
+  max-width:650px;
 }
 
-
-/* =========================================================
-   PRIMARY SEARCH
-   ========================================================= */
+/* SEARCH */
 
 .search-card{
-    background:#fff;
-
-    border:1px solid var(--line);
-
-    border-radius:23px;
-
-    padding:20px;
-
-    box-shadow:var(--shadow);
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:26px;
+  box-shadow:var(--shadow);
+  overflow:hidden;
 }
 
-.mode-tabs{
-    display:grid;
-
-    grid-template-columns:
-        repeat(5,1fr);
-
-    gap:8px;
-
-    margin-bottom:19px;
+.modes{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  border-bottom:1px solid var(--line);
 }
 
 .mode{
-    border:1px solid var(--line);
-
-    background:#f9fafb;
-
-    color:#475467;
-
-    border-radius:11px;
-
-    padding:12px 8px;
-
-    font-size:13px;
-
-    font-weight:850;
-
-    transition:.15s;
+  border:0;
+  background:#fff;
+  padding:17px 10px;
+  font-weight:800;
+  color:var(--muted);
+  border-bottom:3px solid transparent;
 }
 
 .mode:hover{
-    border-color:#b8c9ed;
+  background:#f8fbff;
 }
 
 .mode.active{
-    background:#edf4ff;
-
-    border-color:#9bbcff;
-
-    color:var(--blue);
+  color:var(--blue);
+  border-bottom-color:var(--blue);
+  background:#f8fbff;
 }
 
-.mode-icon{
-    display:block;
-    font-size:20px;
-    margin-bottom:3px;
+.search-body{
+  padding:24px;
 }
 
-.search-title{
-    font-size:21px;
-    font-weight:900;
-    margin-bottom:15px;
+.fields{
+  display:grid;
+  grid-template-columns:1fr 1fr auto;
+  gap:12px;
 }
 
-.search-grid{
-    display:grid;
-
-    grid-template-columns:
-        1fr
-        1fr
-        155px;
-
-    gap:11px;
+.field{
+  position:relative;
 }
 
-.field-label{
-    display:block;
-
-    margin:0 0 6px 3px;
-
-    font-size:10px;
-
-    color:#667085;
-
-    font-weight:900;
-
-    letter-spacing:.7px;
-
-    text-transform:uppercase;
+.field input{
+  width:100%;
+  height:56px;
+  padding:0 17px;
+  border:1px solid #dce4ee;
+  border-radius:14px;
+  outline:none;
+  background:#fbfdff;
+  color:var(--text);
 }
 
-input{
-    width:100%;
-    height:57px;
-
-    border:1px solid #d0d5dd;
-
-    border-radius:12px;
-
-    padding:0 15px;
-
-    outline:none;
-
-    color:var(--text);
-
-    background:#fff;
+.field input:focus{
+  border-color:var(--blue);
+  box-shadow:0 0 0 4px rgba(23,105,255,.1);
 }
 
-input:focus{
-    border-color:var(--blue);
-
-    box-shadow:
-        0 0 0 3px
-        rgba(23,105,255,.10);
+.location-btn{
+  position:absolute;
+  right:8px;
+  top:8px;
+  height:40px;
+  padding:0 12px;
+  border:0;
+  border-radius:10px;
+  background:var(--sky);
+  color:var(--blue);
+  font-weight:800;
 }
 
-.search-button{
-    height:57px;
-
-    border:0;
-
-    border-radius:12px;
-
-    background:var(--blue);
-
-    color:#fff;
-
-    font-size:14px;
-
-    font-weight:900;
+.search-btn{
+  height:56px;
+  border:0;
+  border-radius:14px;
+  padding:0 25px;
+  background:var(--blue);
+  color:#fff;
+  font-weight:900;
+  box-shadow:0 8px 18px rgba(23,105,255,.22);
 }
 
-.search-button:hover{
-    background:var(--blue2);
+.search-btn:hover{
+  background:var(--blue2);
 }
 
-
-/* =========================================================
-   QUICK DESTINATIONS
-   ========================================================= */
-
-.quick-options{
-    display:flex;
-    flex-wrap:wrap;
-    gap:8px;
-
-    margin-top:12px;
+.quick-links{
+  display:flex;
+  gap:8px;
+  margin-top:13px;
+  flex-wrap:wrap;
 }
 
 .quick{
-    border:1px solid var(--line);
-
-    background:#f9fafb;
-
-    color:#475467;
-
-    padding:8px 12px;
-
-    border-radius:9px;
-
-    font-size:12px;
-
-    font-weight:750;
+  border:1px solid var(--line);
+  background:#fff;
+  color:var(--muted);
+  border-radius:10px;
+  padding:8px 12px;
+  font-size:13px;
+  font-weight:700;
 }
 
-.quick:hover{
-    color:var(--blue);
-    border-color:#9bbcff;
-}
-
-
-/* =========================================================
-   RESULTS
-   ========================================================= */
+/* RESULTS */
 
 .results{
-    display:none;
-    margin-top:24px;
+  margin-top:22px;
+  display:none;
 }
 
-.results.visible{
-    display:block;
+.results.show{
+  display:block;
 }
 
-.results-heading{
-    display:flex;
-
-    justify-content:space-between;
-    align-items:end;
-
-    gap:15px;
-
-    margin-bottom:13px;
+.results-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:12px;
 }
 
-.results-heading h2{
-    font-size:26px;
-    letter-spacing:-.8px;
+.results-head h2{
+  margin:0;
+  font-size:21px;
 }
 
-.route{
-    color:var(--muted);
-    font-size:13px;
-    margin-top:4px;
+.results-head span{
+  color:var(--muted);
+  font-size:13px;
 }
-
-.sort{
-    border:1px solid var(--line);
-
-    background:#fff;
-
-    border-radius:9px;
-
-    padding:9px 12px;
-
-    font-size:12px;
-
-    font-weight:800;
-
-    color:#475467;
-}
-
-
-/* =========================================================
-   RESULTS SUMMARY
-   ========================================================= */
-
-.summary{
-    display:grid;
-
-    grid-template-columns:1fr 1fr 1fr;
-
-    gap:10px;
-
-    margin-bottom:12px;
-}
-
-.summary-card{
-    background:#fff;
-
-    border:1px solid var(--line);
-
-    border-radius:14px;
-
-    padding:14px 16px;
-}
-
-.summary-label{
-    color:#98a2b3;
-
-    font-size:10px;
-
-    text-transform:uppercase;
-
-    font-weight:900;
-
-    letter-spacing:.6px;
-}
-
-.summary-value{
-    margin-top:4px;
-
-    font-size:15px;
-
-    font-weight:900;
-}
-
-.summary-detail{
-    color:var(--muted);
-
-    font-size:11px;
-
-    margin-top:3px;
-}
-
-.summary-card.cheapest{
-    border-color:#b7dfce;
-    background:#f6fdf9;
-}
-
-.summary-card.fastest{
-    border-color:#b9ceff;
-    background:#f6f9ff;
-}
-
-
-/* =========================================================
-   RESULT CARDS
-   ========================================================= */
 
 .result-list{
-    display:grid;
-    gap:10px;
-}
-
-.result{
-    position:relative;
-
-    background:#fff;
-
-    border:1px solid var(--line);
-
-    border-radius:17px;
-
-    padding:17px;
-
-    display:grid;
-
-    grid-template-columns:
-        1.4fr
-        .7fr
-        .7fr
-        .7fr
-        145px;
-
-    align-items:center;
-
-    gap:14px;
-
-    transition:.18s;
-}
-
-.result:hover{
-    box-shadow:0 6px 20px rgba(16,24,40,.07);
-    border-color:#b7c9ed;
-}
-
-.result.top-choice{
-    border:2px solid var(--blue);
-}
-
-.result-badge{
-    position:absolute;
-
-    left:15px;
-    top:-10px;
-
-    padding:4px 8px;
-
-    border-radius:6px;
-
-    background:var(--blue);
-
-    color:#fff;
-
-    font-size:9px;
-
-    text-transform:uppercase;
-
-    font-weight:950;
-
-    letter-spacing:.5px;
+  display:grid;
+  gap:10px;
 }
 
 .provider{
-    display:flex;
-    align-items:center;
-    gap:12px;
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:17px;
+  padding:17px;
+  display:flex;
+  align-items:center;
+  gap:15px;
+  box-shadow:0 5px 18px rgba(15,35,65,.04);
 }
 
-.provider-logo{
-    width:47px;
-    height:47px;
-
-    display:grid;
-    place-items:center;
-
-    border-radius:12px;
-
-    color:white;
-
-    font-weight:950;
-    font-size:17px;
+.provider-icon{
+  width:50px;
+  height:50px;
+  border-radius:14px;
+  background:var(--sky);
+  display:grid;
+  place-items:center;
+  font-size:23px;
+  flex:none;
 }
 
-.uber{
-    background:#111;
+.provider-main{
+  flex:1;
 }
 
-.lyft{
-    background:#ff3b8d;
+.provider-main h3{
+  margin:0 0 4px;
+  font-size:17px;
 }
 
-.doordash{
-    background:#ff3008;
+.provider-main p{
+  margin:0;
+  color:var(--muted);
+  font-size:13px;
 }
 
-.instacart{
-    background:#43b02a;
+.provider-price{
+  color:var(--muted);
+  font-size:13px;
+  margin-right:5px;
 }
 
-.roadie{
-    background:#263238;
+.provider-btn{
+  border:0;
+  background:var(--navy);
+  color:#fff;
+  border-radius:11px;
+  padding:11px 15px;
+  font-weight:800;
+  white-space:nowrap;
 }
 
-.taxi{
-    background:#f4c400;
-    color:#111;
+.provider-btn:hover{
+  background:var(--blue);
 }
 
-.provider-name{
-    font-size:15px;
-    font-weight:900;
+/* MY DAY */
+
+.myday{
+  margin-top:30px;
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:24px;
+  box-shadow:var(--shadow);
+  overflow:hidden;
 }
 
-.provider-type{
-    color:var(--muted);
-    font-size:11px;
-    margin-top:3px;
+.myday-header{
+  padding:22px 24px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:15px;
+  border-bottom:1px solid var(--line);
 }
 
-.info label{
-    display:block;
-
-    color:#98a2b3;
-
-    font-size:9px;
-
-    text-transform:uppercase;
-
-    font-weight:900;
-
-    letter-spacing:.5px;
-
-    margin-bottom:3px;
+.myday-title{
+  display:flex;
+  align-items:center;
+  gap:12px;
 }
 
-.info strong{
-    font-size:14px;
+.day-icon{
+  width:43px;
+  height:43px;
+  border-radius:13px;
+  background:var(--sky);
+  display:grid;
+  place-items:center;
+  font-size:21px;
 }
 
-.price{
-    font-size:17px!important;
+.myday h2{
+  margin:0;
+  font-size:22px;
 }
 
-.green{
-    color:var(--green)!important;
+.myday-sub{
+  color:var(--muted);
+  font-size:13px;
+  margin-top:3px;
 }
 
-.gold{
-    color:var(--gold)!important;
+.add-btn{
+  border:0;
+  background:var(--blue);
+  color:#fff;
+  padding:11px 16px;
+  border-radius:11px;
+  font-weight:800;
 }
 
-.book{
-    display:block;
-
-    text-align:center;
-
-    background:var(--blue);
-
-    color:white;
-
-    padding:12px 13px;
-
-    border-radius:10px;
-
-    font-size:12px;
-
-    font-weight:900;
+.add-btn:hover{
+  background:var(--blue2);
 }
 
-.book:hover{
-    background:var(--blue2);
+.day-content{
+  padding:22px 24px;
 }
 
+/* FORM */
 
-/* =========================================================
-   DELIVERY RESULT DETAILS
-   ========================================================= */
-
-.delivery-message{
-    background:#fff;
-
-    border:1px solid var(--line);
-
-    border-radius:15px;
-
-    padding:15px 17px;
-
-    margin-bottom:11px;
-
-    color:#475467;
-
-    font-size:13px;
-
-    line-height:1.5;
+.task-form{
+  display:none;
+  background:#f8fbff;
+  border:1px solid var(--line);
+  padding:18px;
+  border-radius:17px;
+  margin-bottom:20px;
 }
 
-
-/* =========================================================
-   DAILY DASHBOARD
-   ========================================================= */
-
-.daily{
-    margin-top:36px;
+.task-form.show{
+  display:block;
 }
 
-.section-heading{
-    margin-bottom:14px;
+.form-grid{
+  display:grid;
+  grid-template-columns:2fr 1fr 1fr 1fr;
+  gap:10px;
 }
 
-.section-heading h2{
-    font-size:25px;
-    letter-spacing:-.7px;
+.form-control{
+  width:100%;
+  height:46px;
+  border:1px solid #dce4ee;
+  border-radius:11px;
+  padding:0 12px;
+  background:#fff;
+  outline:none;
 }
 
-.section-heading p{
-    color:var(--muted);
-    font-size:13px;
-    margin-top:4px;
+.form-control:focus{
+  border-color:var(--blue);
 }
 
-.daily-grid{
-    display:grid;
-
-    grid-template-columns:
-        1.2fr
-        .8fr;
-
-    gap:12px;
+.form-actions{
+  display:flex;
+  justify-content:flex-end;
+  gap:8px;
+  margin-top:12px;
 }
 
-.day-card{
-    background:#fff;
-
-    border:1px solid var(--line);
-
-    border-radius:17px;
-
-    padding:18px;
+.cancel-btn{
+  border:1px solid var(--line);
+  background:#fff;
+  border-radius:10px;
+  padding:9px 14px;
+  font-weight:700;
 }
 
-.day-card h3{
-    font-size:17px;
-    margin-bottom:12px;
+.save-btn{
+  border:0;
+  background:var(--blue);
+  color:#fff;
+  border-radius:10px;
+  padding:9px 16px;
+  font-weight:800;
 }
 
-.schedule{
-    display:grid;
-    gap:8px;
+/* TASKS */
+
+.task-list{
+  display:grid;
+  gap:9px;
 }
 
-.schedule-item{
-    display:grid;
-
-    grid-template-columns:70px 34px 1fr;
-
-    align-items:center;
-
-    gap:8px;
-
-    padding:10px;
-
-    background:#f9fafb;
-
-    border-radius:10px;
+.empty{
+  padding:28px;
+  text-align:center;
+  color:var(--muted);
+  border:1px dashed #d7e0eb;
+  border-radius:15px;
 }
 
-.time{
-    font-size:12px;
-    font-weight:900;
-    color:#475467;
+.task{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:14px;
+  border:1px solid var(--line);
+  border-radius:15px;
 }
 
-.schedule-icon{
-    width:30px;
-    height:30px;
-
-    border-radius:8px;
-
-    display:grid;
-    place-items:center;
-
-    background:#edf4ff;
+.check{
+  width:22px;
+  height:22px;
+  border-radius:7px;
+  border:2px solid #c8d3e0;
+  background:#fff;
+  flex:none;
+  cursor:pointer;
 }
 
-.schedule-main{
-    font-size:13px;
-    font-weight:800;
+.task.completed .check{
+  background:var(--green);
+  border-color:var(--green);
+  position:relative;
 }
 
-.schedule-sub{
-    font-size:11px;
-    color:var(--muted);
-    margin-top:2px;
+.task.completed .check:after{
+  content:"✓";
+  color:#fff;
+  position:absolute;
+  left:3px;
+  top:-1px;
+  font-size:14px;
+  font-weight:900;
 }
 
-.empty-day{
-    text-align:center;
-
-    padding:30px 10px;
-
-    color:var(--muted);
-
-    font-size:13px;
+.task-info{
+  flex:1;
 }
 
-
-/* =========================================================
-   DAILY TOOLS
-   ========================================================= */
-
-.tools{
-    display:grid;
-
-    grid-template-columns:
-        1fr 1fr;
-
-    gap:9px;
+.task-info strong{
+  display:block;
+  margin-bottom:3px;
 }
 
-.tool{
-    display:block;
-
-    border:1px solid var(--line);
-
-    background:#f9fafb;
-
-    border-radius:12px;
-
-    padding:13px;
-
-    transition:.15s;
+.task.completed strong{
+  text-decoration:line-through;
+  color:#9aa6b5;
 }
 
-.tool:hover{
-    background:#fff;
-    border-color:#b7c9ed;
-    transform:translateY(-1px);
+.task-meta{
+  display:flex;
+  flex-wrap:wrap;
+  gap:7px;
+  color:var(--muted);
+  font-size:12px;
 }
 
-.tool-icon{
-    font-size:20px;
-    margin-bottom:7px;
+.badge{
+  background:var(--sky);
+  color:var(--blue);
+  border-radius:7px;
+  padding:3px 7px;
+  font-weight:800;
 }
 
-.tool-name{
-    font-size:13px;
-    font-weight:900;
+.delete{
+  border:0;
+  background:#f5f7fa;
+  color:#8995a5;
+  width:34px;
+  height:34px;
+  border-radius:9px;
 }
 
-.tool-text{
-    color:var(--muted);
-    font-size:10px;
-    line-height:1.4;
-    margin-top:3px;
+.delete:hover{
+  color:#d23b3b;
+  background:#fff1f1;
 }
 
+/* SAVED PLACES */
 
-/* =========================================================
-   FEATURE GRID
-   ========================================================= */
-
-.features{
-    margin-top:36px;
+.places{
+  margin-top:30px;
 }
 
-.feature-grid{
-    display:grid;
-
-    grid-template-columns:
-        repeat(4,1fr);
-
-    gap:10px;
+.places-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:12px;
 }
 
-.feature{
-    background:#fff;
-
-    border:1px solid var(--line);
-
-    border-radius:15px;
-
-    padding:17px;
-
-    min-height:145px;
+.places-header h2{
+  margin:0;
+  font-size:21px;
 }
 
-.feature-icon{
-    font-size:23px;
-    margin-bottom:10px;
+.places-header span{
+  color:var(--muted);
+  font-size:13px;
 }
 
-.feature h3{
-    font-size:14px;
-    margin-bottom:5px;
+.place-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
 }
 
-.feature p{
-    color:var(--muted);
-    font-size:11px;
-    line-height:1.5;
+.place{
+  border:1px solid var(--line);
+  background:#fff;
+  border-radius:15px;
+  padding:16px;
+  text-align:left;
+  cursor:pointer;
 }
 
+.place:hover{
+  border-color:#bcd1f5;
+  box-shadow:0 5px 18px rgba(15,35,65,.05);
+}
 
-/* =========================================================
-   CAB0 ECOSYSTEM
-   ========================================================= */
+.place-icon{
+  font-size:21px;
+}
+
+.place strong{
+  display:block;
+  margin-top:8px;
+}
+
+.place small{
+  display:block;
+  margin-top:3px;
+  color:var(--muted);
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+/* ECOSYSTEM */
 
 .ecosystem{
-    margin-top:36px;
-}
-
-.eco-grid{
-    display:grid;
-
-    grid-template-columns:1fr 1fr;
-
-    gap:10px;
+  margin:30px 0;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
 }
 
 .eco{
-    background:#fff;
-
-    border:1px solid var(--line);
-
-    border-radius:15px;
-
-    padding:19px;
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:space-between;
-
-    gap:15px;
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:17px;
+  padding:18px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
 }
 
-.eco-name{
-    font-size:19px;
-    font-weight:950;
+.eco h3{
+  margin:0 0 4px;
 }
 
-.eco-text{
-    color:var(--muted);
-    font-size:12px;
-    margin-top:4px;
+.eco p{
+  margin:0;
+  color:var(--muted);
+  font-size:13px;
 }
 
-.eco-link{
-    color:var(--blue);
-    font-size:12px;
-    font-weight:900;
-    white-space:nowrap;
+.eco a{
+  background:var(--navy);
+  color:#fff;
+  padding:9px 13px;
+  border-radius:10px;
+  font-weight:800;
+  font-size:13px;
 }
 
-
-/* =========================================================
-   FOOTER
-   ========================================================= */
+/* FOOTER */
 
 footer{
-    background:#101828;
-
-    color:#98a2b3;
-
-    padding:32px 20px;
+  text-align:center;
+  padding:28px 15px 45px;
+  color:#8a97a8;
+  font-size:12px;
 }
 
-.footer-inner{
-    max-width:1200px;
-
-    margin:auto;
-
-    display:flex;
-
-    justify-content:space-between;
-
-    gap:20px;
-
-    flex-wrap:wrap;
+footer strong{
+  color:var(--navy);
 }
 
-.footer-brand{
-    color:white;
-    font-size:19px;
-    font-weight:900;
-}
-
-.footer-links{
-    display:flex;
-    gap:20px;
-    flex-wrap:wrap;
-    font-size:12px;
-}
-
-.footer-links a:hover{
-    color:#fff;
-}
-
-
-/* =========================================================
-   TOAST
-   ========================================================= */
+/* TOAST */
 
 .toast{
-    position:fixed;
-
-    left:50%;
-    bottom:22px;
-
-    transform:
-        translate(-50%,20px);
-
-    opacity:0;
-
-    pointer-events:none;
-
-    background:#101828;
-
-    color:#fff;
-
-    padding:12px 18px;
-
-    border-radius:10px;
-
-    font-size:12px;
-
-    transition:.2s;
-
-    z-index:500;
+  position:fixed;
+  bottom:24px;
+  left:50%;
+  transform:translate(-50%,20px);
+  background:var(--navy);
+  color:#fff;
+  padding:12px 17px;
+  border-radius:12px;
+  font-size:13px;
+  font-weight:700;
+  opacity:0;
+  pointer-events:none;
+  transition:.25s;
+  z-index:500;
 }
 
 .toast.show{
-    opacity:1;
-
-    transform:
-        translate(-50%,0);
+  opacity:1;
+  transform:translate(-50%,0);
 }
 
+/* MOBILE */
 
-/* =========================================================
-   MOBILE
-   ========================================================= */
+@media(max-width:800px){
 
-@media(max-width:950px){
+  .nav-links{
+    display:none;
+  }
 
-    .result{
-        grid-template-columns:
-            1.4fr
-            .7fr
-            .7fr
-            130px;
-    }
+  .woz{
+    align-items:flex-start;
+    text-align:left;
+  }
 
-    .result .price-info{
-        display:none;
-    }
+  .modes{
+    grid-template-columns:repeat(5,1fr);
+  }
 
-    .feature-grid{
-        grid-template-columns:
-            1fr 1fr;
-    }
+  .mode{
+    font-size:12px;
+    padding:14px 4px;
+  }
 
+  .fields{
+    grid-template-columns:1fr;
+  }
+
+  .search-btn{
+    width:100%;
+  }
+
+  .provider{
+    align-items:flex-start;
+    flex-wrap:wrap;
+  }
+
+  .provider-price{
+    width:100%;
+    margin-left:65px;
+    margin-top:-8px;
+  }
+
+  .provider-btn{
+    margin-left:auto;
+  }
+
+  .form-grid{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .place-grid{
+    grid-template-columns:1fr 1fr;
+  }
 }
 
-@media(max-width:750px){
+@media(max-width:520px){
 
-    .nav-links{
-        display:none;
-    }
+  .container{
+    width:min(100% - 20px,1180px);
+  }
 
-    .mobile-menu{
-        display:block;
+  .hero{
+    padding-top:32px;
+  }
 
-        border:1px solid var(--line);
+  .hero h1{
+    font-size:42px;
+    letter-spacing:-2px;
+  }
 
-        background:#fff;
+  .search-body,
+  .day-content{
+    padding:16px;
+  }
 
-        border-radius:9px;
+  .modes{
+    overflow-x:auto;
+  }
 
-        padding:8px 11px;
-    }
+  .mode{
+    min-width:76px;
+  }
 
-    .mode-tabs{
-        grid-template-columns:
-            repeat(5,1fr);
+  .provider-btn{
+    width:100%;
+    margin-left:0;
+  }
 
-        overflow-x:auto;
-    }
+  .provider-price{
+    margin-left:0;
+  }
 
-    .mode{
-        min-width:100px;
-    }
+  .form-grid{
+    grid-template-columns:1fr;
+  }
 
-    .search-grid{
-        grid-template-columns:1fr;
-    }
+  .place-grid,
+  .ecosystem{
+    grid-template-columns:1fr;
+  }
 
-    .search-button{
-        width:100%;
-    }
-
-    .summary{
-        grid-template-columns:1fr;
-    }
-
-    .daily-grid{
-        grid-template-columns:1fr;
-    }
-
-    .eco-grid{
-        grid-template-columns:1fr;
-    }
-
+  .myday-header{
+    align-items:flex-start;
+  }
 }
-
-@media(max-width:560px){
-
-    main{
-        padding-left:12px;
-        padding-right:12px;
-    }
-
-    .hero h1{
-        letter-spacing:-2px;
-    }
-
-    .woz{
-        padding:15px;
-    }
-
-    .woz-quote{
-        font-size:14px;
-    }
-
-    .search-card{
-        padding:14px;
-    }
-
-    .results-heading{
-        display:block;
-    }
-
-    .sort{
-        margin-top:10px;
-    }
-
-    .result{
-        grid-template-columns:
-            1fr 1fr;
-
-        gap:12px;
-
-        padding:15px;
-    }
-
-    .provider{
-        grid-column:1 / -1;
-    }
-
-    .book{
-        grid-column:1 / -1;
-    }
-
-    .feature-grid{
-        grid-template-columns:1fr;
-    }
-
-    .tools{
-        grid-template-columns:1fr 1fr;
-    }
-
-}
-
 </style>
 </head>
 
-
 <body>
 
-
-<!-- =======================================================
-     HEADER
-======================================================= -->
-
 <header>
+  <div class="nav">
+    <a class="logo" href="#">Cab<span>0</span>.com</a>
 
-<div class="nav">
-
-<a href="#" class="logo">
-    <span>Cab</span>0.com
-</a>
-
-
-<nav class="nav-links">
-
-<a href="#compare">
-    Rides
-</a>
-
-<a href="#compare">
-    Delivery
-</a>
-
-<a href="#daily">
-    My Day
-</a>
-
-<a href="#tools">
-    Tools
-</a>
-
-<a
-href="#compare"
-class="nav-cta"
->
-    Find a Ride
-</a>
-
-</nav>
-
-
-<button
-class="mobile-menu"
-onclick="scrollToSearch()"
->
-☰
-</button>
-
-</div>
-
+    <div class="nav-links">
+      <button class="nav-btn" onclick="scrollToSection('search')">Find a Ride</button>
+      <button class="nav-btn" onclick="scrollToSection('myday')">My Day</button>
+      <button class="nav-btn" onclick="scrollToSection('places')">Saved Places</button>
+    </div>
+  </div>
 </header>
 
+<main class="container">
 
-<main>
+  <!-- WOZ QUOTE -->
+  <section class="woz">
+    <div class="woz-mark">W</div>
+    <div class="woz-text">
+      “Best of luck to you on this worthy venture, it's your turn.”
+      <strong> — Steve Wozniak, Co-Founder of Apple Computer</strong>
+    </div>
+  </section>
 
+  <!-- HERO -->
+  <section class="hero">
+    <h1>Every Ride,<br><span>Every Delivery,</span><br>One Search.</h1>
+    <p>Cab0 brings rides, food, groceries, deliveries and arrival information together in one simple place.</p>
+  </section>
 
-<!-- =======================================================
-     WOZNIAK ENDORSEMENT
-======================================================= -->
+  <!-- SEARCH -->
+  <section class="search-card" id="search">
 
-<section class="woz">
+    <div class="modes">
+      <button class="mode active" data-mode="ride" onclick="setMode('ride')">🚕 Ride</button>
+      <button class="mode" data-mode="food" onclick="setMode('food')">🍔 Food</button>
+      <button class="mode" data-mode="grocery" onclick="setMode('grocery')">🛒 Grocery</button>
+      <button class="mode" data-mode="delivery" onclick="setMode('delivery')">📦 Delivery</button>
+      <button class="mode" data-mode="eta" onclick="setMode('eta')">⏱ ETA</button>
+    </div>
 
-<div class="woz-quote">
-"Best of luck to you on this worthy venture, it's your turn"
-</div>
+    <div class="search-body">
 
-<div class="woz-name">
-Steve Wozniak · Co-Founder, Apple Computer
-</div>
+      <div class="fields">
 
-</section>
+        <div class="field">
+          <input id="fromInput" type="text" placeholder="From">
+          <button class="location-btn" onclick="useLocation()">⌖ Location</button>
+        </div>
 
+        <div class="field">
+          <input id="toInput" type="text" placeholder="Where are you going?">
+        </div>
 
-<!-- =======================================================
-     HERO
-======================================================= -->
+        <button class="search-btn" onclick="searchCab0()">Search</button>
 
-<section class="hero">
+      </div>
 
-<h1>
-Every Ride, Every Delivery,
-<span>One Search.</span>
-</h1>
+      <div class="quick-links">
+        <button class="quick" onclick="useSavedPlace('Home')">⌂ Home</button>
+        <button class="quick" onclick="useSavedPlace('Work')">▣ Work</button>
+        <button class="quick" onclick="useSavedPlace('Airport')">✈ Airport</button>
+        <button class="quick" onclick="swapPlaces()">⇄ Swap</button>
+      </div>
 
-<p>
-Find transportation, delivery and arrival options —
-then use Cab0 every day to organize your time, travel and errands.
-</p>
+    </div>
+  </section>
 
-</section>
+  <!-- RESULTS -->
+  <section class="results" id="results">
 
+    <div class="results-head">
+      <h2 id="resultsTitle">Available Options</h2>
+      <span>Check the provider for current pricing & availability</span>
+    </div>
 
-<!-- =======================================================
-     MAIN CAB0 SEARCH
-======================================================= -->
+    <div class="result-list" id="resultList"></div>
 
-<section
-class="search-card"
-id="compare"
->
+  </section>
 
+  <!-- MY DAY -->
+  <section class="myday" id="myday">
 
-<div class="mode-tabs">
+    <div class="myday-header">
 
-<button
-class="mode active"
-data-mode="rides"
-onclick="changeMode('rides')"
->
+      <div class="myday-title">
+        <div class="day-icon">📅</div>
+        <div>
+          <h2>My Day</h2>
+          <div class="myday-sub" id="todayLabel"></div>
+        </div>
+      </div>
 
-<span class="mode-icon">
-🚕
-</span>
+      <button class="add-btn" onclick="toggleTaskForm()">+ Add</button>
 
-Rides
+    </div>
 
-</button>
+    <div class="day-content">
 
+      <div class="task-form" id="taskForm">
 
-<button
-class="mode"
-data-mode="food"
-onclick="changeMode('food')"
->
+        <div class="form-grid">
 
-<span class="mode-icon">
-🍔
-</span>
+          <input class="form-control" id="taskTitle" placeholder="What do you need to remember?">
 
-Food
+          <input class="form-control" id="taskDate" type="date">
 
-</button>
+          <input class="form-control" id="taskTime" type="time">
 
-
-<button
-class="mode"
-data-mode="grocery"
-onclick="changeMode('grocery')"
->
-
-<span class="mode-icon">
-🛒
-</span>
-
-Groceries
-
-</button>
-
-
-<button
-class="mode"
-data-mode="package"
-onclick="changeMode('package')"
->
-
-<span class="mode-icon">
-📦
-</span>
-
-Delivery
-
-</button>
-
-
-<button
-class="mode"
-data-mode="eta"
-onclick="changeMode('eta')"
->
-
-<span class="mode-icon">
-⏱️
-</span>
-
-ETA
-
-</button>
-
-</div>
-
-
-<div
-class="search-title"
-id="searchTitle"
->
-Where do you want to go?
-</div>
-
-
-<div class="search-grid">
-
-<div>
-
-<label class="field-label">
-From
-</label>
-
-<input
-id="pickup"
-placeholder="Current location"
->
-
-</div>
-
-
-<div>
-
-<label class="field-label">
-To
-</label>
-
-<input
-id="destination"
-placeholder="Where are you going?"
->
-
-</div>
-
-
-<button
-class="search-button"
-onclick="searchCab0()"
-id="searchButton"
->
-Search
-</button>
-
-</div>
-
-
-<div class="quick-options">
-
-<button
-class="quick"
-onclick="setDestination('Airport')"
->
-✈️ Airport
-</button>
-
-<button
-class="quick"
-onclick="setDestination('Home')"
->
-🏠 Home
-</button>
-
-<button
-class="quick"
-onclick="setDestination('Work')"
->
-💼 Work
-</button>
-
-<button
-class="quick"
-onclick="setDestination('Downtown')"
->
-🏙️ Downtown
-</button>
-
-<button
-class="quick"
-onclick="useLocation()"
->
-📍 Use My Location
-</button>
-
-</div>
-
-</section>
-
-
-<!-- =======================================================
-     SEARCH RESULTS
-======================================================= -->
-
-<section
-class="results"
-id="results"
->
-
-
-<div class="results-heading">
-
-<div>
-
-<h2 id="resultsTitle">
-Ride Options
-</h2>
-
-<div
-class="route"
-id="routeText"
->
-Compare available choices.
-</div>
-
-</div>
-
-
-<select
-class="sort"
-id="sort"
-onchange="renderResults()"
->
-
-<option value="recommended">
-Recommended
-</option>
-
-<option value="cheap">
-Lowest Price
-</option>
-
-<option value="fast">
-Fastest
-</option>
-
-<option value="pickup">
-Fastest Pickup
-</option>
-
-</select>
-
-</div>
-
-
-<div
-class="delivery-message"
-id="deliveryMessage"
-style="display:none"
->
-Compare available delivery services, estimated delivery times and ordering options in one place.
-</div>
-
-
-<div
-class="summary"
-id="summary"
->
-
-<div class="summary-card cheapest">
-
-<div class="summary-label">
-Lowest Price
-</div>
-
-<div
-class="summary-value"
-id="lowestName"
->
-Compare options
-</div>
-
-<div
-class="summary-detail"
-id="lowestDetail"
->
-Current price shown by provider
-</div>
-
-</div>
-
-
-<div class="summary-card fastest">
-
-<div class="summary-label">
-Fastest
-</div>
-
-<div
-class="summary-value"
-id="fastestName"
->
-Compare options
-</div>
-
-<div
-class="summary-detail"
-id="fastestDetail"
->
-Estimated time
-</div>
-
-</div>
-
-
-<div class="summary-card">
-
-<div class="summary-label">
-Best Match
-</div>
-
-<div
-class="summary-value"
-id="bestName"
->
-Compare options
-</div>
-
-<div
-class="summary-detail"
-id="bestDetail"
->
-Price + time
-</div>
-
-</div>
-
-</div>
-
-
-<div
-class="result-list"
-id="resultList"
->
-</div>
-
-</section>
-
-
-<!-- =======================================================
-     MY DAY
-======================================================= -->
-
-<section
-class="daily"
-id="daily"
->
-
-<div class="section-heading">
-
-<h2>
-My Day
-</h2>
-
-<p>
-Keep transportation, deliveries, appointments and reminders together.
-</p>
-
-</div>
-
-
-<div class="daily-grid">
-
-
-<div class="day-card">
-
-<h3>
-Today's Schedule
-</h3>
-
-
-<div class="schedule">
-
-
-<div class="schedule-item">
-
-<div class="time">
-8:30 AM
-</div>
-
-<div class="schedule-icon">
-🚕
-</div>
-
-<div>
-
-<div class="schedule-main">
-Leave for Work
-</div>
-
-<div class="schedule-sub">
-Travel time: 24 min
-</div>
-
-</div>
-
-</div>
-
-
-<div class="schedule-item">
-
-<div class="time">
-12:15 PM
-</div>
-
-<div class="schedule-icon">
-🍔
-</div>
-
-<div>
-
-<div class="schedule-main">
-Lunch Delivery
-</div>
-
-<div class="schedule-sub">
-Expected arrival: 12:35 PM
-</div>
-
-</div>
-
-</div>
-
-
-<div class="schedule-item">
-
-<div class="time">
-5:30 PM
-</div>
-
-<div class="schedule-icon">
-🚕
-</div>
-
-<div>
-
-<div class="schedule-main">
-Ride Home
-</div>
-
-<div class="schedule-sub">
-Leave by 5:30 PM
-</div>
-
-</div>
-
-</div>
-
-
-<div class="schedule-item">
-
-<div class="time">
-6:15 PM
-</div>
-
-<div class="schedule-icon">
-📦
-</div>
-
-<div>
-
-<div class="schedule-main">
-Package Arrival
-</div>
-
-<div class="schedule-sub">
-Track delivery
-</div>
-
-</div>
-
-</div>
-
-
-</div>
-
-</div>
-
-
-<div
-class="day-card"
-id="tools"
->
-
-<h3>
-Cab0 Daily Tools
-</h3>
-
-
-<div class="tools">
-
-
-<a
-href="#"
-class="tool"
-onclick="openTool('My Day')"
->
-
-<div class="tool-icon">
-📅
-</div>
-
-<div class="tool-name">
-My Day
-</div>
-
-<div class="tool-text">
-Plan today's travel and errands.
-</div>
-
-</a>
-
-
-<a
-href="#"
-class="tool"
-onclick="openTool('Reminders')"
->
-
-<div class="tool-icon">
-🔔
-</div>
-
-<div class="tool-name">
-Reminders
-</div>
-
-<div class="tool-text">
-Never miss an appointment.
-</div>
-
-</a>
-
-
-<a
-href="#"
-class="tool"
-onclick="openTool('Saved Places')"
->
-
-<div class="tool-icon">
-📍
-</div>
-
-<div class="tool-name">
-Saved Places
-</div>
-
-<div class="tool-text">
-Home, work, airport and more.
-</div>
-
-</a>
-
-
-<a
-href="#"
-class="tool"
-onclick="openTool('Travel Time')"
->
-
-<div class="tool-icon">
-⏱️
-</div>
-
-<div class="tool-name">
-Travel Time
-</div>
-
-<div class="tool-text">
-Know when you need to leave.
-</div>
-
-</a>
-
-
-<a
-href="#"
-class="tool"
-onclick="openTool('Deliveries')"
->
-
-<div class="tool-icon">
-📦
-</div>
-
-<div class="tool-name">
-Deliveries
-</div>
-
-<div class="tool-text">
-Keep deliveries in one place.
-</div>
-
-</a>
-
-
-<a
-href="https://arrivetime.com"
-target="_blank"
-class="tool"
->
-
-<div class="tool-icon">
-🚦
-</div>
-
-<div class="tool-name">
-Arrival Tracker
-</div>
-
-<div class="tool-text">
-Know when people and things arrive.
-</div>
-
-</a>
-
-
-</div>
-
-</div>
-
-</div>
-
-</section>
-
-
-<!-- =======================================================
-     CAB0 FEATURES
-======================================================= -->
-
-<section class="features">
-
-<div class="section-heading">
-
-<h2>
-Everything You Need for Your Day
-</h2>
-
-<p>
-Cab0 becomes the place you go before, during and after you travel.
-</p>
-
-</div>
-
-
-<div class="feature-grid">
-
-
-<div class="feature">
-
-<div class="feature-icon">
-🚕
-</div>
-
-<h3>
-Compare Rides
-</h3>
-
-<p>
-See transportation choices together and choose where to book.
-</p>
-
-</div>
-
-
-<div class="feature">
-
-<div class="feature-icon">
-🍔
-</div>
-
-<h3>
-Food Delivery
-</h3>
-
-<p>
-Find food delivery choices and connect directly to ordering.
-</p>
-
-</div>
-
-
-<div class="feature">
-
-<div class="feature-icon">
-🛒
-</div>
-
-<h3>
-Groceries
-</h3>
-
-<p>
-Find grocery delivery and pickup options.
-</p>
-
-</div>
-
-
-<div class="feature">
-
-<div class="feature-icon">
-📦
-</div>
-
-<h3>
-Package Delivery
-</h3>
-
-<p>
-Find services for sending packages across town.
-</p>
-
-</div>
-
-
-<div class="feature">
-
-<div class="feature-icon">
-⏰
-</div>
-
-<h3>
-Time Manager
-</h3>
-
-<p>
-Plan when to leave, arrive and complete your daily tasks.
-</p>
-
-</div>
-
-
-<div class="feature">
-
-<div class="feature-icon">
-📍
-</div>
-
-<h3>
-Saved Places
-</h3>
-
-<p>
-Keep frequently used destinations ready for one-tap access.
-</p>
-
-</div>
-
-
-<div class="feature">
-
-<div class="feature-icon">
-🔔
-</div>
-
-<h3>
-Reminders
-</h3>
-
-<p>
-Connect important tasks and appointments with your travel schedule.
-</p>
-
-</div>
-
-
-<div class="feature">
-
-<div class="feature-icon">
-🌎
-</div>
-
-<h3>
-One Global Search
-</h3>
-
-<p>
-A single place for transportation, delivery and everyday mobility.
-</p>
-
-</div>
-
-</div>
-
-</section>
-
-
-<!-- =======================================================
-     ECOSYSTEM
-======================================================= -->
-
-<section
-class="ecosystem"
->
-
-<div class="section-heading">
-
-<h2>
-Cab0 Network
-</h2>
-
-<p>
-Connected services for movement and arrival intelligence.
-</p>
-
-</div>
-
-
-<div class="eco-grid">
-
-
-<a
-class="eco"
-href="https://arrivetime.com"
-target="_blank"
-rel="noopener"
->
-
-<div>
-
-<div class="eco-name">
-ArriveTime.com
-</div>
-
-<div class="eco-text">
-Know when people and things will arrive.
-</div>
-
-</div>
-
-<div class="eco-link">
-Visit →
-</div>
-
-</a>
-
-
-<a
-class="eco"
-href="https://4eta.com"
-target="_blank"
-rel="noopener"
->
-
-<div>
-
-<div class="eco-name">
-4ETA.com
-</div>
-
-<div class="eco-text">
-ETA intelligence for the connected world.
-</div>
-
-</div>
-
-<div class="eco-link">
-Visit →
-</div>
-
-</a>
-
-
-</div>
-
-</section>
-
+          <select class="form-control" id="taskType">
+            <option>Reminder</option>
+            <option>Ride</option>
+            <option>Delivery</option>
+            <option>Appointment</option>
+            <option>Other</option>
+          </select>
+
+        </div>
+
+        <input class="form-control" id="taskLocation"
+               placeholder="Location (optional)"
+               style="margin-top:10px">
+
+        <div class="form-actions">
+          <button class="cancel-btn" onclick="toggleTaskForm()">Cancel</button>
+          <button class="save-btn" onclick="saveTask()">Save</button>
+        </div>
+
+      </div>
+
+      <div class="task-list" id="taskList"></div>
+
+    </div>
+  </section>
+
+  <!-- SAVED PLACES -->
+  <section class="places" id="places">
+
+    <div class="places-header">
+      <h2>Saved Places</h2>
+      <span>Click a place to use it as your destination</span>
+    </div>
+
+    <div class="place-grid">
+
+      <button class="place" onclick="choosePlace('Home')">
+        <div class="place-icon">⌂</div>
+        <strong>Home</strong>
+        <small id="homePlace">Add address</small>
+      </button>
+
+      <button class="place" onclick="choosePlace('Work')">
+        <div class="place-icon">▣</div>
+        <strong>Work</strong>
+        <small id="workPlace">Add address</small>
+      </button>
+
+      <button class="place" onclick="choosePlace('Airport')">
+        <div class="place-icon">✈</div>
+        <strong>Airport</strong>
+        <small id="airportPlace">Add address</small>
+      </button>
+
+      <button class="place" onclick="choosePlace('Other')">
+        <div class="place-icon">★</div>
+        <strong>Other</strong>
+        <small id="otherPlace">Add address</small>
+      </button>
+
+    </div>
+  </section>
+
+  <!-- ECOSYSTEM -->
+  <section class="ecosystem">
+
+    <div class="eco">
+      <div>
+        <h3>ArriveTime.com</h3>
+        <p>See where people and things are and when they will arrive.</p>
+      </div>
+      <a href="https://arrivetime.com/" target="_blank">Open →</a>
+    </div>
+
+    <div class="eco">
+      <div>
+        <h3>4ETA.com</h3>
+        <p>Simple ETA information for everyday travel.</p>
+      </div>
+      <a href="https://4eta.com/" target="_blank">Open →</a>
+    </div>
+
+  </section>
 
 </main>
 
-
-<!-- =======================================================
-     FOOTER
-======================================================= -->
-
 <footer>
-
-<div class="footer-inner">
-
-<div>
-
-<div class="footer-brand">
-Cab0.com
-</div>
-
-<div>
-Every Ride, Every Delivery, One Search.
-</div>
-
-</div>
-
-
-<div class="footer-links">
-
-<a href="#compare">
-Rides
-</a>
-
-<a href="#services">
-Delivery
-</a>
-
-<a href="#daily">
-My Day
-</a>
-
-<a href="https://arrivetime.com" target="_blank">
-ArriveTime
-</a>
-
-<a href="https://4eta.com" target="_blank">
-4ETA
-</a>
-
-<a href="#">
-Privacy
-</a>
-
-<a href="#">
-Terms
-</a>
-
-</div>
-
-</div>
-
+  <strong>Cab0.com</strong> — Every Ride, Every Delivery, One Search.
+  <br><br>
+  Provider prices and availability are confirmed on the provider's website.
 </footer>
 
-
-<div
-class="toast"
-id="toast"
-></div>
-
+<div class="toast" id="toast"></div>
 
 <script>
 
 /* =========================================================
-   CAB0 SEARCH MODES
+   CAB0.COM
+   Simple client-side daily dashboard
    ========================================================= */
 
-let currentMode = "rides";
+let currentMode = "ride";
 
+const providers = {
 
-const modeData = {
-
-    rides:{
-        title:"Where do you want to go?",
-        button:"Compare Rides",
-        destination:"Where are you going?",
-        results:"Ride Options"
+  ride: [
+    {
+      icon:"🚕",
+      name:"Uber",
+      description:"Ride booking",
+      button:"Book Ride →",
+      url:"https://m.uber.com/"
     },
-
-    food:{
-        title:"What would you like delivered?",
-        button:"Find Food",
-        destination:"Restaurant or food",
-        results:"Food Delivery Options"
+    {
+      icon:"🚗",
+      name:"Lyft",
+      description:"Ride booking",
+      button:"Book Ride →",
+      url:"https://www.lyft.com/rider"
     },
-
-    grocery:{
-        title:"What groceries do you need?",
-        button:"Find Groceries",
-        destination:"Store or grocery list",
-        results:"Grocery Delivery Options"
-    },
-
-    package:{
-        title:"Where are you sending something?",
-        button:"Find Delivery",
-        destination:"Delivery destination",
-        results:"Package Delivery Options"
-    },
-
-    eta:{
-        title:"When do you need to arrive?",
-        button:"Calculate ETA",
-        destination:"Destination",
-        results:"Arrival & ETA Options"
+    {
+      icon:"🚖",
+      name:"Local Taxi",
+      description:"Find taxi services near you",
+      button:"Find Taxi →",
+      url:"https://www.google.com/search?q=taxi+near+me"
     }
+  ],
+
+  food: [
+    {
+      icon:"🍔",
+      name:"DoorDash",
+      description:"Restaurant food delivery",
+      button:"Order Food →",
+      url:"https://www.doordash.com/"
+    },
+    {
+      icon:"🍴",
+      name:"Uber Eats",
+      description:"Restaurant food delivery",
+      button:"Order Food →",
+      url:"https://www.ubereats.com/"
+    }
+  ],
+
+  grocery: [
+    {
+      icon:"🛒",
+      name:"Instacart",
+      description:"Grocery delivery",
+      button:"Order Groceries →",
+      url:"https://www.instacart.com/"
+    },
+    {
+      icon:"🥦",
+      name:"Uber Eats",
+      description:"Grocery and convenience delivery",
+      button:"Shop Now →",
+      url:"https://www.ubereats.com/"
+    }
+  ],
+
+  delivery: [
+    {
+      icon:"📦",
+      name:"Roadie",
+      description:"Delivery services",
+      button:"Get Quote →",
+      url:"https://www.roadie.com/"
+    },
+    {
+      icon:"📦",
+      name:"DoorDash",
+      description:"Local delivery",
+      button:"Get Started →",
+      url:"https://www.doordash.com/"
+    }
+  ],
+
+  eta: [
+    {
+      icon:"⏱",
+      name:"ArriveTime.com",
+      description:"Track where people and things are and when they will arrive",
+      button:"Track Arrival →",
+      url:"https://arrivetime.com/"
+    },
+    {
+      icon:"⏱",
+      name:"4ETA.com",
+      description:"Simple ETA information",
+      button:"Check ETA →",
+      url:"https://4eta.com/"
+    }
+  ]
 
 };
 
 
 /* =========================================================
-   RIDE OPTIONS
-   IMPORTANT:
-   These are interface examples, NOT claimed live prices.
-   Connect authorized provider APIs before displaying
-   real-time prices/availability.
+   MODE SWITCHING
    ========================================================= */
 
-const data = {
+function setMode(mode){
 
-rides:[
+  currentMode = mode;
 
-    {
-        provider:"Uber",
-        logo:"U",
-        logoClass:"uber",
-        type:"UberX",
-        pickup:4,
-        trip:22,
-        price:null,
-        priceText:"Get current price",
-        booking:"https://m.uber.com/"
-    },
+  document.querySelectorAll(".mode").forEach(button => {
+    button.classList.toggle(
+      "active",
+      button.dataset.mode === mode
+    );
+  });
 
-    {
-        provider:"Lyft",
-        logo:"L",
-        logoClass:"lyft",
-        type:"Lyft",
-        pickup:6,
-        trip:21,
-        price:null,
-        priceText:"Get current price",
-        booking:"https://www.lyft.com/rider"
-    },
+  const from = document.getElementById("fromInput");
+  const to = document.getElementById("toInput");
 
-    {
-        provider:"Local Taxi",
-        logo:"T",
-        logoClass:"taxi",
-        type:"Taxi",
-        pickup:8,
-        trip:20,
-        price:null,
-        priceText:"Get current price",
-        booking:"https://www.google.com/search?q=taxi+near+me"
-    }
+  if(mode === "ride"){
+    from.placeholder = "From";
+    to.placeholder = "Where are you going?";
+  }
 
-],
+  if(mode === "food"){
+    from.placeholder = "Your location";
+    to.placeholder = "Restaurant or cuisine";
+  }
 
+  if(mode === "grocery"){
+    from.placeholder = "Your location";
+    to.placeholder = "Grocery store or items";
+  }
 
-food:[
+  if(mode === "delivery"){
+    from.placeholder = "Pickup location";
+    to.placeholder = "Delivery destination";
+  }
 
-    {
-        provider:"DoorDash",
-        logo:"D",
-        logoClass:"doordash",
-        type:"Food Delivery",
-        pickup:25,
-        trip:35,
-        price:null,
-        priceText:"View current total",
-        booking:"https://www.doordash.com/"
-    },
+  if(mode === "eta"){
+    from.placeholder = "Starting point";
+    to.placeholder = "Destination";
+  }
 
-    {
-        provider:"Uber Eats",
-        logo:"U",
-        logoClass:"uber",
-        type:"Food Delivery",
-        pickup:28,
-        trip:38,
-        price:null,
-        priceText:"View current total",
-        booking:"https://www.ubereats.com/"
-    },
-
-    {
-        provider:"Local Delivery",
-        logo:"L",
-        logoClass:"taxi",
-        type:"Restaurant Delivery",
-        pickup:30,
-        trip:40,
-        price:null,
-        priceText:"View current total",
-        booking:"https://www.google.com/search?q=food+delivery+near+me"
-    }
-
-],
-
-
-grocery:[
-
-    {
-        provider:"Instacart",
-        logo:"I",
-        logoClass:"instacart",
-        type:"Grocery Delivery",
-        pickup:35,
-        trip:55,
-        price:null,
-        priceText:"View current total",
-        booking:"https://www.instacart.com/"
-    },
-
-    {
-        provider:"Local Grocery",
-        logo:"G",
-        logoClass:"green",
-        type:"Grocery Delivery",
-        pickup:40,
-        trip:60,
-        price:null,
-        priceText:"View current total",
-        booking:"https://www.google.com/search?q=grocery+delivery+near+me"
-    },
-
-    {
-        provider:"Store Pickup",
-        logo:"P",
-        logoClass:"taxi",
-        type:"Pickup",
-        pickup:25,
-        trip:45,
-        price:null,
-        priceText:"View current total",
-        booking:"https://www.google.com/search?q=grocery+pickup+near+me"
-    }
-
-],
-
-
-package:[
-
-    {
-        provider:"Roadie",
-        logo:"R",
-        logoClass:"roadie",
-        type:"Local Package Delivery",
-        pickup:35,
-        trip:90,
-        price:null,
-        priceText:"Get delivery quote",
-        booking:"https://www.roadie.com/"
-    },
-
-    {
-        provider:"Local Courier",
-        logo:"C",
-        logoClass:"taxi",
-        type:"Courier",
-        pickup:40,
-        trip:85,
-        price:null,
-        priceText:"Get delivery quote",
-        booking:"https://www.google.com/search?q=local+courier+near+me"
-    },
-
-    {
-        provider:"Same-Day Delivery",
-        logo:"S",
-        logoClass:"doordash",
-        type:"Delivery Service",
-        pickup:45,
-        trip:100,
-        price:null,
-        priceText:"Get delivery quote",
-        booking:"https://www.google.com/search?q=same+day+delivery+near+me"
-    }
-
-],
-
-
-eta:[
-
-    {
-        provider:"ArriveTime",
-        logo:"A",
-        logoClass:"uber",
-        type:"Arrival Intelligence",
-        pickup:5,
-        trip:25,
-        price:null,
-        priceText:"Check ETA",
-        booking:"https://arrivetime.com/"
-    },
-
-    {
-        provider:"4ETA",
-        logo:"4",
-        logoClass:"lyft",
-        type:"ETA Intelligence",
-        pickup:5,
-        trip:25,
-        price:null,
-        priceText:"Check ETA",
-        booking:"https://4eta.com/"
-    }
-
-]
-
-};
-
-
-/* =========================================================
-   CHANGE SEARCH MODE
-   ========================================================= */
-
-function changeMode(mode){
-
-    currentMode = mode;
-
-
-    document
-        .querySelectorAll(".mode")
-        .forEach(button => {
-
-            button.classList.toggle(
-                "active",
-                button.dataset.mode === mode
-            );
-
-        });
-
-
-    const info =
-        modeData[mode];
-
-
-    document.getElementById(
-        "searchTitle"
-    ).textContent =
-        info.title;
-
-
-    document.getElementById(
-        "searchButton"
-    ).textContent =
-        info.button;
-
-
-    document.getElementById(
-        "destination"
-    ).placeholder =
-        info.destination;
-
-
-    document.getElementById(
-        "resultsTitle"
-    ).textContent =
-        info.results;
-
-
-    document.getElementById(
-        "results"
-    ).classList.remove("visible");
-
+  document.getElementById("results").classList.remove("show");
 }
 
 
@@ -2538,465 +1192,534 @@ function changeMode(mode){
 
 function searchCab0(){
 
-    const pickup =
-        document
-        .getElementById("pickup")
-        .value
-        .trim();
+  const from = document.getElementById("fromInput").value.trim();
+  const to = document.getElementById("toInput").value.trim();
 
+  if(!from && !to){
+    showToast("Enter a location or destination first.");
+    return;
+  }
 
-    const destination =
-        document
-        .getElementById("destination")
-        .value
-        .trim();
+  const list = document.getElementById("resultList");
+  const results = providers[currentMode];
 
+  list.innerHTML = "";
 
-    if(!destination){
+  results.forEach(provider => {
 
-        showToast(
-            "Please enter a destination."
-        );
+    const card = document.createElement("div");
+    card.className = "provider";
 
-        document
-        .getElementById("destination")
-        .focus();
+    card.innerHTML = `
+      <div class="provider-icon">${provider.icon}</div>
 
-        return;
+      <div class="provider-main">
+        <h3>${provider.name}</h3>
+        <p>${provider.description}</p>
+      </div>
 
-    }
+      <div class="provider-price">
+        Current price on provider
+      </div>
 
+      <a
+        class="provider-btn"
+        href="${provider.url}"
+        target="_blank"
+        rel="noopener noreferrer">
+        ${provider.button}
+      </a>
+    `;
 
-    document.getElementById(
-        "routeText"
-    ).textContent =
-        (pickup || "Current location")
-        + " → "
-        + destination;
+    list.appendChild(card);
+  });
 
+  const titles = {
+    ride:"Ride Options",
+    food:"Food Options",
+    grocery:"Grocery Options",
+    delivery:"Delivery Options",
+    eta:"ETA Options"
+  };
 
-    document.getElementById(
-        "results"
-    ).classList.add("visible");
+  document.getElementById("resultsTitle").textContent =
+    titles[currentMode];
 
+  document.getElementById("results").classList.add("show");
 
-    renderResults();
-
-
-    document.getElementById(
-        "results"
-    ).scrollIntoView({
-        behavior:"smooth",
-        block:"start"
-    });
-
+  document.getElementById("results").scrollIntoView({
+    behavior:"smooth",
+    block:"start"
+  });
 }
 
 
 /* =========================================================
-   RENDER RESULTS
-   ========================================================= */
-
-function renderResults(){
-
-    let results =
-        [...data[currentMode]];
-
-
-    const sort =
-        document
-        .getElementById("sort")
-        .value;
-
-
-    if(sort === "fast" ||
-       sort === "pickup"){
-
-        results.sort(
-            (a,b) =>
-            a.pickup - b.pickup
-        );
-
-    }
-
-
-    if(sort === "recommended"){
-
-        results.sort(
-            (a,b) =>
-            (a.pickup + a.trip) -
-            (b.pickup + b.trip)
-        );
-
-    }
-
-
-    const fastest =
-        results.reduce(
-            (a,b) =>
-            a.pickup < b.pickup
-            ? a
-            : b
-        );
-
-
-    const lowest =
-        results.reduce(
-            (a,b) =>
-            a.price !== null &&
-            (
-                b.price === null ||
-                a.price < b.price
-            )
-            ? a
-            : b
-        );
-
-
-    const best =
-        results[0];
-
-
-    document.getElementById(
-        "fastestName"
-    ).textContent =
-        fastest.provider;
-
-
-    document.getElementById(
-        "fastestDetail"
-    ).textContent =
-        fastest.pickup +
-        " min estimated";
-
-
-    if(lowest.price !== null){
-
-        document.getElementById(
-            "lowestName"
-        ).textContent =
-            lowest.provider;
-
-        document.getElementById(
-            "lowestDetail"
-        ).textContent =
-            "$" +
-            lowest.price;
-
-    }else{
-
-        document.getElementById(
-            "lowestName"
-        ).textContent =
-            "Live price";
-
-        document.getElementById(
-            "lowestDetail"
-        ).textContent =
-            "Check provider";
-
-    }
-
-
-    document.getElementById(
-        "bestName"
-    ).textContent =
-        best.provider;
-
-
-    document.getElementById(
-        "bestDetail"
-    ).textContent =
-        best.pickup +
-        " min · " +
-        best.trip +
-        " min trip";
-
-
-    const list =
-        document.getElementById(
-            "resultList"
-        );
-
-
-    list.innerHTML =
-        results.map(
-            (item,index) => {
-
-                const badge =
-                    index === 0
-                    ? `<div class="result-badge">
-                        Recommended
-                       </div>`
-                    : "";
-
-
-                const pickupClass =
-                    item.pickup === fastest.pickup
-                    ? "green"
-                    : "";
-
-
-                return `
-
-                <article
-                    class="result ${
-                        index === 0
-                        ? "top-choice"
-                        : ""
-                    }"
-                >
-
-                    ${badge}
-
-                    <div class="provider">
-
-                        <div
-                            class="provider-logo
-                            ${item.logoClass}"
-                        >
-                            ${item.logo}
-                        </div>
-
-                        <div>
-
-                            <div class="provider-name">
-                                ${item.provider}
-                            </div>
-
-                            <div class="provider-type">
-                                ${item.type}
-                            </div>
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="info">
-
-                        <label>
-                            Pickup
-                        </label>
-
-                        <strong
-                            class="${pickupClass}"
-                        >
-                            ${item.pickup} min
-                        </strong>
-
-                    </div>
-
-
-                    <div class="info">
-
-                        <label>
-                            Est. Trip
-                        </label>
-
-                        <strong>
-                            ${item.trip} min
-                        </strong>
-
-                    </div>
-
-
-                    <div class="info price-info">
-
-                        <label>
-                            Price
-                        </label>
-
-                        <strong class="price">
-
-                            ${
-                                item.price !== null
-                                ? "$" + item.price
-                                : item.priceText
-                            }
-
-                        </strong>
-
-                    </div>
-
-
-                    <a
-                        href="${item.booking}"
-                        target="_blank"
-                        rel="noopener"
-                        class="book"
-                    >
-                        ${
-                            currentMode === "rides"
-                            ? "Book Ride →"
-                            :
-                            currentMode === "eta"
-                            ? "Check ETA →"
-                            :
-                            "Get Options →"
-                        }
-                    </a>
-
-                </article>
-
-                `;
-
-            }
-        ).join("");
-
-
-    const delivery =
-        currentMode === "food" ||
-        currentMode === "grocery" ||
-        currentMode === "package";
-
-
-    document.getElementById(
-        "deliveryMessage"
-    ).style.display =
-        delivery
-        ? "block"
-        : "none";
-
-}
-
-
-/* =========================================================
-   USE LOCATION
+   LOCATION
    ========================================================= */
 
 function useLocation(){
 
-    if(!navigator.geolocation){
+  if(!navigator.geolocation){
+    showToast("Location is not supported by this browser.");
+    return;
+  }
 
-        showToast(
-            "Location is not available in this browser."
+  showToast("Finding your location...");
+
+  navigator.geolocation.getCurrentPosition(
+
+    position => {
+
+      const lat = position.coords.latitude;
+      const lon = position.coords.longitude;
+
+      document.getElementById("fromInput").value =
+        `${lat.toFixed(5)}, ${lon.toFixed(5)}`;
+
+      showToast("Your location was added.");
+
+    },
+
+    () => {
+      showToast("Location permission was not available.");
+    },
+
+    {
+      enableHighAccuracy:true,
+      timeout:10000
+    }
+  );
+}
+
+
+/* =========================================================
+   SWAP LOCATIONS
+   ========================================================= */
+
+function swapPlaces(){
+
+  const from = document.getElementById("fromInput");
+  const to = document.getElementById("toInput");
+
+  const temp = from.value;
+  from.value = to.value;
+  to.value = temp;
+}
+
+
+/* =========================================================
+   MY DAY
+   ========================================================= */
+
+const TASK_KEY = "cab0_my_day";
+
+function getTasks(){
+
+  try{
+    return JSON.parse(
+      localStorage.getItem(TASK_KEY)
+    ) || [];
+  }catch(e){
+    return [];
+  }
+}
+
+function saveTasks(tasks){
+
+  localStorage.setItem(
+    TASK_KEY,
+    JSON.stringify(tasks)
+  );
+
+  renderTasks();
+}
+
+function toggleTaskForm(){
+
+  const form = document.getElementById("taskForm");
+
+  form.classList.toggle("show");
+
+  if(form.classList.contains("show")){
+
+    const today = new Date();
+
+    document.getElementById("taskDate").value =
+      today.toISOString().split("T")[0];
+
+    setTimeout(() => {
+      document.getElementById("taskTitle").focus();
+    },50);
+  }
+}
+
+function saveTask(){
+
+  const title =
+    document.getElementById("taskTitle").value.trim();
+
+  if(!title){
+    showToast("Enter something to add to My Day.");
+    return;
+  }
+
+  const task = {
+
+    id:Date.now(),
+
+    title:title,
+
+    date:
+      document.getElementById("taskDate").value,
+
+    time:
+      document.getElementById("taskTime").value,
+
+    type:
+      document.getElementById("taskType").value,
+
+    location:
+      document.getElementById("taskLocation").value.trim(),
+
+    completed:false
+  };
+
+  const tasks = getTasks();
+
+  tasks.push(task);
+
+  saveTasks(tasks);
+
+  clearTaskForm();
+
+  document
+    .getElementById("taskForm")
+    .classList.remove("show");
+
+  showToast("Added to My Day.");
+}
+
+function clearTaskForm(){
+
+  document.getElementById("taskTitle").value = "";
+  document.getElementById("taskTime").value = "";
+  document.getElementById("taskLocation").value = "";
+}
+
+function toggleTask(id){
+
+  const tasks = getTasks();
+
+  const task = tasks.find(t => t.id === id);
+
+  if(task){
+    task.completed = !task.completed;
+  }
+
+  saveTasks(tasks);
+}
+
+function deleteTask(id){
+
+  const tasks =
+    getTasks().filter(t => t.id !== id);
+
+  saveTasks(tasks);
+
+  showToast("Removed from My Day.");
+}
+
+function renderTasks(){
+
+  const list =
+    document.getElementById("taskList");
+
+  const tasks = getTasks();
+
+  tasks.sort((a,b) => {
+
+    const aDate =
+      `${a.date || "9999-12-31"} ${a.time || "23:59"}`;
+
+    const bDate =
+      `${b.date || "9999-12-31"} ${b.time || "23:59"}`;
+
+    return aDate.localeCompare(bDate);
+  });
+
+  if(tasks.length === 0){
+
+    list.innerHTML = `
+      <div class="empty">
+        Your day is clear.<br>
+        Click <strong>+ Add</strong> to create a reminder, ride, delivery or appointment.
+      </div>
+    `;
+
+    return;
+  }
+
+  list.innerHTML = "";
+
+  tasks.forEach(task => {
+
+    const row = document.createElement("div");
+
+    row.className =
+      "task" + (task.completed ? " completed" : "");
+
+    let dateText = "";
+
+    if(task.date){
+
+      const date =
+        new Date(task.date + "T00:00:00");
+
+      dateText =
+        date.toLocaleDateString(
+          undefined,
+          {
+            weekday:"short",
+            month:"short",
+            day:"numeric"
+          }
         );
-
-        return;
-
     }
 
+    if(task.time){
 
-    showToast(
-        "Requesting your location..."
-    );
+      const [hours,minutes] =
+        task.time.split(":");
 
+      const timeDate =
+        new Date();
 
-    navigator.geolocation.getCurrentPosition(
+      timeDate.setHours(
+        Number(hours),
+        Number(minutes)
+      );
 
-        function(position){
+      dateText +=
+        " • " +
+        timeDate.toLocaleTimeString(
+          undefined,
+          {
+            hour:"numeric",
+            minute:"2-digit"
+          }
+        );
+    }
 
-            document.getElementById(
-                "pickup"
-            ).value =
-                "Current location";
+    row.innerHTML = `
 
-            showToast(
-                "Current location selected."
-            );
+      <button
+        class="check"
+        aria-label="Complete task"
+        onclick="toggleTask(${task.id})">
+      </button>
 
-        },
+      <div class="task-info">
 
-        function(){
+        <strong>${escapeHTML(task.title)}</strong>
 
-            showToast(
-                "Location permission was not provided."
-            );
+        <div class="task-meta">
 
-        }
+          ${
+            dateText
+              ? `<span>${escapeHTML(dateText)}</span>`
+              : ""
+          }
 
-    );
+          <span class="badge">
+            ${escapeHTML(task.type)}
+          </span>
 
+          ${
+            task.location
+              ? `<span>📍 ${escapeHTML(task.location)}</span>`
+              : ""
+          }
+
+        </div>
+
+      </div>
+
+      <button
+        class="delete"
+        aria-label="Delete"
+        onclick="deleteTask(${task.id})">
+        ×
+      </button>
+    `;
+
+    list.appendChild(row);
+  });
 }
 
 
 /* =========================================================
-   QUICK DESTINATION
+   SAVED PLACES
    ========================================================= */
 
-function setDestination(place){
+const PLACES_KEY = "cab0_saved_places";
 
-    document.getElementById(
-        "destination"
-    ).value =
-        place;
+function getPlaces(){
 
-
-    document.getElementById(
-        "destination"
-    ).focus();
-
+  try{
+    return JSON.parse(
+      localStorage.getItem(PLACES_KEY)
+    ) || {};
+  }catch(e){
+    return {};
+  }
 }
 
+function savePlaces(places){
 
-/* =========================================================
-   DAILY TOOLS
-   ========================================================= */
+  localStorage.setItem(
+    PLACES_KEY,
+    JSON.stringify(places)
+  );
 
-function openTool(tool){
+  renderPlaces();
+}
 
-    event.preventDefault();
+function choosePlace(name){
 
-    showToast(
-        tool +
-        " is ready to be connected."
+  const places = getPlaces();
+
+  if(places[name]){
+
+    document.getElementById("toInput").value =
+      places[name];
+
+    showToast(name + " added as destination.");
+
+    scrollToSection("search");
+
+    return;
+  }
+
+  const address =
+    prompt(
+      `Enter the address for ${name}:`
     );
 
+  if(!address) return;
+
+  places[name] = address;
+
+  savePlaces(places);
+
+  document.getElementById("toInput").value =
+    address;
+
+  scrollToSection("search");
+
+  showToast(name + " saved.");
+}
+
+function useSavedPlace(name){
+
+  const places = getPlaces();
+
+  if(places[name]){
+
+    document.getElementById("toInput").value =
+      places[name];
+
+    showToast(name + " selected.");
+
+  }else{
+
+    choosePlace(name);
+  }
+}
+
+function renderPlaces(){
+
+  const places = getPlaces();
+
+  document.getElementById("homePlace").textContent =
+    places.Home || "Add address";
+
+  document.getElementById("workPlace").textContent =
+    places.Work || "Add address";
+
+  document.getElementById("airportPlace").textContent =
+    places.Airport || "Add address";
+
+  document.getElementById("otherPlace").textContent =
+    places.Other || "Add address";
 }
 
 
 /* =========================================================
-   SCROLL TO SEARCH
+   HELPERS
    ========================================================= */
 
-function scrollToSearch(){
+function scrollToSection(id){
 
-    document.getElementById(
-        "compare"
-    ).scrollIntoView({
-        behavior:"smooth"
+  const element =
+    document.getElementById(id);
+
+  if(element){
+
+    element.scrollIntoView({
+      behavior:"smooth",
+      block:"start"
     });
-
+  }
 }
-
-
-/* =========================================================
-   TOAST
-   ========================================================= */
 
 function showToast(message){
 
-    const toast =
-        document.getElementById(
-            "toast"
-        );
+  const toast =
+    document.getElementById("toast");
+
+  toast.textContent = message;
+
+  toast.classList.add("show");
+
+  clearTimeout(window.cab0ToastTimer);
+
+  window.cab0ToastTimer =
+    setTimeout(() => {
+      toast.classList.remove("show");
+    },2600);
+}
+
+function escapeHTML(value){
+
+  return String(value)
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+}
 
 
-    toast.textContent =
-        message;
+/* =========================================================
+   TODAY
+   ========================================================= */
 
+function renderToday(){
 
-    toast.classList.add("show");
+  const today =
+    new Date();
 
-
-    clearTimeout(
-        window.__cab0Toast
+  document.getElementById("todayLabel").textContent =
+    today.toLocaleDateString(
+      undefined,
+      {
+        weekday:"long",
+        month:"long",
+        day:"numeric",
+        year:"numeric"
+      }
     );
-
-
-    window.__cab0Toast =
-        setTimeout(
-            function(){
-
-                toast.classList.remove(
-                    "show"
-                );
-
-            },
-            2600
-        );
-
 }
 
 
@@ -3004,7 +1727,39 @@ function showToast(message){
    INITIALIZE
    ========================================================= */
 
-changeMode("rides");
+document.addEventListener("DOMContentLoaded", () => {
+
+  renderToday();
+
+  renderTasks();
+
+  renderPlaces();
+
+  /*
+    Allow Enter in the search fields
+  */
+
+  document
+    .getElementById("fromInput")
+    .addEventListener("keydown", e => {
+
+      if(e.key === "Enter"){
+        searchCab0();
+      }
+
+    });
+
+  document
+    .getElementById("toInput")
+    .addEventListener("keydown", e => {
+
+      if(e.key === "Enter"){
+        searchCab0();
+      }
+
+    });
+
+});
 
 </script>
 

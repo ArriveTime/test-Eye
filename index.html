@@ -1,1684 +1,5758 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Cab0.com — Every Ride, Every Delivery, One Search</title>
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
 
-<meta name="description" content="Cab0.com — Compare rides, prices and ETAs in one search.">
+<title>CITY KEY QUEST // NEXUS</title>
+
+
+<!-- =========================================================
+     FREE MAP SYSTEM
+     Leaflet = free/open-source map interface
+     OpenStreetMap = map data
+     No Google / Mapbox / MapTiler API key required
+========================================================= -->
+
+<link rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+
+<!-- =========================================================
+     FONTS
+========================================================= -->
+
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Orbitron:wght@500;600;700;800;900&display=swap"
+      rel="stylesheet">
+
+
+<!-- =========================================================
+     ICONS
+========================================================= -->
+
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
 
 <style>
-:root{
-    --bg:#f5f7fa;
-    --white:#ffffff;
-    --dark:#101828;
-    --text:#182230;
-    --muted:#667085;
-    --line:#e4e7ec;
-    --blue:#1769ff;
-    --blue-dark:#0b4fd1;
-    --green:#079455;
-    --gold:#d99b00;
-    --red:#d92d20;
-    --shadow:0 12px 35px rgba(16,24,40,.10);
-    --radius:18px;
+
+/* =========================================================
+   GLOBAL DESIGN
+========================================================= */
+
+:root {
+
+    --bg:
+        #02050b;
+
+    --panel:
+        rgba(5, 12, 24, .90);
+
+    --panel2:
+        rgba(8, 18, 34, .95);
+
+    --cyan:
+        #00f6ff;
+
+    --blue:
+        #168cff;
+
+    --gold:
+        #ffd400;
+
+    --green:
+        #20ff91;
+
+    --red:
+        #ff3159;
+
+    --purple:
+        #a855ff;
+
+    --orange:
+        #ff8a00;
+
+    --text:
+        #eef7ff;
+
+    --muted:
+        #7e95ad;
+
+    --border:
+        rgba(0,246,255,.20);
+
+    --shadow:
+        0 0 35px rgba(0,246,255,.12);
 }
 
-*{
-    box-sizing:border-box;
-    margin:0;
-    padding:0;
+
+* {
+
+    box-sizing:
+        border-box;
+
+    margin:
+        0;
+
+    padding:
+        0;
+
+    user-select:
+        none;
 }
 
-body{
+
+html,
+body {
+
+    width:
+        100%;
+
+    height:
+        100%;
+
+    overflow:
+        hidden;
+}
+
+
+body {
+
     font-family:
-        Inter,
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        Arial,
+        'Outfit',
         sans-serif;
 
-    background:var(--bg);
-    color:var(--text);
+    color:
+        var(--text);
+
+    background:
+        radial-gradient(
+            circle at 50% 50%,
+            #07162b 0%,
+            #02050b 65%
+        );
 }
 
-a{
-    text-decoration:none;
-    color:inherit;
-}
 
 button,
-input{
-    font:inherit;
+input,
+select {
+
+    font-family:
+        inherit;
 }
 
-button{
-    cursor:pointer;
+
+button {
+
+    cursor:
+        pointer;
 }
 
-/* ==============================
-   HEADER
-============================== */
 
-header{
-    background:var(--white);
-    border-bottom:1px solid var(--line);
-    position:sticky;
-    top:0;
-    z-index:100;
+/* =========================================================
+   MAIN GAME WINDOW
+========================================================= */
+
+#game-window {
+
+    position:
+        relative;
+
+    width:
+        100vw;
+
+    height:
+        100vh;
+
+    overflow:
+        hidden;
+
+    background:
+        #02050b;
 }
 
-.nav{
-    max-width:1180px;
-    margin:auto;
-    height:70px;
-    padding:0 20px;
 
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
+/* =========================================================
+   MAP
+========================================================= */
+
+#map {
+
+    position:
+        absolute;
+
+    inset:
+        0;
+
+    z-index:
+        1;
+
+    background:
+        #02050a;
 }
 
-.logo{
-    font-size:28px;
-    font-weight:900;
-    letter-spacing:-1.5px;
+
+/*
+   Futuristic visual treatment for the
+   OpenStreetMap tiles.
+*/
+
+.leaflet-tile {
+
+    filter:
+        brightness(.48)
+        contrast(1.25)
+        saturate(.65)
+        hue-rotate(175deg);
 }
 
-.logo span{
-    color:var(--blue);
+
+/*
+   OpenStreetMap attribution.
+   This should remain visible because
+   OpenStreetMap requires attribution.
+*/
+
+.leaflet-control-attribution {
+
+    background:
+        rgba(2,8,18,.88) !important;
+
+    color:
+        #7e95ad !important;
+
+    font-size:
+        9px !important;
 }
 
-.nav-links{
-    display:flex;
-    gap:25px;
-    align-items:center;
+
+.leaflet-control-attribution a {
+
+    color:
+        var(--cyan) !important;
 }
 
-.nav-links a{
-    font-size:14px;
-    color:#475467;
-    font-weight:600;
+
+/* =========================================================
+   TOP HEADER
+========================================================= */
+
+.top-header {
+
+    position:
+        absolute;
+
+    top:
+        16px;
+
+    left:
+        50%;
+
+    transform:
+        translateX(-50%);
+
+    z-index:
+        1000;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        13px;
+
+    padding:
+        11px 30px;
+
+    border:
+        1px solid rgba(0,246,255,.32);
+
+    border-radius:
+        50px;
+
+    background:
+        rgba(3,10,20,.90);
+
+    backdrop-filter:
+        blur(18px);
+
+    box-shadow:
+        0 0 30px rgba(0,246,255,.12),
+        inset 0 0 20px rgba(0,246,255,.03);
+
+    white-space:
+        nowrap;
 }
 
-.nav-links a:hover{
-    color:var(--blue);
+
+.header-key {
+
+    color:
+        var(--gold);
+
+    font-size:
+        1.6rem;
+
+    filter:
+        drop-shadow(0 0 8px var(--gold));
 }
 
-.nav-button{
-    background:var(--blue);
-    color:white!important;
-    padding:11px 17px;
-    border-radius:10px;
-}
 
-/* ==============================
-   MAIN
-============================== */
+.header-title {
 
-main{
-    max-width:1180px;
-    margin:auto;
-    padding:25px 20px 70px;
-}
+    font-family:
+        Orbitron,
+        sans-serif;
 
-/* ==============================
-   WOZNIAK QUOTE
-============================== */
+    font-size:
+        1.25rem;
 
-.woz{
+    font-weight:
+        900;
+
+    letter-spacing:
+        4px;
+
     background:
         linear-gradient(
-            110deg,
-            #101828,
-            #182c50
+            90deg,
+            white,
+            var(--cyan),
+            var(--gold)
         );
 
-    color:white;
+    -webkit-background-clip:
+        text;
 
-    border-radius:18px;
-
-    padding:18px 25px;
-
-    text-align:center;
-
-    margin-bottom:22px;
-
-    box-shadow:var(--shadow);
+    -webkit-text-fill-color:
+        transparent;
 }
 
-.woz-quote{
-    font-size:18px;
-    font-weight:600;
-    line-height:1.4;
-    font-style:italic;
-}
 
-.woz-name{
-    margin-top:6px;
-    font-size:13px;
-    color:#b9d2ff;
-    font-weight:700;
-}
+.header-status {
 
-/* ==============================
-   HERO
-============================== */
+    font-family:
+        Orbitron,
+        sans-serif;
 
-.hero{
-    text-align:center;
-    padding:18px 0 30px;
-}
-
-.hero h1{
     font-size:
-        clamp(38px,6vw,64px);
+        .58rem;
 
-    line-height:1;
+    color:
+        var(--green);
 
-    letter-spacing:-3px;
-
-    color:var(--dark);
+    letter-spacing:
+        1px;
 }
 
-.hero h1 span{
-    color:var(--blue);
-}
 
-.hero p{
-    max-width:650px;
-    margin:15px auto 0;
-    color:var(--muted);
-    font-size:17px;
-}
+/* =========================================================
+   STATUS CHIP
+========================================================= */
 
-/* ==============================
-   SEARCH BOX
-============================== */
+.status-chip {
 
-.search-card{
-    background:white;
-    border-radius:22px;
-    box-shadow:var(--shadow);
-    padding:22px;
-    border:1px solid var(--line);
-}
+    position:
+        absolute;
 
-.search-title{
-    font-size:20px;
-    font-weight:800;
-    margin-bottom:17px;
-}
+    top:
+        78px;
 
-.search-grid{
-    display:grid;
-    grid-template-columns:1fr 1fr 160px;
-    gap:12px;
-}
+    left:
+        50%;
 
-.field{
-    position:relative;
-}
+    transform:
+        translateX(-50%);
 
-.field-label{
-    display:block;
-    font-size:11px;
-    font-weight:800;
-    color:#667085;
-    text-transform:uppercase;
-    letter-spacing:.6px;
-    margin:0 0 6px 3px;
-}
+    z-index:
+        1000;
 
-input{
-    width:100%;
-    height:58px;
-    border:1px solid #d0d5dd;
-    border-radius:12px;
-    padding:0 15px;
-    outline:none;
-    color:var(--text);
-    background:white;
-}
+    padding:
+        6px 13px;
 
-input:focus{
-    border-color:var(--blue);
+    border-radius:
+        20px;
+
+    background:
+        rgba(3,10,20,.90);
+
+    border:
+        1px solid var(--green);
+
+    color:
+        var(--green);
+
+    font-family:
+        Orbitron,
+        sans-serif;
+
+    font-size:
+        .56rem;
+
+    letter-spacing:
+        1px;
+
     box-shadow:
-        0 0 0 3px
-        rgba(23,105,255,.10);
+        0 0 12px rgba(32,255,145,.12);
 }
 
-.search-button{
-    height:58px;
-    border:0;
-    border-radius:12px;
-    background:var(--blue);
-    color:white;
-    font-weight:800;
-    font-size:15px;
+
+/* =========================================================
+   GENERIC PANEL
+========================================================= */
+
+.ui-panel {
+
+    position:
+        absolute;
+
+    z-index:
+        1000;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(8,20,37,.94),
+            rgba(2,8,18,.92)
+        );
+
+    border:
+        1px solid var(--border);
+
+    backdrop-filter:
+        blur(18px);
+
+    border-radius:
+        15px;
+
+    box-shadow:
+        0 20px 60px rgba(0,0,0,.65),
+        inset 0 0 25px rgba(0,246,255,.025);
 }
 
-.search-button:hover{
-    background:var(--blue-dark);
+
+.panel-title {
+
+    font-family:
+        Orbitron,
+        sans-serif;
+
+    font-size:
+        .67rem;
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        1.8px;
+
+    color:
+        #c9e9ff;
+
+    text-transform:
+        uppercase;
+
+    margin-bottom:
+        10px;
+
+    display:
+        flex;
+
+    justify-content:
+        space-between;
+
+    align-items:
+        center;
 }
 
-/* ==============================
-   QUICK OPTIONS
-============================== */
 
-.quick-options{
-    display:flex;
-    gap:9px;
-    margin-top:14px;
-    flex-wrap:wrap;
+/* =========================================================
+   LEFT SIDEBAR
+========================================================= */
+
+#left-sidebar {
+
+    top:
+        18px;
+
+    left:
+        18px;
+
+    bottom:
+        18px;
+
+    width:
+        325px;
+
+    padding:
+        15px;
+
+    overflow-y:
+        auto;
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    gap:
+        13px;
 }
 
-.quick{
-    border:1px solid var(--line);
-    background:#f9fafb;
-    padding:9px 13px;
-    border-radius:10px;
-    font-size:13px;
-    font-weight:700;
-    color:#475467;
+
+#left-sidebar::-webkit-scrollbar {
+
+    width:
+        4px;
 }
 
-.quick:hover{
-    border-color:var(--blue);
-    color:var(--blue);
+
+#left-sidebar::-webkit-scrollbar-thumb {
+
+    background:
+        var(--cyan);
+
+    border-radius:
+        10px;
 }
 
-/* ==============================
-   RESULTS
-============================== */
 
-.results{
-    margin-top:25px;
-    display:none;
+/* =========================================================
+   POINTS CORE
+========================================================= */
+
+.points-core {
+
+    padding:
+        15px;
+
+    border-radius:
+        12px;
+
+    border:
+        1px solid rgba(255,212,0,.28);
+
+    background:
+        radial-gradient(
+            circle at top right,
+            rgba(255,212,0,.13),
+            transparent 55%
+        );
+
+    box-shadow:
+        inset 0 0 25px rgba(255,212,0,.025);
 }
 
-.results.visible{
-    display:block;
+
+.points-label {
+
+    color:
+        var(--muted);
+
+    font-family:
+        Orbitron,
+        sans-serif;
+
+    font-size:
+        .58rem;
+
+    letter-spacing:
+        2px;
 }
 
-.results-header{
-    display:flex;
-    justify-content:space-between;
-    align-items:end;
-    gap:15px;
-    margin-bottom:13px;
+
+.points-number {
+
+    margin-top:
+        3px;
+
+    font-family:
+        Orbitron,
+        sans-serif;
+
+    font-size:
+        2rem;
+
+    font-weight:
+        900;
+
+    color:
+        var(--gold);
+
+    text-shadow:
+        0 0 15px rgba(255,212,0,.55);
+
+    transition:
+        transform .15s;
 }
 
-.results-header h2{
-    font-size:25px;
-    letter-spacing:-.7px;
+
+.points-number.pulse {
+
+    transform:
+        scale(1.08);
 }
 
-.results-header p{
-    color:var(--muted);
-    font-size:13px;
-}
 
-.sort{
-    border:1px solid var(--line);
-    background:white;
-    border-radius:9px;
-    padding:9px 12px;
-    font-size:13px;
-    font-weight:700;
-}
+.points-grid {
 
-/* ==============================
-   HIGHLIGHTS
-============================== */
-
-.highlights{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:12px;
-    margin-bottom:13px;
-}
-
-.highlight{
-    background:white;
-    border:1px solid var(--line);
-    border-radius:14px;
-    padding:14px 17px;
-    display:flex;
-    align-items:center;
-    gap:12px;
-}
-
-.highlight-icon{
-    width:38px;
-    height:38px;
-    border-radius:10px;
-    display:grid;
-    place-items:center;
-    font-size:18px;
-    background:#eef4ff;
-}
-
-.highlight strong{
-    display:block;
-    font-size:14px;
-}
-
-.highlight span{
-    color:var(--muted);
-    font-size:12px;
-}
-
-/* ==============================
-   RIDE CARD
-============================== */
-
-.ride-list{
-    display:grid;
-    gap:10px;
-}
-
-.ride{
-    position:relative;
-
-    background:white;
-
-    border:1px solid var(--line);
-
-    border-radius:17px;
-
-    padding:18px;
-
-    display:grid;
+    display:
+        grid;
 
     grid-template-columns:
-        1.5fr
-        .8fr
-        .8fr
+        1fr 1fr;
+
+    gap:
+        7px;
+
+    margin-top:
+        10px;
+}
+
+
+.mini-stat {
+
+    padding:
+        8px;
+
+    border-radius:
+        8px;
+
+    background:
+        rgba(255,255,255,.035);
+
+    border:
+        1px solid rgba(255,255,255,.06);
+}
+
+
+.mini-label {
+
+    color:
+        var(--muted);
+
+    font-size:
+        .57rem;
+
+    text-transform:
+        uppercase;
+}
+
+
+.mini-value {
+
+    margin-top:
+        2px;
+
+    font-family:
+        Orbitron,
+        sans-serif;
+
+    font-size:
+        .9rem;
+
+    color:
+        white;
+}
+
+
+/* =========================================================
+   CAREER
+========================================================= */
+
+.career-badge {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        10px;
+
+    padding:
+        10px;
+
+    border-radius:
+        10px;
+
+    background:
+        rgba(0,246,255,.05);
+
+    border:
+        1px solid rgba(0,246,255,.12);
+}
+
+
+.career-icon {
+
+    width:
+        35px;
+
+    height:
+        35px;
+
+    display:
+        flex;
+
+    justify-content:
+        center;
+
+    align-items:
+        center;
+
+    border-radius:
+        9px;
+
+    background:
+        rgba(0,246,255,.10);
+
+    color:
+        var(--cyan);
+
+    box-shadow:
+        0 0 15px rgba(0,246,255,.12);
+}
+
+
+.career-name {
+
+    font-family:
+        Orbitron,
+        sans-serif;
+
+    font-size:
+        .72rem;
+
+    font-weight:
+        800;
+}
+
+
+.career-status {
+
+    color:
+        var(--muted);
+
+    font-size:
+        .65rem;
+}
+
+
+/* =========================================================
+   GENDER
+========================================================= */
+
+.gender-toggle {
+
+    display:
+        flex;
+
+    gap:
+        7px;
+}
+
+
+.gender-btn {
+
+    flex:
+        1;
+
+    padding:
+        8px;
+
+    color:
+        var(--muted);
+
+    background:
+        rgba(255,255,255,.035);
+
+    border:
+        1px solid rgba(255,255,255,.08);
+
+    border-radius:
+        8px;
+
+    transition:
+        .2s;
+}
+
+
+.gender-btn.active {
+
+    color:
+        var(--cyan);
+
+    border-color:
+        var(--cyan);
+
+    background:
+        rgba(0,246,255,.09);
+
+    box-shadow:
+        0 0 14px rgba(0,246,255,.14);
+}
+
+
+/* =========================================================
+   INPUTS
+========================================================= */
+
+.input-group {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        7px;
+
+    margin-bottom:
+        7px;
+}
+
+
+.input-label {
+
+    width:
+        65px;
+
+    color:
+        var(--muted);
+
+    font-size:
+        .68rem;
+}
+
+
+input,
+select {
+
+    flex:
+        1;
+
+    min-width:
+        0;
+
+    color:
+        white;
+
+    background:
+        rgba(0,0,0,.45);
+
+    border:
+        1px solid rgba(255,255,255,.10);
+
+    border-radius:
+        6px;
+
+    padding:
+        7px 8px;
+
+    outline:
+        none;
+}
+
+
+input:focus,
+select:focus {
+
+    border-color:
+        var(--cyan);
+
+    box-shadow:
+        0 0 10px rgba(0,246,255,.08);
+}
+
+
+/* =========================================================
+   MAIN BUTTON
+========================================================= */
+
+.btn-main {
+
+    width:
+        100%;
+
+    padding:
+        10px;
+
+    border:
+        0;
+
+    border-radius:
+        8px;
+
+    color:
+        #001018;
+
+    font-family:
+        Orbitron,
+        sans-serif;
+
+    font-weight:
+        900;
+
+    background:
+        linear-gradient(
+            90deg,
+            var(--cyan),
+            #74ffff
+        );
+
+    box-shadow:
+        0 0 18px rgba(0,246,255,.20);
+
+    transition:
+        .2s;
+}
+
+
+.btn-main:hover {
+
+    filter:
+        brightness(1.15);
+
+    transform:
+        translateY(-1px);
+}
+
+
+/* =========================================================
+   LIVE BARS
+========================================================= */
+
+.stat-bar {
+
+    margin-bottom:
+        8px;
+}
+
+
+.stat-row {
+
+    display:
+        flex;
+
+    justify-content:
+        space-between;
+
+    color:
+        var(--muted);
+
+    font-size:
+        .68rem;
+
+    margin-bottom:
+        4px;
+}
+
+
+.bar-bg {
+
+    height:
+        7px;
+
+    overflow:
+        hidden;
+
+    border-radius:
+        20px;
+
+    background:
+        rgba(255,255,255,.06);
+}
+
+
+.bar-fill {
+
+    height:
+        100%;
+
+    width:
+        100%;
+
+    border-radius:
+        inherit;
+
+    transition:
+        width .3s;
+}
+
+
+/* =========================================================
+   ACTIVITY LOG
+========================================================= */
+
+#log-box {
+
+    max-height:
         150px;
 
-    align-items:center;
+    overflow-y:
+        auto;
 
-    gap:15px;
+    color:
+        #b8cadb;
 
-    transition:.18s;
+    font-size:
+        .68rem;
+
+    line-height:
+        1.45;
 }
 
-.ride:hover{
-    border-color:#b7c9ed;
-    box-shadow:0 6px 20px rgba(16,24,40,.07);
+
+.log-line {
+
+    padding:
+        6px 0;
+
+    border-bottom:
+        1px solid rgba(255,255,255,.04);
 }
 
-.ride.featured{
-    border:2px solid var(--blue);
+
+/* =========================================================
+   RIGHT ACTION MENU
+========================================================= */
+
+#action-menu {
+
+    top:
+        105px;
+
+    right:
+        18px;
+
+    width:
+        235px;
+
+    padding:
+        12px;
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    gap:
+        7px;
 }
 
-.badge{
-    position:absolute;
-    top:-10px;
-    left:16px;
 
-    background:var(--blue);
+.action-btn {
 
-    color:white;
+    width:
+        100%;
 
-    padding:4px 9px;
+    display:
+        flex;
 
-    border-radius:7px;
+    align-items:
+        center;
 
-    font-size:10px;
+    gap:
+        10px;
 
-    font-weight:900;
+    padding:
+        10px;
 
-    text-transform:uppercase;
+    border-radius:
+        9px;
 
-    letter-spacing:.4px;
+    color:
+        var(--text);
+
+    background:
+        rgba(255,255,255,.035);
+
+    border:
+        1px solid rgba(255,255,255,.08);
+
+    font-size:
+        .72rem;
+
+    transition:
+        .2s;
 }
 
-.provider{
-    display:flex;
-    align-items:center;
-    gap:13px;
+
+.action-btn:hover {
+
+    border-color:
+        var(--cyan);
+
+    background:
+        rgba(0,246,255,.08);
+
+    transform:
+        translateX(-2px);
 }
 
-.provider-logo{
-    width:48px;
-    height:48px;
 
-    border-radius:13px;
+/* =========================================================
+   BOTTOM HUD
+========================================================= */
 
-    display:grid;
-    place-items:center;
+#bottom-hud {
 
-    color:white;
+    position:
+        absolute;
 
-    font-size:18px;
-    font-weight:900;
+    z-index:
+        1000;
 
-    background:#111827;
+    bottom:
+        18px;
+
+    left:
+        50%;
+
+    transform:
+        translateX(-50%);
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        15px;
 }
 
-.uber{
-    background:#111;
+
+.roll-orb {
+
+    width:
+        76px;
+
+    height:
+        76px;
+
+    border-radius:
+        50%;
+
+    display:
+        flex;
+
+    justify-content:
+        center;
+
+    align-items:
+        center;
+
+    color:
+        var(--gold);
+
+    font-size:
+        1.7rem;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(255,212,0,.18),
+            rgba(3,10,20,.96) 70%
+        );
+
+    border:
+        2px solid var(--gold);
+
+    box-shadow:
+        0 0 30px rgba(255,212,0,.28);
+
+    transition:
+        .2s;
 }
 
-.lyft{
-    background:#ff3b8d;
+
+.roll-orb:hover {
+
+    transform:
+        scale(1.06);
+
+    box-shadow:
+        0 0 45px rgba(255,212,0,.45);
 }
 
-.taxi{
-    background:#eab308;
-    color:#111;
+
+.moves-tag {
+
+    padding:
+        12px 18px;
+
+    border-radius:
+        10px;
+
+    background:
+        rgba(3,10,20,.90);
+
+    border:
+        1px solid var(--cyan);
+
+    font-family:
+        Orbitron,
+        sans-serif;
+
+    font-size:
+        .75rem;
 }
 
-.provider-name{
-    font-size:16px;
-    font-weight:850;
+
+.moves-tag strong {
+
+    color:
+        var(--cyan);
+
+    font-size:
+        1rem;
 }
 
-.ride-type{
-    color:var(--muted);
-    font-size:12px;
-    margin-top:3px;
+
+/* =========================================================
+   MODAL
+========================================================= */
+
+.modal-overlay {
+
+    position:
+        fixed;
+
+    inset:
+        0;
+
+    z-index:
+        3000;
+
+    display:
+        none;
+
+    justify-content:
+        center;
+
+    align-items:
+        center;
+
+    background:
+        rgba(0,0,0,.78);
+
+    backdrop-filter:
+        blur(12px);
 }
 
-.ride-info label{
-    display:block;
-    color:#98a2b3;
-    font-size:10px;
-    font-weight:800;
-    text-transform:uppercase;
-    margin-bottom:3px;
+
+.modal-card {
+
+    width:
+        min(94vw, 470px);
+
+    max-height:
+        85vh;
+
+    overflow-y:
+        auto;
+
+    padding:
+        22px;
+
+    border-radius:
+        16px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #081426,
+            #030812
+        );
+
+    border:
+        1px solid var(--cyan);
+
+    box-shadow:
+        0 0 50px rgba(0,246,255,.16);
 }
 
-.ride-info strong{
-    font-size:15px;
+
+.modal-title {
+
+    font-family:
+        Orbitron,
+        sans-serif;
+
+    color:
+        var(--cyan);
+
+    margin-bottom:
+        10px;
 }
 
-.fast{
-    color:var(--green)!important;
+
+.modal-text {
+
+    color:
+        #a9bdd0;
+
+    font-size:
+        .78rem;
+
+    line-height:
+        1.5;
+
+    margin-bottom:
+        15px;
 }
 
-.cheap{
-    color:var(--gold)!important;
-}
 
-.book{
-    display:block;
-    text-align:center;
+.modal-grid {
 
-    padding:12px 15px;
+    display:
+        grid;
 
-    background:var(--blue);
-
-    color:white;
-
-    border-radius:10px;
-
-    font-size:13px;
-
-    font-weight:850;
-}
-
-.book:hover{
-    background:var(--blue-dark);
-}
-
-.book.disabled{
-    background:#98a2b3;
-}
-
-/* ==============================
-   NOTICE
-============================== */
-
-.api-notice{
-    margin-top:14px;
-
-    background:#fffaeb;
-
-    border:1px solid #fedf89;
-
-    border-radius:12px;
-
-    padding:12px 14px;
-
-    color:#7a5b00;
-
-    font-size:12px;
-
-    line-height:1.5;
-}
-
-/* ==============================
-   DAILY LINKS
-============================== */
-
-.services{
-    margin-top:35px;
-}
-
-.services h2{
-    font-size:24px;
-    margin-bottom:14px;
-}
-
-.service-grid{
-    display:grid;
     grid-template-columns:
-        repeat(3,1fr);
-    gap:12px;
+        1fr 1fr;
+
+    gap:
+        8px;
 }
 
-.service{
-    background:white;
-    border:1px solid var(--line);
-    border-radius:15px;
-    padding:19px;
+
+.option-btn {
+
+    padding:
+        11px;
+
+    border-radius:
+        9px;
+
+    color:
+        white;
+
+    background:
+        rgba(255,255,255,.04);
+
+    border:
+        1px solid rgba(255,255,255,.10);
+
+    transition:
+        .2s;
 }
 
-.service-icon{
-    font-size:24px;
-    margin-bottom:10px;
+
+.option-btn:hover {
+
+    border-color:
+        var(--cyan);
+
+    background:
+        rgba(0,246,255,.08);
 }
 
-.service h3{
-    font-size:16px;
-}
 
-.service p{
-    color:var(--muted);
-    font-size:13px;
-    line-height:1.5;
-    margin-top:5px;
-}
-
-/* ==============================
-   ECOSYSTEM
-============================== */
-
-.ecosystem{
-    margin-top:35px;
-}
-
-.ecosystem h2{
-    font-size:24px;
-    margin-bottom:14px;
-}
-
-.eco-grid{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:12px;
-}
-
-.eco{
-    background:white;
-    border:1px solid var(--line);
-    border-radius:15px;
-    padding:20px;
-
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    gap:15px;
-}
-
-.eco-name{
-    font-size:20px;
-    font-weight:900;
-}
-
-.eco p{
-    color:var(--muted);
-    font-size:13px;
-    margin-top:4px;
-}
-
-.eco-link{
-    color:var(--blue);
-    font-weight:800;
-    font-size:13px;
-    white-space:nowrap;
-}
-
-/* ==============================
-   FOOTER
-============================== */
-
-footer{
-    background:#101828;
-    color:#98a2b3;
-    padding:35px 20px;
-}
-
-.footer-inner{
-    max-width:1180px;
-    margin:auto;
-
-    display:flex;
-    justify-content:space-between;
-    gap:20px;
-    flex-wrap:wrap;
-}
-
-.footer-logo{
-    color:white;
-    font-size:20px;
-    font-weight:900;
-}
-
-.footer-links{
-    display:flex;
-    gap:20px;
-    flex-wrap:wrap;
-}
-
-.footer-links a:hover{
-    color:white;
-}
-
-/* ==============================
+/* =========================================================
    MOBILE
-============================== */
+========================================================= */
 
-@media(max-width:800px){
+@media(max-width:800px) {
 
-    .nav-links{
-        display:none;
+    #left-sidebar {
+
+        width:
+            260px;
+
     }
 
-    .search-grid{
-        grid-template-columns:1fr;
+    #action-menu {
+
+        width:
+            190px;
+
     }
 
-    .search-button{
-        width:100%;
+    .header-title {
+
+        font-size:
+            .9rem;
+
+        letter-spacing:
+            2px;
+
     }
 
-    .highlights{
-        grid-template-columns:1fr;
-    }
+    .header-status {
 
-    .ride{
-        grid-template-columns:
-            1fr 1fr;
+        display:
+            none;
 
-        gap:13px;
-    }
-
-    .provider{
-        grid-column:1 / -1;
-    }
-
-    .ride-info{
-        grid-column:auto;
-    }
-
-    .book{
-        grid-column:1 / -1;
-    }
-
-    .service-grid,
-    .eco-grid{
-        grid-template-columns:1fr;
     }
 
 }
 
-@media(max-width:500px){
 
-    main{
-        padding-left:12px;
-        padding-right:12px;
+@media(max-width:600px) {
+
+    #left-sidebar {
+
+        width:
+            230px;
+
+        left:
+            8px;
+
+        top:
+            8px;
+
+        bottom:
+            8px;
+
     }
 
-    .hero h1{
-        letter-spacing:-2px;
+    #action-menu {
+
+        right:
+            8px;
+
+        top:
+            90px;
+
+        width:
+            170px;
+
     }
 
-    .woz{
-        padding:16px;
+    .top-header {
+
+        padding:
+            9px 15px;
+
     }
 
-    .woz-quote{
-        font-size:15px;
+    .header-title {
+
+        font-size:
+            .72rem;
+
     }
 
-    .search-card{
-        padding:15px;
-    }
+    .status-chip {
 
-    .results-header{
-        display:block;
-    }
+        display:
+            none;
 
-    .sort{
-        margin-top:10px;
-    }
-
-    .ride{
-        padding:15px;
     }
 
 }
 
-/* ==============================
-   TOAST
-============================== */
-
-.toast{
-    position:fixed;
-    bottom:25px;
-    left:50%;
-
-    transform:
-        translate(-50%,20px);
-
-    opacity:0;
-
-    background:#101828;
-    color:white;
-
-    padding:12px 18px;
-
-    border-radius:10px;
-
-    font-size:13px;
-
-    pointer-events:none;
-
-    transition:.2s;
-
-    z-index:500;
-}
-
-.toast.show{
-    opacity:1;
-    transform:
-        translate(-50%,0);
-}
 </style>
+
 </head>
+
 
 <body>
 
-<header>
 
-<div class="nav">
-
-<a href="#" class="logo">
-    <span>Cab</span>0.com
-</a>
-
-<div class="nav-links">
-
-<a href="#compare">Compare Rides</a>
-<a href="#services">Services</a>
-<a href="#ecosystem">Cab0 Network</a>
-
-<a href="#compare" class="nav-button">
-    Find a Ride
-</a>
-
-</div>
-
-</div>
-
-</header>
+<div id="game-window">
 
 
-<main>
+<!-- =========================================================
+     HEADER
+========================================================= -->
 
+<div class="top-header">
 
-<!-- ==============================
-     WOZNIAK ENDORSEMENT
-============================== -->
+    <i class="fa-solid fa-key header-key"></i>
 
-<section class="woz">
+    <span class="header-title">
+        CITY KEY QUEST
+    </span>
 
-<div class="woz-quote">
-"Best of luck to you on this worthy venture, it's your turn"
-</div>
-
-<div class="woz-name">
-Steve Wozniak · Co-Founder, Apple Computer
-</div>
-
-</section>
-
-
-<!-- ==============================
-     HERO
-============================== -->
-
-<section class="hero">
-
-<h1>
-Every Ride, Every Delivery,
-<span>One Search.</span>
-</h1>
-
-<p>
-Compare your transportation options in one place —
-see the price, pickup time and trip time before you book.
-</p>
-
-</section>
-
-
-<!-- ==============================
-     SEARCH
-============================== -->
-
-<section class="search-card" id="compare">
-
-<div class="search-title">
-Where do you want to go?
-</div>
-
-<div class="search-grid">
-
-<div class="field">
-
-<label class="field-label">
-Pickup
-</label>
-
-<input
-id="pickup"
-placeholder="Current location"
->
+    <span class="header-status">
+        // NEXUS
+    </span>
 
 </div>
 
 
-<div class="field">
-
-<label class="field-label">
-Destination
-</label>
-
-<input
-id="destination"
-placeholder="Where are you going?"
->
-
-</div>
-
-
-<button
-class="search-button"
-onclick="findRides()"
->
-Compare Rides
-</button>
-
-</div>
-
-
-<div class="quick-options">
-
-<button
-class="quick"
-onclick="setDestination('Airport')"
->
-✈️ Airport
-</button>
-
-<button
-class="quick"
-onclick="setDestination('Downtown')"
->
-🏙️ Downtown
-</button>
-
-<button
-class="quick"
-onclick="setDestination('Home')"
->
-🏠 Home
-</button>
-
-<button
-class="quick"
-onclick="setDestination('Work')"
->
-💼 Work
-</button>
-
-</div>
-
-</section>
-
-
-<!-- ==============================
-     RESULTS
-============================== -->
-
-<section class="results" id="results">
-
-<div class="results-header">
-
-<div>
-
-<h2>
-Your Ride Options
-</h2>
-
-<p id="routeText">
-Compare available choices.
-</p>
-
-</div>
-
-<select
-class="sort"
-id="sort"
-onchange="sortRides()"
->
-
-<option value="recommended">
-Recommended
-</option>
-
-<option value="cheap">
-Cheapest first
-</option>
-
-<option value="fast">
-Fastest pickup
-</option>
-
-</select>
-
-</div>
-
-
-<div class="highlights">
-
-<div class="highlight">
-
-<div class="highlight-icon">
-💰
-</div>
-
-<div>
-
-<strong id="cheapestText">
-Cheapest option
-</strong>
-
-<span id="cheapestDetail">
-Compare prices below
-</span>
-
-</div>
-
-</div>
-
-
-<div class="highlight">
-
-<div class="highlight-icon">
-⚡
-</div>
-
-<div>
-
-<strong id="fastestText">
-Fastest pickup
-</strong>
-
-<span id="fastestDetail">
-Compare ETAs below
-</span>
-
-</div>
-
-</div>
-
-</div>
-
+<!-- =========================================================
+     STATUS
+========================================================= -->
 
 <div
-class="ride-list"
-id="rideList"
-></div>
+    class="status-chip"
+    id="protection-status">
 
-
-<div class="api-notice">
-
-<strong>Live pricing:</strong>
-The prices and ETAs shown in this prototype are sample comparison data.
-To make Cab0 show real-time prices and availability, the site will need live integrations with transportation providers or an authorized comparison API.
-
-</div>
-
-</section>
-
-
-<!-- ==============================
-     SERVICES
-============================== -->
-
-<section class="services" id="services">
-
-<h2>
-More Than Rides
-</h2>
-
-<div class="service-grid">
-
-<div class="service">
-
-<div class="service-icon">
-🍔
-</div>
-
-<h3>
-Food Delivery
-</h3>
-
-<p>
-Compare delivery options and connect customers with ordering services.
-</p>
+    ● OPEN WORLD
 
 </div>
 
 
-<div class="service">
+<!-- =========================================================
+     MAP
+========================================================= -->
 
-<div class="service-icon">
-🛒
+<div id="map"></div>
+
+
+<!-- =========================================================
+     LEFT SIDEBAR
+========================================================= -->
+
+<div
+    class="ui-panel"
+    id="left-sidebar">
+
+
+    <!-- LIVE POINTS -->
+
+    <div class="points-core">
+
+        <div class="points-label">
+            LIVE QUEST POINTS
+        </div>
+
+        <div
+            class="points-number"
+            id="points-display">
+
+            0
+
+        </div>
+
+
+        <div class="points-grid">
+
+            <div class="mini-stat">
+
+                <div class="mini-label">
+                    Reserve
+                </div>
+
+                <div
+                    class="mini-value"
+                    id="reserve-display">
+
+                    50
+
+                </div>
+
+            </div>
+
+
+            <div class="mini-stat">
+
+                <div class="mini-label">
+                    Clues
+                </div>
+
+                <div
+                    class="mini-value"
+                    id="clue-display">
+
+                    0
+
+                </div>
+
+            </div>
+
+
+            <div class="mini-stat">
+
+                <div class="mini-label">
+                    Time
+                </div>
+
+                <div
+                    class="mini-value"
+                    id="time-display">
+
+                    00:00
+
+                </div>
+
+            </div>
+
+
+            <div class="mini-stat">
+
+                <div class="mini-label">
+                    Reports
+                </div>
+
+                <div
+                    class="mini-value"
+                    id="crime-display">
+
+                    0
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- CAREER -->
+
+    <div>
+
+        <div class="panel-title">
+
+            <span>
+                CAREER STATUS
+            </span>
+
+            <i
+                class="fa-solid fa-id-card"
+                style="color:var(--cyan)">
+            </i>
+
+        </div>
+
+
+        <div class="career-badge">
+
+            <div class="career-icon">
+
+                <i
+                    id="career-icon"
+                    class="fa-solid fa-user">
+                </i>
+
+            </div>
+
+
+            <div>
+
+                <div
+                    class="career-name"
+                    id="career-name">
+
+                    CIVILIAN
+
+                </div>
+
+
+                <div
+                    class="career-status"
+                    id="career-status">
+
+                    Open World Player
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- PLAYER PROFILE -->
+
+    <div style="
+        border-top:1px solid rgba(255,255,255,.07);
+        padding-top:10px;
+    ">
+
+        <div class="panel-title">
+
+            PLAYER PROFILE
+
+        </div>
+
+
+        <div class="gender-toggle">
+
+            <button
+                class="gender-btn active"
+                id="btn-female"
+                onclick="setGender('female')">
+
+                <i class="fa-solid fa-venus"></i>
+
+                FEMALE
+
+            </button>
+
+
+            <button
+                class="gender-btn"
+                id="btn-male"
+                onclick="setGender('male')">
+
+                <i class="fa-solid fa-mars"></i>
+
+                MALE
+
+            </button>
+
+        </div>
+
+
+        <br>
+
+
+        <div class="input-group">
+
+            <span class="input-label">
+                Name
+            </span>
+
+            <input
+                id="player-name-input"
+                value="Explorer1"
+                maxlength="20">
+
+        </div>
+
+
+        <div class="input-group">
+
+            <span class="input-label">
+                ZIP
+            </span>
+
+            <input
+                id="zip-input"
+                value="23185"
+                maxlength="5"
+                inputmode="numeric"
+                placeholder="ZIP Code">
+
+        </div>
+
+
+        <div class="input-group">
+
+            <span class="input-label">
+                Transport
+            </span>
+
+            <select id="transport-input">
+
+                <option value="walk">
+                    🚶 Walking
+                </option>
+
+                <option value="bike">
+                    🚲 Bike (+1)
+                </option>
+
+                <option value="car">
+                    🚗 Car (+2)
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <button
+            class="btn-main"
+            onclick="initGame()">
+
+            INITIALIZE QUEST
+
+        </button>
+
+    </div>
+
+
+    <!-- PLAYER SYSTEMS -->
+
+    <div style="
+        border-top:1px solid rgba(255,255,255,.07);
+        padding-top:10px;
+    ">
+
+        <div class="panel-title">
+
+            PLAYER SYSTEMS
+
+        </div>
+
+
+        <!-- LIFE -->
+
+        <div class="stat-bar">
+
+            <div class="stat-row">
+
+                <span>
+                    LIFE
+                </span>
+
+                <span id="life-text">
+                    100
+                </span>
+
+            </div>
+
+
+            <div class="bar-bg">
+
+                <div
+                    class="bar-fill"
+                    id="life-bar"
+                    style="
+                        width:100%;
+                        background:var(--red);
+                    ">
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- RESERVE -->
+
+        <div class="stat-bar">
+
+            <div class="stat-row">
+
+                <span>
+                    RESERVE
+                </span>
+
+                <span id="reserve-text">
+                    50
+                </span>
+
+            </div>
+
+
+            <div class="bar-bg">
+
+                <div
+                    class="bar-fill"
+                    id="reserve-bar"
+                    style="
+                        width:50%;
+                        background:var(--purple);
+                    ">
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- CAREER XP -->
+
+        <div class="stat-bar">
+
+            <div class="stat-row">
+
+                <span>
+                    CAREER XP
+                </span>
+
+                <span id="career-xp-text">
+                    0
+                </span>
+
+            </div>
+
+
+            <div class="bar-bg">
+
+                <div
+                    class="bar-fill"
+                    id="career-xp-bar"
+                    style="
+                        width:0%;
+                        background:var(--cyan);
+                    ">
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ACTIVITY LOG -->
+
+    <div style="
+        border-top:1px solid rgba(255,255,255,.07);
+        padding-top:10px;
+        flex:1;
+    ">
+
+        <div class="panel-title">
+
+            <span>
+                ACTIVITY STREAM
+            </span>
+
+            <i
+                class="fa-solid fa-satellite-dish"
+                style="color:var(--cyan)">
+            </i>
+
+        </div>
+
+
+        <div id="log-box"></div>
+
+    </div>
+
+
 </div>
 
-<h3>
-Grocery Delivery
-</h3>
 
-<p>
-Find grocery delivery and pickup options from participating services.
-</p>
+<!-- =========================================================
+     RIGHT ACTION MENU
+========================================================= -->
 
-</div>
-
-
-<div class="service">
-
-<div class="service-icon">
-⏱️
-</div>
-
-<h3>
-Arrival Tracking
-</h3>
-
-<p>
-Connect Cab0 with arrival and ETA services so users know when something will arrive.
-</p>
-
-</div>
-
-</div>
-
-</section>
+<div
+    class="ui-panel"
+    id="action-menu">
 
 
-<!-- ==============================
-     ECOSYSTEM
-============================== -->
+    <div class="panel-title">
 
-<section class="ecosystem" id="ecosystem">
+        WORLD ACTIONS
 
-<h2>
-The Cab0 Network
-</h2>
-
-<div class="eco-grid">
+    </div>
 
 
-<a
-class="eco"
-href="https://arrivetime.com"
-target="_blank"
-rel="noopener"
->
+    <button
+        class="action-btn"
+        onclick="showHowToPlay()">
 
-<div>
+        <i
+            class="fa-solid fa-circle-question"
+            style="color:var(--cyan)">
+        </i>
 
-<div class="eco-name">
-ArriveTime.com
-</div>
+        How To Play
 
-<p>
-Know when people and things will arrive.
-</p>
-
-</div>
-
-<div class="eco-link">
-Visit →
-</div>
-
-</a>
+    </button>
 
 
-<a
-class="eco"
-href="https://4eta.com"
-target="_blank"
-rel="noopener"
->
+    <button
+        class="action-btn"
+        onclick="openCareerCenter()">
 
-<div>
+        <i
+            class="fa-solid fa-building-columns"
+            style="color:var(--purple)">
+        </i>
 
-<div class="eco-name">
-4ETA.com
-</div>
+        Career & Education
 
-<p>
-ETA intelligence and arrival information.
-</p>
-
-</div>
-
-<div class="eco-link">
-Visit →
-</div>
-
-</a>
+    </button>
 
 
-</div>
+    <button
+        class="action-btn"
+        onclick="callPolice()">
 
-</section>
+        <i
+            class="fa-solid fa-shield-halved"
+            style="color:var(--blue)">
+        </i>
 
-</main>
+        Call Police
+
+    </button>
 
 
-<!-- ==============================
-     FOOTER
-============================== -->
+    <button
+        class="action-btn"
+        onclick="hireLawyer()">
 
-<footer>
+        <i
+            class="fa-solid fa-scale-balanced"
+            style="color:var(--gold)">
+        </i>
 
-<div class="footer-inner">
+        Hire Lawyer
 
-<div>
+    </button>
 
-<div class="footer-logo">
-Cab0.com
-</div>
 
-<div>
-Every Ride, Every Delivery, One Search.
-</div>
+    <button
+        class="action-btn"
+        onclick="openHideoutMenu()">
+
+        <i
+            class="fa-solid fa-eye-slash"
+            style="color:var(--purple)">
+        </i>
+
+        Hide / Evade Detection
+
+    </button>
+
+
+    <button
+        class="action-btn"
+        onclick="replenishFoodWater()">
+
+        <i
+            class="fa-solid fa-heart-pulse"
+            style="color:var(--green)">
+        </i>
+
+        Restore Life
+
+    </button>
 
 </div>
 
 
-<div class="footer-links">
+<!-- =========================================================
+     BOTTOM HUD
+========================================================= -->
 
-<a href="https://arrivetime.com"
-target="_blank">
-ArriveTime.com
-</a>
+<div id="bottom-hud">
 
-<a href="https://4eta.com"
-target="_blank">
-4ETA.com
-</a>
 
-<a href="#">
-Privacy
-</a>
+    <div
+        class="roll-orb"
+        onclick="rollDice()"
+        id="dice-orb">
 
-<a href="#">
-Terms
-</a>
+        <i class="fa-solid fa-cube"></i>
+
+    </div>
+
+
+    <div class="moves-tag">
+
+        MOVES:
+
+        <strong id="moves-count">
+            0
+        </strong>
+
+    </div>
 
 </div>
 
+
+<!-- =========================================================
+     MODAL
+========================================================= -->
+
+<div
+    class="modal-overlay"
+    id="modal-screen">
+
+
+    <div class="modal-card">
+
+
+        <h2
+            class="modal-title"
+            id="modal-heading">
+
+            SYSTEM
+
+        </h2>
+
+
+        <div
+            class="modal-text"
+            id="modal-body">
+
+        </div>
+
+
+        <div
+            class="modal-grid"
+            id="modal-actions">
+
+        </div>
+
+    </div>
+
 </div>
 
-</footer>
 
-
-<div class="toast" id="toast"></div>
+</div>
 
 
 <script>
 
-/* ==========================================
-   SAMPLE RIDE DATA
-   Replace these with LIVE API results later.
-========================================== */
+/* =========================================================
+   GLOBAL VARIABLES
+========================================================= */
 
-let rides = [
+let map = null;
 
-{
-    provider:"Uber",
-    logo:"U",
-    logoClass:"uber",
-    type:"UberX",
-    pickup:4,
-    trip:22,
-    price:14,
-    booking:"https://m.uber.com/"
-},
+let userMarker = null;
 
-{
-    provider:"Lyft",
-    logo:"L",
-    logoClass:"lyft",
-    type:"Lyft",
-    pickup:6,
-    trip:21,
-    price:12,
-    booking:"https://www.lyft.com/rider"
-},
+let selectedGender =
+    'female';
 
-{
-    provider:"Local Taxi",
-    logo:"T",
-    logoClass:"taxi",
-    type:"Taxi",
-    pickup:8,
-    trip:20,
-    price:16,
-    booking:"https://www.google.com/search?q=taxi+near+me"
-}
+let gameStarted =
+    false;
 
-];
+let movesLeft =
+    0;
+
+let gameTimer =
+    null;
+
+let jailTimer =
+    null;
+
+let poiMarkers =
+    [];
+
+let poiList =
+    [];
+
+let goldenKeyPoiIndex =
+    -1;
+
+let gameWon =
+    false;
 
 
-/* ==========================================
-   SET DESTINATION
-========================================== */
+/* =========================================================
+   PLAYER STATE
+========================================================= */
 
-function setDestination(place){
+let gameState = {
 
-    document.getElementById(
-        "destination"
-    ).value = place;
+    name:
+        'Explorer1',
 
-    document.getElementById(
-        "destination"
-    ).focus();
+    zip:
+        '23185',
 
-}
+    city:
+        '',
+
+    state:
+        '',
+
+    transport:
+        'walk',
+
+    points:
+        0,
+
+    reservePoints:
+        50,
+
+    clues:
+        0,
+
+    life:
+        100,
+
+    crimesWitnessed:
+        0,
+
+    careerXP:
+        0,
+
+    career:
+        'civilian',
+
+    education:
+        null,
+
+    protected:
+        false,
+
+    hidden:
+        false,
+
+    hidingPlace:
+        null,
+
+    arrested:
+        false,
+
+    jailSeconds:
+        0,
+
+    lawyerHired:
+        false,
+
+    academyLevel:
+        0,
+
+    lawLevel:
+        0,
+
+    collegeLevel:
+        0,
+
+    playSeconds:
+        0,
+
+    lat:
+        37.2707,
+
+    lng:
+        -76.7075
+
+};
 
 
-/* ==========================================
-   FIND RIDES
-========================================== */
+/* =========================================================
+   CAREER DEFINITIONS
+========================================================= */
 
-function findRides(){
+const careers = {
 
-    const pickup =
-        document
-        .getElementById("pickup")
-        .value
-        .trim();
+    civilian: {
 
-    const destination =
-        document
-        .getElementById("destination")
-        .value
-        .trim();
+        name:
+            'CIVILIAN',
+
+        icon:
+            'fa-user',
+
+        color:
+            '#00f6ff'
+
+    },
 
 
-    if(!destination){
+    policeStudent: {
 
-        showToast(
-            "Please enter a destination."
-        );
+        name:
+            'POLICE ACADEMY',
 
-        document
-        .getElementById("destination")
-        .focus();
+        icon:
+            'fa-shield-halved',
 
-        return;
+        color:
+            '#168cff'
+
+    },
+
+
+    police: {
+
+        name:
+            'POLICE OFFICER',
+
+        icon:
+            'fa-shield-halved',
+
+        color:
+            '#168cff'
+
+    },
+
+
+    lawStudent: {
+
+        name:
+            'LAW SCHOOL',
+
+        icon:
+            'fa-scale-balanced',
+
+        color:
+            '#ffd400'
+
+    },
+
+
+    lawyer: {
+
+        name:
+            'LAWYER',
+
+        icon:
+            'fa-scale-balanced',
+
+        color:
+            '#ffd400'
+
+    },
+
+
+    college: {
+
+        name:
+            'COLLEGE STUDENT',
+
+        icon:
+            'fa-graduation-cap',
+
+        color:
+            '#a855ff'
+
+    }
+
+};
+
+
+/* =========================================================
+   FREE OPENSTREETMAP INITIALIZATION
+========================================================= */
+
+function initMap(lat, lng) {
+
+
+    /*
+       Remove previous map.
+    */
+
+    if (map) {
+
+        map.remove();
+
+        map =
+            null;
+
     }
 
 
-    const pickupText =
-        pickup || "Current location";
+    /*
+       Create Leaflet map.
+    */
 
+    map =
+        L.map(
+            'map',
+            {
+                zoomControl:
+                    false,
 
-    document.getElementById(
-        "routeText"
-    ).textContent =
-        pickupText +
-        " → " +
-        destination;
-
-
-    document.getElementById(
-        "results"
-    ).classList.add("visible");
-
-
-    updateHighlights();
-
-    renderRides();
-
-
-    document.getElementById(
-        "results"
-    ).scrollIntoView({
-        behavior:"smooth",
-        block:"start"
-    });
-
-}
-
-
-/* ==========================================
-   RENDER RIDES
-========================================== */
-
-function renderRides(){
-
-    const list =
-        document.getElementById(
-            "rideList"
+                attributionControl:
+                    true
+            }
+        )
+        .setView(
+            [lat, lng],
+            15
         );
 
 
-    let sorted =
-        [...rides];
+    /*
+       FREE OPENSTREETMAP TILE SERVER
+
+       No API key required.
+    */
+
+    L.tileLayer(
+
+        'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+
+        {
+
+            maxZoom:
+                19,
+
+            minZoom:
+                3,
+
+            attribution:
+                '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors'
+
+        }
+
+    ).addTo(map);
 
 
-    const sort =
-        document.getElementById(
-            "sort"
-        ).value;
+    /*
+       Futuristic player marker.
+    */
 
+    const playerIcon =
+        L.divIcon({
 
-    if(sort === "cheap"){
+            html: `
 
-        sorted.sort(
-            (a,b) =>
-            a.price - b.price
-        );
+                <div style="
+                    width:42px;
+                    height:42px;
 
-    }
+                    display:flex;
 
+                    align-items:center;
+                    justify-content:center;
 
-    if(sort === "fast"){
+                    border-radius:50%;
 
-        sorted.sort(
-            (a,b) =>
-            a.pickup - b.pickup
-        );
+                    background:
+                        rgba(0,246,255,.10);
 
-    }
+                    border:
+                        1px solid #00f6ff;
 
+                    box-shadow:
+                        0 0 12px #00f6ff,
+                        0 0 30px rgba(0,246,255,.45);
+                ">
 
-    if(sort === "recommended"){
+                    <i
+                        class="fa-solid fa-location-crosshairs"
+                        style="
+                            color:#00f6ff;
+                            font-size:22px;
 
-        sorted.sort(
-            (a,b) =>
-            (a.price + a.pickup) -
-            (b.price + b.pickup)
-        );
-
-    }
-
-
-    const cheapest =
-        Math.min(
-            ...rides.map(
-                ride => ride.price
-            )
-        );
-
-
-    const fastest =
-        Math.min(
-            ...rides.map(
-                ride => ride.pickup
-            )
-        );
-
-
-    list.innerHTML =
-        sorted.map(
-            ride => {
-
-                let badge = "";
-
-
-                if(
-                    ride.price === cheapest
-                ){
-
-                    badge =
-                    `<div class="badge">
-                        Cheapest
-                    </div>`;
-
-                }
-
-
-                else if(
-                    ride.pickup === fastest
-                ){
-
-                    badge =
-                    `<div class="badge">
-                        Fastest pickup
-                    </div>`;
-
-                }
-
-
-                const priceClass =
-                    ride.price === cheapest
-                    ? "cheap"
-                    : "";
-
-
-                const pickupClass =
-                    ride.pickup === fastest
-                    ? "fast"
-                    : "";
-
-
-                return `
-
-                <div class="ride
-                    ${
-                        ride.price === cheapest
-                        || ride.pickup === fastest
-                        ? "featured"
-                        : ""
-                    }">
-
-                    ${badge}
-
-                    <div class="provider">
-
-                        <div
-                            class="provider-logo
-                            ${ride.logoClass}"
-                        >
-                            ${ride.logo}
-                        </div>
-
-                        <div>
-
-                            <div class="provider-name">
-                                ${ride.provider}
-                            </div>
-
-                            <div class="ride-type">
-                                ${ride.type}
-                            </div>
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="ride-info">
-
-                        <label>
-                            Pickup
-                        </label>
-
-                        <strong
-                            class="${pickupClass}"
-                        >
-                            ${ride.pickup} min
-                        </strong>
-
-                    </div>
-
-
-                    <div class="ride-info">
-
-                        <label>
-                            Est. Price
-                        </label>
-
-                        <strong
-                            class="${priceClass}"
-                        >
-                            $${ride.price}
-                        </strong>
-
-                        <div class="ride-type">
-                            ${ride.trip} min trip
-                        </div>
-
-                    </div>
-
-
-                    <a
-                        class="book"
-                        href="${ride.booking}"
-                        target="_blank"
-                        rel="noopener"
-                    >
-                        Book Ride →
-                    </a>
+                            filter:
+                                drop-shadow(
+                                    0 0 6px #00f6ff
+                                );
+                        ">
+                    </i>
 
                 </div>
 
-                `;
+            `,
 
+            className:
+                'custom-player-marker',
+
+            iconSize:
+                [42,42],
+
+            iconAnchor:
+                [21,21]
+
+        });
+
+
+    /*
+       Add player marker.
+    */
+
+    userMarker =
+        L.marker(
+
+            [lat,lng],
+
+            {
+                icon:
+                    playerIcon
             }
-        ).join("");
+
+        )
+        .addTo(map);
+
+
+    /*
+       Add futuristic player
+       radar/area circle.
+    */
+
+    L.circle(
+
+        [lat,lng],
+
+        {
+
+            radius:
+                75,
+
+            color:
+                '#00f6ff',
+
+            weight:
+                1,
+
+            opacity:
+                .35,
+
+            fillColor:
+                '#00f6ff',
+
+            fillOpacity:
+                .04
+
+        }
+
+    ).addTo(map);
 
 }
 
 
-/* ==========================================
-   HIGHLIGHTS
-========================================== */
+/* =========================================================
+   FREE ZIP CODE LOCATION LOOKUP
+========================================================= */
 
-function updateHighlights(){
+async function getCoordinatesFromZip(zip) {
 
-    const cheapest =
-        rides.reduce(
-            (a,b) =>
-            a.price < b.price ? a : b
+
+    /*
+       Clean ZIP input.
+    */
+
+    const cleanZip =
+        String(zip)
+            .trim()
+            .replace(
+                /\s+/g,
+                ''
+            );
+
+
+    /*
+       U.S. ZIP validation.
+    */
+
+    if (
+        !/^\d{5}$/.test(cleanZip)
+    ) {
+
+        throw new Error(
+            'Please enter a valid 5-digit U.S. ZIP code.'
+        );
+
+    }
+
+
+    /*
+       Zippopotam.us
+       does not require an API key.
+    */
+
+    const response =
+        await fetch(
+
+            `https://api.zippopotam.us/us/${cleanZip}`
+
         );
 
 
-    const fastest =
-        rides.reduce(
-            (a,b) =>
-            a.pickup < b.pickup ? a : b
+    if (
+        !response.ok
+    ) {
+
+        throw new Error(
+            'ZIP code could not be located.'
+        );
+
+    }
+
+
+    const data =
+        await response.json();
+
+
+    if (
+        !data.places ||
+        !data.places.length
+    ) {
+
+        throw new Error(
+            'No location found for that ZIP code.'
+        );
+
+    }
+
+
+    const place =
+        data.places[0];
+
+
+    return {
+
+        lat:
+            parseFloat(
+                place.latitude
+            ),
+
+        lng:
+            parseFloat(
+                place.longitude
+            ),
+
+        city:
+            place['place name'],
+
+        state:
+            place['state abbreviation'],
+
+        stateName:
+            place.state
+
+    };
+
+}
+
+
+/* =========================================================
+   FREE LOCAL BUSINESS DATA (OpenStreetMap Overpass API)
+   No API key required. Pulls real shops, restaurants,
+   tourist attractions and historic sites near the player.
+========================================================= */
+
+async function fetchNearbyPOIs(lat, lng, radius = 1200) {
+
+
+    const query = `
+        [out:json][timeout:25];
+        (
+          node["shop"](around:${radius},${lat},${lng});
+          node["amenity"~"restaurant|cafe|bar|fast_food|pub|ice_cream|marketplace|cinema|theatre|arts_centre|bakery"](around:${radius},${lat},${lng});
+          node["tourism"](around:${radius},${lat},${lng});
+          node["historic"](around:${radius},${lat},${lng});
+        );
+        out body 60;
+    `;
+
+
+    const response =
+        await fetch(
+
+            'https://overpass-api.de/api/interpreter',
+
+            {
+                method:
+                    'POST',
+
+                body:
+                    'data=' + encodeURIComponent(query)
+            }
+
         );
 
 
-    document.getElementById(
-        "cheapestText"
-    ).textContent =
-        "Cheapest: " +
-        cheapest.provider;
+    if (
+        !response.ok
+    ) {
+
+        throw new Error(
+            'Business directory lookup failed.'
+        );
+
+    }
 
 
-    document.getElementById(
-        "cheapestDetail"
-    ).textContent =
-        "$" +
-        cheapest.price +
-        " estimated fare";
+    const data =
+        await response.json();
 
 
-    document.getElementById(
-        "fastestText"
-    ).textContent =
-        "Fastest pickup: " +
-        fastest.provider;
+    return (
+        data.elements || []
+    ).filter(
 
+        el =>
+            el.tags &&
+            el.tags.name
 
-    document.getElementById(
-        "fastestDetail"
-    ).textContent =
-        fastest.pickup +
-        " minute estimated pickup";
+    );
 
 }
 
 
-/* ==========================================
-   SORT
-========================================== */
+/*
+   Turn raw OpenStreetMap tags into a
+   simple, game-friendly category.
+*/
 
-function sortRides(){
+function classifyPoi(tags) {
 
-    renderRides();
+
+    if (tags.historic) {
+
+        return {
+            label: tags.historic.replace(/_/g,' '),
+            icon: 'fa-landmark',
+            color: '#ffd400'
+        };
+
+    }
+
+
+    if (tags.tourism) {
+
+        return {
+            label: tags.tourism.replace(/_/g,' '),
+            icon: 'fa-monument',
+            color: '#a855ff'
+        };
+
+    }
+
+
+    if (tags.amenity) {
+
+        return {
+            label: tags.amenity.replace(/_/g,' '),
+            icon: 'fa-utensils',
+            color: '#ff8a00'
+        };
+
+    }
+
+
+    if (tags.shop) {
+
+        return {
+            label: tags.shop.replace(/_/g,' ') + ' shop',
+            icon: 'fa-store',
+            color: '#20ff91'
+        };
+
+    }
+
+
+    return {
+        label: 'local business',
+        icon: 'fa-map-pin',
+        color: '#00f6ff'
+    };
 
 }
 
 
-/* ==========================================
-   TOAST
-========================================== */
+/*
+   Load real nearby businesses / attractions,
+   hide the Golden Key at one of them, and
+   drop a marker for each on the map.
+*/
 
-function showToast(message){
+async function loadNearbyPOIs() {
 
-    const toast =
+
+    poiList = [];
+
+    goldenKeyPoiIndex = -1;
+
+    gameWon = false;
+
+
+    addLog(
+        'SCANNING AREA FOR LOCAL BUSINESSES...'
+    );
+
+
+    try {
+
+        const elements =
+            await fetchNearbyPOIs(
+                gameState.lat,
+                gameState.lng
+            );
+
+
+        if (
+            !elements.length
+        ) {
+
+            addLog(
+                'NO NEARBY BUSINESS DATA FOUND FOR THIS ZIP CODE.'
+            );
+
+            return;
+
+        }
+
+
+        const shuffled =
+
+            elements
+                .sort(() => Math.random() - 0.5)
+                .slice(0, 25);
+
+
+        poiList =
+            shuffled.map(
+
+                (el, i) => {
+
+                    const info =
+                        classifyPoi(
+                            el.tags
+                        );
+
+                    return {
+
+                        id: i,
+
+                        name: el.tags.name,
+
+                        lat: el.lat,
+
+                        lng: el.lon,
+
+                        tags: el.tags,
+
+                        category: info.label,
+
+                        icon: info.icon,
+
+                        color: info.color,
+
+                        website:
+                            el.tags.website
+                            ||
+                            el.tags['contact:website']
+                            ||
+                            null,
+
+                        address:
+                            [
+                                el.tags['addr:housenumber'],
+                                el.tags['addr:street']
+                            ]
+                            .filter(Boolean)
+                            .join(' '),
+
+                        searched: false,
+
+                        isGoldenKey: false
+
+                    };
+
+                }
+
+            );
+
+
+        goldenKeyPoiIndex =
+            Math.floor(
+                Math.random() * poiList.length
+            );
+
+
+        poiList[goldenKeyPoiIndex].isGoldenKey =
+            true;
+
+
+        placePoiMarkers();
+
+
+        addLog(
+
+            `${poiList.length} LOCAL BUSINESSES MAPPED // THE GOLDEN KEY IS HIDDEN AMONG THEM`
+
+        );
+
+
+        addLog(
+
+            'TIP: ROLL THE DIE FOR MOVES, THEN CLICK A MARKER ON THE MAP TO SEARCH IT.'
+
+        );
+
+
+    } catch(error) {
+
+        addLog(
+
+            `BUSINESS SCAN FAILED // ${error.message}`
+
+        );
+
+    }
+
+}
+
+
+/*
+   Draw a clickable marker for every
+   local business / attraction.
+*/
+
+function placePoiMarkers() {
+
+
+    poiMarkers.forEach(
+
+        marker =>
+            map.removeLayer(marker)
+
+    );
+
+
+    poiMarkers = [];
+
+
+    poiList.forEach(
+
+        poi => {
+
+
+            const ringColor =
+                poi.searched
+                    ? '#3a4a5c'
+                    : poi.color;
+
+
+            const icon =
+                L.divIcon({
+
+                    html: `
+
+                        <div style="
+                            width:34px;
+                            height:34px;
+
+                            display:flex;
+                            align-items:center;
+                            justify-content:center;
+
+                            border-radius:50%;
+
+                            background:rgba(2,8,18,.85);
+
+                            border:2px solid ${ringColor};
+
+                            box-shadow:
+                                ${poi.searched
+                                    ? 'none'
+                                    : `0 0 12px ${ringColor}`};
+                        ">
+
+                            <i
+                                class="fa-solid ${poi.icon}"
+                                style="
+                                    color:${ringColor};
+                                    font-size:14px;
+                                ">
+                            </i>
+
+                        </div>
+
+                    `,
+
+                    className: 'poi-marker',
+
+                    iconSize: [34,34],
+
+                    iconAnchor: [17,17]
+
+                });
+
+
+            const marker =
+
+                L.marker(
+
+                    [poi.lat, poi.lng],
+
+                    { icon }
+
+                )
+                .addTo(map);
+
+
+            marker.on(
+
+                'click',
+
+                () =>
+                    openBusinessEncounter(poi.id)
+
+            );
+
+
+            poiMarkers.push(
+                marker
+            );
+
+        }
+
+    );
+
+}
+
+
+/*
+   Distance (meters) between two
+   map coordinates.
+*/
+
+function haversineDistance(lat1, lon1, lat2, lon2) {
+
+
+    const R = 6371000;
+
+    const toRad =
+        d => d * Math.PI / 180;
+
+    const dLat =
+        toRad(lat2 - lat1);
+
+    const dLon =
+        toRad(lon2 - lon1);
+
+    const a =
+
+        Math.sin(dLat/2) ** 2
+        +
+        Math.cos(toRad(lat1))
+        *
+        Math.cos(toRad(lat2))
+        *
+        Math.sin(dLon/2) ** 2;
+
+
+    return (
+
+        R * 2 *
+        Math.atan2(
+            Math.sqrt(a),
+            Math.sqrt(1 - a)
+        )
+
+    );
+
+}
+
+
+/*
+   Compass direction from one
+   coordinate toward another.
+*/
+
+function bearingToCompass(lat1, lon1, lat2, lon2) {
+
+
+    const toRad =
+        d => d * Math.PI / 180;
+
+    const y =
+        Math.sin(toRad(lon2 - lon1))
+        *
+        Math.cos(toRad(lat2));
+
+    const x =
+
+        Math.cos(toRad(lat1))
+        *
+        Math.sin(toRad(lat2))
+        -
+        Math.sin(toRad(lat1))
+        *
+        Math.cos(toRad(lat2))
+        *
+        Math.cos(toRad(lon2 - lon1));
+
+
+    const brng =
+        (Math.atan2(y, x) * 180 / Math.PI + 360) % 360;
+
+
+    const dirs = [
+
+        'north', 'northeast', 'east', 'southeast',
+        'south', 'southwest', 'west', 'northwest'
+
+    ];
+
+
+    return dirs[
+        Math.round(brng / 45) % 8
+    ];
+
+}
+
+
+/*
+   Build a spoken/written clue pointing
+   toward the Golden Key location.
+*/
+
+function generateClue(poi) {
+
+
+    const key =
+        poiList[goldenKeyPoiIndex];
+
+
+    const distMeters =
+        haversineDistance(
+
+            poi.lat, poi.lng,
+            key.lat, key.lng
+
+        );
+
+
+    const blocks =
+        Math.max(
+            1,
+            Math.round(distMeters / 80)
+        );
+
+
+    const dir =
+        bearingToCompass(
+
+            poi.lat, poi.lng,
+            key.lat, key.lng
+
+        );
+
+
+    return (
+
+        `The key seems to be about ${blocks} block${blocks === 1 ? '' : 's'} ` +
+        `to the ${dir}, near a ${key.category}.`
+
+    );
+
+}
+
+
+/*
+   Player clicks a real business
+   marker on the map.
+*/
+
+function openBusinessEncounter(id) {
+
+
+    if (
+        !gameStarted
+    ) {
+
+        alert(
+            'Initialize the quest first.'
+        );
+
+        return;
+
+    }
+
+
+    if (
+        gameState.arrested
+    ) {
+
+        alert(
+            'You cannot explore while incarcerated.'
+        );
+
+        return;
+
+    }
+
+
+    if (
+        gameWon
+    ) {
+
+        alert(
+            'The Golden Key has already been found this quest!'
+        );
+
+        return;
+
+    }
+
+
+    if (
+        movesLeft <= 0
+    ) {
+
+        alert(
+            'Roll the die for moves first.'
+        );
+
+        return;
+
+    }
+
+
+    const poi =
+        poiList.find(
+            p => p.id === id
+        );
+
+
+    if (!poi) return;
+
+
+    const catLabel =
+
+        poi.category.charAt(0).toUpperCase()
+        +
+        poi.category.slice(1);
+
+
+    let body = `
+
+        <strong style="color:var(--gold);">${poi.name}</strong><br>
+
+        <span style="color:var(--muted);font-size:.7rem;">
+            ${catLabel}${poi.address ? ' • ' + poi.address : ''}
+        </span><br><br>
+
+        ${poi.searched
+            ? 'You already searched this location.'
+            : 'Search this location for the Golden Key? (Costs 1 move)'}
+
+    `;
+
+
+    const actions = [];
+
+
+    if (!poi.searched) {
+
+        actions.push({
+            text: 'SEARCH LOCATION',
+            action: () => searchBusiness(poi.id)
+        });
+
+    }
+
+
+    if (poi.website) {
+
+        actions.push({
+            text: 'VISIT WEBSITE',
+            action: () => window.open(poi.website, '_blank')
+        });
+
+    }
+
+
+    actions.push({
+        text: 'LEAVE',
+        action: closeModal
+    });
+
+
+    showModal(
+        'BUSINESS ENCOUNTER',
+        body,
+        actions
+    );
+
+}
+
+
+/*
+   Search a real business for the
+   Golden Key.
+*/
+
+function searchBusiness(id) {
+
+
+    const poi =
+        poiList.find(
+            p => p.id === id
+        );
+
+
+    if (
+        !poi ||
+        poi.searched
+    ) {
+
+        closeModal();
+
+        return;
+
+    }
+
+
+    movesLeft--;
+
+
+    document
+        .getElementById('moves-count')
+        .innerText = movesLeft;
+
+
+    poi.searched = true;
+
+
+    if (poi.isGoldenKey) {
+
+
+        gameWon = true;
+
+
+        gameState.clues++;
+
+
+        awardPoints(
+            500,
+            'GOLDEN KEY DISCOVERED'
+        );
+
+
+        addLog(
+            `🔑 GOLDEN KEY FOUND AT ${poi.name}!`
+        );
+
+
+        placePoiMarkers();
+
+
+        speak(
+
+            `Congratulations! The Golden Key was hidden at ${poi.name}. ` +
+            `Visit them to celebrate your quest!`
+
+        );
+
+
+        showModal(
+
+            '🔑 GOLDEN KEY FOUND!',
+
+            `
+                <strong style="color:var(--gold);font-size:1.1rem;">
+                    ${poi.name}
+                </strong><br>
+
+                ${poi.address ? poi.address + '<br>' : ''}
+                <br>
+
+                You found the Golden Key to the city! Be sure to stop by
+                ${poi.name} in real life to see what they have to offer.
+            `,
+
+            [
+                { text: 'CLAIM VICTORY', action: closeModal }
+            ]
+
+        );
+
+
+    } else {
+
+
+        gameState.clues++;
+
+
+        const clue =
+            generateClue(poi);
+
+
+        awardPoints(
+            15,
+            'CLUE GATHERED'
+        );
+
+
+        addLog(
+            `CLUE // ${clue}`
+        );
+
+
+        speak(clue);
+
+
+        placePoiMarkers();
+
+
+        showModal(
+
+            'NO KEY HERE',
+
+            `
+                No Golden Key at ${poi.name}, but a local tells you:
+                <br><br>
+                <em>"${clue}"</em>
+            `,
+
+            [
+                { text: 'CONTINUE', action: closeModal }
+            ]
+
+        );
+
+    }
+
+}
+
+
+/*
+   Simple instructions modal.
+*/
+
+function showHowToPlay() {
+
+
+    showModal(
+
+        'HOW TO PLAY',
+
+        `
+            <ol style="padding-left:18px;line-height:1.8;">
+
+                <li>Roll the die (bottom of screen) to get movement points.</li>
+
+                <li>Every glowing marker on the map is a real local business or attraction.</li>
+
+                <li>Click a marker, then choose SEARCH LOCATION. Each search costs 1 move.</li>
+
+                <li>No key there? You'll get a spoken and written clue pointing toward it.</li>
+
+                <li>Find the Golden Key to win — then go visit the business that hosted it!</li>
+
+            </ol>
+        `,
+
+        [
+            { text: 'GOT IT', action: closeModal }
+        ]
+
+    );
+
+}
+
+
+/* =========================================================
+   ACTIVITY LOG
+========================================================= */
+
+function addLog(text) {
+
+
+    const box =
         document.getElementById(
-            "toast"
+            'log-box'
         );
 
 
-    toast.textContent =
-        message;
+    const line =
+        document.createElement(
+            'div'
+        );
 
 
-    toast.classList.add(
-        "show"
+    line.className =
+        'log-line';
+
+
+    line.innerHTML = `
+
+        <span style="
+            color:var(--cyan);
+        ">
+            &gt;
+        </span>
+
+        ${text}
+
+    `;
+
+
+    box.appendChild(
+        line
     );
 
 
-    clearTimeout(
-        window.toastTimer
+    box.scrollTop =
+        box.scrollHeight;
+
+}
+
+
+/* =========================================================
+   VOICE
+========================================================= */
+
+function speak(text) {
+
+
+    if (
+        !('speechSynthesis' in window)
+    ) {
+
+        return;
+
+    }
+
+
+    window.speechSynthesis.cancel();
+
+
+    const utterance =
+        new SpeechSynthesisUtterance(
+            text
+        );
+
+
+    utterance.pitch =
+        selectedGender === 'female'
+            ? 1.1
+            : .9;
+
+
+    window.speechSynthesis.speak(
+        utterance
+    );
+
+}
+
+
+/* =========================================================
+   GENDER
+========================================================= */
+
+function setGender(gender) {
+
+
+    selectedGender =
+        gender;
+
+
+    document
+        .getElementById(
+            'btn-female'
+        )
+        .classList
+        .toggle(
+            'active',
+            gender === 'female'
+        );
+
+
+    document
+        .getElementById(
+            'btn-male'
+        )
+        .classList
+        .toggle(
+            'active',
+            gender === 'male'
+        );
+
+}
+
+
+/* =========================================================
+   GAME INITIALIZATION
+========================================================= */
+
+async function initGame() {
+
+
+    gameState.name =
+
+        document
+            .getElementById(
+                'player-name-input'
+            )
+            .value
+            .trim()
+            ||
+            'Explorer1';
+
+
+    gameState.zip =
+
+        document
+            .getElementById(
+                'zip-input'
+            )
+            .value
+            .trim()
+            ||
+            '23185';
+
+
+    gameState.transport =
+
+        document
+            .getElementById(
+                'transport-input'
+            )
+            .value;
+
+
+    /*
+       Try the free ZIP lookup.
+    */
+
+    try {
+
+        addLog(
+            `LOCATING ZIP CODE // ${gameState.zip}`
+        );
+
+
+        const location =
+            await getCoordinatesFromZip(
+                gameState.zip
+            );
+
+
+        gameState.lat =
+            location.lat;
+
+
+        gameState.lng =
+            location.lng;
+
+
+        gameState.city =
+            location.city;
+
+
+        gameState.state =
+            location.state;
+
+
+        addLog(
+
+            `LOCATION LOCKED // ${location.city}, ${location.state}`
+
+        );
+
+
+    } catch(error) {
+
+
+        /*
+           The game still works if the
+           ZIP service temporarily fails.
+        */
+
+        addLog(
+
+            `LOCATION LOOKUP FAILED // ${error.message}`
+
+        );
+
+
+        addLog(
+
+            'DEFAULT MAP LOCATION LOADED.'
+
+        );
+
+    }
+
+
+    /*
+       Initialize visual map.
+    */
+
+    initMap(
+
+        gameState.lat,
+        gameState.lng
+
     );
 
 
-    window.toastTimer =
-        setTimeout(
+    /*
+       Load real local businesses and
+       hide the Golden Key among them.
+    */
+
+    await loadNearbyPOIs();
+
+
+    /*
+       Start game.
+    */
+
+    gameStarted =
+        true;
+
+
+    /*
+       Start live point timer.
+    */
+
+    startLivePointSystem();
+
+
+    /*
+       Refresh interface.
+    */
+
+    updateUI();
+
+
+    addLog(
+
+        `QUEST INITIALIZED // Welcome ${gameState.name}.`
+
+    );
+
+
+    addLog(
+
+        'LIVE POINT ACCUMULATION ACTIVE.'
+
+    );
+
+
+    speak(
+
+        `Welcome ${gameState.name}. Quest initialized.`
+
+    );
+
+}
+
+
+/* =========================================================
+   LIVE POINT SYSTEM
+========================================================= */
+
+function startLivePointSystem() {
+
+
+    if (gameTimer) {
+
+        clearInterval(
+            gameTimer
+        );
+
+    }
+
+
+    gameTimer =
+
+        setInterval(
+
             () => {
 
-                toast.classList.remove(
-                    "show"
-                );
+
+                if (
+                    !gameStarted
+                ) {
+
+                    return;
+
+                }
+
+
+                /*
+                   Players in jail don't earn
+                   normal open-world points.
+                */
+
+                if (
+                    gameState.arrested
+                ) {
+
+                    return;
+
+                }
+
+
+                /*
+                   Every second of active
+                   gameplay adds one point.
+                */
+
+                gameState.playSeconds++;
+
+                gameState.points++;
+
+
+                /*
+                   Reserve points gradually
+                   regenerate while playing.
+                */
+
+                if (
+                    gameState.reservePoints <
+                    100
+                ) {
+
+                    gameState.reservePoints =
+
+                        Math.min(
+
+                            100,
+
+                            gameState.reservePoints
+                            +
+                            0.1
+
+                        );
+
+                }
+
+
+                /*
+                   Students gain career XP.
+                */
+
+                if (
+                    gameState.education
+                ) {
+
+                    gameState.careerXP++;
+
+                }
+
+
+                updateUI();
 
             },
-            2500
+
+            1000
+
         );
 
 }
+
+
+/* =========================================================
+   AWARD POINTS
+========================================================= */
+
+function awardPoints(
+    amount,
+    reason
+) {
+
+
+    gameState.points +=
+        amount;
+
+
+    const display =
+        document.getElementById(
+            'points-display'
+        );
+
+
+    display.classList.remove(
+        'pulse'
+    );
+
+
+    void display.offsetWidth;
+
+
+    display.classList.add(
+        'pulse'
+    );
+
+
+    addLog(
+
+        `+${amount} POINTS // ${reason}`
+
+    );
+
+
+    updateUI();
+
+}
+
+
+/* =========================================================
+   DICE / MOVEMENT
+========================================================= */
+
+function rollDice() {
+
+
+    if (
+        !gameStarted
+    ) {
+
+        alert(
+            'Initialize the quest first.'
+        );
+
+        return;
+
+    }
+
+
+    if (
+        gameState.arrested
+    ) {
+
+        alert(
+            'You are currently in jail.'
+        );
+
+        return;
+
+    }
+
+
+    if (
+        gameState.hidden
+    ) {
+
+        alert(
+            'You are hiding. Exit hiding first.'
+        );
+
+        return;
+
+    }
+
+
+    const roll =
+        Math.floor(
+            Math.random() * 6
+        ) + 1;
+
+
+    let bonus =
+        0;
+
+
+    if (
+        gameState.transport ===
+        'car'
+    ) {
+
+        bonus =
+            2;
+
+    } else if (
+        gameState.transport ===
+        'bike'
+    ) {
+
+        bonus =
+            1;
+
+    }
+
+
+    movesLeft =
+        roll + bonus;
+
+
+    document
+        .getElementById(
+            'moves-count'
+        )
+        .innerText =
+        movesLeft;
+
+
+    addLog(
+
+        `MOVEMENT ROLL // ${roll} + ${bonus} transport bonus`
+
+    );
+
+
+    /*
+       Protected education players
+       don't lose life from normal movement.
+    */
+
+    if (
+        !gameState.protected
+    ) {
+
+        gameState.life =
+
+            Math.max(
+
+                0,
+
+                gameState.life -
+                2
+
+            );
+
+    }
+
+
+    updateUI();
+
+}
+
+
+/* =========================================================
+   CAREER CENTER
+========================================================= */
+
+function openCareerCenter() {
+
+
+    if (
+        gameState.arrested
+    ) {
+
+        alert(
+            'Career services are unavailable while incarcerated.'
+        );
+
+        return;
+
+    }
+
+
+    showModal(
+
+        'CAREER & EDUCATION NETWORK',
+
+        `
+
+            Choose your career path.
+
+            While actively enrolled in
+            Police Academy, Law School,
+            or College, your player is
+            protected from player-versus-player
+            harm and continues earning points.
+
+        `,
+
+        [
+
+            {
+
+                text:
+                    'POLICE ACADEMY',
+
+                action:
+                    enrollPoliceAcademy
+
+            },
+
+            {
+
+                text:
+                    'LAW SCHOOL',
+
+                action:
+                    enrollLawSchool
+
+            },
+
+            {
+
+                text:
+                    'COLLEGE',
+
+                action:
+                    enrollCollege
+
+            },
+
+            {
+
+                text:
+                    'LEAVE',
+
+                action:
+                    closeModal
+
+            }
+
+        ]
+
+    );
+
+}
+
+
+/* =========================================================
+   POLICE ACADEMY
+========================================================= */
+
+function enrollPoliceAcademy() {
+
+
+    gameState.career =
+        'policeStudent';
+
+
+    gameState.education =
+        'police';
+
+
+    gameState.protected =
+        true;
+
+
+    updateProtection();
+
+
+    addLog(
+        'ENROLLED // POLICE ACADEMY'
+    );
+
+
+    addLog(
+        'EDUCATION PROTECTION ENABLED'
+    );
+
+
+    showPoliceTraining();
+
+
+    updateUI();
+
+}
+
+
+function showPoliceTraining() {
+
+
+    showModal(
+
+        'POLICE ACADEMY',
+
+        `
+
+            POLICE ACADEMY TRAINING
+
+            Complete all three fictional
+            game-training modules.
+
+            Training categories:
+
+            • Arrest procedure
+            • Defensive tactics
+            • Firearms safety
+            • Emergency response
+
+            These are fictional game skills
+            and do not provide real-world
+            weapons instruction.
+
+        `,
+
+        [
+
+            {
+
+                text:
+                    'ARREST PROCEDURE',
+
+                action:
+                    () =>
+                    completePoliceModule(
+                        'ARREST PROCEDURE'
+                    )
+
+            },
+
+            {
+
+                text:
+                    'DEFENSIVE TACTICS',
+
+                action:
+                    () =>
+                    completePoliceModule(
+                        'DEFENSIVE TACTICS'
+                    )
+
+            },
+
+            {
+
+                text:
+                    'FIREARMS SAFETY',
+
+                action:
+                    () =>
+                    completePoliceModule(
+                        'FIREARMS SAFETY'
+                    )
+
+            },
+
+            {
+
+                text:
+                    'GRADUATE',
+
+                action:
+                    graduatePolice
+
+            }
+
+        ]
+
+    );
+
+}
+
+
+function completePoliceModule(
+    module
+) {
+
+
+    gameState.academyLevel++;
+
+
+    gameState.careerXP +=
+        50;
+
+
+    awardPoints(
+
+        40,
+
+        `POLICE ACADEMY // ${module}`
+
+    );
+
+
+    if (
+        gameState.academyLevel >= 3
+    ) {
+
+        addLog(
+            'ALL POLICE ACADEMY MODULES COMPLETE'
+        );
+
+    }
+
+
+    showPoliceTraining();
+
+}
+
+
+function graduatePolice() {
+
+
+    if (
+        gameState.academyLevel < 3
+    ) {
+
+        alert(
+            'Complete all three academy modules first.'
+        );
+
+        return;
+
+    }
+
+
+    gameState.career =
+        'police';
+
+
+    gameState.education =
+        null;
+
+
+    gameState.protected =
+        false;
+
+
+    awardPoints(
+
+        150,
+
+        'POLICE ACADEMY GRADUATION'
+
+    );
+
+
+    addLog(
+        'STATUS UPGRADED // POLICE OFFICER'
+    );
+
+
+    closeModal();
+
+
+    updateProtection();
+
+
+    updateUI();
+
+}
+
+
+/* =========================================================
+   LAW SCHOOL
+========================================================= */
+
+function enrollLawSchool() {
+
+
+    gameState.career =
+        'lawStudent';
+
+
+    gameState.education =
+        'law';
+
+
+    gameState.protected =
+        true;
+
+
+    updateProtection();
+
+
+    addLog(
+        'ENROLLED // LAW SCHOOL'
+    );
+
+
+    addLog(
+        'EDUCATION PROTECTION ENABLED'
+    );
+
+
+    showLawTraining();
+
+
+    updateUI();
+
+}
+
+
+function showLawTraining() {
+
+
+    showModal(
+
+        'LAW SCHOOL',
+
+        `
+
+            LEGAL TRAINING PROGRAM
+
+            Complete all three fictional
+            game-law modules.
+
+            • Criminal procedure
+            • Courtroom advocacy
+            • Client representation
+
+        `,
+
+        [
+
+            {
+
+                text:
+                    'CRIMINAL PROCEDURE',
+
+                action:
+                    () =>
+                    completeLawModule(
+                        'CRIMINAL PROCEDURE'
+                    )
+
+            },
+
+            {
+
+                text:
+                    'COURTROOM ADVOCACY',
+
+                action:
+                    () =>
+                    completeLawModule(
+                        'COURTROOM ADVOCACY'
+                    )
+
+            },
+
+            {
+
+                text:
+                    'CLIENT REPRESENTATION',
+
+                action:
+                    () =>
+                    completeLawModule(
+                        'CLIENT REPRESENTATION'
+                    )
+
+            },
+
+            {
+
+                text:
+                    'GRADUATE',
+
+                action:
+                    graduateLaw
+
+            }
+
+        ]
+
+    );
+
+}
+
+
+function completeLawModule(
+    module
+) {
+
+
+    gameState.lawLevel++;
+
+
+    gameState.careerXP +=
+        50;
+
+
+    awardPoints(
+
+        40,
+
+        `LAW SCHOOL // ${module}`
+
+    );
+
+
+    showLawTraining();
+
+}
+
+
+function graduateLaw() {
+
+
+    if (
+        gameState.lawLevel < 3
+    ) {
+
+        alert(
+            'Complete all three law-school modules first.'
+        );
+
+        return;
+
+    }
+
+
+    gameState.career =
+        'lawyer';
+
+
+    gameState.education =
+        null;
+
+
+    gameState.protected =
+        false;
+
+
+    awardPoints(
+
+        150,
+
+        'LAW SCHOOL GRADUATION'
+
+    );
+
+
+    addLog(
+        'STATUS UPGRADED // GAME LAWYER'
+    );
+
+
+    closeModal();
+
+
+    updateProtection();
+
+
+    updateUI();
+
+}
+
+
+/* =========================================================
+   COLLEGE
+========================================================= */
+
+function enrollCollege() {
+
+
+    gameState.career =
+        'college';
+
+
+    gameState.education =
+        'college';
+
+
+    gameState.protected =
+        true;
+
+
+    updateProtection();
+
+
+    awardPoints(
+
+        20,
+
+        'COLLEGE ENROLLMENT'
+
+    );
+
+
+    addLog(
+        'ENROLLED // COLLEGE'
+    );
+
+
+    addLog(
+        'EDUCATION PROTECTION ENABLED'
+    );
+
+
+    closeModal();
+
+
+    updateUI();
+
+}
+
+
+/* =========================================================
+   CALL POLICE
+========================================================= */
+
+function callPolice() {
+
+
+    if (
+        !gameStarted
+    ) {
+
+        return;
+
+    }
+
+
+    const cost =
+        25;
+
+
+    if (
+        gameState.points <
+        cost
+    ) {
+
+        alert(
+            'You need 25 points to call police.'
+        );
+
+        return;
+
+    }
+
+
+    gameState.points -=
+        cost;
+
+
+    addLog(
+        'EMERGENCY CALL // POLICE DISPATCHED'
+    );
+
+
+    showModal(
+
+        'POLICE DISPATCH',
+
+        `
+
+            Police response requested.
+
+            Choose the type of fictional
+            game incident to report.
+
+        `,
+
+        [
+
+            {
+
+                text:
+                    'REPORT ASSAULT',
+
+                action:
+                    () =>
+                    reportCrime(
+                        'ASSAULT'
+                    )
+
+            },
+
+            {
+
+                text:
+                    'REPORT ROBBERY',
+
+                action:
+                    () =>
+                    reportCrime(
+                        'ROBBERY'
+                    )
+
+            },
+
+            {
+
+                text:
+                    'REPORT THEFT',
+
+                action:
+                    () =>
+                    reportCrime(
+                        'THEFT'
+                    )
+
+            },
+
+            {
+
+                text:
+                    'CLOSE',
+
+                action:
+                    closeModal
+
+            }
+
+        ]
+
+    );
+
+
+    updateUI();
+
+}
+
+
+/* =========================================================
+   REPORT CRIME
+========================================================= */
+
+function reportCrime(
+    type
+) {
+
+
+    gameState.crimesWitnessed++;
+
+
+    addLog(
+        `CRIME REPORTED // ${type}`
+    );
+
+
+    /*
+       If player is a police officer,
+       give them the officer response.
+    */
+
+    if (
+        gameState.career ===
+        'police'
+    ) {
+
+        showOfficerResponse(
+            type
+        );
+
+        return;
+
+    }
+
+
+    showModal(
+
+        'POLICE RESPONSE',
+
+        `
+
+            Dispatch received your
+            ${type} report.
+
+            Officers are responding to
+            the simulated game incident.
+
+        `,
+
+        [
+
+            {
+
+                text:
+                    'CLOSE',
+
+                action:
+                    closeModal
+
+            }
+
+        ]
+
+    );
+
+}
+
+
+/* =========================================================
+   OFFICER RESPONSE
+========================================================= */
+
+function showOfficerResponse(
+    type
+) {
+
+
+    showModal(
+
+        'OFFICER RESPONSE',
+
+        `
+
+            INCIDENT TYPE:
+
+            ${type}
+
+            As a certified game police
+            officer, you can initiate
+            the fictional arrest mechanic.
+
+        `,
+
+        [
+
+            {
+
+                text:
+                    'ARREST SUSPECT',
+
+                action:
+                    () =>
+                    arrestSuspect(
+                        type
+                    )
+
+            },
+
+            {
+
+                text:
+                    'DISENGAGE',
+
+                action:
+                    closeModal
+
+            }
+
+        ]
+
+    );
+
+}
+
+
+function arrestSuspect(
+    type
+) {
+
+
+    gameState.careerXP +=
+        30;
+
+
+    awardPoints(
+
+        75,
+
+        `ARREST COMPLETED // ${type}`
+
+    );
+
+
+    addLog(
+        `SUSPECT ARRESTED // ${type}`
+    );
+
+
+    closeModal();
+
+
+    updateUI();
+
+}
+
+
+/* =========================================================
+   HIRE LAWYER
+========================================================= */
+
+function hireLawyer() {
+
+
+    const cost =
+        100;
+
+
+    if (
+        gameState.points <
+        cost
+    ) {
+
+        alert(
+            `Hiring a lawyer costs ${cost} points.`
+        );
+
+        return;
+
+    }
+
+
+    gameState.points -=
+        cost;
+
+
+    gameState.lawyerHired =
+        true;
+
+
+    addLog(
+        'LEGAL COUNSEL RETAINED'
+    );
+
+
+    showModal(
+
+        'LEGAL COUNSEL',
+
+        `
+
+            Your game lawyer is now retained.
+
+            If you are arrested, legal counsel
+            can reduce your simulated jail
+            sentence.
+
+        `,
+
+        [
+
+            {
+
+                text:
+                    'CLOSE',
+
+                action:
+                    closeModal
+
+            }
+
+        ]
+
+    );
+
+
+    updateUI();
+
+}
+
+
+/* =========================================================
+   HIDING / EVASION
+========================================================= */
+
+function openHideoutMenu() {
+
+
+    if (
+        gameState.protected
+    ) {
+
+        alert(
+            'You are already protected while attending education.'
+        );
+
+        return;
+
+    }
+
+
+    if (
+        gameState.hidden
+    ) {
+
+        exitHideout();
+
+        return;
+
+    }
+
+
+    showModal(
+
+        'EVASION NETWORK',
+
+        `
+
+            Hide temporarily from detection.
+
+            Hiding consumes reserve points.
+
+            Available locations:
+
+        `,
+
+        [
+
+            {
+
+                text:
+                    'TRASH CONTAINER',
+
+                action:
+                    () =>
+                    enterHideout(
+                        'TRASH CONTAINER',
+                        5
+                    )
+
+            },
+
+            {
+
+                text:
+                    'ABANDONED BUILDING',
+
+                action:
+                    () =>
+                    enterHideout(
+                        'ABANDONED BUILDING',
+                        10
+                    )
+
+            },
+
+            {
+
+                text:
+                    'DARK ALLEY',
+
+                action:
+                    () =>
+                    enterHideout(
+                        'DARK ALLEY',
+                        7
+                    )
+
+            },
+
+            {
+
+                text:
+                    'CANCEL',
+
+                action:
+                    closeModal
+
+            }
+
+        ]
+
+    );
+
+}
+
+
+function enterHideout(
+    place,
+    cost
+) {
+
+
+    if (
+        gameState.reservePoints <
+        cost
+    ) {
+
+        alert(
+            'Not enough reserve points.'
+        );
+
+        return;
+
+    }
+
+
+    gameState.reservePoints -=
+        cost;
+
+
+    gameState.hidden =
+        true;
+
+
+    gameState.hidingPlace =
+        place;
+
+
+    addLog(
+
+        `HIDDEN // ${place} // -${cost} RESERVE`
+
+    );
+
+
+    closeModal();
+
+
+    updateProtection();
+
+
+    updateUI();
+
+}
+
+
+function exitHideout() {
+
+
+    addLog(
+
+        `LEFT HIDEOUT // ${gameState.hidingPlace}`
+
+    );
+
+
+    gameState.hidden =
+        false;
+
+
+    gameState.hidingPlace =
+        null;
+
+
+    updateProtection();
+
+
+    updateUI();
+
+}
+
+
+/* =========================================================
+   JAIL
+========================================================= */
+
+function arrestPlayer() {
+
+
+    /*
+       Educational protection.
+    */
+
+    if (
+        gameState.protected
+    ) {
+
+        addLog(
+            'ARREST BLOCKED // EDUCATION PROTECTION ACTIVE'
+        );
+
+        return;
+
+    }
+
+
+    gameState.arrested =
+        true;
+
+
+    gameState.jailSeconds =
+        120;
+
+
+    /*
+       Current lawyer contract is consumed
+       when used for this arrest.
+    */
+
+    if (
+        gameState.lawyerHired
+    ) {
+
+        gameState.jailSeconds =
+            60;
+
+        gameState.lawyerHired =
+            false;
+
+        addLog(
+            'LEGAL COUNSEL ACTIVATED // JAIL SENTENCE REDUCED'
+        );
+
+    }
+
+
+    addLog(
+        'PLAYER ARRESTED // TRANSPORTED TO GAME JAIL'
+    );
+
+
+    startJailTimer();
+
+
+    updateUI();
+
+}
+
+
+function startJailTimer() {
+
+
+    if (jailTimer) {
+
+        clearInterval(
+            jailTimer
+        );
+
+    }
+
+
+    jailTimer =
+
+        setInterval(
+
+            () => {
+
+
+                if (
+                    gameState.jailSeconds <=
+                    0
+                ) {
+
+                    releaseFromJail();
+
+                    return;
+
+                }
+
+
+                gameState.jailSeconds--;
+
+
+                updateUI();
+
+            },
+
+            1000
+
+        );
+
+}
+
+
+function releaseFromJail() {
+
+
+    clearInterval(
+        jailTimer
+    );
+
+
+    gameState.arrested =
+        false;
+
+
+    gameState.jailSeconds =
+        0;
+
+
+    addLog(
+        'RELEASED // JAIL SENTENCE COMPLETE'
+    );
+
+
+    updateUI();
+
+}
+
+
+/* =========================================================
+   LIFE RESTORATION
+========================================================= */
+
+function replenishFoodWater() {
+
+
+    const cost =
+        20;
+
+
+    if (
+        gameState.points <
+        cost
+    ) {
+
+        alert(
+            'Restoration costs 20 points.'
+        );
+
+        return;
+
+    }
+
+
+    gameState.points -=
+        cost;
+
+
+    gameState.life =
+        100;
+
+
+    addLog(
+        'LIFE SYSTEM RESTORED // -20 POINTS'
+    );
+
+
+    updateUI();
+
+}
+
+
+/* =========================================================
+   PROTECTION STATUS
+========================================================= */
+
+function updateProtection() {
+
+
+    const status =
+        document.getElementById(
+            'protection-status'
+        );
+
+
+    if (
+        gameState.hidden
+    ) {
+
+        status.innerText =
+            `● HIDDEN // ${gameState.hidingPlace}`;
+
+        status.style.color =
+            '#a855ff';
+
+        return;
+
+    }
+
+
+    if (
+        gameState.protected
+    ) {
+
+        status.innerText =
+            '● EDUCATION PROTECTION ACTIVE';
+
+        status.style.color =
+            '#20ff91';
+
+        return;
+
+    }
+
+
+    if (
+        gameState.arrested
+    ) {
+
+        status.innerText =
+            '● INCARCERATED';
+
+        status.style.color =
+            '#ff3159';
+
+        return;
+
+    }
+
+
+    status.innerText =
+        '● OPEN WORLD';
+
+    status.style.color =
+        '#20ff91';
+
+}
+
+
+/* =========================================================
+   UPDATE USER INTERFACE
+========================================================= */
+
+function updateUI() {
+
+
+    /*
+       Points
+    */
+
+    document
+        .getElementById(
+            'points-display'
+        )
+        .innerText =
+        Math.floor(
+            gameState.points
+        );
+
+
+    /*
+       Reserve
+    */
+
+    document
+        .getElementById(
+            'reserve-display'
+        )
+        .innerText =
+        Math.floor(
+            gameState.reservePoints
+        );
+
+
+    document
+        .getElementById(
+            'reserve-text'
+        )
+        .innerText =
+        Math.floor(
+            gameState.reservePoints
+        );
+
+
+    /*
+       Clues
+    */
+
+    document
+        .getElementById(
+            'clue-display'
+        )
+        .innerText =
+        gameState.clues;
+
+
+    /*
+       Crime reports
+    */
+
+    document
+        .getElementById(
+            'crime-display'
+        )
+        .innerText =
+        gameState.crimesWitnessed;
+
+
+    /*
+       Time
+    */
+
+    document
+        .getElementById(
+            'time-display'
+        )
+        .innerText =
+        formatTime(
+            gameState.playSeconds
+        );
+
+
+    /*
+       Life
+    */
+
+    document
+        .getElementById(
+            'life-text'
+        )
+        .innerText =
+        Math.floor(
+            gameState.life
+        );
+
+
+    document
+        .getElementById(
+            'life-bar'
+        )
+        .style.width =
+        `${gameState.life}%`;
+
+
+    /*
+       Reserve bar
+    */
+
+    document
+        .getElementById(
+            'reserve-bar'
+        )
+        .style.width =
+        `${gameState.reservePoints}%`;
+
+
+    /*
+       Career XP
+    */
+
+    document
+        .getElementById(
+            'career-xp-text'
+        )
+        .innerText =
+        Math.floor(
+            gameState.careerXP
+        );
+
+
+    document
+        .getElementById(
+            'career-xp-bar'
+        )
+        .style.width =
+        `${gameState.careerXP % 100}%`;
+
+
+    /*
+       Career information.
+    */
+
+    const career =
+        careers[
+            gameState.career
+        ] ||
+        careers.civilian;
+
+
+    document
+        .getElementById(
+            'career-name'
+        )
+        .innerText =
+        career.name;
+
+
+    const careerIcon =
+        document.getElementById(
+            'career-icon'
+        );
+
+
+    careerIcon.className =
+        `fa-solid ${career.icon}`;
+
+
+    careerIcon.style.color =
+        career.color;
+
+
+    let status =
+        'Open World Player';
+
+
+    if (
+        gameState.career ===
+        'policeStudent'
+    ) {
+
+        status =
+            `Academy Level ${gameState.academyLevel}/3`;
+
+    }
+
+
+    if (
+        gameState.career ===
+        'police'
+    ) {
+
+        status =
+            'Certified Game Officer';
+
+    }
+
+
+    if (
+        gameState.career ===
+        'lawStudent'
+    ) {
+
+        status =
+            `Law Level ${gameState.lawLevel}/3`;
+
+    }
+
+
+    if (
+        gameState.career ===
+        'lawyer'
+    ) {
+
+        status =
+            'Licensed Game Lawyer';
+
+    }
+
+
+    if (
+        gameState.career ===
+        'college'
+    ) {
+
+        status =
+            'College Student';
+
+    }
+
+
+    if (
+        gameState.arrested
+    ) {
+
+        status =
+            `JAIL // ${formatTime(
+                gameState.jailSeconds
+            )}`;
+
+    }
+
+
+    document
+        .getElementById(
+            'career-status'
+        )
+        .innerText =
+        status;
+
+
+    updateProtection();
+
+}
+
+
+/* =========================================================
+   TIME FORMAT
+========================================================= */
+
+function formatTime(
+    seconds
+) {
+
+
+    const mins =
+        Math.floor(
+            seconds / 60
+        );
+
+
+    const secs =
+        seconds % 60;
+
+
+    return (
+
+        String(mins)
+            .padStart(2,'0')
+
+        +
+
+        ':'
+
+        +
+
+        String(secs)
+            .padStart(2,'0')
+
+    );
+
+}
+
+
+/* =========================================================
+   MODAL SYSTEM
+========================================================= */
+
+function showModal(
+    heading,
+    body,
+    actions = []
+) {
+
+
+    document
+        .getElementById(
+            'modal-heading'
+        )
+        .innerText =
+        heading;
+
+
+    document
+        .getElementById(
+            'modal-body'
+        )
+        .innerHTML =
+        body;
+
+
+    const container =
+        document.getElementById(
+            'modal-actions'
+        );
+
+
+    container.innerHTML =
+        '';
+
+
+    actions.forEach(
+
+        action => {
+
+
+            const button =
+                document.createElement(
+                    'button'
+                );
+
+
+            button.className =
+                'option-btn';
+
+
+            button.innerText =
+                action.text;
+
+
+            button.onclick =
+                action.action;
+
+
+            container.appendChild(
+                button
+            );
+
+        }
+
+    );
+
+
+    document
+        .getElementById(
+            'modal-screen'
+        )
+        .style.display =
+        'flex';
+
+}
+
+
+/* =========================================================
+   CLOSE MODAL
+========================================================= */
+
+function closeModal() {
+
+
+    document
+        .getElementById(
+            'modal-screen'
+        )
+        .style.display =
+        'none';
+
+}
+
+
+/* =========================================================
+   ESCAPE KEY CLOSES MODAL
+========================================================= */
+
+document.addEventListener(
+
+    'keydown',
+
+    function(event) {
+
+        if (
+            event.key ===
+            'Escape'
+        ) {
+
+            closeModal();
+
+        }
+
+    }
+
+);
+
+
+/* =========================================================
+   INITIAL STARTUP
+========================================================= */
+
+window.onload =
+    function() {
+
+
+        /*
+           Show the default map before
+           the player starts.
+        */
+
+        initMap(
+
+            gameState.lat,
+            gameState.lng
+
+        );
+
+
+        addLog(
+            'NEXUS SYSTEM ONLINE'
+        );
+
+
+        addLog(
+            'FREE OPENSTREETMAP NAVIGATION READY'
+        );
+
+
+        addLog(
+            'ENTER ZIP CODE AND INITIALIZE QUEST'
+        );
+
+
+        updateUI();
+
+    };
+
 
 </script>
 

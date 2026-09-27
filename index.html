@@ -6,11 +6,9 @@
 
 <title>Cab0.com — Every Ride. Every Delivery. One Search.</title>
 
-<meta name="description"
-content="Cab0.com connects rides, robotaxis, taxis, food, groceries, packages and delivery services in one simple global search.">
+<meta name="description" content="Cab0.com connects rides, robotaxis, taxis, food, groceries, packages and delivery services in one simple global search.">
 
 <style>
-
 :root{
   --navy:#071a33;
   --navy2:#0c2748;
@@ -23,18 +21,12 @@ content="Cab0.com connects rides, robotaxis, taxis, food, groceries, packages an
   --bg:#f5f8fc;
   --white:#fff;
   --green:#18a56b;
-  --gold:#c99635;
   --shadow:0 15px 45px rgba(9,31,60,.09);
-  --radius:22px;
 }
 
-*{
-  box-sizing:border-box;
-}
+*{box-sizing:border-box}
 
-html{
-  scroll-behavior:smooth;
-}
+html{scroll-behavior:smooth}
 
 body{
   margin:0;
@@ -43,24 +35,11 @@ body{
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
 }
 
-button,
-input,
-select{
-  font:inherit;
-}
+button,input,select{font:inherit}
+button{cursor:pointer}
+a{text-decoration:none;color:inherit}
 
-button{
-  cursor:pointer;
-}
-
-a{
-  text-decoration:none;
-  color:inherit;
-}
-
-/* =========================================================
-   HEADER
-========================================================= */
+/* HEADER */
 
 header{
   position:sticky;
@@ -86,10 +65,21 @@ header{
   font-weight:950;
   letter-spacing:-1.7px;
   color:var(--navy);
+  position:relative;
+  display:inline-block;
 }
 
-.logo span{
-  color:var(--blue);
+.logo span{color:var(--blue)}
+
+.logo .registered{
+  position:relative;
+  display:inline-block;
+  font-size:10px;
+  font-weight:900;
+  vertical-align:top;
+  top:-5px;
+  margin-left:2px;
+  color:var(--navy);
 }
 
 .navlinks{
@@ -112,18 +102,14 @@ header{
   background:var(--sky);
 }
 
-/* =========================================================
-   MAIN
-========================================================= */
+/* MAIN */
 
 .container{
   width:min(1220px,calc(100% - 30px));
   margin:auto;
 }
 
-/* =========================================================
-   WOZNIak FEATURE
-========================================================= */
+/* WOZ QUOTE */
 
 .woz{
   margin:28px auto 0;
@@ -152,38 +138,16 @@ header{
     0 0 0 70px rgba(255,255,255,.018);
 }
 
-.woz-top{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  color:#bcd5ff;
-  text-transform:uppercase;
-  letter-spacing:1.8px;
-  font-size:11px;
-  font-weight:900;
-  margin-bottom:16px;
-}
-
-.woz-star{
-  width:31px;
-  height:31px;
-  display:grid;
-  place-items:center;
-  border-radius:50%;
-  background:white;
-  color:var(--navy);
-  font-weight:950;
-}
-
 .woz blockquote{
   position:relative;
   z-index:2;
   margin:0;
-  max-width:900px;
-  font-size:clamp(23px,3vw,39px);
-  line-height:1.16;
-  letter-spacing:-1.1px;
+  max-width:1100px;
+  font-size:clamp(21px,3vw,38px);
+  line-height:1.18;
+  letter-spacing:-1px;
   font-weight:800;
+  white-space:nowrap;
 }
 
 .woz blockquote span{
@@ -195,17 +159,17 @@ header{
   z-index:2;
   margin-top:18px;
   color:#dce9ff;
-  font-size:14px;
-  font-weight:700;
+  font-size:clamp(18px,2vw,25px);
+  line-height:1.2;
+  font-weight:800;
+  letter-spacing:-.4px;
 }
 
-/* =========================================================
-   HERO
-========================================================= */
+/* HERO */
 
 .hero{
   text-align:center;
-  padding:53px 10px 35px;
+  padding:47px 10px 35px;
 }
 
 .hero h1{
@@ -216,9 +180,7 @@ header{
   letter-spacing:-4px;
 }
 
-.hero h1 span{
-  color:var(--blue);
-}
+.hero h1 span{color:var(--blue)}
 
 .hero p{
   max-width:700px;
@@ -228,9 +190,7 @@ header{
   line-height:1.55;
 }
 
-/* =========================================================
-   GLOBAL SEARCH
-========================================================= */
+/* SEARCH */
 
 .search-card{
   background:white;
@@ -265,9 +225,7 @@ header{
   border-bottom-color:var(--blue);
 }
 
-.search-area{
-  padding:24px;
-}
+.search-area{padding:24px}
 
 .search-fields{
   display:grid;
@@ -275,9 +233,7 @@ header{
   gap:11px;
 }
 
-.input-wrap{
-  position:relative;
-}
+.input-wrap{position:relative}
 
 .input-wrap input{
   width:100%;
@@ -319,9 +275,7 @@ header{
   box-shadow:0 9px 22px rgba(23,105,255,.22);
 }
 
-.search-button:hover{
-  background:var(--blue2);
-}
+.search-button:hover{background:var(--blue2)}
 
 .search-tools{
   margin-top:13px;
@@ -340,18 +294,14 @@ header{
   font-weight:800;
 }
 
-/* =========================================================
-   PROVIDER RESULTS
-========================================================= */
+/* RESULTS */
 
 .results{
   display:none;
   margin-top:25px;
 }
 
-.results.show{
-  display:block;
-}
+.results.show{display:block}
 
 .results-heading{
   display:flex;
@@ -438,17 +388,11 @@ header{
   font-weight:850;
 }
 
-.provider-button:hover{
-  background:var(--blue);
-}
+.provider-button:hover{background:var(--blue)}
 
-/* =========================================================
-   PROVIDER DIRECTORY
-========================================================= */
+/* DIRECTORY */
 
-.directory{
-  margin-top:34px;
-}
+.directory{margin-top:34px}
 
 .directory-top{
   display:flex;
@@ -479,9 +423,7 @@ header{
   background:white;
 }
 
-.directory-search:focus{
-  border-color:var(--blue);
-}
+.directory-search:focus{border-color:var(--blue)}
 
 .filter-row{
   display:flex;
@@ -543,9 +485,7 @@ header{
   font-size:10px;
 }
 
-/* =========================================================
-   MY DAY
-========================================================= */
+/* MY DAY */
 
 .myday{
   margin-top:35px;
@@ -601,9 +541,7 @@ header{
   font-weight:850;
 }
 
-.day-body{
-  padding:20px 24px;
-}
+.day-body{padding:20px 24px}
 
 .task-form{
   display:none;
@@ -614,9 +552,7 @@ header{
   margin-bottom:17px;
 }
 
-.task-form.show{
-  display:block;
-}
+.task-form.show{display:block}
 
 .task-grid{
   display:grid;
@@ -702,9 +638,7 @@ header{
   font-size:13px;
 }
 
-.task-content{
-  flex:1;
-}
+.task-content{flex:1}
 
 .task-content strong{
   display:block;
@@ -731,17 +665,11 @@ header{
   color:#8995a5;
 }
 
-/* =========================================================
-   SAVED PLACES
-========================================================= */
+/* SAVED PLACES */
 
-.places{
-  margin-top:32px;
-}
+.places{margin-top:32px}
 
-.section-title{
-  margin-bottom:13px;
-}
+.section-title{margin-bottom:13px}
 
 .section-title h2{
   margin:0;
@@ -773,9 +701,7 @@ header{
   box-shadow:0 8px 22px rgba(15,35,65,.06);
 }
 
-.place-icon{
-  font-size:21px;
-}
+.place-icon{font-size:21px}
 
 .place strong{
   display:block;
@@ -791,9 +717,7 @@ header{
   white-space:nowrap;
 }
 
-/* =========================================================
-   CAB0 ECOSYSTEM
-========================================================= */
+/* ECOSYSTEM */
 
 .ecosystem{
   margin:32px 0;
@@ -813,9 +737,7 @@ header{
   gap:15px;
 }
 
-.eco h3{
-  margin:0 0 4px;
-}
+.eco h3{margin:0 0 4px}
 
 .eco p{
   margin:0;
@@ -832,9 +754,7 @@ header{
   font-weight:900;
 }
 
-/* =========================================================
-   FOOTER
-========================================================= */
+/* FOOTER */
 
 footer{
   text-align:center;
@@ -844,13 +764,9 @@ footer{
   line-height:1.6;
 }
 
-footer strong{
-  color:var(--navy);
-}
+footer strong{color:var(--navy)}
 
-/* =========================================================
-   TOAST
-========================================================= */
+/* TOAST */
 
 .toast{
   position:fixed;
@@ -874,9 +790,7 @@ footer strong{
   transform:translate(-50%,0);
 }
 
-/* =========================================================
-   MOBILE
-========================================================= */
+/* MOBILE */
 
 @media(max-width:900px){
 
@@ -889,13 +803,9 @@ footer strong{
     grid-template-columns:1fr;
   }
 
-  .search-button{
-    width:100%;
-  }
+  .search-button{width:100%}
 
-  .provider-grid{
-    grid-template-columns:1fr;
-  }
+  .provider-grid{grid-template-columns:1fr}
 
   .directory-grid{
     grid-template-columns:repeat(2,1fr);
@@ -908,6 +818,10 @@ footer strong{
   .task-grid{
     grid-template-columns:1fr 1fr;
   }
+
+  .woz blockquote{
+    white-space:normal;
+  }
 }
 
 @media(max-width:600px){
@@ -916,16 +830,19 @@ footer strong{
     width:calc(100% - 20px);
   }
 
-  .navlinks{
-    display:none;
-  }
+  .navlinks{display:none}
 
   .woz{
     padding:25px 22px;
   }
 
   .woz blockquote{
-    font-size:24px;
+    font-size:23px;
+    white-space:normal;
+  }
+
+  .woz-credit{
+    font-size:18px;
   }
 
   .hero{
@@ -976,43 +893,34 @@ footer strong{
     grid-template-columns:1fr;
   }
 }
-
 </style>
 </head>
 
 <body>
-
-<!-- =====================================================
-     HEADER
-===================================================== -->
 
 <header>
 
   <div class="nav">
 
     <a class="logo" href="#">
-      Cab<span>0</span>.com
+      Cab<span>0</span>.com<sup class="registered">®</sup>
     </a>
 
     <nav class="navlinks">
 
-      <button class="navlink"
-              onclick="scrollToId('search')">
+      <button class="navlink" onclick="scrollToId('search')">
         Find a Service
       </button>
 
-      <button class="navlink"
-              onclick="scrollToId('directory')">
+      <button class="navlink" onclick="scrollToId('directory')">
         Providers
       </button>
 
-      <button class="navlink"
-              onclick="scrollToId('myday')">
+      <button class="navlink" onclick="scrollToId('myday')">
         My Day
       </button>
 
-      <button class="navlink"
-              onclick="scrollToId('places')">
+      <button class="navlink" onclick="scrollToId('places')">
         Saved Places
       </button>
 
@@ -1026,20 +934,12 @@ footer strong{
 <main class="container">
 
 
-<!-- =====================================================
-     STEVE WOZNIAK FEATURE
-===================================================== -->
+<!-- STEVE WOZNIAK QUOTE -->
 
 <section class="woz">
 
-  <div class="woz-top">
-    <div class="woz-star">W</div>
-    Cab0.com • Words of Encouragement
-  </div>
-
   <blockquote>
-    “Best of luck to you on this worthy venture,
-    <span>it's your turn.</span>”
+    “Best of luck to you on this worthy venture, <span>it's your turn.</span>”
   </blockquote>
 
   <div class="woz-credit">
@@ -1049,9 +949,7 @@ footer strong{
 </section>
 
 
-<!-- =====================================================
-     HERO
-===================================================== -->
+<!-- HERO -->
 
 <section class="hero">
 
@@ -1061,18 +959,10 @@ footer strong{
     One Search.
   </h1>
 
-  <p>
-    Rides, robotaxis, taxis, food, groceries, packages,
-    couriers and arrival services — Cab0 brings the
-    world's transportation and delivery options together.
-  </p>
-
 </section>
 
 
-<!-- =====================================================
-     SEARCH
-===================================================== -->
+<!-- SEARCH -->
 
 <section class="search-card" id="search">
 
@@ -1160,23 +1050,19 @@ footer strong{
 
     <div class="search-tools">
 
-      <button class="tool"
-              onclick="selectPlace('Home')">
+      <button class="tool" onclick="selectPlace('Home')">
         ⌂ Home
       </button>
 
-      <button class="tool"
-              onclick="selectPlace('Work')">
+      <button class="tool" onclick="selectPlace('Work')">
         ▣ Work
       </button>
 
-      <button class="tool"
-              onclick="selectPlace('Airport')">
+      <button class="tool" onclick="selectPlace('Airport')">
         ✈ Airport
       </button>
 
-      <button class="tool"
-              onclick="swapLocations()">
+      <button class="tool" onclick="swapLocations()">
         ⇄ Swap
       </button>
 
@@ -1187,18 +1073,14 @@ footer strong{
 </section>
 
 
-<!-- =====================================================
-     SEARCH RESULTS
-===================================================== -->
+<!-- RESULTS -->
 
 <section class="results" id="results">
 
   <div class="results-heading">
 
     <div>
-      <h2 id="resultTitle">
-        Ride Options
-      </h2>
+      <h2 id="resultTitle">Ride Options</h2>
     </div>
 
     <p>
@@ -1207,35 +1089,33 @@ footer strong{
 
   </div>
 
-  <div class="provider-grid"
-       id="providerResults">
-  </div>
+  <div class="provider-grid" id="providerResults"></div>
 
 </section>
 
 
-<!-- =====================================================
-     GLOBAL PROVIDER DIRECTORY
-===================================================== -->
+<!-- DIRECTORY -->
 
 <section class="directory" id="directory">
 
   <div class="directory-top">
 
     <div>
+
       <h2>Global Provider Directory</h2>
 
       <p>
         Search Cab0's growing network of transportation,
         autonomous, food and delivery services.
       </p>
+
     </div>
 
     <input
       class="directory-search"
       id="directorySearch"
       placeholder="Search providers..."
-      oninput="renderDirectory()">
+      oninput="renderDirectory">
 
   </div>
 
@@ -1281,16 +1161,12 @@ footer strong{
   </div>
 
 
-  <div class="directory-grid"
-       id="directoryGrid">
-  </div>
+  <div class="directory-grid" id="directoryGrid"></div>
 
 </section>
 
 
-<!-- =====================================================
-     MY DAY
-===================================================== -->
+<!-- MY DAY -->
 
 <section class="myday" id="myday">
 
@@ -1298,24 +1174,19 @@ footer strong{
 
     <div class="myday-title">
 
-      <div class="day-icon">
-        📅
-      </div>
+      <div class="day-icon">📅</div>
 
       <div>
 
         <h2>My Day</h2>
 
-        <div class="myday-sub"
-             id="today">
-        </div>
+        <div class="myday-sub" id="today"></div>
 
       </div>
 
     </div>
 
-    <button class="add"
-            onclick="toggleTaskForm()">
+    <button class="add" onclick="toggleTaskForm()">
       + Add
     </button>
 
@@ -1324,8 +1195,7 @@ footer strong{
 
   <div class="day-body">
 
-    <div class="task-form"
-         id="taskForm">
+    <div class="task-form" id="taskForm">
 
       <div class="task-grid">
 
@@ -1344,9 +1214,7 @@ footer strong{
           id="taskTime"
           type="time">
 
-        <select
-          class="form-input"
-          id="taskType">
+        <select class="form-input" id="taskType">
 
           <option>Reminder</option>
           <option>Ride</option>
@@ -1368,13 +1236,11 @@ footer strong{
 
       <div class="task-actions">
 
-        <button class="cancel"
-                onclick="toggleTaskForm()">
+        <button class="cancel" onclick="toggleTaskForm()">
           Cancel
         </button>
 
-        <button class="save"
-                onclick="saveTask()">
+        <button class="save" onclick="saveTask()">
           Save
         </button>
 
@@ -1383,18 +1249,14 @@ footer strong{
     </div>
 
 
-    <div class="tasks"
-         id="tasks">
-    </div>
+    <div class="tasks" id="tasks"></div>
 
   </div>
 
 </section>
 
 
-<!-- =====================================================
-     SAVED PLACES
-===================================================== -->
+<!-- SAVED PLACES -->
 
 <section class="places" id="places">
 
@@ -1411,58 +1273,46 @@ footer strong{
 
   <div class="place-grid">
 
-    <button class="place"
-            onclick="editPlace('Home')">
+    <button class="place" onclick="editPlace('Home')">
 
       <div class="place-icon">⌂</div>
 
       <strong>Home</strong>
 
-      <small id="HomePlace">
-        Add address
-      </small>
+      <small id="HomePlace">Add address</small>
 
     </button>
 
 
-    <button class="place"
-            onclick="editPlace('Work')">
+    <button class="place" onclick="editPlace('Work')">
 
       <div class="place-icon">▣</div>
 
       <strong>Work</strong>
 
-      <small id="WorkPlace">
-        Add address
-      </small>
+      <small id="WorkPlace">Add address</small>
 
     </button>
 
 
-    <button class="place"
-            onclick="editPlace('Airport')">
+    <button class="place" onclick="editPlace('Airport')">
 
       <div class="place-icon">✈</div>
 
       <strong>Airport</strong>
 
-      <small id="AirportPlace">
-        Add address
-      </small>
+      <small id="AirportPlace">Add address</small>
 
     </button>
 
 
-    <button class="place"
-            onclick="editPlace('Other')">
+    <button class="place" onclick="editPlace('Other')">
 
       <div class="place-icon">★</div>
 
       <strong>Other</strong>
 
-      <small id="OtherPlace">
-        Add address
-      </small>
+      <small id="OtherPlace">Add address</small>
 
     </button>
 
@@ -1471,9 +1321,7 @@ footer strong{
 </section>
 
 
-<!-- =====================================================
-     ARRIVETIME / 4ETA
-===================================================== -->
+<!-- CAB0 ECOSYSTEM -->
 
 <section class="ecosystem">
 
@@ -1520,7 +1368,6 @@ footer strong{
 
 </section>
 
-
 </main>
 
 
@@ -1538,673 +1385,172 @@ footer strong{
 </footer>
 
 
-<div class="toast"
-     id="toast">
-</div>
+<div class="toast" id="toast"></div>
 
 
 <script>
 
-/* =========================================================
-   CAB0 PROVIDER DATABASE
-=========================================================
-
-   This is intentionally structured as data.
-
-   New providers can be added here without redesigning
-   the website.
-
-========================================================= */
+/* PROVIDER DATABASE */
 
 const PROVIDERS = [
 
-  /* ===================== RIDES ===================== */
-
-  {
-    name:"Uber",
-    category:"rides",
-    icon:"🚕",
-    description:"Global rides, taxis and mobility",
-    region:"Global",
-    url:"https://www.uber.com/"
-  },
-
-  {
-    name:"Lyft",
-    category:"rides",
-    icon:"🚗",
-    description:"Rides and transportation",
-    region:"United States / Canada",
-    url:"https://www.lyft.com/"
-  },
-
-  {
-    name:"DiDi",
-    category:"rides",
-    icon:"🚕",
-    description:"Ride-hailing and mobility",
-    region:"Asia / Latin America / Global markets",
-    url:"https://www.didiglobal.com/"
-  },
-
-  {
-    name:"Grab",
-    category:"rides",
-    icon:"🛺",
-    description:"Rides, taxis and everyday mobility",
-    region:"Southeast Asia",
-    url:"https://www.grab.com/"
-  },
-
-  {
-    name:"Bolt",
-    category:"rides",
-    icon:"⚡",
-    description:"Rides, taxis and mobility",
-    region:"Europe / Africa / Asia / Global markets",
-    url:"https://bolt.eu/"
-  },
-
-  {
-    name:"inDrive",
-    category:"rides",
-    icon:"🚘",
-    description:"Ride-hailing and intercity transportation",
-    region:"Global markets",
-    url:"https://indrive.com/"
-  },
-
-  {
-    name:"Ola",
-    category:"rides",
-    icon:"🚕",
-    description:"Ride-hailing and mobility",
-    region:"India / International",
-    url:"https://www.olacabs.com/"
-  },
-
-  {
-    name:"Gojek",
-    category:"rides",
-    icon:"🛵",
-    description:"Rides and on-demand services",
-    region:"Southeast Asia",
-    url:"https://www.gojek.com/"
-  },
-
-  {
-    name:"Careem",
-    category:"rides",
-    icon:"🚙",
-    description:"Rides and everyday services",
-    region:"Middle East / Africa / Asia",
-    url:"https://www.careem.com/"
-  },
-
-  {
-    name:"Cabify",
-    category:"rides",
-    icon:"🚗",
-    description:"Private rides and mobility",
-    region:"Spain / Latin America",
-    url:"https://cabify.com/"
-  },
-
-  {
-    name:"FREE NOW",
-    category:"rides",
-    icon:"🚕",
-    description:"Taxi and mobility services",
-    region:"Europe",
-    url:"https://www.free-now.com/"
-  },
-
-  {
-    name:"Gett",
-    category:"rides",
-    icon:"🚕",
-    description:"Taxi and ground transportation",
-    region:"Selected global markets",
-    url:"https://www.gett.com/"
-  },
-
-  {
-    name:"Curb",
-    category:"rides",
-    icon:"🚖",
-    description:"Taxi booking and payments",
-    region:"United States",
-    url:"https://www.gocurb.com/"
-  },
-
-  {
-    name:"Blacklane",
-    category:"rides",
-    icon:"🖤",
-    description:"Professional chauffeur service",
-    region:"Global",
-    url:"https://www.blacklane.com/"
-  },
-
-  {
-    name:"BlaBlaCar",
-    category:"rides",
-    icon:"👥",
-    description:"Long-distance carpooling",
-    region:"Global",
-    url:"https://www.blablacar.com/"
-  },
-
-  {
-    name:"Yandex Go",
-    category:"rides",
-    icon:"🚕",
-    description:"Rides, taxis and local services",
-    region:"Selected international markets",
-    url:"https://go.yandex/"
-  },
-
-
-  /* ===================== ROBOTAXI ===================== */
-
-  {
-    name:"Waymo",
-    category:"robotaxi",
-    icon:"🤖",
-    description:"Autonomous ride-hailing",
-    region:"United States / expanding internationally",
-    url:"https://waymo.com/"
-  },
-
-  {
-    name:"Zoox",
-    category:"robotaxi",
-    icon:"🤖",
-    description:"Purpose-built autonomous robotaxi",
-    region:"United States",
-    url:"https://zoox.com/"
-  },
-
-  {
-    name:"Tesla Robotaxi",
-    category:"robotaxi",
-    icon:"⚡",
-    description:"Tesla autonomous ride service",
-    region:"Selected markets",
-    url:"https://www.tesla.com/"
-  },
-
-  {
-    name:"Baidu Apollo Go",
-    category:"robotaxi",
-    icon:"🤖",
-    description:"Autonomous ride-hailing",
-    region:"China / international development",
-    url:"https://apollo.auto/"
-  },
-
-  {
-    name:"Pony.ai",
-    category:"robotaxi",
-    icon:"🤖",
-    description:"Autonomous driving and robotaxis",
-    region:"China / United States",
-    url:"https://www.pony.ai/"
-  },
-
-  {
-    name:"WeRide",
-    category:"robotaxi",
-    icon:"🤖",
-    description:"Autonomous mobility",
-    region:"Global development",
-    url:"https://www.weride.ai/"
-  },
-
-  {
-    name:"Avride",
-    category:"robotaxi",
-    icon:"🤖",
-    description:"Autonomous driving technology",
-    region:"International",
-    url:"https://avride.ai/"
-  },
-
-
-  /* ===================== FOOD ===================== */
-
-  {
-    name:"DoorDash",
-    category:"food",
-    icon:"🍔",
-    description:"Restaurant and local delivery",
-    region:"North America / International",
-    url:"https://www.doordash.com/"
-  },
-
-  {
-    name:"Uber Eats",
-    category:"food",
-    icon:"🍴",
-    description:"Restaurant food delivery",
-    region:"Global",
-    url:"https://www.ubereats.com/"
-  },
-
-  {
-    name:"Grubhub",
-    category:"food",
-    icon:"🍔",
-    description:"Restaurant ordering and delivery",
-    region:"United States",
-    url:"https://www.grubhub.com/"
-  },
-
-  {
-    name:"Deliveroo",
-    category:"food",
-    icon:"🍱",
-    description:"Restaurant and grocery delivery",
-    region:"International",
-    url:"https://deliveroo.com/"
-  },
-
-  {
-    name:"Just Eat",
-    category:"food",
-    icon:"🍕",
-    description:"Restaurant ordering and delivery",
-    region:"International",
-    url:"https://www.just-eat.com/"
-  },
-
-  {
-    name:"Wolt",
-    category:"food",
-    icon:"🍔",
-    description:"Food and local commerce delivery",
-    region:"Europe / Asia / International",
-    url:"https://wolt.com/"
-  },
-
-  {
-    name:"Glovo",
-    category:"food",
-    icon:"🛵",
-    description:"Food and local delivery",
-    region:"International",
-    url:"https://glovoapp.com/"
-  },
-
-  {
-    name:"Rappi",
-    category:"food",
-    icon:"🛵",
-    description:"Food and everyday delivery",
-    region:"Latin America",
-    url:"https://www.rappi.com/"
-  },
-
-  {
-    name:"iFood",
-    category:"food",
-    icon:"🍽",
-    description:"Food delivery marketplace",
-    region:"Brazil / Latin America",
-    url:"https://www.ifood.com.br/"
-  },
-
-  {
-    name:"Meituan",
-    category:"food",
-    icon:"🍜",
-    description:"Food and local services",
-    region:"China",
-    url:"https://www.meituan.com/"
-  },
-
-
-  /* ===================== GROCERY ===================== */
-
-  {
-    name:"Walmart",
-    category:"grocery",
-    icon:"🛒",
-    description:"Grocery, retail and delivery",
-    region:"United States / International",
-    url:"https://www.walmart.com/"
-  },
-
-  {
-    name:"Amazon",
-    category:"grocery",
-    icon:"📦",
-    description:"Retail, grocery and delivery",
-    region:"Global",
-    url:"https://www.amazon.com/"
-  },
-
-  {
-    name:"Instacart",
-    category:"grocery",
-    icon:"🛒",
-    description:"Grocery delivery and pickup",
-    region:"North America",
-    url:"https://www.instacart.com/"
-  },
-
-  {
-    name:"Kroger",
-    category:"grocery",
-    icon:"🛒",
-    description:"Grocery ordering and delivery",
-    region:"United States",
-    url:"https://www.kroger.com/"
-  },
-
-  {
-    name:"Target",
-    category:"grocery",
-    icon:"🎯",
-    description:"Retail, groceries and delivery",
-    region:"United States",
-    url:"https://www.target.com/"
-  },
-
-  {
-    name:"Gopuff",
-    category:"grocery",
-    icon:"⚡",
-    description:"Convenience and everyday delivery",
-    region:"United States / International",
-    url:"https://www.gopuff.com/"
-  },
-
-  {
-    name:"Carrefour",
-    category:"grocery",
-    icon:"🛒",
-    description:"Grocery and retail",
-    region:"International",
-    url:"https://www.carrefour.com/"
-  },
-
-
-  /* ===================== DELIVERY ===================== */
-
-  {
-    name:"Roadie",
-    category:"delivery",
-    icon:"📦",
-    description:"Same-day delivery network",
-    region:"United States",
-    url:"https://www.roadie.com/"
-  },
-
-  {
-    name:"Amazon Logistics",
-    category:"delivery",
-    icon:"📦",
-    description:"Amazon package delivery",
-    region:"Global",
-    url:"https://www.amazon.com/"
-  },
-
-  {
-    name:"Walmart Delivery",
-    category:"delivery",
-    icon:"🛒",
-    description:"Retail and local delivery",
-    region:"United States",
-    url:"https://www.walmart.com/"
-  },
-
-  {
-    name:"Uber Direct",
-    category:"delivery",
-    icon:"📦",
-    description:"On-demand business delivery",
-    region:"Selected markets",
-    url:"https://merchants.uber.com/"
-  },
-
-  {
-    name:"DoorDash Drive",
-    category:"delivery",
-    icon:"📦",
-    description:"Business delivery services",
-    region:"Selected markets",
-    url:"https://merchants.doordash.com/"
-  },
-
-  {
-    name:"FedEx",
-    category:"delivery",
-    icon:"📦",
-    description:"Global shipping and delivery",
-    region:"Global",
-    url:"https://www.fedex.com/"
-  },
-
-  {
-    name:"UPS",
-    category:"delivery",
-    icon:"📦",
-    description:"Global package delivery",
-    region:"Global",
-    url:"https://www.ups.com/"
-  },
-
-  {
-    name:"USPS",
-    category:"delivery",
-    icon:"📬",
-    description:"United States postal delivery",
-    region:"United States",
-    url:"https://www.usps.com/"
-  },
-
-  {
-    name:"DHL",
-    category:"delivery",
-    icon:"📦",
-    description:"Global logistics and delivery",
-    region:"Global",
-    url:"https://www.dhl.com/"
-  },
-
-  {
-    name:"OnTrac",
-    category:"delivery",
-    icon:"📦",
-    description:"Regional package delivery",
-    region:"United States",
-    url:"https://www.ontrac.com/"
-  },
-
-
-  /* ===================== COURIER ===================== */
-
-  {
-    name:"Uber Courier",
-    category:"courier",
-    icon:"🚚",
-    description:"Local on-demand courier service",
-    region:"Selected markets",
-    url:"https://www.uber.com/"
-  },
-
-  {
-    name:"Roadie",
-    category:"courier",
-    icon:"🚚",
-    description:"Local and same-day courier delivery",
-    region:"United States",
-    url:"https://www.roadie.com/"
-  },
-
-  {
-    name:"DHL Express",
-    category:"courier",
-    icon:"✈️",
-    description:"International express shipping",
-    region:"Global",
-    url:"https://www.dhl.com/"
-  },
-
-  {
-    name:"FedEx Express",
-    category:"courier",
-    icon:"✈️",
-    description:"Express package delivery",
-    region:"Global",
-    url:"https://www.fedex.com/"
-  },
-
-  {
-    name:"UPS Express",
-    category:"courier",
-    icon:"✈️",
-    description:"Express package delivery",
-    region:"Global",
-    url:"https://www.ups.com/"
-  }
+  {name:"Uber",category:"rides",icon:"🚕",description:"Global rides, taxis and mobility",region:"Global",url:"https://www.uber.com/"},
+  {name:"Lyft",category:"rides",icon:"🚗",description:"Rides and transportation",region:"United States / Canada",url:"https://www.lyft.com/"},
+  {name:"DiDi",category:"rides",icon:"🚕",description:"Ride-hailing and mobility",region:"Asia / Latin America / Global markets",url:"https://www.didiglobal.com/"},
+  {name:"Grab",category:"rides",icon:"🛺",description:"Rides, taxis and everyday mobility",region:"Southeast Asia",url:"https://www.grab.com/"},
+  {name:"Bolt",category:"rides",icon:"⚡",description:"Rides, taxis and mobility",region:"Europe / Africa / Asia / Global markets",url:"https://bolt.eu/"},
+  {name:"inDrive",category:"rides",icon:"🚘",description:"Ride-hailing and intercity transportation",region:"Global markets",url:"https://indrive.com/"},
+  {name:"Ola",category:"rides",icon:"🚕",description:"Ride-hailing and mobility",region:"India / International",url:"https://www.olacabs.com/"},
+  {name:"Gojek",category:"rides",icon:"🛵",description:"Rides and on-demand services",region:"Southeast Asia",url:"https://www.gojek.com/"},
+  {name:"Careem",category:"rides",icon:"🚙",description:"Rides and everyday services",region:"Middle East / Africa / Asia",url:"https://www.careem.com/"},
+  {name:"Cabify",category:"rides",icon:"🚗",description:"Private rides and mobility",region:"Spain / Latin America",url:"https://cabify.com/"},
+  {name:"FREE NOW",category:"rides",icon:"🚕",description:"Taxi and mobility services",region:"Europe",url:"https://www.free-now.com/"},
+  {name:"Gett",category:"rides",icon:"🚕",description:"Taxi and ground transportation",region:"Selected global markets",url:"https://www.gett.com/"},
+  {name:"Curb",category:"rides",icon:"🚖",description:"Taxi booking and payments",region:"United States",url:"https://www.gocurb.com/"},
+  {name:"Blacklane",category:"rides",icon:"🖤",description:"Professional chauffeur service",region:"Global",url:"https://www.blacklane.com/"},
+  {name:"BlaBlaCar",category:"rides",icon:"👥",description:"Long-distance carpooling",region:"Global",url:"https://www.blablacar.com/"},
+  {name:"Yandex Go",category:"rides",icon:"🚕",description:"Rides, taxis and local services",region:"Selected international markets",url:"https://go.yandex/"},
+
+  {name:"Waymo",category:"robotaxi",icon:"🤖",description:"Autonomous ride-hailing",region:"United States / expanding internationally",url:"https://waymo.com/"},
+  {name:"Zoox",category:"robotaxi",icon:"🤖",description:"Purpose-built autonomous robotaxi",region:"United States",url:"https://zoox.com/"},
+  {name:"Tesla Robotaxi",category:"robotaxi",icon:"⚡",description:"Tesla autonomous ride service",region:"Selected markets",url:"https://www.tesla.com/"},
+  {name:"Baidu Apollo Go",category:"robotaxi",icon:"🤖",description:"Autonomous ride-hailing",region:"China / international development",url:"https://apollo.auto/"},
+  {name:"Pony.ai",category:"robotaxi",icon:"🤖",description:"Autonomous driving and robotaxis",region:"China / United States",url:"https://www.pony.ai/"},
+  {name:"WeRide",category:"robotaxi",icon:"🤖",description:"Autonomous mobility",region:"Global development",url:"https://www.weride.ai/"},
+  {name:"Avride",category:"robotaxi",icon:"🤖",description:"Autonomous driving technology",region:"International",url:"https://avride.ai/"},
+
+  {name:"DoorDash",category:"food",icon:"🍔",description:"Restaurant and local delivery",region:"North America / International",url:"https://www.doordash.com/"},
+  {name:"Uber Eats",category:"food",icon:"🍴",description:"Restaurant food delivery",region:"Global",url:"https://www.ubereats.com/"},
+  {name:"Grubhub",category:"food",icon:"🍔",description:"Restaurant ordering and delivery",region:"United States",url:"https://www.grubhub.com/"},
+  {name:"Deliveroo",category:"food",icon:"🍱",description:"Restaurant and grocery delivery",region:"International",url:"https://deliveroo.com/"},
+  {name:"Just Eat",category:"food",icon:"🍕",description:"Restaurant ordering and delivery",region:"International",url:"https://www.just-eat.com/"},
+  {name:"Wolt",category:"food",icon:"🍔",description:"Food and local commerce delivery",region:"Europe / Asia / International",url:"https://wolt.com/"},
+  {name:"Glovo",category:"food",icon:"🛵",description:"Food and local delivery",region:"International",url:"https://glovoapp.com/"},
+  {name:"Rappi",category:"food",icon:"🛵",description:"Food and everyday delivery",region:"Latin America",url:"https://www.rappi.com/"},
+  {name:"iFood",category:"food",icon:"🍽",description:"Food delivery marketplace",region:"Brazil / Latin America",url:"https://www.ifood.com.br/"},
+  {name:"Meituan",category:"food",icon:"🍜",description:"Food and local services",region:"China",url:"https://www.meituan.com/"},
+
+  {name:"Walmart",category:"grocery",icon:"🛒",description:"Grocery, retail and delivery",region:"United States / International",url:"https://www.walmart.com/"},
+  {name:"Amazon",category:"grocery",icon:"📦",description:"Retail, grocery and delivery",region:"Global",url:"https://www.amazon.com/"},
+  {name:"Instacart",category:"grocery",icon:"🛒",description:"Grocery delivery and pickup",region:"North America",url:"https://www.instacart.com/"},
+  {name:"Kroger",category:"grocery",icon:"🛒",description:"Grocery ordering and delivery",region:"United States",url:"https://www.kroger.com/"},
+  {name:"Target",category:"grocery",icon:"🎯",description:"Retail, groceries and delivery",region:"United States",url:"https://www.target.com/"},
+  {name:"Gopuff",category:"grocery",icon:"⚡",description:"Convenience and everyday delivery",region:"United States / International",url:"https://www.gopuff.com/"},
+  {name:"Carrefour",category:"grocery",icon:"🛒",description:"Grocery and retail",region:"International",url:"https://www.carrefour.com/"},
+
+  {name:"Roadie",category:"delivery",icon:"📦",description:"Same-day delivery network",region:"United States",url:"https://www.roadie.com/"},
+  {name:"Amazon Logistics",category:"delivery",icon:"📦",description:"Amazon package delivery",region:"Global",url:"https://www.amazon.com/"},
+  {name:"Walmart Delivery",category:"delivery",icon:"🛒",description:"Retail and local delivery",region:"United States",url:"https://www.walmart.com/"},
+  {name:"Uber Direct",category:"delivery",icon:"📦",description:"On-demand business delivery",region:"Selected markets",url:"https://merchants.uber.com/"},
+  {name:"DoorDash Drive",category:"delivery",icon:"📦",description:"Business delivery services",region:"Selected markets",url:"https://merchants.doordash.com/"},
+  {name:"FedEx",category:"delivery",icon:"📦",description:"Global shipping and delivery",region:"Global",url:"https://www.fedex.com/"},
+  {name:"UPS",category:"delivery",icon:"📦",description:"Global package delivery",region:"Global",url:"https://www.ups.com/"},
+  {name:"USPS",category:"delivery",icon:"📬",description:"United States postal delivery",region:"United States",url:"https://www.usps.com/"},
+  {name:"DHL",category:"delivery",icon:"📦",description:"Global logistics and delivery",region:"Global",url:"https://www.dhl.com/"},
+  {name:"OnTrac",category:"delivery",icon:"📦",description:"Regional package delivery",region:"United States",url:"https://www.ontrac.com/"},
+
+  {name:"Uber Courier",category:"courier",icon:"🚚",description:"Local on-demand courier service",region:"Selected markets",url:"https://www.uber.com/"},
+  {name:"Roadie",category:"courier",icon:"🚚",description:"Local and same-day courier delivery",region:"United States",url:"https://www.roadie.com/"},
+  {name:"DHL Express",category:"courier",icon:"✈️",description:"International express shipping",region:"Global",url:"https://www.dhl.com/"},
+  {name:"FedEx Express",category:"courier",icon:"✈️",description:"Express package delivery",region:"Global",url:"https://www.fedex.com/"},
+  {name:"UPS Express",category:"courier",icon:"✈️",description:"Express package delivery",region:"Global",url:"https://www.ups.com/"}
 
 ];
 
-
-/* =========================================================
-   CATEGORY CONFIGURATION
-========================================================= */
-
-const CATEGORY_NAMES = {
-
+const CATEGORY_NAMES={
   rides:"Ride Options",
-
   robotaxi:"Robotaxi Options",
-
   food:"Food Delivery",
-
   grocery:"Grocery Delivery",
-
   delivery:"Delivery Options",
-
   courier:"Courier Options",
-
   eta:"ETA & Tracking"
-
 };
 
-let currentCategory = "rides";
-let currentFilter = "all";
+let currentCategory="rides";
+let currentFilter="all";
 
-
-/* =========================================================
-   CATEGORY SELECTION
-========================================================= */
+/* CATEGORY */
 
 function setCategory(category){
 
-  currentCategory = category;
+  currentCategory=category;
 
-  document.querySelectorAll(".category").forEach(button => {
-
+  document.querySelectorAll(".category").forEach(button=>{
     button.classList.toggle(
       "active",
-      button.dataset.category === category
+      button.dataset.category===category
     );
-
   });
 
-  const destination =
-    document.getElementById("destination");
+  const from=document.getElementById("from");
+  const destination=document.getElementById("destination");
 
-  const from =
-    document.getElementById("from");
-
-  if(category === "rides"){
-    from.placeholder = "From / pickup location";
-    destination.placeholder = "Where are you going?";
+  if(category==="rides"){
+    from.placeholder="From / pickup location";
+    destination.placeholder="Where are you going?";
   }
 
-  if(category === "robotaxi"){
-    from.placeholder = "Your location";
-    destination.placeholder = "Robotaxi destination";
+  if(category==="robotaxi"){
+    from.placeholder="Your location";
+    destination.placeholder="Robotaxi destination";
   }
 
-  if(category === "food"){
-    from.placeholder = "Your location";
-    destination.placeholder = "Restaurant or food";
+  if(category==="food"){
+    from.placeholder="Your location";
+    destination.placeholder="Restaurant or food";
   }
 
-  if(category === "grocery"){
-    from.placeholder = "Your location";
-    destination.placeholder = "Store or groceries";
+  if(category==="grocery"){
+    from.placeholder="Your location";
+    destination.placeholder="Store or groceries";
   }
 
-  if(category === "delivery"){
-    from.placeholder = "Pickup location";
-    destination.placeholder = "Delivery destination";
+  if(category==="delivery"){
+    from.placeholder="Pickup location";
+    destination.placeholder="Delivery destination";
   }
 
-  if(category === "courier"){
-    from.placeholder = "Pickup location";
-    destination.placeholder = "Delivery destination";
+  if(category==="courier"){
+    from.placeholder="Pickup location";
+    destination.placeholder="Delivery destination";
   }
 
-  if(category === "eta"){
-    from.placeholder = "Starting point";
-    destination.placeholder = "Destination or tracking";
+  if(category==="eta"){
+    from.placeholder="Starting point";
+    destination.placeholder="Destination or tracking";
   }
 
   searchProviders();
-
 }
 
-
-/* =========================================================
-   SEARCH PROVIDERS
-========================================================= */
+/* SEARCH */
 
 function searchProviders(){
 
-  const from =
-    document.getElementById("from").value.trim();
-
-  const destination =
-    document.getElementById("destination").value.trim();
-
-  const results =
-    document.getElementById("results");
-
-  const grid =
-    document.getElementById("providerResults");
+  const from=document.getElementById("from").value.trim();
+  const destination=document.getElementById("destination").value.trim();
 
   if(!from && !destination){
-
-    showToast(
-      "Enter a location or destination first."
-    );
-
+    showToast("Enter a location or destination first.");
     return;
   }
 
-  const providers =
-    PROVIDERS.filter(
-      provider =>
-        provider.category === currentCategory
-    );
+  const results=document.getElementById("results");
+  const grid=document.getElementById("providerResults");
 
-  grid.innerHTML = "";
+  const providers=PROVIDERS.filter(
+    provider=>provider.category===currentCategory
+  );
 
-  providers.forEach(provider => {
+  grid.innerHTML="";
 
-    const card =
-      document.createElement("div");
+  providers.forEach(provider=>{
 
-    card.className = "provider";
+    const card=document.createElement("div");
+    card.className="provider";
 
-    card.innerHTML = `
+    card.innerHTML=`
 
       <div class="provider-icon">
         ${provider.icon}
@@ -2231,9 +1577,7 @@ function searchProviders(){
         href="${provider.url}"
         target="_blank"
         rel="noopener noreferrer">
-
         Visit →
-
       </a>
 
     `;
@@ -2242,7 +1586,7 @@ function searchProviders(){
 
   });
 
-  document.getElementById("resultTitle").textContent =
+  document.getElementById("resultTitle").textContent=
     CATEGORY_NAMES[currentCategory];
 
   results.classList.add("show");
@@ -2251,95 +1595,72 @@ function searchProviders(){
     behavior:"smooth",
     block:"start"
   });
-
 }
 
-
-/* =========================================================
-   DIRECTORY FILTER
-========================================================= */
+/* DIRECTORY */
 
 function setFilter(filter){
 
-  currentFilter = filter;
+  currentFilter=filter;
 
-  document.querySelectorAll(".filter").forEach(button => {
-
+  document.querySelectorAll(".filter").forEach(button=>{
     button.classList.toggle(
       "active",
-      button.dataset.filter === filter
+      button.dataset.filter===filter
     );
-
   });
 
   renderDirectory();
-
 }
-
 
 function renderDirectory(){
 
-  const grid =
-    document.getElementById("directoryGrid");
+  const grid=document.getElementById("directoryGrid");
 
-  const search =
-    document
-      .getElementById("directorySearch")
-      .value
-      .toLowerCase()
-      .trim();
+  const search=document
+    .getElementById("directorySearch")
+    .value
+    .toLowerCase()
+    .trim();
 
-  let list =
-    PROVIDERS.slice();
+  let list=PROVIDERS.slice();
 
-  if(currentFilter !== "all"){
-
-    list =
-      list.filter(
-        provider =>
-          provider.category === currentFilter
-      );
-
+  if(currentFilter!=="all"){
+    list=list.filter(
+      provider=>provider.category===currentFilter
+    );
   }
 
   if(search){
+    list=list.filter(provider=>{
 
-    list =
-      list.filter(provider => {
+      const text=(
+        provider.name+
+        " "+
+        provider.description+
+        " "+
+        provider.region
+      ).toLowerCase();
 
-        const text =
-          (
-            provider.name +
-            " " +
-            provider.description +
-            " " +
-            provider.region
-          ).toLowerCase();
+      return text.includes(search);
 
-        return text.includes(search);
-
-      });
-
+    });
   }
 
-  grid.innerHTML = "";
+  grid.innerHTML="";
 
-  list.forEach(provider => {
+  list.forEach(provider=>{
 
-    const item =
-      document.createElement("div");
+    const item=document.createElement("div");
+    item.className="directory-item";
 
-    item.className =
-      "directory-item";
-
-    item.innerHTML = `
+    item.innerHTML=`
 
       <div class="directory-item-icon">
         ${provider.icon}
       </div>
 
       <div>
-
         <strong>
           ${escapeHTML(provider.name)}
         </strong>
@@ -2347,7 +1668,6 @@ function renderDirectory(){
         <small>
           ${escapeHTML(provider.region)}
         </small>
-
       </div>
 
     `;
@@ -2355,54 +1675,35 @@ function renderDirectory(){
     grid.appendChild(item);
 
   });
-
 }
 
-
-/* =========================================================
-   LOCATION
-========================================================= */
+/* LOCATION */
 
 function useLocation(){
 
   if(!navigator.geolocation){
-
-    showToast(
-      "Location is not supported by this browser."
-    );
-
+    showToast("Location is not supported by this browser.");
     return;
   }
 
-  showToast(
-    "Finding your location..."
-  );
+  showToast("Finding your location...");
 
   navigator.geolocation.getCurrentPosition(
 
-    position => {
+    position=>{
 
-      const lat =
-        position.coords.latitude;
+      const lat=position.coords.latitude;
+      const lon=position.coords.longitude;
 
-      const lon =
-        position.coords.longitude;
-
-      document.getElementById("from").value =
+      document.getElementById("from").value=
         `${lat.toFixed(5)}, ${lon.toFixed(5)}`;
 
-      showToast(
-        "Your location was added."
-      );
+      showToast("Your location was added.");
 
     },
 
-    () => {
-
-      showToast(
-        "Location permission was not available."
-      );
-
+    ()=>{
+      showToast("Location permission was not available.");
     },
 
     {
@@ -2411,58 +1712,36 @@ function useLocation(){
     }
 
   );
-
 }
 
-
-/* =========================================================
-   LOCATION SWAP
-========================================================= */
+/* SWAP */
 
 function swapLocations(){
 
-  const from =
-    document.getElementById("from");
+  const from=document.getElementById("from");
+  const destination=document.getElementById("destination");
 
-  const destination =
-    document.getElementById("destination");
+  const temp=from.value;
 
-  const temp =
-    from.value;
-
-  from.value =
-    destination.value;
-
-  destination.value =
-    temp;
-
+  from.value=destination.value;
+  destination.value=temp;
 }
 
+/* SAVED PLACES */
 
-/* =========================================================
-   SAVED PLACES
-========================================================= */
-
-const PLACE_KEY =
-  "cab0_places_v2";
-
+const PLACE_KEY="cab0_places_v2";
 
 function getPlaces(){
 
   try{
-
     return JSON.parse(
       localStorage.getItem(PLACE_KEY)
-    ) || {};
-
+    )||{};
   }catch(error){
-
     return {};
-
   }
 
 }
-
 
 function savePlaces(places){
 
@@ -2472,142 +1751,97 @@ function savePlaces(places){
   );
 
   renderPlaces();
-
 }
-
 
 function editPlace(name){
 
-  const places =
-    getPlaces();
+  const places=getPlaces();
 
   if(places[name]){
 
-    const answer =
-      confirm(
-        `${name} is currently saved as:\n\n${places[name]}\n\nPress OK to replace it or Cancel to use it.`
-      );
+    const answer=confirm(
+      `${name} is currently saved as:\n\n${places[name]}\n\nPress OK to replace it or Cancel to use it.`
+    );
 
     if(!answer){
 
-      document.getElementById(
-        "destination"
-      ).value = places[name];
+      document.getElementById("destination").value=
+        places[name];
 
       scrollToId("search");
 
       return;
-
     }
 
   }
 
-  const address =
-    prompt(
-      `Enter the address for ${name}:`,
-      places[name] || ""
-    );
+  const address=prompt(
+    `Enter the address for ${name}:`,
+    places[name]||""
+  );
 
-  if(!address){
+  if(!address)return;
 
-    return;
-
-  }
-
-  places[name] =
-    address.trim();
+  places[name]=address.trim();
 
   savePlaces(places);
 
-  document.getElementById(
-    "destination"
-  ).value =
+  document.getElementById("destination").value=
     address.trim();
 
   scrollToId("search");
 
-  showToast(
-    `${name} saved.`
-  );
-
+  showToast(`${name} saved.`);
 }
-
 
 function selectPlace(name){
 
-  const places =
-    getPlaces();
+  const places=getPlaces();
 
   if(!places[name]){
-
     editPlace(name);
-
     return;
-
   }
 
-  document.getElementById(
-    "destination"
-  ).value =
+  document.getElementById("destination").value=
     places[name];
 
-  showToast(
-    `${name} selected.`
-  );
-
+  showToast(`${name} selected.`);
 }
-
 
 function renderPlaces(){
 
-  const places =
-    getPlaces();
+  const places=getPlaces();
 
-  ["Home","Work","Airport","Other"]
-    .forEach(name => {
+  ["Home","Work","Airport","Other"].forEach(name=>{
 
-      const element =
-        document.getElementById(
-          name + "Place"
-        );
+    const element=document.getElementById(
+      name+"Place"
+    );
 
-      if(element){
+    if(element){
+      element.textContent=
+        places[name]||"Add address";
+    }
 
-        element.textContent =
-          places[name] ||
-          "Add address";
-
-      }
-
-    });
-
+  });
 }
 
+/* MY DAY */
 
-/* =========================================================
-   MY DAY
-========================================================= */
-
-const TASK_KEY =
-  "cab0_tasks_v2";
-
+const TASK_KEY="cab0_tasks_v2";
 
 function getTasks(){
 
   try{
-
     return JSON.parse(
       localStorage.getItem(TASK_KEY)
-    ) || [];
-
+    )||[];
   }catch(error){
-
     return [];
-
   }
 
 }
-
 
 function saveTasks(tasks){
 
@@ -2617,91 +1851,51 @@ function saveTasks(tasks){
   );
 
   renderTasks();
-
 }
-
 
 function toggleTaskForm(){
 
-  const form =
-    document.getElementById("taskForm");
+  const form=document.getElementById("taskForm");
 
   form.classList.toggle("show");
 
   if(form.classList.contains("show")){
 
-    const today =
-      new Date();
+    const today=new Date();
 
-    document.getElementById(
-      "taskDate"
-    ).value =
-      today.toISOString()
-      .split("T")[0];
+    document.getElementById("taskDate").value=
+      today.toISOString().split("T")[0];
 
-    setTimeout(() => {
-
-      document.getElementById(
-        "taskTitle"
-      ).focus();
-
+    setTimeout(()=>{
+      document.getElementById("taskTitle").focus();
     },50);
 
   }
-
 }
-
 
 function saveTask(){
 
-  const title =
-    document
-      .getElementById("taskTitle")
-      .value
-      .trim();
+  const title=document
+    .getElementById("taskTitle")
+    .value
+    .trim();
 
   if(!title){
-
-    showToast(
-      "Enter something for My Day."
-    );
-
+    showToast("Enter something for My Day.");
     return;
-
   }
 
-  const task = {
-
+  const task={
     id:Date.now(),
-
     title:title,
-
-    date:
-      document.getElementById(
-        "taskDate"
-      ).value,
-
-    time:
-      document.getElementById(
-        "taskTime"
-      ).value,
-
-    type:
-      document.getElementById(
-        "taskType"
-      ).value,
-
-    location:
-      document.getElementById(
-        "taskLocation"
-      ).value.trim(),
-
+    date:document.getElementById("taskDate").value,
+    time:document.getElementById("taskTime").value,
+    type:document.getElementById("taskType").value,
+    location:document.getElementById("taskLocation").value.trim(),
     completed:false
-
   };
 
-  const tasks =
-    getTasks();
+  const tasks=getTasks();
 
   tasks.push(task);
 
@@ -2709,97 +1903,64 @@ function saveTask(){
 
   clearTaskForm();
 
-  document
-    .getElementById("taskForm")
+  document.getElementById("taskForm")
     .classList.remove("show");
 
-  showToast(
-    "Added to My Day."
-  );
-
+  showToast("Added to My Day.");
 }
-
 
 function clearTaskForm(){
 
-  document.getElementById(
-    "taskTitle"
-  ).value = "";
-
-  document.getElementById(
-    "taskTime"
-  ).value = "";
-
-  document.getElementById(
-    "taskLocation"
-  ).value = "";
-
+  document.getElementById("taskTitle").value="";
+  document.getElementById("taskTime").value="";
+  document.getElementById("taskLocation").value="";
 }
-
 
 function toggleTask(id){
 
-  const tasks =
-    getTasks();
+  const tasks=getTasks();
 
-  const task =
-    tasks.find(
-      item => item.id === id
-    );
+  const task=tasks.find(item=>item.id===id);
 
   if(task){
-
-    task.completed =
-      !task.completed;
-
+    task.completed=!task.completed;
   }
 
   saveTasks(tasks);
-
 }
-
 
 function deleteTask(id){
 
-  const tasks =
-    getTasks().filter(
-      item => item.id !== id
-    );
+  const tasks=getTasks().filter(
+    item=>item.id!==id
+  );
 
   saveTasks(tasks);
 
-  showToast(
-    "Removed from My Day."
-  );
-
+  showToast("Removed from My Day.");
 }
-
 
 function renderTasks(){
 
-  const container =
-    document.getElementById(
-      "tasks"
-    );
+  const container=document.getElementById("tasks");
 
-  let tasks =
-    getTasks();
+  let tasks=getTasks();
 
-  tasks.sort((a,b) => {
+  tasks.sort((a,b)=>{
 
-    const first =
-      `${a.date || "9999-12-31"} ${a.time || "23:59"}`;
+    const first=
+      `${a.date||"9999-12-31"} ${a.time||"23:59"}`;
 
-    const second =
-      `${b.date || "9999-12-31"} ${b.time || "23:59"}`;
+    const second=
+      `${b.date||"9999-12-31"} ${b.time||"23:59"}`;
 
     return first.localeCompare(second);
 
   });
 
-  if(tasks.length === 0){
+  if(tasks.length===0){
 
-    container.innerHTML = `
+    container.innerHTML=`
 
       <div class="empty">
 
@@ -2816,56 +1977,48 @@ function renderTasks(){
     `;
 
     return;
-
   }
 
-  container.innerHTML = "";
+  container.innerHTML="";
 
-  tasks.forEach(task => {
+  tasks.forEach(task=>{
 
-    const row =
-      document.createElement("div");
+    const row=document.createElement("div");
 
-    row.className =
-      "task" +
-      (task.completed ? " done" : "");
+    row.className=
+      "task"+
+      (task.completed?" done":"");
 
-    let meta = "";
+    let meta="";
 
     if(task.date){
 
-      const date =
-        new Date(
-          task.date + "T00:00:00"
-        );
+      const date=new Date(
+        task.date+"T00:00:00"
+      );
 
-      meta +=
-        date.toLocaleDateString(
-          undefined,
-          {
-            weekday:"short",
-            month:"short",
-            day:"numeric"
-          }
-        );
-
+      meta+=date.toLocaleDateString(
+        undefined,
+        {
+          weekday:"short",
+          month:"short",
+          day:"numeric"
+        }
+      );
     }
 
     if(task.time){
 
-      const [hour,minute] =
-        task.time.split(":");
+      const [hour,minute]=task.time.split(":");
 
-      const time =
-        new Date();
+      const time=new Date();
 
       time.setHours(
         Number(hour),
         Number(minute)
       );
 
-      meta +=
-        " • " +
+      meta+=" • "+
         time.toLocaleTimeString(
           undefined,
           {
@@ -2873,18 +2026,13 @@ function renderTasks(){
             minute:"2-digit"
           }
         );
-
     }
 
     if(task.location){
-
-      meta +=
-        " • 📍 " +
-        task.location;
-
+      meta+=" • 📍 "+task.location;
     }
 
-    row.innerHTML = `
+    row.innerHTML=`
 
       <button
         class="check"
@@ -2898,10 +2046,8 @@ function renderTasks(){
         </strong>
 
         <div class="task-meta">
-
           ${escapeHTML(meta)}
           • ${escapeHTML(task.type)}
-
         </div>
 
       </div>
@@ -2909,9 +2055,7 @@ function renderTasks(){
       <button
         class="delete"
         onclick="deleteTask(${task.id})">
-
         ×
-
       </button>
 
     `;
@@ -2919,18 +2063,13 @@ function renderTasks(){
     container.appendChild(row);
 
   });
-
 }
 
-
-/* =========================================================
-   HELPERS
-========================================================= */
+/* HELPERS */
 
 function escapeHTML(value){
 
   return String(value)
-
     .replace(/&/g,"&amp;")
     .replace(/</g,"&lt;")
     .replace(/>/g,"&gt;")
@@ -2939,11 +2078,9 @@ function escapeHTML(value){
 
 }
 
-
 function scrollToId(id){
 
-  const element =
-    document.getElementById(id);
+  const element=document.getElementById(id);
 
   if(element){
 
@@ -2953,95 +2090,57 @@ function scrollToId(id){
     });
 
   }
-
 }
-
 
 function showToast(message){
 
-  const toast =
-    document.getElementById("toast");
+  const toast=document.getElementById("toast");
 
-  toast.textContent =
-    message;
+  toast.textContent=message;
 
   toast.classList.add("show");
 
-  clearTimeout(
-    window.cab0Toast
-  );
+  clearTimeout(window.cab0Toast);
 
-  window.cab0Toast =
-    setTimeout(() => {
-
-      toast.classList.remove("show");
-
-    },2600);
-
+  window.cab0Toast=setTimeout(()=>{
+    toast.classList.remove("show");
+  },2600);
 }
 
+/* ENTER KEY */
 
-/* =========================================================
-   ENTER KEY SEARCH
-========================================================= */
+document.getElementById("from")
+.addEventListener("keydown",event=>{
+  if(event.key==="Enter")searchProviders();
+});
 
-document
-  .getElementById("from")
-  .addEventListener(
-    "keydown",
-    event => {
+document.getElementById("destination")
+.addEventListener("keydown",event=>{
+  if(event.key==="Enter")searchProviders();
+});
 
-      if(event.key === "Enter"){
-        searchProviders();
+/* INITIALIZE */
+
+document.addEventListener("DOMContentLoaded",()=>{
+
+  renderDirectory();
+
+  renderPlaces();
+
+  renderTasks();
+
+  document.getElementById("today").textContent=
+    new Date().toLocaleDateString(
+      undefined,
+      {
+        weekday:"long",
+        month:"long",
+        day:"numeric",
+        year:"numeric"
       }
+    );
 
-    }
-  );
-
-
-document
-  .getElementById("destination")
-  .addEventListener(
-    "keydown",
-    event => {
-
-      if(event.key === "Enter"){
-        searchProviders();
-      }
-
-    }
-  );
-
-
-/* =========================================================
-   INITIALIZE
-========================================================= */
-
-document.addEventListener(
-  "DOMContentLoaded",
-  () => {
-
-    renderDirectory();
-
-    renderPlaces();
-
-    renderTasks();
-
-    document.getElementById(
-      "today"
-    ).textContent =
-      new Date().toLocaleDateString(
-        undefined,
-        {
-          weekday:"long",
-          month:"long",
-          day:"numeric",
-          year:"numeric"
-        }
-      );
-
-  }
-);
+});
 
 </script>
 

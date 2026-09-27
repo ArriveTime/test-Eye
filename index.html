@@ -3,894 +3,708 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Cab0.com — Every Ride. Every Delivery. One Search.</title>
-
-<meta name="description" content="Cab0.com connects rides, robotaxis, taxis, food, groceries, packages and delivery services in one simple global search.">
+<title>Cab0.com® — Every Ride. Every Delivery. One Search.</title>
 
 <style>
 :root{
   --navy:#071a33;
-  --navy2:#0c2748;
-  --blue:#1769ff;
-  --blue2:#0d55d9;
-  --sky:#eef5ff;
+  --blue:#0b63ce;
+  --blue2:#1683ff;
+  --light:#f5f8fc;
+  --line:#dfe7f1;
   --text:#122033;
-  --muted:#68788d;
-  --line:#e3eaf3;
-  --bg:#f5f8fc;
+  --muted:#64748b;
   --white:#fff;
-  --green:#18a56b;
-  --shadow:0 15px 45px rgba(9,31,60,.09);
+  --shadow:0 18px 45px rgba(7,26,51,.10);
+  --radius:22px;
 }
 
 *{box-sizing:border-box}
 
-html{scroll-behavior:smooth}
+html{
+  scroll-behavior:smooth;
+}
 
 body{
   margin:0;
-  background:var(--bg);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
   color:var(--text);
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+  background:#f7f9fc;
 }
 
-button,input,select{font:inherit}
-button{cursor:pointer}
-a{text-decoration:none;color:inherit}
+a{
+  color:inherit;
+  text-decoration:none;
+}
+
+button,
+input,
+select{
+  font:inherit;
+}
+
+.container{
+  width:min(1180px,92%);
+  margin:auto;
+}
 
 /* HEADER */
 
 header{
   position:sticky;
   top:0;
-  z-index:1000;
+  z-index:100;
   background:rgba(255,255,255,.96);
   backdrop-filter:blur(14px);
   border-bottom:1px solid var(--line);
 }
 
 .nav{
-  width:min(1220px,calc(100% - 30px));
-  margin:auto;
-  min-height:72px;
+  height:76px;
   display:flex;
   align-items:center;
   justify-content:space-between;
-  gap:20px;
+  gap:24px;
 }
 
 .logo{
-  font-size:29px;
-  font-weight:950;
-  letter-spacing:-1.7px;
-  color:var(--navy);
   position:relative;
-  display:inline-block;
+  font-size:30px;
+  font-weight:900;
+  letter-spacing:-1.5px;
+  color:var(--navy);
+  white-space:nowrap;
 }
 
-.logo span{color:var(--blue)}
-
-.logo .registered{
-  position:relative;
-  display:inline-block;
-  font-size:10px;
-  font-weight:900;
-  vertical-align:top;
+.logo sup{
+  position:absolute;
   top:-5px;
-  margin-left:2px;
-  color:var(--navy);
+  right:-14px;
+  font-size:11px;
+  font-weight:800;
 }
 
 .navlinks{
   display:flex;
   align-items:center;
-  gap:7px;
+  gap:25px;
+  color:#40516a;
+  font-size:14px;
+  font-weight:700;
 }
 
-.navlink{
-  border:0;
-  background:transparent;
-  color:var(--muted);
-  padding:10px 14px;
-  border-radius:11px;
-  font-weight:750;
-}
-
-.navlink:hover{
+.navlinks a:hover{
   color:var(--blue);
-  background:var(--sky);
 }
 
-/* MAIN */
-
-.container{
-  width:min(1220px,calc(100% - 30px));
-  margin:auto;
-}
-
-/* WOZ QUOTE */
-
-.woz{
-  margin:28px auto 0;
-  background:
-    radial-gradient(circle at 10% 20%,rgba(23,105,255,.14),transparent 34%),
-    linear-gradient(135deg,#071a33,#102d50);
+.nav-btn{
+  background:var(--navy);
   color:white;
-  border-radius:27px;
-  padding:34px 38px;
-  position:relative;
-  overflow:hidden;
-  box-shadow:0 20px 55px rgba(7,26,51,.18);
-}
-
-.woz:after{
-  content:"";
-  position:absolute;
-  width:280px;
-  height:280px;
-  border-radius:50%;
-  border:1px solid rgba(255,255,255,.09);
-  right:-80px;
-  top:-100px;
-  box-shadow:
-    0 0 0 35px rgba(255,255,255,.025),
-    0 0 0 70px rgba(255,255,255,.018);
-}
-
-.woz blockquote{
-  position:relative;
-  z-index:2;
-  margin:0;
-  max-width:1100px;
-  font-size:clamp(21px,3vw,38px);
-  line-height:1.18;
-  letter-spacing:-1px;
-  font-weight:800;
-  white-space:nowrap;
-}
-
-.woz blockquote span{
-  color:#72a8ff;
-}
-
-.woz-credit{
-  position:relative;
-  z-index:2;
-  margin-top:18px;
-  color:#dce9ff;
-  font-size:clamp(18px,2vw,25px);
-  line-height:1.2;
-  font-weight:800;
-  letter-spacing:-.4px;
+  padding:11px 17px;
+  border-radius:12px;
 }
 
 /* HERO */
 
 .hero{
+  padding:65px 0 28px;
   text-align:center;
-  padding:47px 10px 35px;
 }
 
 .hero h1{
   margin:0;
-  color:var(--navy);
-  font-size:clamp(43px,6.7vw,76px);
-  line-height:.96;
+  font-size:clamp(42px,6vw,76px);
+  line-height:.98;
   letter-spacing:-4px;
+  font-weight:900;
+  color:var(--navy);
 }
 
-.hero h1 span{color:var(--blue)}
+.hero h1 span{
+  display:block;
+}
 
-.hero p{
+.hero-sub{
+  margin:20px auto 0;
   max-width:700px;
-  margin:22px auto 0;
   color:var(--muted);
   font-size:18px;
-  line-height:1.55;
+  line-height:1.6;
+}
+
+/* WOZNIak QUOTE */
+
+.quote-box{
+  width:min(900px,100%);
+  margin:34px auto 34px;
+  padding:28px 50px;
+  border-radius:22px;
+  background:linear-gradient(135deg,#071a33,#103c70);
+  color:#fff;
+  box-shadow:0 18px 45px rgba(7,26,51,.18);
+  text-align:center;
+}
+
+.quote-text{
+  margin:0 auto;
+  font-size:clamp(18px,2.2vw,25px);
+  line-height:1.4;
+  font-weight:800;
+  letter-spacing:-.2px;
+  white-space:nowrap;
+}
+
+.quote-attribution{
+  margin:14px auto 0;
+  font-size:16px;
+  line-height:1.4;
+  font-weight:800;
+  letter-spacing:.1px;
+  white-space:nowrap;
 }
 
 /* SEARCH */
 
 .search-card{
-  background:white;
+  background:#fff;
   border:1px solid var(--line);
   border-radius:28px;
+  padding:20px;
   box-shadow:var(--shadow);
-  overflow:hidden;
+  margin-top:28px;
 }
 
-.categories{
+.tabs{
   display:grid;
   grid-template-columns:repeat(7,1fr);
-  border-bottom:1px solid var(--line);
+  gap:8px;
+  margin-bottom:18px;
 }
 
-.category{
+.tab{
   border:0;
-  background:white;
-  color:var(--muted);
-  padding:17px 7px;
-  font-weight:850;
-  border-bottom:3px solid transparent;
+  background:#f1f5f9;
+  color:#526174;
+  padding:13px 8px;
+  border-radius:13px;
+  cursor:pointer;
+  font-weight:800;
+  font-size:13px;
 }
 
-.category:hover{
-  background:#f8fbff;
+.tab.active{
+  background:var(--navy);
+  color:white;
 }
 
-.category.active{
-  color:var(--blue);
-  background:#f8fbff;
-  border-bottom-color:var(--blue);
-}
-
-.search-area{padding:24px}
-
-.search-fields{
+.search-row{
   display:grid;
-  grid-template-columns:1fr 1fr auto;
-  gap:11px;
+  grid-template-columns:1fr 1fr auto auto;
+  gap:10px;
 }
 
-.input-wrap{position:relative}
+.field{
+  position:relative;
+}
 
-.input-wrap input{
+.field input{
   width:100%;
-  height:57px;
-  border:1px solid #d8e1ec;
+  height:52px;
+  border:1px solid var(--line);
   border-radius:14px;
   padding:0 16px;
+  outline:none;
   background:#fbfdff;
   color:var(--text);
-  outline:none;
 }
 
-.input-wrap input:focus{
+.field input:focus{
   border-color:var(--blue);
-  box-shadow:0 0 0 4px rgba(23,105,255,.1);
+  box-shadow:0 0 0 3px rgba(11,99,206,.09);
 }
 
-.location{
-  position:absolute;
-  right:7px;
-  top:7px;
-  height:43px;
-  border:0;
-  border-radius:10px;
-  background:var(--sky);
-  color:var(--blue);
-  font-weight:800;
-  padding:0 12px;
-}
-
-.search-button{
-  height:57px;
-  padding:0 26px;
-  border:0;
+.location-btn,
+.swap-btn,
+.search-btn{
+  height:52px;
   border-radius:14px;
-  background:var(--blue);
-  color:white;
-  font-weight:900;
-  box-shadow:0 9px 22px rgba(23,105,255,.22);
+  border:1px solid var(--line);
+  padding:0 16px;
+  cursor:pointer;
+  font-weight:800;
 }
 
-.search-button:hover{background:var(--blue2)}
+.location-btn,
+.swap-btn{
+  background:#fff;
+  color:var(--navy);
+}
 
-.search-tools{
-  margin-top:13px;
+.search-btn{
+  border:0;
+  color:#fff;
+  background:var(--blue);
+  min-width:120px;
+}
+
+.shortcuts{
   display:flex;
   flex-wrap:wrap;
   gap:8px;
+  margin-top:13px;
 }
 
-.tool{
+.shortcut{
   border:1px solid var(--line);
-  background:white;
-  color:var(--muted);
-  border-radius:10px;
+  background:#fff;
   padding:8px 12px;
-  font-size:12px;
-  font-weight:800;
-}
-
-/* RESULTS */
-
-.results{
-  display:none;
-  margin-top:25px;
-}
-
-.results.show{display:block}
-
-.results-heading{
-  display:flex;
-  justify-content:space-between;
-  align-items:end;
-  gap:15px;
-  margin-bottom:13px;
-}
-
-.results-heading h2{
-  margin:0;
-  font-size:23px;
-}
-
-.results-heading p{
-  margin:0;
-  color:var(--muted);
-  font-size:12px;
-}
-
-.provider-grid{
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:11px;
-}
-
-.provider{
-  background:white;
-  border:1px solid var(--line);
-  border-radius:18px;
-  padding:17px;
-  display:flex;
-  align-items:center;
-  gap:13px;
-  transition:.2s;
-}
-
-.provider:hover{
-  transform:translateY(-2px);
-  box-shadow:0 10px 25px rgba(15,35,65,.07);
-}
-
-.provider-icon{
-  width:51px;
-  height:51px;
-  border-radius:14px;
-  background:var(--sky);
-  display:grid;
-  place-items:center;
-  font-size:23px;
-  flex:none;
-}
-
-.provider-info{
-  flex:1;
-  min-width:0;
-}
-
-.provider-name{
-  font-size:16px;
-  font-weight:900;
-  margin-bottom:3px;
-}
-
-.provider-desc{
-  color:var(--muted);
-  font-size:12px;
-  line-height:1.35;
-}
-
-.provider-region{
-  color:#8390a0;
-  font-size:11px;
-  margin-top:4px;
-}
-
-.provider-button{
-  flex:none;
-  background:var(--navy);
-  color:white;
   border-radius:10px;
-  padding:10px 13px;
+  color:#526174;
+  cursor:pointer;
   font-size:12px;
-  font-weight:850;
+  font-weight:700;
 }
 
-.provider-button:hover{background:var(--blue)}
+/* SECTION */
 
-/* DIRECTORY */
+.section{
+  padding:58px 0;
+}
 
-.directory{margin-top:34px}
-
-.directory-top{
+.section-head{
   display:flex;
   justify-content:space-between;
   align-items:end;
   gap:20px;
-  margin-bottom:14px;
+  margin-bottom:22px;
 }
 
-.directory-top h2{
+.section h2{
   margin:0;
-  font-size:24px;
+  font-size:32px;
+  letter-spacing:-1.5px;
+  color:var(--navy);
 }
 
-.directory-top p{
-  margin:5px 0 0;
+.section-intro{
+  margin:7px 0 0;
+  color:var(--muted);
+  line-height:1.5;
+}
+
+.results{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:18px;
+}
+
+.provider-card{
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:20px;
+  padding:22px;
+  box-shadow:0 10px 28px rgba(7,26,51,.06);
+  display:flex;
+  flex-direction:column;
+  min-height:190px;
+}
+
+.provider-top{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  align-items:start;
+}
+
+.provider-name{
+  font-size:19px;
+  font-weight:900;
+  color:var(--navy);
+}
+
+.provider-category{
+  display:inline-block;
+  margin-top:6px;
+  font-size:11px;
+  font-weight:800;
+  color:var(--blue);
+  background:#edf5ff;
+  padding:5px 8px;
+  border-radius:7px;
+}
+
+.provider-description{
   color:var(--muted);
   font-size:13px;
+  line-height:1.5;
+  margin:14px 0;
 }
 
-.directory-search{
-  width:280px;
-  height:44px;
-  border:1px solid var(--line);
+.visit{
+  margin-top:auto;
+  display:inline-flex;
+  justify-content:center;
+  align-items:center;
+  height:42px;
   border-radius:11px;
-  padding:0 13px;
-  outline:none;
-  background:white;
-}
-
-.directory-search:focus{border-color:var(--blue)}
-
-.filter-row{
-  display:flex;
-  flex-wrap:wrap;
-  gap:7px;
-  margin-bottom:14px;
-}
-
-.filter{
-  border:1px solid var(--line);
-  background:white;
-  color:var(--muted);
-  border-radius:9px;
-  padding:8px 12px;
-  font-size:12px;
+  background:var(--navy);
+  color:white;
+  font-size:13px;
   font-weight:800;
 }
 
-.filter.active{
-  color:var(--blue);
-  border-color:#bcd1f5;
-  background:var(--sky);
+.notice{
+  margin-top:18px;
+  padding:14px 16px;
+  background:#eef6ff;
+  color:#315273;
+  border:1px solid #d6e8fb;
+  border-radius:13px;
+  font-size:12px;
+  line-height:1.5;
+}
+
+/* DIRECTORY */
+
+.directory-tools{
+  display:grid;
+  grid-template-columns:1fr 200px;
+  gap:10px;
+  margin-bottom:18px;
+}
+
+.directory-search,
+.directory-filter{
+  height:48px;
+  border:1px solid var(--line);
+  border-radius:12px;
+  background:white;
+  padding:0 14px;
+  outline:none;
 }
 
 .directory-grid{
   display:grid;
   grid-template-columns:repeat(4,1fr);
-  gap:9px;
+  gap:12px;
 }
 
 .directory-item{
-  background:white;
+  background:#fff;
   border:1px solid var(--line);
-  border-radius:14px;
-  padding:13px;
-  display:flex;
-  align-items:center;
-  gap:10px;
-}
-
-.directory-item-icon{
-  width:37px;
-  height:37px;
-  border-radius:10px;
-  background:#f2f6fb;
-  display:grid;
-  place-items:center;
-  font-size:17px;
-  flex:none;
+  border-radius:15px;
+  padding:15px;
 }
 
 .directory-item strong{
   display:block;
-  font-size:13px;
-}
-
-.directory-item small{
-  color:var(--muted);
-  font-size:10px;
-}
-
-/* MY DAY */
-
-.myday{
-  margin-top:35px;
-  background:white;
-  border:1px solid var(--line);
-  border-radius:24px;
-  overflow:hidden;
-  box-shadow:var(--shadow);
-}
-
-.myday-head{
-  padding:22px 24px;
-  border-bottom:1px solid var(--line);
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:15px;
-}
-
-.myday-title{
-  display:flex;
-  gap:12px;
-  align-items:center;
-}
-
-.day-icon{
-  width:44px;
-  height:44px;
-  border-radius:13px;
-  background:var(--sky);
-  display:grid;
-  place-items:center;
-  font-size:21px;
-}
-
-.myday h2{
-  margin:0;
-  font-size:22px;
-}
-
-.myday-sub{
-  margin-top:3px;
-  color:var(--muted);
-  font-size:12px;
-}
-
-.add{
-  border:0;
-  background:var(--blue);
-  color:white;
-  padding:10px 15px;
-  border-radius:10px;
-  font-weight:850;
-}
-
-.day-body{padding:20px 24px}
-
-.task-form{
-  display:none;
-  padding:17px;
-  background:#f8fbff;
-  border:1px solid var(--line);
-  border-radius:16px;
-  margin-bottom:17px;
-}
-
-.task-form.show{display:block}
-
-.task-grid{
-  display:grid;
-  grid-template-columns:2fr 1fr 1fr 1fr;
-  gap:9px;
-}
-
-.form-input{
-  width:100%;
-  height:44px;
-  border:1px solid #d8e1ec;
-  background:white;
-  border-radius:10px;
-  padding:0 11px;
-  outline:none;
-}
-
-.task-actions{
-  display:flex;
-  justify-content:flex-end;
-  gap:8px;
-  margin-top:10px;
-}
-
-.cancel{
-  border:1px solid var(--line);
-  background:white;
-  border-radius:9px;
-  padding:9px 13px;
-  font-weight:750;
-}
-
-.save{
-  border:0;
-  background:var(--blue);
-  color:white;
-  border-radius:9px;
-  padding:9px 15px;
-  font-weight:850;
-}
-
-.tasks{
-  display:grid;
-  gap:8px;
-}
-
-.empty{
-  border:1px dashed #d4deea;
-  border-radius:14px;
-  padding:26px;
-  text-align:center;
-  color:var(--muted);
-  font-size:13px;
-}
-
-.task{
-  border:1px solid var(--line);
-  border-radius:14px;
-  padding:13px;
-  display:flex;
-  align-items:center;
-  gap:11px;
-}
-
-.check{
-  width:22px;
-  height:22px;
-  border:2px solid #c7d3e0;
-  background:white;
-  border-radius:7px;
-  flex:none;
-}
-
-.task.done .check{
-  background:var(--green);
-  border-color:var(--green);
-}
-
-.task.done .check:after{
-  content:"✓";
-  color:white;
-  font-weight:900;
-  font-size:13px;
-}
-
-.task-content{flex:1}
-
-.task-content strong{
-  display:block;
   font-size:14px;
+  color:var(--navy);
 }
 
-.task.done .task-content strong{
-  color:#9ba6b5;
-  text-decoration:line-through;
-}
-
-.task-meta{
-  margin-top:3px;
+.directory-item span{
+  display:block;
+  margin-top:5px;
   color:var(--muted);
   font-size:11px;
 }
 
-.delete{
+.directory-item a{
+  display:inline-block;
+  margin-top:10px;
+  font-size:12px;
+  color:var(--blue);
+  font-weight:800;
+}
+
+/* MY DAY */
+
+.day-card{
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:22px;
+  padding:22px;
+  box-shadow:var(--shadow);
+}
+
+.day-form{
+  display:grid;
+  grid-template-columns:1.2fr .8fr .8fr 1fr auto;
+  gap:9px;
+}
+
+.day-form input,
+.day-form select{
+  height:46px;
+  border:1px solid var(--line);
+  border-radius:11px;
+  padding:0 12px;
+  outline:none;
+}
+
+.add-task{
   border:0;
-  width:32px;
-  height:32px;
+  background:var(--blue);
+  color:white;
+  border-radius:11px;
+  padding:0 17px;
+  cursor:pointer;
+  font-weight:800;
+}
+
+.tasks{
+  margin-top:18px;
+  display:grid;
+  gap:9px;
+}
+
+.task{
+  display:grid;
+  grid-template-columns:auto 1fr auto;
+  align-items:center;
+  gap:12px;
+  padding:13px 14px;
+  border:1px solid var(--line);
+  border-radius:12px;
+}
+
+.task.done{
+  opacity:.55;
+}
+
+.task.done .task-title{
+  text-decoration:line-through;
+}
+
+.task-title{
+  font-weight:800;
+  font-size:14px;
+}
+
+.task-meta{
+  color:var(--muted);
+  font-size:11px;
+  margin-top:3px;
+}
+
+.delete-task{
+  border:0;
+  background:#f1f5f9;
   border-radius:8px;
-  background:#f4f6f9;
-  color:#8995a5;
+  padding:7px 10px;
+  cursor:pointer;
 }
 
 /* SAVED PLACES */
 
-.places{margin-top:32px}
-
-.section-title{margin-bottom:13px}
-
-.section-title h2{
-  margin:0;
-  font-size:23px;
-}
-
-.section-title p{
-  margin:4px 0 0;
-  color:var(--muted);
-  font-size:12px;
-}
-
-.place-grid{
+.saved-grid{
   display:grid;
   grid-template-columns:repeat(4,1fr);
-  gap:10px;
+  gap:14px;
 }
 
-.place{
+.saved{
+  background:#fff;
   border:1px solid var(--line);
-  background:white;
-  border-radius:15px;
-  padding:17px;
-  text-align:left;
+  border-radius:18px;
+  padding:20px;
+  cursor:pointer;
 }
 
-.place:hover{
-  border-color:#bdd1f2;
-  box-shadow:0 8px 22px rgba(15,35,65,.06);
-}
-
-.place-icon{font-size:21px}
-
-.place strong{
+.saved strong{
   display:block;
-  margin-top:8px;
+  color:var(--navy);
 }
 
-.place small{
+.saved span{
   display:block;
-  margin-top:4px;
   color:var(--muted);
-  overflow:hidden;
-  text-overflow:ellipsis;
-  white-space:nowrap;
+  font-size:12px;
+  margin-top:6px;
+  min-height:18px;
 }
 
 /* ECOSYSTEM */
 
 .ecosystem{
-  margin:32px 0;
   display:grid;
   grid-template-columns:1fr 1fr;
-  gap:11px;
+  gap:18px;
 }
 
-.eco{
-  background:linear-gradient(135deg,#071a33,#12345d);
-  color:white;
-  border-radius:18px;
-  padding:20px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:15px;
+.eco-card{
+  background:linear-gradient(135deg,#071a33,#123c6c);
+  color:#fff;
+  border-radius:22px;
+  padding:28px;
 }
 
-.eco h3{margin:0 0 4px}
-
-.eco p{
+.eco-card h3{
   margin:0;
-  color:#b9c9dd;
-  font-size:12px;
+  font-size:25px;
 }
 
-.eco a{
-  background:white;
+.eco-card p{
+  color:#c9d8eb;
+  font-size:14px;
+  line-height:1.5;
+}
+
+.eco-card a{
+  display:inline-block;
+  margin-top:8px;
+  background:#fff;
   color:var(--navy);
-  border-radius:9px;
-  padding:9px 12px;
-  font-size:12px;
+  padding:10px 15px;
+  border-radius:10px;
+  font-size:13px;
   font-weight:900;
 }
 
 /* FOOTER */
 
 footer{
-  text-align:center;
-  padding:30px 15px 50px;
-  color:#8a97a8;
-  font-size:11px;
-  line-height:1.6;
-}
-
-footer strong{color:var(--navy)}
-
-/* TOAST */
-
-.toast{
-  position:fixed;
-  bottom:24px;
-  left:50%;
-  transform:translate(-50%,20px);
-  opacity:0;
-  pointer-events:none;
   background:var(--navy);
-  color:white;
-  padding:12px 17px;
-  border-radius:11px;
-  font-size:12px;
-  font-weight:800;
-  transition:.25s;
-  z-index:3000;
+  color:#d8e3f1;
+  padding:40px 0;
+  margin-top:30px;
 }
 
-.toast.show{
-  opacity:1;
-  transform:translate(-50%,0);
+.footer-inner{
+  display:flex;
+  justify-content:space-between;
+  gap:25px;
+  align-items:center;
+}
+
+.footer-logo{
+  color:white;
+  font-weight:900;
+  font-size:22px;
+}
+
+.footer-note{
+  color:#9fb2ca;
+  font-size:12px;
+  line-height:1.5;
 }
 
 /* MOBILE */
 
 @media(max-width:900px){
-
-  .categories{
-    grid-template-columns:repeat(7,110px);
-    overflow-x:auto;
+  .navlinks{
+    display:none;
   }
 
-  .search-fields{
-    grid-template-columns:1fr;
+  .tabs{
+    grid-template-columns:repeat(4,1fr);
   }
 
-  .search-button{width:100%}
+  .search-row{
+    grid-template-columns:1fr 1fr;
+  }
 
-  .provider-grid{grid-template-columns:1fr}
+  .results{
+    grid-template-columns:repeat(2,1fr);
+  }
 
   .directory-grid{
     grid-template-columns:repeat(2,1fr);
   }
 
-  .place-grid{
-    grid-template-columns:repeat(2,1fr);
-  }
-
-  .task-grid{
+  .day-form{
     grid-template-columns:1fr 1fr;
   }
 
-  .woz blockquote{
-    white-space:normal;
+  .saved-grid{
+    grid-template-columns:repeat(2,1fr);
   }
 }
 
-@media(max-width:600px){
-
-  .container{
-    width:calc(100% - 20px);
+@media(max-width:620px){
+  .nav{
+    height:66px;
   }
 
-  .navlinks{display:none}
-
-  .woz{
-    padding:25px 22px;
+  .logo{
+    font-size:26px;
   }
 
-  .woz blockquote{
-    font-size:23px;
-    white-space:normal;
-  }
-
-  .woz-credit{
-    font-size:18px;
+  .nav-btn{
+    padding:9px 12px;
+    font-size:12px;
   }
 
   .hero{
-    padding:38px 5px 28px;
+    padding:45px 0 18px;
   }
 
   .hero h1{
-    font-size:44px;
+    font-size:45px;
     letter-spacing:-2.5px;
   }
 
-  .search-area,
-  .day-body{
-    padding:16px;
+  .hero-sub{
+    font-size:15px;
   }
 
-  .provider{
-    flex-wrap:wrap;
+  .quote-box{
+    margin:26px auto 26px;
+    padding:24px 18px;
   }
 
-  .provider-button{
-    width:100%;
-    text-align:center;
+  .quote-text{
+    white-space:normal;
+    font-size:18px;
   }
 
-  .directory-top{
-    display:block;
+  .quote-attribution{
+    white-space:normal;
+    font-size:14px;
   }
 
-  .directory-search{
-    width:100%;
-    margin-top:12px;
+  .search-card{
+    padding:13px;
+    border-radius:20px;
   }
 
-  .directory-grid{
+  .tabs{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .search-row{
     grid-template-columns:1fr;
   }
 
-  .task-grid{
+  .results,
+  .directory-grid,
+  .ecosystem{
     grid-template-columns:1fr;
   }
 
-  .place-grid{
+  .directory-tools{
+    grid-template-columns:1fr;
+  }
+
+  .day-form{
+    grid-template-columns:1fr;
+  }
+
+  .saved-grid{
     grid-template-columns:1fr 1fr;
   }
 
-  .ecosystem{
-    grid-template-columns:1fr;
+  .section{
+    padding:42px 0;
+  }
+
+  .section h2{
+    font-size:27px;
+  }
+
+  .footer-inner{
+    flex-direction:column;
+    align-items:flex-start;
   }
 }
 </style>
@@ -899,1173 +713,1135 @@ footer strong{color:var(--navy)}
 <body>
 
 <header>
-
-  <div class="nav">
-
-    <a class="logo" href="#">
-      Cab<span>0</span>.com<sup class="registered">®</sup>
-    </a>
+  <div class="container nav">
+    <a href="#" class="logo">Cab0.com<sup>®</sup></a>
 
     <nav class="navlinks">
-
-      <button class="navlink" onclick="scrollToId('search')">
-        Find a Service
-      </button>
-
-      <button class="navlink" onclick="scrollToId('directory')">
-        Providers
-      </button>
-
-      <button class="navlink" onclick="scrollToId('myday')">
-        My Day
-      </button>
-
-      <button class="navlink" onclick="scrollToId('places')">
-        Saved Places
-      </button>
-
+      <a href="#search">Search</a>
+      <a href="#providers">Providers</a>
+      <a href="#myday">My Day</a>
+      <a href="#saved">Saved</a>
+      <a href="#about">About</a>
     </nav>
 
+    <a href="#search" class="nav-btn">Start Searching</a>
   </div>
-
 </header>
 
-
-<main class="container">
-
-
-<!-- STEVE WOZNIAK QUOTE -->
-
-<section class="woz">
-
-  <blockquote>
-    “Best of luck to you on this worthy venture, <span>it's your turn.</span>”
-  </blockquote>
-
-  <div class="woz-credit">
-    — Steve Wozniak, Co-Founder of Apple
-  </div>
-
-</section>
-
-
-<!-- HERO -->
+<main>
 
 <section class="hero">
+  <div class="container">
 
-  <h1>
-    Every Ride.<br>
-    <span>Every Delivery.</span><br>
-    One Search.
-  </h1>
+    <h1>
+      <span>Every Ride.</span>
+      <span>Every Delivery.</span>
+      <span>One Search.</span>
+    </h1>
 
-</section>
+    <!-- CENTERED WOZNIAK BOX MOVED BETWEEN HERO AND CATEGORIES -->
+    <div class="quote-box">
+      <p class="quote-text">“Best of luck to you on this worthy venture, it's your turn.”</p>
+      <p class="quote-attribution">Steve Wozniak, Co-Founder of Apple</p>
+    </div>
 
+    <div class="search-card" id="search">
 
-<!-- SEARCH -->
-
-<section class="search-card" id="search">
-
-  <div class="categories">
-
-    <button class="category active"
-            data-category="rides"
-            onclick="setCategory('rides')">
-      🚕 Rides
-    </button>
-
-    <button class="category"
-            data-category="robotaxi"
-            onclick="setCategory('robotaxi')">
-      🤖 Robotaxi
-    </button>
-
-    <button class="category"
-            data-category="food"
-            onclick="setCategory('food')">
-      🍔 Food
-    </button>
-
-    <button class="category"
-            data-category="grocery"
-            onclick="setCategory('grocery')">
-      🛒 Grocery
-    </button>
-
-    <button class="category"
-            data-category="delivery"
-            onclick="setCategory('delivery')">
-      📦 Delivery
-    </button>
-
-    <button class="category"
-            data-category="courier"
-            onclick="setCategory('courier')">
-      🚚 Courier
-    </button>
-
-    <button class="category"
-            data-category="eta"
-            onclick="setCategory('eta')">
-      ⏱ ETA
-    </button>
-
-  </div>
-
-
-  <div class="search-area">
-
-    <div class="search-fields">
-
-      <div class="input-wrap">
-
-        <input id="from"
-               type="text"
-               placeholder="From / pickup location">
-
-        <button class="location"
-                onclick="useLocation()">
-          ⌖ Location
-        </button>
-
+      <div class="tabs" id="tabs">
+        <button class="tab active" data-category="Rides">Rides</button>
+        <button class="tab" data-category="Robotaxi">Robotaxi</button>
+        <button class="tab" data-category="Food">Food</button>
+        <button class="tab" data-category="Grocery">Grocery</button>
+        <button class="tab" data-category="Delivery">Delivery</button>
+        <button class="tab" data-category="Courier">Courier</button>
+        <button class="tab" data-category="ETA">ETA</button>
       </div>
 
+      <div class="search-row">
+        <div class="field">
+          <input id="from" type="text" placeholder="From">
+        </div>
 
-      <div class="input-wrap">
+        <div class="field">
+          <input id="destination" type="text" placeholder="Destination">
+        </div>
 
-        <input id="destination"
-               type="text"
-               placeholder="Where are you going?">
-
+        <button class="location-btn" onclick="useLocation()">⌖ Location</button>
+        <button class="swap-btn" onclick="swapLocations()">⇄ Swap</button>
       </div>
 
-
-      <button class="search-button"
-              onclick="searchProviders()">
-        Search
-      </button>
-
-    </div>
-
-
-    <div class="search-tools">
-
-      <button class="tool" onclick="selectPlace('Home')">
-        ⌂ Home
-      </button>
-
-      <button class="tool" onclick="selectPlace('Work')">
-        ▣ Work
-      </button>
-
-      <button class="tool" onclick="selectPlace('Airport')">
-        ✈ Airport
-      </button>
-
-      <button class="tool" onclick="swapLocations()">
-        ⇄ Swap
-      </button>
+      <div class="shortcuts">
+        <button class="shortcut" onclick="setSaved('Home')">Home</button>
+        <button class="shortcut" onclick="setSaved('Work')">Work</button>
+        <button class="shortcut" onclick="setSaved('Airport')">Airport</button>
+        <button class="shortcut" onclick="setSaved('Other')">Other</button>
+        <button class="search-btn" onclick="runSearch()">Search</button>
+      </div>
 
     </div>
-
   </div>
-
 </section>
 
 
-<!-- RESULTS -->
+<section class="section" id="results-section">
+  <div class="container">
 
-<section class="results" id="results">
-
-  <div class="results-heading">
-
-    <div>
-      <h2 id="resultTitle">Ride Options</h2>
-    </div>
-
-    <p>
-      Check provider for current price and availability.
-    </p>
-
-  </div>
-
-  <div class="provider-grid" id="providerResults"></div>
-
-</section>
-
-
-<!-- DIRECTORY -->
-
-<section class="directory" id="directory">
-
-  <div class="directory-top">
-
-    <div>
-
-      <h2>Global Provider Directory</h2>
-
-      <p>
-        Search Cab0's growing network of transportation,
-        autonomous, food and delivery services.
-      </p>
-
-    </div>
-
-    <input
-      class="directory-search"
-      id="directorySearch"
-      placeholder="Search providers..."
-      oninput="renderDirectory">
-
-  </div>
-
-
-  <div class="filter-row">
-
-    <button class="filter active"
-            data-filter="all"
-            onclick="setFilter('all')">
-      All
-    </button>
-
-    <button class="filter"
-            data-filter="rides"
-            onclick="setFilter('rides')">
-      Rides
-    </button>
-
-    <button class="filter"
-            data-filter="robotaxi"
-            onclick="setFilter('robotaxi')">
-      Robotaxi
-    </button>
-
-    <button class="filter"
-            data-filter="food"
-            onclick="setFilter('food')">
-      Food
-    </button>
-
-    <button class="filter"
-            data-filter="grocery"
-            onclick="setFilter('grocery')">
-      Grocery
-    </button>
-
-    <button class="filter"
-            data-filter="delivery"
-            onclick="setFilter('delivery')">
-      Delivery
-    </button>
-
-  </div>
-
-
-  <div class="directory-grid" id="directoryGrid"></div>
-
-</section>
-
-
-<!-- MY DAY -->
-
-<section class="myday" id="myday">
-
-  <div class="myday-head">
-
-    <div class="myday-title">
-
-      <div class="day-icon">📅</div>
-
+    <div class="section-head">
       <div>
-
-        <h2>My Day</h2>
-
-        <div class="myday-sub" id="today"></div>
-
+        <h2 id="resultsTitle">Rides</h2>
+        <p class="section-intro">
+          Explore providers that can serve your selected transportation or delivery need.
+        </p>
       </div>
-
     </div>
 
-    <button class="add" onclick="toggleTaskForm()">
-      + Add
-    </button>
+    <div class="results" id="results"></div>
+
+    <div class="notice">
+      Cab0.com connects people with provider options. Prices, availability, ETAs,
+      service areas and booking requirements are determined by each provider.
+    </div>
 
   </div>
+</section>
 
 
-  <div class="day-body">
+<section class="section" id="providers">
+  <div class="container">
 
-    <div class="task-form" id="taskForm">
+    <div class="section-head">
+      <div>
+        <h2>Global Provider Directory</h2>
+        <p class="section-intro">
+          Search transportation, robotaxi, food, grocery, delivery and courier providers.
+        </p>
+      </div>
+    </div>
 
-      <div class="task-grid">
+    <div class="directory-tools">
+      <input
+        class="directory-search"
+        id="directorySearch"
+        placeholder="Search providers..."
+        oninput="renderDirectory()"
+      >
 
-        <input
-          class="form-input"
-          id="taskTitle"
-          placeholder="Reminder, ride, delivery or appointment">
+      <select class="directory-filter" id="directoryFilter" onchange="renderDirectory()">
+        <option value="All">All Categories</option>
+        <option value="Rides">Rides</option>
+        <option value="Robotaxi">Robotaxi</option>
+        <option value="Food">Food</option>
+        <option value="Grocery">Grocery</option>
+        <option value="Delivery">Delivery</option>
+        <option value="Courier">Courier</option>
+      </select>
+    </div>
 
-        <input
-          class="form-input"
-          id="taskDate"
-          type="date">
+    <div class="directory-grid" id="directory"></div>
 
-        <input
-          class="form-input"
-          id="taskTime"
-          type="time">
+  </div>
+</section>
 
-        <select class="form-input" id="taskType">
 
-          <option>Reminder</option>
+<section class="section" id="myday">
+  <div class="container">
+
+    <div class="section-head">
+      <div>
+        <h2>My Day</h2>
+        <p class="section-intro">
+          Keep your rides, deliveries, appointments and arrival reminders together.
+        </p>
+      </div>
+    </div>
+
+    <div class="day-card">
+
+      <div class="day-form">
+        <input id="taskTitle" placeholder="What do you need to remember?">
+        <input id="taskDate" type="date">
+        <input id="taskTime" type="time">
+
+        <select id="taskType">
           <option>Ride</option>
           <option>Delivery</option>
           <option>Appointment</option>
+          <option>Arrival</option>
           <option>Other</option>
-
         </select>
 
+        <button class="add-task" onclick="addTask()">Add</button>
       </div>
 
-
-      <input
-        class="form-input"
-        id="taskLocation"
-        placeholder="Location (optional)"
-        style="margin-top:9px">
-
-
-      <div class="task-actions">
-
-        <button class="cancel" onclick="toggleTaskForm()">
-          Cancel
-        </button>
-
-        <button class="save" onclick="saveTask()">
-          Save
-        </button>
-
-      </div>
+      <div class="tasks" id="tasks"></div>
 
     </div>
-
-
-    <div class="tasks" id="tasks"></div>
-
   </div>
-
 </section>
 
 
-<!-- SAVED PLACES -->
+<section class="section" id="saved">
+  <div class="container">
 
-<section class="places" id="places">
+    <div class="section-head">
+      <div>
+        <h2>Saved Places</h2>
+        <p class="section-intro">
+          Save frequently used places for faster searches.
+        </p>
+      </div>
+    </div>
 
-  <div class="section-title">
+    <div class="saved-grid">
 
-    <h2>Saved Places</h2>
+      <div class="saved" onclick="editSaved('Home')">
+        <strong>Home</strong>
+        <span id="savedHome">Add a place</span>
+      </div>
 
-    <p>
-      Save your most-used destinations for one-click access.
-    </p>
+      <div class="saved" onclick="editSaved('Work')">
+        <strong>Work</strong>
+        <span id="savedWork">Add a place</span>
+      </div>
 
-  </div>
+      <div class="saved" onclick="editSaved('Airport')">
+        <strong>Airport</strong>
+        <span id="savedAirport">Add a place</span>
+      </div>
 
+      <div class="saved" onclick="editSaved('Other')">
+        <strong>Other</strong>
+        <span id="savedOther">Add a place</span>
+      </div>
 
-  <div class="place-grid">
-
-    <button class="place" onclick="editPlace('Home')">
-
-      <div class="place-icon">⌂</div>
-
-      <strong>Home</strong>
-
-      <small id="HomePlace">Add address</small>
-
-    </button>
-
-
-    <button class="place" onclick="editPlace('Work')">
-
-      <div class="place-icon">▣</div>
-
-      <strong>Work</strong>
-
-      <small id="WorkPlace">Add address</small>
-
-    </button>
-
-
-    <button class="place" onclick="editPlace('Airport')">
-
-      <div class="place-icon">✈</div>
-
-      <strong>Airport</strong>
-
-      <small id="AirportPlace">Add address</small>
-
-    </button>
-
-
-    <button class="place" onclick="editPlace('Other')">
-
-      <div class="place-icon">★</div>
-
-      <strong>Other</strong>
-
-      <small id="OtherPlace">Add address</small>
-
-    </button>
+    </div>
 
   </div>
-
 </section>
 
 
-<!-- CAB0 ECOSYSTEM -->
+<section class="section" id="about">
+  <div class="container">
 
-<section class="ecosystem">
+    <div class="section-head">
+      <div>
+        <h2>The Cab0 Ecosystem</h2>
+        <p class="section-intro">
+          Transportation, delivery and arrival tools working together.
+        </p>
+      </div>
+    </div>
 
-  <div class="eco">
+    <div class="ecosystem">
 
-    <div>
+      <div class="eco-card">
+        <h3>ArriveTime.com</h3>
+        <p>
+          See where important people and things are now and when they will arrive.
+        </p>
+        <a href="https://arrivetime.com/" target="_blank" rel="noopener">
+          Visit ArriveTime →
+        </a>
+      </div>
 
-      <h3>ArriveTime.com</h3>
-
-      <p>
-        See where people and things are and when they will arrive.
-      </p>
+      <div class="eco-card">
+        <h3>4ETA.com</h3>
+        <p>
+          A simple destination for ETA and arrival information.
+        </p>
+        <a href="https://4eta.com/" target="_blank" rel="noopener">
+          Visit 4ETA →
+        </a>
+      </div>
 
     </div>
 
-    <a href="https://arrivetime.com/"
-       target="_blank"
-       rel="noopener">
-      Open →
-    </a>
-
   </div>
-
-
-  <div class="eco">
-
-    <div>
-
-      <h3>4ETA.com</h3>
-
-      <p>
-        Simple ETA information for everyday travel.
-      </p>
-
-    </div>
-
-    <a href="https://4eta.com/"
-       target="_blank"
-       rel="noopener">
-      Open →
-    </a>
-
-  </div>
-
 </section>
 
 </main>
 
 
 <footer>
+  <div class="container footer-inner">
+    <div>
+      <div class="footer-logo">Cab0.com®</div>
+      <div class="footer-note">
+        One search for rides, robotaxis, taxis, food, groceries, packages,
+        couriers and arrival services.
+      </div>
+    </div>
 
-  <strong>Cab0.com</strong>
-  — Every Ride. Every Delivery. One Search.
-
-  <br>
-
-  Cab0 connects users with third-party transportation
-  and delivery services. Provider availability,
-  pricing and booking are determined by each provider.
-
+    <div class="footer-note">
+      © 2026 Cab0.com. Provider services, pricing and availability are supplied
+      by individual providers.
+    </div>
+  </div>
 </footer>
-
-
-<div class="toast" id="toast"></div>
 
 
 <script>
 
-/* PROVIDER DATABASE */
+const providers = [
 
-const PROVIDERS = [
+  /* RIDES */
+  {
+    name:"Uber",
+    category:"Rides",
+    description:"Global ride-hailing and mobility platform.",
+    url:"https://www.uber.com/"
+  },
+  {
+    name:"Lyft",
+    category:"Rides",
+    description:"Ride-hailing and transportation services.",
+    url:"https://www.lyft.com/"
+  },
+  {
+    name:"DiDi",
+    category:"Rides",
+    description:"Global mobility and ride-hailing platform.",
+    url:"https://www.didiglobal.com/"
+  },
+  {
+    name:"Grab",
+    category:"Rides",
+    description:"Southeast Asian mobility and delivery platform.",
+    url:"https://www.grab.com/"
+  },
+  {
+    name:"Bolt",
+    category:"Rides",
+    description:"Mobility platform offering rides and other services.",
+    url:"https://bolt.eu/"
+  },
+  {
+    name:"inDrive",
+    category:"Rides",
+    description:"Global ride-hailing and mobility service.",
+    url:"https://indrive.com/"
+  },
+  {
+    name:"Ola",
+    category:"Rides",
+    description:"Ride-hailing and mobility platform.",
+    url:"https://www.olacabs.com/"
+  },
+  {
+    name:"Gojek",
+    category:"Rides",
+    description:"Mobility and on-demand services platform.",
+    url:"https://www.gojek.com/"
+  },
+  {
+    name:"Careem",
+    category:"Rides",
+    description:"Middle East mobility and delivery platform.",
+    url:"https://www.careem.com/"
+  },
+  {
+    name:"Cabify",
+    category:"Rides",
+    description:"Mobility platform operating across multiple markets.",
+    url:"https://cabify.com/"
+  },
+  {
+    name:"FREE NOW",
+    category:"Rides",
+    description:"Taxi and mobility platform.",
+    url:"https://www.free-now.com/"
+  },
+  {
+    name:"Gett",
+    category:"Rides",
+    description:"Ground transportation and corporate mobility platform.",
+    url:"https://www.gett.com/"
+  },
+  {
+    name:"Curb",
+    category:"Rides",
+    description:"Taxi and mobility platform.",
+    url:"https://www.gocurb.com/"
+  },
+  {
+    name:"Blacklane",
+    category:"Rides",
+    description:"Professional chauffeur and premium ground transportation.",
+    url:"https://www.blacklane.com/"
+  },
+  {
+    name:"BlaBlaCar",
+    category:"Rides",
+    description:"Long-distance ridesharing and carpooling network.",
+    url:"https://www.blablacar.com/"
+  },
+  {
+    name:"Yandex Go",
+    category:"Rides",
+    description:"Mobility and delivery services platform.",
+    url:"https://go.yandex/"
+  },
 
-  {name:"Uber",category:"rides",icon:"🚕",description:"Global rides, taxis and mobility",region:"Global",url:"https://www.uber.com/"},
-  {name:"Lyft",category:"rides",icon:"🚗",description:"Rides and transportation",region:"United States / Canada",url:"https://www.lyft.com/"},
-  {name:"DiDi",category:"rides",icon:"🚕",description:"Ride-hailing and mobility",region:"Asia / Latin America / Global markets",url:"https://www.didiglobal.com/"},
-  {name:"Grab",category:"rides",icon:"🛺",description:"Rides, taxis and everyday mobility",region:"Southeast Asia",url:"https://www.grab.com/"},
-  {name:"Bolt",category:"rides",icon:"⚡",description:"Rides, taxis and mobility",region:"Europe / Africa / Asia / Global markets",url:"https://bolt.eu/"},
-  {name:"inDrive",category:"rides",icon:"🚘",description:"Ride-hailing and intercity transportation",region:"Global markets",url:"https://indrive.com/"},
-  {name:"Ola",category:"rides",icon:"🚕",description:"Ride-hailing and mobility",region:"India / International",url:"https://www.olacabs.com/"},
-  {name:"Gojek",category:"rides",icon:"🛵",description:"Rides and on-demand services",region:"Southeast Asia",url:"https://www.gojek.com/"},
-  {name:"Careem",category:"rides",icon:"🚙",description:"Rides and everyday services",region:"Middle East / Africa / Asia",url:"https://www.careem.com/"},
-  {name:"Cabify",category:"rides",icon:"🚗",description:"Private rides and mobility",region:"Spain / Latin America",url:"https://cabify.com/"},
-  {name:"FREE NOW",category:"rides",icon:"🚕",description:"Taxi and mobility services",region:"Europe",url:"https://www.free-now.com/"},
-  {name:"Gett",category:"rides",icon:"🚕",description:"Taxi and ground transportation",region:"Selected global markets",url:"https://www.gett.com/"},
-  {name:"Curb",category:"rides",icon:"🚖",description:"Taxi booking and payments",region:"United States",url:"https://www.gocurb.com/"},
-  {name:"Blacklane",category:"rides",icon:"🖤",description:"Professional chauffeur service",region:"Global",url:"https://www.blacklane.com/"},
-  {name:"BlaBlaCar",category:"rides",icon:"👥",description:"Long-distance carpooling",region:"Global",url:"https://www.blablacar.com/"},
-  {name:"Yandex Go",category:"rides",icon:"🚕",description:"Rides, taxis and local services",region:"Selected international markets",url:"https://go.yandex/"},
+  /* ROBOTAXI */
+  {
+    name:"Waymo",
+    category:"Robotaxi",
+    description:"Autonomous driving and robotaxi service.",
+    url:"https://waymo.com/"
+  },
+  {
+    name:"Zoox",
+    category:"Robotaxi",
+    description:"Autonomous ride-hailing technology and service.",
+    url:"https://zoox.com/"
+  },
+  {
+    name:"Tesla Robotaxi",
+    category:"Robotaxi",
+    description:"Tesla autonomous driving and robotaxi initiative.",
+    url:"https://www.tesla.com/"
+  },
+  {
+    name:"Baidu Apollo Go",
+    category:"Robotaxi",
+    description:"Autonomous driving and robotaxi platform.",
+    url:"https://apollo.auto/"
+  },
+  {
+    name:"Pony.ai",
+    category:"Robotaxi",
+    description:"Autonomous driving technology and robotaxi services.",
+    url:"https://www.pony.ai/"
+  },
+  {
+    name:"WeRide",
+    category:"Robotaxi",
+    description:"Autonomous driving technology and mobility services.",
+    url:"https://www.weride.ai/"
+  },
+  {
+    name:"Avride",
+    category:"Robotaxi",
+    description:"Autonomous vehicle technology and mobility services.",
+    url:"https://avride.ai/"
+  },
 
-  {name:"Waymo",category:"robotaxi",icon:"🤖",description:"Autonomous ride-hailing",region:"United States / expanding internationally",url:"https://waymo.com/"},
-  {name:"Zoox",category:"robotaxi",icon:"🤖",description:"Purpose-built autonomous robotaxi",region:"United States",url:"https://zoox.com/"},
-  {name:"Tesla Robotaxi",category:"robotaxi",icon:"⚡",description:"Tesla autonomous ride service",region:"Selected markets",url:"https://www.tesla.com/"},
-  {name:"Baidu Apollo Go",category:"robotaxi",icon:"🤖",description:"Autonomous ride-hailing",region:"China / international development",url:"https://apollo.auto/"},
-  {name:"Pony.ai",category:"robotaxi",icon:"🤖",description:"Autonomous driving and robotaxis",region:"China / United States",url:"https://www.pony.ai/"},
-  {name:"WeRide",category:"robotaxi",icon:"🤖",description:"Autonomous mobility",region:"Global development",url:"https://www.weride.ai/"},
-  {name:"Avride",category:"robotaxi",icon:"🤖",description:"Autonomous driving technology",region:"International",url:"https://avride.ai/"},
+  /* FOOD */
+  {
+    name:"DoorDash",
+    category:"Food",
+    description:"Food delivery and local commerce platform.",
+    url:"https://www.doordash.com/"
+  },
+  {
+    name:"Uber Eats",
+    category:"Food",
+    description:"Restaurant and food delivery service.",
+    url:"https://www.ubereats.com/"
+  },
+  {
+    name:"Grubhub",
+    category:"Food",
+    description:"Online restaurant ordering and delivery platform.",
+    url:"https://www.grubhub.com/"
+  },
+  {
+    name:"Deliveroo",
+    category:"Food",
+    description:"On-demand restaurant and grocery delivery platform.",
+    url:"https://deliveroo.com/"
+  },
+  {
+    name:"Just Eat",
+    category:"Food",
+    description:"Online food ordering and delivery marketplace.",
+    url:"https://www.just-eat.com/"
+  },
+  {
+    name:"Wolt",
+    category:"Food",
+    description:"Local delivery platform for food and commerce.",
+    url:"https://wolt.com/"
+  },
+  {
+    name:"Glovo",
+    category:"Food",
+    description:"On-demand delivery and local commerce platform.",
+    url:"https://glovoapp.com/"
+  },
+  {
+    name:"Rappi",
+    category:"Food",
+    description:"Latin American delivery and commerce platform.",
+    url:"https://www.rappi.com/"
+  },
+  {
+    name:"iFood",
+    category:"Food",
+    description:"Food delivery and ordering platform.",
+    url:"https://www.ifood.com.br/"
+  },
+  {
+    name:"Meituan",
+    category:"Food",
+    description:"Chinese local services and food delivery platform.",
+    url:"https://www.meituan.com/"
+  },
 
-  {name:"DoorDash",category:"food",icon:"🍔",description:"Restaurant and local delivery",region:"North America / International",url:"https://www.doordash.com/"},
-  {name:"Uber Eats",category:"food",icon:"🍴",description:"Restaurant food delivery",region:"Global",url:"https://www.ubereats.com/"},
-  {name:"Grubhub",category:"food",icon:"🍔",description:"Restaurant ordering and delivery",region:"United States",url:"https://www.grubhub.com/"},
-  {name:"Deliveroo",category:"food",icon:"🍱",description:"Restaurant and grocery delivery",region:"International",url:"https://deliveroo.com/"},
-  {name:"Just Eat",category:"food",icon:"🍕",description:"Restaurant ordering and delivery",region:"International",url:"https://www.just-eat.com/"},
-  {name:"Wolt",category:"food",icon:"🍔",description:"Food and local commerce delivery",region:"Europe / Asia / International",url:"https://wolt.com/"},
-  {name:"Glovo",category:"food",icon:"🛵",description:"Food and local delivery",region:"International",url:"https://glovoapp.com/"},
-  {name:"Rappi",category:"food",icon:"🛵",description:"Food and everyday delivery",region:"Latin America",url:"https://www.rappi.com/"},
-  {name:"iFood",category:"food",icon:"🍽",description:"Food delivery marketplace",region:"Brazil / Latin America",url:"https://www.ifood.com.br/"},
-  {name:"Meituan",category:"food",icon:"🍜",description:"Food and local services",region:"China",url:"https://www.meituan.com/"},
+  /* GROCERY */
+  {
+    name:"Walmart",
+    category:"Grocery",
+    description:"Retail, grocery and delivery services.",
+    url:"https://www.walmart.com/"
+  },
+  {
+    name:"Amazon",
+    category:"Grocery",
+    description:"Global commerce, grocery and delivery ecosystem.",
+    url:"https://www.amazon.com/"
+  },
+  {
+    name:"Instacart",
+    category:"Grocery",
+    description:"Grocery delivery and pickup marketplace.",
+    url:"https://www.instacart.com/"
+  },
+  {
+    name:"Kroger",
+    category:"Grocery",
+    description:"Grocery retail and delivery services.",
+    url:"https://www.kroger.com/"
+  },
+  {
+    name:"Target",
+    category:"Grocery",
+    description:"Retail and same-day delivery services.",
+    url:"https://www.target.com/"
+  },
+  {
+    name:"Gopuff",
+    category:"Grocery",
+    description:"Instant commerce and convenience delivery.",
+    url:"https://www.gopuff.com/"
+  },
+  {
+    name:"Carrefour",
+    category:"Grocery",
+    description:"Global grocery and retail company.",
+    url:"https://www.carrefour.com/"
+  },
 
-  {name:"Walmart",category:"grocery",icon:"🛒",description:"Grocery, retail and delivery",region:"United States / International",url:"https://www.walmart.com/"},
-  {name:"Amazon",category:"grocery",icon:"📦",description:"Retail, grocery and delivery",region:"Global",url:"https://www.amazon.com/"},
-  {name:"Instacart",category:"grocery",icon:"🛒",description:"Grocery delivery and pickup",region:"North America",url:"https://www.instacart.com/"},
-  {name:"Kroger",category:"grocery",icon:"🛒",description:"Grocery ordering and delivery",region:"United States",url:"https://www.kroger.com/"},
-  {name:"Target",category:"grocery",icon:"🎯",description:"Retail, groceries and delivery",region:"United States",url:"https://www.target.com/"},
-  {name:"Gopuff",category:"grocery",icon:"⚡",description:"Convenience and everyday delivery",region:"United States / International",url:"https://www.gopuff.com/"},
-  {name:"Carrefour",category:"grocery",icon:"🛒",description:"Grocery and retail",region:"International",url:"https://www.carrefour.com/"},
+  /* DELIVERY */
+  {
+    name:"Roadie",
+    category:"Delivery",
+    description:"Crowdsourced delivery and logistics platform.",
+    url:"https://www.roadie.com/"
+  },
+  {
+    name:"Amazon Logistics",
+    category:"Delivery",
+    description:"Amazon's delivery and logistics network.",
+    url:"https://www.amazon.com/"
+  },
+  {
+    name:"Walmart Delivery",
+    category:"Delivery",
+    description:"Walmart delivery and fulfillment services.",
+    url:"https://www.walmart.com/"
+  },
+  {
+    name:"Uber Direct",
+    category:"Delivery",
+    description:"On-demand delivery infrastructure for businesses.",
+    url:"https://merchants.uber.com/"
+  },
+  {
+    name:"DoorDash Drive",
+    category:"Delivery",
+    description:"Delivery infrastructure for merchants and businesses.",
+    url:"https://merchants.doordash.com/"
+  },
+  {
+    name:"FedEx",
+    category:"Delivery",
+    description:"Global shipping, package delivery and logistics.",
+    url:"https://www.fedex.com/"
+  },
+  {
+    name:"UPS",
+    category:"Delivery",
+    description:"Global package delivery and logistics.",
+    url:"https://www.ups.com/"
+  },
+  {
+    name:"USPS",
+    category:"Delivery",
+    description:"United States postal and package delivery network.",
+    url:"https://www.usps.com/"
+  },
+  {
+    name:"DHL",
+    category:"Delivery",
+    description:"Global logistics and express delivery network.",
+    url:"https://www.dhl.com/"
+  },
+  {
+    name:"OnTrac",
+    category:"Delivery",
+    description:"Regional package delivery and logistics.",
+    url:"https://www.ontrac.com/"
+  },
 
-  {name:"Roadie",category:"delivery",icon:"📦",description:"Same-day delivery network",region:"United States",url:"https://www.roadie.com/"},
-  {name:"Amazon Logistics",category:"delivery",icon:"📦",description:"Amazon package delivery",region:"Global",url:"https://www.amazon.com/"},
-  {name:"Walmart Delivery",category:"delivery",icon:"🛒",description:"Retail and local delivery",region:"United States",url:"https://www.walmart.com/"},
-  {name:"Uber Direct",category:"delivery",icon:"📦",description:"On-demand business delivery",region:"Selected markets",url:"https://merchants.uber.com/"},
-  {name:"DoorDash Drive",category:"delivery",icon:"📦",description:"Business delivery services",region:"Selected markets",url:"https://merchants.doordash.com/"},
-  {name:"FedEx",category:"delivery",icon:"📦",description:"Global shipping and delivery",region:"Global",url:"https://www.fedex.com/"},
-  {name:"UPS",category:"delivery",icon:"📦",description:"Global package delivery",region:"Global",url:"https://www.ups.com/"},
-  {name:"USPS",category:"delivery",icon:"📬",description:"United States postal delivery",region:"United States",url:"https://www.usps.com/"},
-  {name:"DHL",category:"delivery",icon:"📦",description:"Global logistics and delivery",region:"Global",url:"https://www.dhl.com/"},
-  {name:"OnTrac",category:"delivery",icon:"📦",description:"Regional package delivery",region:"United States",url:"https://www.ontrac.com/"},
-
-  {name:"Uber Courier",category:"courier",icon:"🚚",description:"Local on-demand courier service",region:"Selected markets",url:"https://www.uber.com/"},
-  {name:"Roadie",category:"courier",icon:"🚚",description:"Local and same-day courier delivery",region:"United States",url:"https://www.roadie.com/"},
-  {name:"DHL Express",category:"courier",icon:"✈️",description:"International express shipping",region:"Global",url:"https://www.dhl.com/"},
-  {name:"FedEx Express",category:"courier",icon:"✈️",description:"Express package delivery",region:"Global",url:"https://www.fedex.com/"},
-  {name:"UPS Express",category:"courier",icon:"✈️",description:"Express package delivery",region:"Global",url:"https://www.ups.com/"}
-
+  /* COURIER */
+  {
+    name:"Uber Courier",
+    category:"Courier",
+    description:"On-demand local courier and package delivery.",
+    url:"https://www.uber.com/"
+  },
+  {
+    name:"Roadie",
+    category:"Courier",
+    description:"Crowdsourced local and long-distance delivery.",
+    url:"https://www.roadie.com/"
+  },
+  {
+    name:"DHL Express",
+    category:"Courier",
+    description:"International express courier and delivery.",
+    url:"https://www.dhl.com/"
+  },
+  {
+    name:"FedEx Express",
+    category:"Courier",
+    description:"Express package and document delivery.",
+    url:"https://www.fedex.com/"
+  },
+  {
+    name:"UPS Express",
+    category:"Courier",
+    description:"Express package and document delivery.",
+    url:"https://www.ups.com/"
+  }
 ];
 
-const CATEGORY_NAMES={
-  rides:"Ride Options",
-  robotaxi:"Robotaxi Options",
-  food:"Food Delivery",
-  grocery:"Grocery Delivery",
-  delivery:"Delivery Options",
-  courier:"Courier Options",
-  eta:"ETA & Tracking"
-};
 
-let currentCategory="rides";
-let currentFilter="all";
+let currentCategory = "Rides";
 
-/* CATEGORY */
 
-function setCategory(category){
+/* RENDER PROVIDERS */
 
-  currentCategory=category;
+function renderResults(category = currentCategory){
 
-  document.querySelectorAll(".category").forEach(button=>{
-    button.classList.toggle(
-      "active",
-      button.dataset.category===category
-    );
-  });
+  currentCategory = category;
 
-  const from=document.getElementById("from");
-  const destination=document.getElementById("destination");
+  const results = document.getElementById("results");
+  const title = document.getElementById("resultsTitle");
 
-  if(category==="rides"){
-    from.placeholder="From / pickup location";
-    destination.placeholder="Where are you going?";
-  }
+  title.textContent = category;
 
-  if(category==="robotaxi"){
-    from.placeholder="Your location";
-    destination.placeholder="Robotaxi destination";
-  }
+  if(category === "ETA"){
+    results.innerHTML = `
+      <div class="provider-card">
+        <div class="provider-top">
+          <div>
+            <div class="provider-name">ArriveTime.com</div>
+            <span class="provider-category">ETA</span>
+          </div>
+        </div>
+        <div class="provider-description">
+          Track where important people and things are now and when they will arrive.
+        </div>
+        <a class="visit" href="https://arrivetime.com/" target="_blank" rel="noopener">
+          Visit →
+        </a>
+      </div>
 
-  if(category==="food"){
-    from.placeholder="Your location";
-    destination.placeholder="Restaurant or food";
-  }
-
-  if(category==="grocery"){
-    from.placeholder="Your location";
-    destination.placeholder="Store or groceries";
-  }
-
-  if(category==="delivery"){
-    from.placeholder="Pickup location";
-    destination.placeholder="Delivery destination";
-  }
-
-  if(category==="courier"){
-    from.placeholder="Pickup location";
-    destination.placeholder="Delivery destination";
-  }
-
-  if(category==="eta"){
-    from.placeholder="Starting point";
-    destination.placeholder="Destination or tracking";
-  }
-
-  searchProviders();
-}
-
-/* SEARCH */
-
-function searchProviders(){
-
-  const from=document.getElementById("from").value.trim();
-  const destination=document.getElementById("destination").value.trim();
-
-  if(!from && !destination){
-    showToast("Enter a location or destination first.");
+      <div class="provider-card">
+        <div class="provider-top">
+          <div>
+            <div class="provider-name">4ETA.com</div>
+            <span class="provider-category">ETA</span>
+          </div>
+        </div>
+        <div class="provider-description">
+          A simple destination for ETA and arrival information.
+        </div>
+        <a class="visit" href="https://4eta.com/" target="_blank" rel="noopener">
+          Visit →
+        </a>
+      </div>
+    `;
     return;
   }
 
-  const results=document.getElementById("results");
-  const grid=document.getElementById("providerResults");
+  const list = providers.filter(p => p.category === category);
 
-  const providers=PROVIDERS.filter(
-    provider=>provider.category===currentCategory
-  );
-
-  grid.innerHTML="";
-
-  providers.forEach(provider=>{
-
-    const card=document.createElement("div");
-    card.className="provider";
-
-    card.innerHTML=`
-
-      <div class="provider-icon">
-        ${provider.icon}
+  results.innerHTML = list.map(p => `
+    <div class="provider-card">
+      <div class="provider-top">
+        <div>
+          <div class="provider-name">${escapeHTML(p.name)}</div>
+          <span class="provider-category">${escapeHTML(p.category)}</span>
+        </div>
       </div>
 
-      <div class="provider-info">
-
-        <div class="provider-name">
-          ${escapeHTML(provider.name)}
-        </div>
-
-        <div class="provider-desc">
-          ${escapeHTML(provider.description)}
-        </div>
-
-        <div class="provider-region">
-          ${escapeHTML(provider.region)}
-        </div>
-
+      <div class="provider-description">
+        ${escapeHTML(p.description)}
       </div>
 
       <a
-        class="provider-button"
-        href="${provider.url}"
+        class="visit"
+        href="${p.url}"
         target="_blank"
-        rel="noopener noreferrer">
+        rel="noopener noreferrer"
+      >
         Visit →
       </a>
+    </div>
+  `).join("");
+}
 
-    `;
 
-    grid.appendChild(card);
+/* CATEGORY TABS */
+
+document.querySelectorAll(".tab").forEach(tab => {
+
+  tab.addEventListener("click", () => {
+
+    document.querySelectorAll(".tab").forEach(t => {
+      t.classList.remove("active");
+    });
+
+    tab.classList.add("active");
+
+    const category = tab.dataset.category;
+
+    updatePlaceholders(category);
+    renderResults(category);
 
   });
 
-  document.getElementById("resultTitle").textContent=
-    CATEGORY_NAMES[currentCategory];
+});
 
-  results.classList.add("show");
 
-  results.scrollIntoView({
+function updatePlaceholders(category){
+
+  const from = document.getElementById("from");
+  const destination = document.getElementById("destination");
+
+  if(category === "Rides" || category === "Robotaxi"){
+    from.placeholder = "Pickup location";
+    destination.placeholder = "Where are you going?";
+  }
+
+  else if(category === "Food"){
+    from.placeholder = "Restaurant or area";
+    destination.placeholder = "Delivery address";
+  }
+
+  else if(category === "Grocery"){
+    from.placeholder = "Store or grocery";
+    destination.placeholder = "Delivery address";
+  }
+
+  else if(category === "Delivery" || category === "Courier"){
+    from.placeholder = "Pickup location";
+    destination.placeholder = "Delivery destination";
+  }
+
+  else if(category === "ETA"){
+    from.placeholder = "Person, place or item";
+    destination.placeholder = "Arrival destination";
+  }
+}
+
+
+/* SEARCH */
+
+function runSearch(){
+
+  const from = document.getElementById("from").value.trim();
+  const destination = document.getElementById("destination").value.trim();
+
+  if(!from && !destination){
+    alert("Enter a starting point, destination, or both.");
+    return;
+  }
+
+  renderResults(currentCategory);
+
+  document.getElementById("results-section").scrollIntoView({
     behavior:"smooth",
     block:"start"
   });
+
 }
 
-/* DIRECTORY */
-
-function setFilter(filter){
-
-  currentFilter=filter;
-
-  document.querySelectorAll(".filter").forEach(button=>{
-    button.classList.toggle(
-      "active",
-      button.dataset.filter===filter
-    );
-  });
-
-  renderDirectory();
-}
-
-function renderDirectory(){
-
-  const grid=document.getElementById("directoryGrid");
-
-  const search=document
-    .getElementById("directorySearch")
-    .value
-    .toLowerCase()
-    .trim();
-
-  let list=PROVIDERS.slice();
-
-  if(currentFilter!=="all"){
-    list=list.filter(
-      provider=>provider.category===currentFilter
-    );
-  }
-
-  if(search){
-    list=list.filter(provider=>{
-
-      const text=(
-        provider.name+
-        " "+
-        provider.description+
-        " "+
-        provider.region
-      ).toLowerCase();
-
-      return text.includes(search);
-
-    });
-  }
-
-  grid.innerHTML="";
-
-  list.forEach(provider=>{
-
-    const item=document.createElement("div");
-    item.className="directory-item";
-
-    item.innerHTML=`
-
-      <div class="directory-item-icon">
-        ${provider.icon}
-      </div>
-
-      <div>
-        <strong>
-          ${escapeHTML(provider.name)}
-        </strong>
-
-        <small>
-          ${escapeHTML(provider.region)}
-        </small>
-      </div>
-
-    `;
-
-    grid.appendChild(item);
-
-  });
-}
 
 /* LOCATION */
 
 function useLocation(){
 
   if(!navigator.geolocation){
-    showToast("Location is not supported by this browser.");
+    alert("Location services are not available in this browser.");
     return;
   }
 
-  showToast("Finding your location...");
-
   navigator.geolocation.getCurrentPosition(
 
-    position=>{
+    position => {
 
-      const lat=position.coords.latitude;
-      const lon=position.coords.longitude;
+      const lat = position.coords.latitude.toFixed(5);
+      const lon = position.coords.longitude.toFixed(5);
 
-      document.getElementById("from").value=
-        `${lat.toFixed(5)}, ${lon.toFixed(5)}`;
-
-      showToast("Your location was added.");
+      document.getElementById("from").value =
+        `${lat}, ${lon}`;
 
     },
 
-    ()=>{
-      showToast("Location permission was not available.");
-    },
-
-    {
-      enableHighAccuracy:true,
-      timeout:10000
+    () => {
+      alert("Unable to access your location. Please enter it manually.");
     }
 
   );
+
 }
+
 
 /* SWAP */
 
 function swapLocations(){
 
-  const from=document.getElementById("from");
-  const destination=document.getElementById("destination");
+  const from = document.getElementById("from");
+  const destination = document.getElementById("destination");
 
-  const temp=from.value;
+  const temp = from.value;
 
-  from.value=destination.value;
-  destination.value=temp;
+  from.value = destination.value;
+  destination.value = temp;
+
 }
+
 
 /* SAVED PLACES */
 
-const PLACE_KEY="cab0_places_v2";
+function getSavedPlaces(){
 
-function getPlaces(){
-
-  try{
-    return JSON.parse(
-      localStorage.getItem(PLACE_KEY)
-    )||{};
-  }catch(error){
-    return {};
-  }
+  return JSON.parse(
+    localStorage.getItem("cab0SavedPlaces") || "{}"
+  );
 
 }
 
-function savePlaces(places){
+
+function savePlaces(data){
 
   localStorage.setItem(
-    PLACE_KEY,
-    JSON.stringify(places)
+    "cab0SavedPlaces",
+    JSON.stringify(data)
   );
 
-  renderPlaces();
 }
 
-function editPlace(name){
 
-  const places=getPlaces();
+function editSaved(name){
 
-  if(places[name]){
+  const places = getSavedPlaces();
 
-    const answer=confirm(
-      `${name} is currently saved as:\n\n${places[name]}\n\nPress OK to replace it or Cancel to use it.`
-    );
+  const current = places[name] || "";
 
-    if(!answer){
-
-      document.getElementById("destination").value=
-        places[name];
-
-      scrollToId("search");
-
-      return;
-    }
-
-  }
-
-  const address=prompt(
-    `Enter the address for ${name}:`,
-    places[name]||""
+  const value = prompt(
+    `Enter the address or location for ${name}:`,
+    current
   );
 
-  if(!address)return;
+  if(value === null) return;
 
-  places[name]=address.trim();
+  places[name] = value.trim();
 
   savePlaces(places);
+  renderSavedPlaces();
 
-  document.getElementById("destination").value=
-    address.trim();
-
-  scrollToId("search");
-
-  showToast(`${name} saved.`);
 }
 
-function selectPlace(name){
 
-  const places=getPlaces();
+function setSaved(name){
+
+  const places = getSavedPlaces();
 
   if(!places[name]){
-    editPlace(name);
+
+    editSaved(name);
+
     return;
+
   }
 
-  document.getElementById("destination").value=
-    places[name];
+  document.getElementById("from").value = places[name];
 
-  showToast(`${name} selected.`);
 }
 
-function renderPlaces(){
 
-  const places=getPlaces();
+function renderSavedPlaces(){
 
-  ["Home","Work","Airport","Other"].forEach(name=>{
+  const places = getSavedPlaces();
 
-    const element=document.getElementById(
-      name+"Place"
-    );
+  ["Home","Work","Airport","Other"].forEach(name => {
+
+    const element =
+      document.getElementById(
+        "saved" + name
+      );
 
     if(element){
-      element.textContent=
-        places[name]||"Add address";
+
+      element.textContent =
+        places[name] || "Add a place";
+
     }
 
   });
+
 }
+
 
 /* MY DAY */
 
-const TASK_KEY="cab0_tasks_v2";
-
 function getTasks(){
 
-  try{
-    return JSON.parse(
-      localStorage.getItem(TASK_KEY)
-    )||[];
-  }catch(error){
-    return [];
-  }
+  return JSON.parse(
+    localStorage.getItem("cab0Tasks") || "[]"
+  );
 
 }
+
 
 function saveTasks(tasks){
 
   localStorage.setItem(
-    TASK_KEY,
+    "cab0Tasks",
     JSON.stringify(tasks)
   );
 
-  renderTasks();
 }
 
-function toggleTaskForm(){
 
-  const form=document.getElementById("taskForm");
+function addTask(){
 
-  form.classList.toggle("show");
+  const title =
+    document.getElementById("taskTitle").value.trim();
 
-  if(form.classList.contains("show")){
+  const date =
+    document.getElementById("taskDate").value;
 
-    const today=new Date();
+  const time =
+    document.getElementById("taskTime").value;
 
-    document.getElementById("taskDate").value=
-      today.toISOString().split("T")[0];
-
-    setTimeout(()=>{
-      document.getElementById("taskTitle").focus();
-    },50);
-
-  }
-}
-
-function saveTask(){
-
-  const title=document
-    .getElementById("taskTitle")
-    .value
-    .trim();
+  const type =
+    document.getElementById("taskType").value;
 
   if(!title){
-    showToast("Enter something for My Day.");
+
+    alert("Please enter something to remember.");
+
     return;
+
   }
 
-  const task={
+  const tasks = getTasks();
+
+  tasks.push({
     id:Date.now(),
-    title:title,
-    date:document.getElementById("taskDate").value,
-    time:document.getElementById("taskTime").value,
-    type:document.getElementById("taskType").value,
-    location:document.getElementById("taskLocation").value.trim(),
-    completed:false
-  };
-
-  const tasks=getTasks();
-
-  tasks.push(task);
+    title,
+    date,
+    time,
+    type,
+    done:false
+  });
 
   saveTasks(tasks);
 
-  clearTaskForm();
+  document.getElementById("taskTitle").value = "";
+  document.getElementById("taskDate").value = "";
+  document.getElementById("taskTime").value = "";
 
-  document.getElementById("taskForm")
-    .classList.remove("show");
+  renderTasks();
 
-  showToast("Added to My Day.");
 }
 
-function clearTaskForm(){
-
-  document.getElementById("taskTitle").value="";
-  document.getElementById("taskTime").value="";
-  document.getElementById("taskLocation").value="";
-}
 
 function toggleTask(id){
 
-  const tasks=getTasks();
+  const tasks = getTasks();
 
-  const task=tasks.find(item=>item.id===id);
+  const task = tasks.find(
+    t => t.id === id
+  );
 
   if(task){
-    task.completed=!task.completed;
+    task.done = !task.done;
   }
 
   saveTasks(tasks);
+  renderTasks();
+
 }
+
 
 function deleteTask(id){
 
-  const tasks=getTasks().filter(
-    item=>item.id!==id
-  );
+  const tasks =
+    getTasks().filter(
+      t => t.id !== id
+    );
 
   saveTasks(tasks);
+  renderTasks();
 
-  showToast("Removed from My Day.");
 }
+
 
 function renderTasks(){
 
-  const container=document.getElementById("tasks");
+  const container =
+    document.getElementById("tasks");
 
-  let tasks=getTasks();
+  const tasks = getTasks();
 
-  tasks.sort((a,b)=>{
+  tasks.sort((a,b) => {
 
-    const first=
-      `${a.date||"9999-12-31"} ${a.time||"23:59"}`;
+    const aDate =
+      `${a.date || "9999-99-99"} ${a.time || "99:99"}`;
 
-    const second=
-      `${b.date||"9999-12-31"} ${b.time||"23:59"}`;
+    const bDate =
+      `${b.date || "9999-99-99"} ${b.time || "99:99"}`;
 
-    return first.localeCompare(second);
+    return aDate.localeCompare(bDate);
 
   });
 
-  if(tasks.length===0){
+  if(!tasks.length){
 
-    container.innerHTML=`
-
-      <div class="empty">
-
-        Your day is clear.
-
-        <br><br>
-
-        Click <strong>+ Add</strong>
-        to create a reminder, ride,
-        delivery or appointment.
-
+    container.innerHTML = `
+      <div class="task">
+        <div></div>
+        <div>
+          <div class="task-title">
+            No reminders yet.
+          </div>
+          <div class="task-meta">
+            Add a ride, delivery, appointment or arrival.
+          </div>
+        </div>
+        <div></div>
       </div>
-
     `;
 
     return;
+
   }
 
-  container.innerHTML="";
+  container.innerHTML = tasks.map(task => `
 
-  tasks.forEach(task=>{
+    <div class="task ${task.done ? "done" : ""}">
 
-    const row=document.createElement("div");
+      <input
+        type="checkbox"
+        ${task.done ? "checked" : ""}
+        onchange="toggleTask(${task.id})"
+      >
 
-    row.className=
-      "task"+
-      (task.completed?" done":"");
-
-    let meta="";
-
-    if(task.date){
-
-      const date=new Date(
-        task.date+"T00:00:00"
-      );
-
-      meta+=date.toLocaleDateString(
-        undefined,
-        {
-          weekday:"short",
-          month:"short",
-          day:"numeric"
-        }
-      );
-    }
-
-    if(task.time){
-
-      const [hour,minute]=task.time.split(":");
-
-      const time=new Date();
-
-      time.setHours(
-        Number(hour),
-        Number(minute)
-      );
-
-      meta+=" • "+
-        time.toLocaleTimeString(
-          undefined,
-          {
-            hour:"numeric",
-            minute:"2-digit"
-          }
-        );
-    }
-
-    if(task.location){
-      meta+=" • 📍 "+task.location;
-    }
-
-    row.innerHTML=`
-
-      <button
-        class="check"
-        onclick="toggleTask(${task.id})">
-      </button>
-
-      <div class="task-content">
-
-        <strong>
+      <div>
+        <div class="task-title">
           ${escapeHTML(task.title)}
-        </strong>
-
-        <div class="task-meta">
-          ${escapeHTML(meta)}
-          • ${escapeHTML(task.type)}
         </div>
 
+        <div class="task-meta">
+          ${escapeHTML(task.type)}
+          ${task.date ? " • " + escapeHTML(task.date) : ""}
+          ${task.time ? " • " + escapeHTML(task.time) : ""}
+        </div>
       </div>
 
       <button
-        class="delete"
-        onclick="deleteTask(${task.id})">
-        ×
+        class="delete-task"
+        onclick="deleteTask(${task.id})"
+      >
+        Delete
       </button>
 
-    `;
+    </div>
 
-    container.appendChild(row);
+  `).join("");
 
-  });
 }
 
-/* HELPERS */
+
+/* DIRECTORY */
+
+function renderDirectory(){
+
+  const search =
+    document.getElementById("directorySearch")
+      .value
+      .toLowerCase()
+      .trim();
+
+  const filter =
+    document.getElementById("directoryFilter")
+      .value;
+
+  const container =
+    document.getElementById("directory");
+
+  const list =
+    providers.filter(provider => {
+
+      const matchesSearch =
+        !search ||
+        provider.name.toLowerCase().includes(search) ||
+        provider.category.toLowerCase().includes(search) ||
+        provider.description.toLowerCase().includes(search);
+
+      const matchesFilter =
+        filter === "All" ||
+        provider.category === filter;
+
+      return matchesSearch && matchesFilter;
+
+    });
+
+  container.innerHTML = list.map(provider => `
+
+    <div class="directory-item">
+
+      <strong>
+        ${escapeHTML(provider.name)}
+      </strong>
+
+      <span>
+        ${escapeHTML(provider.category)}
+      </span>
+
+      <a
+        href="${provider.url}"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Visit provider →
+      </a>
+
+    </div>
+
+  `).join("");
+
+}
+
+
+/* ESCAPE HTML */
 
 function escapeHTML(value){
 
@@ -2078,69 +1854,13 @@ function escapeHTML(value){
 
 }
 
-function scrollToId(id){
-
-  const element=document.getElementById(id);
-
-  if(element){
-
-    element.scrollIntoView({
-      behavior:"smooth",
-      block:"start"
-    });
-
-  }
-}
-
-function showToast(message){
-
-  const toast=document.getElementById("toast");
-
-  toast.textContent=message;
-
-  toast.classList.add("show");
-
-  clearTimeout(window.cab0Toast);
-
-  window.cab0Toast=setTimeout(()=>{
-    toast.classList.remove("show");
-  },2600);
-}
-
-/* ENTER KEY */
-
-document.getElementById("from")
-.addEventListener("keydown",event=>{
-  if(event.key==="Enter")searchProviders();
-});
-
-document.getElementById("destination")
-.addEventListener("keydown",event=>{
-  if(event.key==="Enter")searchProviders();
-});
 
 /* INITIALIZE */
 
-document.addEventListener("DOMContentLoaded",()=>{
-
-  renderDirectory();
-
-  renderPlaces();
-
-  renderTasks();
-
-  document.getElementById("today").textContent=
-    new Date().toLocaleDateString(
-      undefined,
-      {
-        weekday:"long",
-        month:"long",
-        day:"numeric",
-        year:"numeric"
-      }
-    );
-
-});
+renderResults("Rides");
+renderDirectory();
+renderSavedPlaces();
+renderTasks();
 
 </script>
 

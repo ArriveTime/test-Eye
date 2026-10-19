@@ -1,156 +1,1778 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="description" content="H0H.com Hollywood Hotspots: discover Hollywood landmarks, legendary nightlife, celebrity-associated restaurants, and unforgettable Los Angeles experiences.">
-<meta name="theme-color" content="#10061e">
-<title>H0H.com | Hollywood Hotspots — Your VIP Guide to Everything Hollywood</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#100719">
+<meta name="description" content="H0H.com Hollywood Hotspots. Your VIP guide to Hollywood casting calls, open auditions, entertainment news, nightlife, restaurants, attractions, local weather, traffic, parking and real estate.">
+<meta name="robots" content="index,follow">
+<meta property="og:type" content="website">
+<meta property="og:title" content="H0H.com | Hollywood Hotspots">
+<meta property="og:description" content="Your VIP Guide to Everything Hollywood. Casting calls, nightlife, celebrity hotspots, entertainment and more.">
+<meta property="og:image" content="https://h0h.com/hollywood-hotspots.jpg">
+<meta property="og:url" content="https://h0h.com/">
+<link rel="canonical" href="https://h0h.com/">
+<title>H0H.com | Hollywood Hotspots</title>
+
 <style>
-:root{--bg:#10061e;--pink:#ff42bd;--purple:#aa67ff;--blue:#36d8ff;--gold:#ffda7b;--text:#fff;--muted:#d7c9e5}
-*{box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,Helvetica,sans-serif}
-a{color:inherit}
-header{position:sticky;top:0;z-index:20;background:rgba(13,5,26,.94);backdrop-filter:blur(12px);border-bottom:1px solid #ffffff26}
-nav{max-width:1220px;margin:auto;padding:13px 22px;display:flex;align-items:center;justify-content:space-between;gap:16px}
-.navbrand{font-size:25px;font-weight:900;text-decoration:none;letter-spacing:1px;color:var(--gold)}
-.navlinks{display:flex;flex-wrap:wrap;gap:17px;align-items:center}
-.navlinks a{text-decoration:none;font-size:13px;font-weight:bold;color:#f5eaff}
-.navlinks a:hover{color:var(--pink)}
-.hero{min-height:670px;position:relative;display:flex;align-items:center;justify-content:center;text-align:center;padding:65px 20px 75px;overflow:hidden;background:linear-gradient(180deg,rgba(12,4,28,.28),rgba(16,6,30,.78) 70%,#10061e),url('https://images.unsplash.com/photo-1534258936925-c58bed479fcb?auto=format&fit=crop&w=2200&q=85') center/cover}
-.hero:before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 50% 45%,transparent 5%,rgba(21,4,39,.48) 85%)}
-.hero-content{position:relative;z-index:2;max-width:1000px}
-.eyebrow{font-weight:800;letter-spacing:4px;color:var(--gold);font-size:14px;text-shadow:0 2px 10px #000}
-.logo{display:flex;justify-content:center;align-items:center;gap:0;font-size:clamp(95px,19vw,220px);font-weight:1000;letter-spacing:-13px;line-height:1.15;filter:drop-shadow(0 0 20px #ff42bd77)}
-.logo-h{color:#ff75dc;text-shadow:0 0 8px #ff42bd,0 0 25px #ff42bd,0 0 55px #ff42bd}
-.spotlight{position:relative;color:#fff3c0;text-shadow:0 0 8px white,0 0 24px #ffe087,0 0 55px #ffd95e}
-.spotlight:after{content:"";position:absolute;left:41%;top:75%;width:140%;height:150%;background:linear-gradient(180deg,rgba(255,240,170,.28),transparent);clip-path:polygon(45% 0,55% 0,100% 100%,0 100%);transform:translateX(-34%) rotate(-13deg);pointer-events:none;z-index:-1}
-.dotcom{font-size:clamp(26px,4.5vw,52px);font-weight:900;color:#fff;margin-top:-16px;text-shadow:0 0 17px #36d8ff}
-.hero h1{font-size:clamp(30px,5vw,60px);margin:26px 0 9px;letter-spacing:3px;color:#fff;text-shadow:0 0 18px #ff42bd}
-.hero p{font-size:clamp(17px,2vw,23px);color:#fff0d1;margin:0 auto 29px;line-height:1.5}
-.actions{display:flex;justify-content:center;gap:13px;flex-wrap:wrap}
-.btn{display:inline-block;padding:15px 24px;border-radius:40px;text-decoration:none;font-weight:900;font-size:14px;transition:transform .2s,box-shadow .2s}
-.btn:hover{transform:translateY(-3px)}
-.btn-primary{background:linear-gradient(100deg,#ff45ba,#b34fff);color:white;box-shadow:0 0 22px #ff42bd70}
-.btn-outline{border:1px solid #ffdb88;color:#ffe19b;background:#10061e99}
-.container{max-width:1220px;margin:auto;padding:58px 22px}
-.section-heading{text-align:center;margin-bottom:34px}
-.section-heading .kicker{font-size:12px;font-weight:900;letter-spacing:3px;color:var(--pink);text-transform:uppercase}
-.section-heading h2{font-size:clamp(29px,4vw,42px);margin:9px 0;color:#fff}
-.section-heading p{max-width:700px;margin:auto;color:var(--muted);line-height:1.7}
-.categories{display:grid;grid-template-columns:repeat(3,1fr);gap:17px}
-.cat{min-height:170px;border:1px solid #ffffff33;border-radius:20px;padding:23px;text-decoration:none;display:flex;flex-direction:column;justify-content:flex-end;position:relative;overflow:hidden;background:linear-gradient(145deg,#3b1358,#160a2e);transition:transform .2s,border-color .2s}
-.cat:hover{transform:translateY(-5px);border-color:var(--pink)}
-.cat:before{content:"";position:absolute;inset:0;opacity:.65;background:radial-gradient(circle at 85% 10%,#ff43ba75,transparent 60%)}
-.cat:nth-child(2n):before{background:radial-gradient(circle at 85% 10%,#35d8ff75,transparent 60%)}
-.cat:nth-child(3n):before{background:radial-gradient(circle at 85% 10%,#ffd67b75,transparent 60%)}
-.cat span,.cat strong,.cat small{position:relative;z-index:1}
-.cat span{font-size:35px;margin-bottom:13px}
-.cat strong{font-size:20px}
-.cat small{font-size:12px;color:#e8d9ef;margin-top:6px}
-.card-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:19px}
-.card{background:linear-gradient(155deg,#251038,#170a2a);border:1px solid #ffffff24;border-radius:19px;overflow:hidden;display:flex;flex-direction:column}
-.card img{width:100%;height:185px;object-fit:cover;background:#2d1641}
-.card-body{padding:21px;display:flex;flex-direction:column;flex:1}
-.tag{display:inline-block;align-self:flex-start;border:1px solid #ff42bd66;border-radius:20px;color:#ff99df;padding:5px 10px;font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:1px}
-.card h3{font-size:21px;margin:13px 0 8px}
-.card p{color:var(--muted);font-size:14px;line-height:1.7;flex:1;margin:0 0 20px}
-.card-links{display:flex;gap:9px;flex-wrap:wrap}
-.card-links a{font-size:12px;font-weight:bold;text-decoration:none;border:1px solid #ffffff4b;border-radius:30px;padding:10px 13px}
-.card-links a:first-child{background:#ff42bd;color:white;border-color:#ff42bd}
-.live-panel{background:linear-gradient(110deg,#34104a,#11243f);border:1px solid #ff42bd5e;border-radius:24px;padding:35px;display:flex;align-items:center;justify-content:space-between;gap:25px;flex-wrap:wrap}
-.live-panel h2{font-size:30px;margin:0 0 9px}
-.live-panel p{margin:0;color:var(--muted);max-width:620px;line-height:1.7}
-.note{text-align:center;color:#ad9bbd;font-size:12px;line-height:1.8;margin-top:30px}
-footer{background:#090311;border-top:1px solid #ffffff22;padding:35px 22px;text-align:center;color:#bcaed0;font-size:13px;line-height:1.8}
-footer strong{color:var(--gold);font-size:22px}
-footer a{color:#ff99df}
-@media(max-width:900px){.card-grid{grid-template-columns:repeat(2,1fr)}.categories{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:580px){nav{flex-direction:column}.navlinks{justify-content:center;gap:11px}.navlinks a{font-size:11px}.hero{min-height:580px}.logo{letter-spacing:-7px}.categories,.card-grid{grid-template-columns:1fr}.container{padding:43px 17px}.live-panel{padding:25px}}
+:root {
+  --bg:#0d0718;
+  --panel:#211130;
+  --pink:#ff42b3;
+  --purple:#a75cff;
+  --blue:#35d9ff;
+  --gold:#ffd477;
+  --muted:#cbbdd9;
+}
+* { box-sizing:border-box; }
+html { scroll-behavior:smooth;scroll-padding-top:125px; }
+body {
+  margin:0;
+  background:var(--bg);
+  color:white;
+  font-family:Arial,Helvetica,sans-serif;
+}
+a { color:inherit; }
+a:focus-visible,button:focus-visible {
+  outline:3px solid var(--gold);
+  outline-offset:4px;
+}
+header {
+  position:sticky;
+  top:0;
+  z-index:100;
+  background:rgba(12,6,24,.96);
+  backdrop-filter:blur(16px);
+  border-bottom:1px solid #ffffff24;
+}
+.nav {
+  max-width:1320px;
+  margin:auto;
+  padding:13px 20px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:20px;
+}
+.brand {
+  font-size:29px;
+  font-weight:900;
+  color:var(--gold);
+  text-decoration:none;
+  white-space:nowrap;
+  text-shadow:0 0 14px #ffd47766;
+}
+.brand span { color:white; }
+.navlinks {
+  display:flex;
+  gap:17px;
+  flex-wrap:wrap;
+  align-items:center;
+}
+.navlinks a {
+  font-size:12px;
+  font-weight:800;
+  text-transform:uppercase;
+  text-decoration:none;
+}
+.navlinks a:hover { color:var(--pink); }
+.navlinks .special { color:var(--gold); }
+
+/* HOLLYWOOD LIVE BAR */
+
+.livebar {
+  background:linear-gradient(90deg,#221031,#291039,#15172f);
+  border-top:1px solid #ffffff12;
+}
+.livebar-inner {
+  max-width:1320px;
+  margin:auto;
+  padding:10px 20px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:18px;
+  flex-wrap:wrap;
+}
+.live-label {
+  color:var(--gold);
+  font-weight:900;
+  font-size:11px;
+  letter-spacing:1px;
+  white-space:nowrap;
+}
+.live-dot {
+  display:inline-block;
+  width:8px;
+  height:8px;
+  background:#58e3a1;
+  border-radius:50%;
+  margin-right:6px;
+}
+.live-item {
+  display:flex;
+  align-items:center;
+  gap:8px;
+  font-size:12px;
+  color:#eee2f4;
+  white-space:nowrap;
+}
+.live-item strong { color:white; }
+.live-link {
+  color:var(--blue);
+  text-decoration:none;
+  font-weight:800;
+}
+.live-link:hover { text-decoration:underline; }
+.live-separator {
+  height:17px;
+  width:1px;
+  background:#ffffff38;
+}
+
+/* HERO */
+
+.hero-image {
+  display:block;
+  width:100%;
+  height:auto;
+  min-height:220px;
+  object-fit:cover;
+  background:#170a28;
+}
+.hero-bottom {
+  padding:30px 20px 42px;
+  text-align:center;
+  background:
+    radial-gradient(circle at top,#65276a55,transparent 65%),
+    linear-gradient(#1c0b30,var(--bg));
+}
+.hero-bottom p {
+  font-size:clamp(16px,2vw,21px);
+  line-height:1.65;
+  color:#f4dff0;
+  margin:0 0 25px;
+}
+.buttons {
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:12px;
+}
+.btn {
+  display:inline-block;
+  padding:14px 22px;
+  border-radius:40px;
+  font-size:12px;
+  font-weight:900;
+  text-decoration:none;
+  text-align:center;
+  transition:transform .2s;
+}
+.btn:hover { transform:translateY(-3px); }
+.btn-pink {
+  background:linear-gradient(110deg,#ff35ac,#a54aff);
+  box-shadow:0 0 24px #ff35ac44;
+}
+.btn-gold {
+  background:linear-gradient(110deg,#ffe7a4,#ffc54c);
+  color:#1b1020;
+}
+.btn-outline {
+  border:1px solid #ffd47788;
+  color:var(--gold);
+  background:#ffffff09;
+}
+
+/* SECTIONS */
+
+.container {
+  max-width:1250px;
+  margin:auto;
+  padding:62px 20px;
+}
+.heading {
+  text-align:center;
+  margin-bottom:34px;
+}
+.eyebrow {
+  font-size:12px;
+  letter-spacing:3px;
+  text-transform:uppercase;
+  font-weight:900;
+  color:var(--pink);
+}
+.heading h2 {
+  font-size:clamp(28px,4vw,43px);
+  margin:12px 0;
+}
+.heading p {
+  color:var(--muted);
+  line-height:1.75;
+  max-width:750px;
+  margin:auto;
+}
+.gradient {
+  background:linear-gradient(90deg,#ff5fc5,#ffd477,#42dbff);
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+}
+
+/* FEATURED CASTING */
+
+.casting-feature {
+  padding:40px;
+  border-radius:26px;
+  border:2px solid #ffd47799;
+  background:
+    radial-gradient(circle at 85% 15%,#ff42b344,transparent 45%),
+    linear-gradient(135deg,#351344,#120c29);
+  box-shadow:0 0 40px #ff42b31a;
+}
+.casting-label {
+  display:inline-block;
+  padding:9px 15px;
+  border-radius:25px;
+  background:var(--gold);
+  color:#201026;
+  font-size:11px;
+  font-weight:900;
+  letter-spacing:1px;
+}
+.casting-feature h2 {
+  font-size:clamp(29px,4.5vw,48px);
+  line-height:1.15;
+  margin:20px 0 12px;
+}
+.casting-lead {
+  font-size:23px;
+  color:var(--gold);
+  font-weight:800;
+}
+.casting-feature p {
+  line-height:1.8;
+  color:#e6d8ed;
+}
+.casting-types {
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:12px;
+  margin:28px 0;
+}
+.casting-type {
+  padding:21px 13px;
+  border:1px solid #ffffff28;
+  border-radius:15px;
+  background:#ffffff0c;
+  text-align:center;
+}
+.casting-type span {
+  display:block;
+  font-size:30px;
+  margin-bottom:10px;
+}
+.casting-type strong { font-size:14px; }
+.casting-type small {
+  display:block;
+  color:#cbbbd9;
+  margin-top:8px;
+  line-height:1.5;
+}
+.casting-actions {
+  display:flex;
+  flex-wrap:wrap;
+  gap:12px;
+}
+
+/* CATEGORY TILES */
+
+.categories {
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:18px;
+}
+.category {
+  position:relative;
+  overflow:hidden;
+  min-height:175px;
+  padding:25px;
+  border-radius:20px;
+  border:1px solid #ffffff26;
+  background:linear-gradient(135deg,#40164f,#171027);
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-end;
+  text-decoration:none;
+  transition:transform .2s;
+}
+.category:before {
+  content:"";
+  position:absolute;
+  width:180px;
+  height:180px;
+  right:-45px;
+  top:-70px;
+  background:#ff42b355;
+  filter:blur(55px);
+}
+.category:nth-child(3n+2):before { background:#35d9ff66; }
+.category:nth-child(3n+3):before { background:#ffd47766; }
+.category:hover { transform:translateY(-5px); }
+.category span,.category strong,.category small {
+  position:relative;
+}
+.category span {
+  font-size:33px;
+  margin-bottom:13px;
+}
+.category strong { font-size:20px; }
+.category small {
+  margin-top:8px;
+  color:#d7c9e4;
+  font-size:13px;
+  line-height:1.5;
+}
+.category.featured {
+  border:2px solid var(--gold);
+  background:linear-gradient(135deg,#702c72,#2c153e);
+}
+.category.featured strong { color:var(--gold); }
+
+/* RESOURCE AND DESTINATION CARDS */
+
+.grid {
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:20px;
+}
+.card {
+  display:flex;
+  flex-direction:column;
+  background:linear-gradient(145deg,#29163b,#160c24);
+  border:1px solid #ffffff25;
+  border-radius:20px;
+  overflow:hidden;
+  transition:transform .2s;
+}
+.card:hover { transform:translateY(-4px); }
+.card-image {
+  width:100%;
+  height:195px;
+  object-fit:cover;
+  background:#2d1743;
+}
+.card-body {
+  display:flex;
+  flex-direction:column;
+  flex:1;
+  padding:23px;
+}
+.card-icon {
+  font-size:31px;
+  margin-bottom:12px;
+}
+.card h3 {
+  font-size:21px;
+  margin:0 0 12px;
+}
+.card p {
+  color:var(--muted);
+  line-height:1.75;
+  font-size:14px;
+  margin:0 0 20px;
+  flex:1;
+}
+.card-actions {
+  display:flex;
+  gap:9px;
+  flex-wrap:wrap;
+}
+.card-actions a {
+  display:inline-block;
+  padding:11px 15px;
+  border-radius:30px;
+  background:linear-gradient(90deg,#ff42b3,#a75cff);
+  text-decoration:none;
+  font-weight:800;
+  font-size:12px;
+}
+.card-actions a.secondary {
+  background:transparent;
+  border:1px solid #ffffff55;
+}
+.tag {
+  color:#ff9bd9;
+  font-size:11px;
+  text-transform:uppercase;
+  font-weight:900;
+  letter-spacing:1px;
+  margin-bottom:12px;
+}
+
+/* PANELS AND MAP */
+
+.panel {
+  padding:35px;
+  border:1px solid #ff42b355;
+  border-radius:23px;
+  background:
+    radial-gradient(circle at top right,#ff42b333,transparent 45%),
+    linear-gradient(120deg,#35144e,#12203d);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:22px;
+}
+.panel h3 {
+  font-size:27px;
+  margin:0 0 12px;
+}
+.panel p {
+  max-width:680px;
+  color:var(--muted);
+  line-height:1.8;
+  margin:0;
+}
+.map-frame {
+  border-radius:20px;
+  overflow:hidden;
+  border:1px solid #ffffff44;
+}
+.map-frame iframe {
+  width:100%;
+  height:430px;
+  display:block;
+  border:0;
+}
+.note {
+  color:#b9a9c8;
+  font-size:12px;
+  line-height:1.9;
+  text-align:center;
+  margin:26px auto 0;
+  max-width:900px;
+}
+footer {
+  background:#080410;
+  border-top:1px solid #ffffff22;
+  text-align:center;
+  padding:45px 20px;
+  color:#c5b6d2;
+  font-size:13px;
+  line-height:1.9;
+}
+.footer-brand {
+  color:var(--gold);
+  font-size:32px;
+  font-weight:900;
+}
+footer p {
+  max-width:920px;
+  margin:16px auto;
+}
+
+/* MOBILE */
+
+@media(max-width:950px) {
+  .categories,.grid {
+    grid-template-columns:repeat(2,1fr);
+  }
+  .casting-types {
+    grid-template-columns:repeat(2,1fr);
+  }
+}
+@media(max-width:650px) {
+  .nav {
+    flex-direction:column;
+    padding:10px;
+  }
+  .navlinks {
+    justify-content:center;
+    gap:11px;
+  }
+  .navlinks a { font-size:11px; }
+  .livebar-inner {
+    gap:9px 15px;
+    padding:10px;
+  }
+  .live-separator { display:none; }
+  .live-label { width:100%;text-align:center; }
+  .live-item { font-size:11px; }
+  .categories,.grid { grid-template-columns:1fr; }
+  .container { padding:45px 17px; }
+  .casting-feature { padding:25px 18px; }
+  .casting-type { padding:17px 9px; }
+  .panel { padding:25px; }
+  .map-frame iframe { height:340px; }
+}
+@media(prefers-reduced-motion:reduce) {
+  html { scroll-behavior:auto; }
+  *,*:before,*:after { transition:none!important; }
+}
 </style>
 </head>
+
 <body>
-<header><nav>
-<a class="navbrand" href="#home">H0H.com</a>
-<div class="navlinks">
-<a href="#explore">EXPLORE</a>
-<a href="#hotspots">HOTSPOTS</a>
-<a href="#nightlife">NIGHTLIFE</a>
-<a href="#dining">DINING</a>
-<a href="#landmarks">LANDMARKS</a>
-<a href="#map">MAP</a>
+
+<header>
+
+<nav class="nav">
+  <a href="#home" class="brand">
+    H<span>0</span>H.com
+  </a>
+
+  <div class="navlinks">
+    <a class="special" href="#casting">⭐ Casting</a>
+    <a href="#explore">Explore</a>
+    <a href="#hotspots">Hotspots</a>
+    <a href="#nightlife">Nightlife</a>
+    <a href="#dining">Dining</a>
+    <a href="#parking">Parking</a>
+    <a href="#real-estate">Real Estate</a>
+    <a href="#news">News</a>
+    <a href="#map">Map</a>
+  </div>
+</nav>
+
+<!-- HOLLYWOOD LIVE INFORMATION BAR -->
+
+<div class="livebar">
+  <div class="livebar-inner">
+
+    <div class="live-label">
+      <span class="live-dot"></span>
+      HOLLYWOOD LIVE
+    </div>
+
+    <div class="live-separator"></div>
+
+    <div class="live-item">
+      🕒 <strong>TIME:</strong>
+      <span id="hollywood-time" aria-label="Los Angeles local time">
+        Loading...
+      </span>
+    </div>
+
+    <div class="live-separator"></div>
+
+    <div class="live-item">
+      🌤️ <strong>WEATHER:</strong>
+      <span id="hollywood-weather" aria-live="polite">
+        Loading...
+      </span>
+    </div>
+
+    <div class="live-separator"></div>
+
+    <div class="live-item">
+      🚗
+      <a class="live-link"
+         href="https://www.google.com/maps/@34.098,-118.343,12z/data=!5m1!1e1"
+         target="_blank"
+         rel="noopener noreferrer">
+        LIVE TRAFFIC ↗
+      </a>
+    </div>
+
+  </div>
 </div>
-</nav></header>
+
+</header>
+
 <main>
-<section class="hero" id="home">
-<div class="hero-content">
-<div class="eyebrow">LIGHTS • CAMERA • HOLLYWOOD</div>
-<div class="logo" aria-label="H zero H"><span class="logo-h">H</span><span class="spotlight">0</span><span class="logo-h">H</span></div>
-<div class="dotcom">.com</div>
-<h1>HOLLYWOOD HOTSPOTS</h1>
-<p>Your VIP Guide to Everything Hollywood<br>Famous Places. Legendary Nights. Unforgettable Experiences.</p>
-<div class="actions">
-<a class="btn btn-primary" href="#explore">✨ EXPLORE HOLLYWOOD</a>
-<a class="btn btn-outline" href="#map">📍 HOLLYWOOD MAP</a>
-</div>
-</div>
+
+<!-- HOMEPAGE -->
+
+<section id="home">
+
+  <img
+    class="hero-image"
+    src="hollywood-hotspots.jpg"
+    alt="H0H.com Hollywood Hotspots neon skyline and Hollywood Sign with spotlight"
+    fetchpriority="high"
+  >
+
+  <div class="hero-bottom">
+
+    <p>
+      Famous Places. Legendary Nights. Unforgettable Experiences.
+      <br>
+      Discover Hollywood, West Hollywood, Beverly Hills,
+      the Sunset Strip — and your next big opportunity.
+    </p>
+
+    <div class="buttons">
+      <a class="btn btn-gold" href="#casting">
+        🎬 CASTING CALLS & AUDITIONS
+      </a>
+      <a class="btn btn-pink" href="#explore">
+        ✨ EXPLORE HOLLYWOOD
+      </a>
+      <a class="btn btn-outline" href="#map">
+        📍 HOLLYWOOD MAP
+      </a>
+    </div>
+
+  </div>
 </section>
+
+<!-- FEATURED CASTING -->
+
+<section class="container" id="casting">
+
+  <div class="casting-feature">
+
+    <span class="casting-label">
+      ★ FEATURED HOLLYWOOD OPPORTUNITIES
+    </span>
+
+    <h2>🎬 CASTING CALLS<br>& OPEN AUDITIONS</h2>
+
+    <div class="casting-lead">
+      Your Hollywood Opportunity Starts Here.
+    </div>
+
+    <p>
+      Dream of appearing in a movie, television show,
+      commercial, reality competition or live production?
+      Explore casting platforms, auditions, talent
+      opportunities and entertainment industry resources.
+    </p>
+
+    <div class="casting-types">
+
+      <div class="casting-type">
+        <span>🎥</span>
+        <strong>Film & Television</strong>
+        <small>Acting roles and extras</small>
+      </div>
+
+      <div class="casting-type">
+        <span>🌟</span>
+        <strong>Reality Television</strong>
+        <small>Contestants and competitions</small>
+      </div>
+
+      <div class="casting-type">
+        <span>🎤</span>
+        <strong>Commercials & Voiceover</strong>
+        <small>Advertising and talent</small>
+      </div>
+
+      <div class="casting-type">
+        <span>📸</span>
+        <strong>Modeling & More</strong>
+        <small>Modeling and theater</small>
+      </div>
+
+    </div>
+
+    <div class="casting-actions">
+      <a class="btn btn-gold" href="#casting-resources">
+        FIND CASTING OPPORTUNITIES ↓
+      </a>
+      <a class="btn btn-outline" href="#news">
+        HOLLYWOOD INDUSTRY NEWS ↓
+      </a>
+    </div>
+
+    <p class="note">
+      H0H.com is an independent directory, not a casting agency.
+      External platforms control their listings, eligibility,
+      fees and application requirements.
+    </p>
+
+  </div>
+</section>
+
+<!-- CASTING RESOURCES -->
+
+<section class="container" id="casting-resources">
+
+  <div class="heading">
+    <div class="eyebrow">Find Your Next Opportunity</div>
+    <h2>Explore <span class="gradient">Casting Platforms</span></h2>
+    <p>
+      Browse established services for current acting,
+      television, modeling and other casting opportunities.
+    </p>
+  </div>
+
+  <div class="grid">
+
+    <article class="card">
+      <div class="card-body">
+        <div class="card-icon">🎭</div>
+        <h3>Backstage</h3>
+        <p>
+          Acting auditions, film and television,
+          commercials, theater and voiceover.
+          Some applications require paid membership.
+        </p>
+        <div class="card-actions">
+          <a href="https://www.backstage.com/"
+             target="_blank" rel="noopener noreferrer">
+            VISIT BACKSTAGE ↗
+          </a>
+        </div>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="card-body">
+        <div class="card-icon">🎬</div>
+        <h3>Actors Access</h3>
+        <p>
+          Professional casting breakdowns,
+          actor profiles and audition submissions.
+          Registration or submission fees may apply.
+        </p>
+        <div class="card-actions">
+          <a href="https://actorsaccess.com/"
+             target="_blank" rel="noopener noreferrer">
+            ACTORS ACCESS ↗
+          </a>
+        </div>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="card-body">
+        <div class="card-icon">📸</div>
+        <h3>Casting Networks</h3>
+        <p>
+          Film, television, commercial and modeling
+          opportunities. Some features require
+          registration or membership.
+        </p>
+        <div class="card-actions">
+          <a href="https://www.castingnetworks.com/"
+             target="_blank" rel="noopener noreferrer">
+            CASTING NETWORKS ↗
+          </a>
+        </div>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="card-body">
+        <div class="card-icon">🌟</div>
+        <h3>Reality TV Casting</h3>
+        <p>
+          Explore official network casting information
+          and application opportunities for reality
+          and competition television.
+        </p>
+        <div class="card-actions">
+          <a href="https://www.cbs.com/casting/"
+             target="_blank" rel="noopener noreferrer">
+            CBS CASTING ↗
+          </a>
+        </div>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="card-body">
+        <div class="card-icon">🎙️</div>
+        <h3>Voiceover & Creative Roles</h3>
+        <p>
+          Find voice acting, commercials and creative
+          production opportunities through
+          established casting services.
+        </p>
+        <div class="card-actions">
+          <a href="https://www.backstage.com/casting/"
+             target="_blank" rel="noopener noreferrer">
+            EXPLORE ROLES ↗
+          </a>
+        </div>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="card-body">
+        <div class="card-icon">🛡️</div>
+        <h3>SAG-AFTRA</h3>
+        <p>
+          Performer resources, professional
+          standards, industry information
+          and member services.
+        </p>
+        <div class="card-actions">
+          <a href="https://www.sagaftra.org/"
+             target="_blank" rel="noopener noreferrer">
+            SAG-AFTRA ↗
+          </a>
+        </div>
+      </div>
+    </article>
+
+  </div>
+
+  <p class="note">
+    Casting opportunities change frequently.
+    Verify all listings with the relevant organization.
+    Be cautious of anyone promising a role in exchange
+    for payment. Never provide sensitive financial or
+    identification information to unverified contacts.
+  </p>
+
+</section>
+
+<!-- HOLLYWOOD INDUSTRY NEWS -->
+
+<section class="container" id="news">
+
+  <div class="heading">
+    <div class="eyebrow">Behind the Scenes</div>
+    <h2>Hollywood <span class="gradient">Industry News</span></h2>
+    <p>
+      Stay connected with major entertainment publications
+      covering Hollywood, film, television,
+      streaming, casting and celebrity culture.
+    </p>
+  </div>
+
+  <div class="grid">
+
+    <article class="card">
+      <div class="card-body">
+        <div class="card-icon">📰</div>
+        <h3>Deadline</h3>
+        <p>
+          Entertainment industry reporting,
+          casting news, studio developments,
+          film and television coverage.
+        </p>
+        <div class="card-actions">
+          <a href="https://deadline.com/"
+             target="_blank" rel="noopener noreferrer">
+            READ DEADLINE ↗
+          </a>
+        </div>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="card-body">
+        <div class="card-icon">🎥</div>
+        <h3>Variety</h3>
+        <p>
+          Film, television, awards,
+          entertainment business and
+          Hollywood industry analysis.
+        </p>
+        <div class="card-actions">
+          <a href="https://variety.com/"
+             target="_blank" rel="noopener noreferrer">
+            READ VARIETY ↗
+          </a>
+        </div>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="card-body">
+        <div class="card-icon">🌟</div>
+        <h3>The Hollywood Reporter</h3>
+        <p>
+          Entertainment news, interviews,
+          reviews, film and television
+          industry reporting.
+        </p>
+        <div class="card-actions">
+          <a href="https://www.hollywoodreporter.com/"
+             target="_blank" rel="noopener noreferrer">
+            READ THR ↗
+          </a>
+        </div>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="card-body">
+        <div class="card-icon">📺</div>
+        <h3>Entertainment Tonight</h3>
+        <p>
+          Celebrity interviews, entertainment
+          updates and Hollywood
+          red-carpet coverage.
+        </p>
+        <div class="card-actions">
+          <a href="https://www.etonline.com/"
+             target="_blank" rel="noopener noreferrer">
+            VISIT ET ↗
+          </a>
+        </div>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="card-body">
+        <div class="card-icon">🎭</div>
+        <h3>Backstage Magazine</h3>
+        <p>
+          Audition advice, acting careers,
+          industry interviews and
+          performer resources.
+        </p>
+        <div class="card-actions">
+          <a href="https://www.backstage.com/magazine/"
+             target="_blank" rel="noopener noreferrer">
+            ACTING NEWS ↗
+          </a>
+        </div>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="card-body">
+        <div class="card-icon">🎞️</div>
+        <h3>IMDb</h3>
+        <p>
+          Movie and television information,
+          credits, cast lists and
+          entertainment titles.
+        </p>
+        <div class="card-actions">
+          <a href="https://www.imdb.com/"
+             target="_blank" rel="noopener noreferrer">
+            EXPLORE IMDb ↗
+          </a>
+        </div>
+      </div>
+    </article>
+
+  </div>
+
+  <p class="note">
+    News links open the respective publishers'
+    websites. H0H.com does not reproduce their articles
+    or claim affiliation with the publishers.
+  </p>
+
+</section>
+
+<!-- EXPLORE CATEGORIES -->
+
 <section class="container" id="explore">
-<div class="section-heading"><div class="kicker">Discover the Magic</div><h2>Everything Hollywood. One Destination.</h2><p>From legendary landmarks and glamorous nightlife to celebrity-associated dining, discover the places that make Hollywood unforgettable.</p></div>
-<div class="categories">
-<a class="cat" href="#hotspots"><span>🌟</span><strong>Celebrity Hotspots</strong><small>Legendary celebrity-associated destinations</small></a>
-<a class="cat" href="#nightlife"><span>🍸</span><strong>Nightlife & Clubs</strong><small>Sunset Strip and famous music venues</small></a>
-<a class="cat" href="#dining"><span>🍽️</span><strong>Dining & Restaurants</strong><small>Iconic Hollywood dining experiences</small></a>
-<a class="cat" href="#landmarks"><span>🎬</span><strong>Famous Landmarks</strong><small>The Hollywood Sign, Walk of Fame & more</small></a>
-<a class="cat" href="#map"><span>📍</span><strong>Explore the Map</strong><small>Find destinations and directions</small></a>
-<a class="cat" href="#discover"><span>🎟️</span><strong>Shows & Experiences</strong><small>Studio tours and unforgettable attractions</small></a>
-</div>
+
+  <div class="heading">
+    <div class="eyebrow">Discover the Magic</div>
+    <h2>Everything Hollywood. <span class="gradient">One Destination.</span></h2>
+    <p>
+      Explore legendary landmarks, celebrity hotspots,
+      casting opportunities, nightlife, dining,
+      entertainment and Hollywood attractions.
+    </p>
+  </div>
+
+  <div class="categories">
+
+    <a class="category featured" href="#casting">
+      <span>🎬</span>
+      <strong>Casting Calls & Auditions</strong>
+      <small>Acting, reality television and talent opportunities</small>
+    </a>
+
+    <a class="category" href="#hotspots">
+      <span>🌟</span>
+      <strong>Celebrity Hotspots</strong>
+      <small>Legendary Hollywood destinations</small>
+    </a>
+
+    <a class="category" href="#nightlife">
+      <span>🍸</span>
+      <strong>Nightlife & Clubs</strong>
+      <small>Sunset Strip and famous music venues</small>
+    </a>
+
+    <a class="category" href="#dining">
+      <span>🍽️</span>
+      <strong>Dining & Restaurants</strong>
+      <small>Historic restaurants and glamorous dining</small>
+    </a>
+
+    <a class="category" href="#landmarks">
+      <span>🎬</span>
+      <strong>Hollywood Landmarks</strong>
+      <small>The Hollywood Sign, Walk of Fame and more</small>
+    </a>
+
+    <a class="category" href="#news">
+      <span>📰</span>
+      <strong>Hollywood News</strong>
+      <small>Film, television and entertainment news</small>
+    </a>
+
+    <a class="category" href="#map">
+      <span>📍</span>
+      <strong>Hollywood Map</strong>
+      <small>Locations and directions</small>
+    </a>
+
+    <a class="category" href="#experiences">
+      <span>🎟️</span>
+      <strong>Shows & Experiences</strong>
+      <small>Studio tours and attractions</small>
+    </a>
+
+    <a class="category" href="#casting-resources">
+      <span>🎭</span>
+      <strong>Acting Resources</strong>
+      <small>Casting platforms and performer information</small>
+    </a>
+
+    <a class="category" href="#parking">
+      <span>🅿️</span>
+      <strong>Hollywood Parking Locator</strong>
+      <small>Public garages, paid parking, street parking and directions</small>
+    </a>
+
+    <a class="category" href="#real-estate">
+      <span>🏡</span>
+      <strong>Hollywood Real Estate</strong>
+      <small>Homes for sale, condos, apartments and rentals</small>
+    </a>
+
+  </div>
 </section>
+
+<!-- HOLLYWOOD LANDMARKS -->
+
+<section class="container" id="landmarks">
+
+  <div class="heading">
+    <div class="eyebrow">Lights. Camera. Hollywood.</div>
+    <h2>Iconic <span class="gradient">Hollywood Landmarks</span></h2>
+    <p>
+      Discover the famous places that made Hollywood
+      one of the world's most recognizable destinations.
+    </p>
+  </div>
+
+  <div class="grid">
+
+    <article class="card">
+      <img class="card-image"
+        src="https://images.unsplash.com/photo-1534258936925-c58bed479fcb?auto=format&fit=crop&w=900&q=85"
+        alt="Los Angeles landscape" loading="lazy">
+      <div class="card-body">
+        <div class="tag">World-Famous Landmark</div>
+        <h3>Hollywood Sign</h3>
+        <p>
+          The iconic Hollywood Sign overlooking
+          Los Angeles. Discover its history
+          and public viewing locations.
+        </p>
+        <div class="card-actions">
+          <a href="https://www.hollywoodsign.org/"
+             target="_blank" rel="noopener noreferrer">
+            Official Site ↗
+          </a>
+          <a class="secondary"
+             href="https://www.google.com/maps/search/?api=1&query=Hollywood+Sign+Los+Angeles"
+             target="_blank" rel="noopener noreferrer">
+            Map ↗
+          </a>
+        </div>
+      </div>
+    </article>
+
+    <article class="card">
+      <img class="card-image"
+        src="https://images.unsplash.com/photo-1519501025264-65ba15a82390?auto=format&fit=crop&w=900&q=85"
+        alt="City lights" loading="lazy">
+      <div class="card-body">
+        <div class="tag">Hollywood History</div>
+        <h3>Hollywood Walk of Fame</h3>
+        <p>
+          Explore legendary sidewalk stars
+          honoring figures from film,
+          television, music and entertainment.
+        </p>
+        <div class="card-actions">
+          <a href="https://walkoffame.com/"
+             target="_blank" rel="noopener noreferrer">
+            Official Site ↗
+          </a>
+          <a class="secondary"
+             href="https://www.google.com/maps/search/?api=1&query=Hollywood+Walk+of+Fame"
+             target="_blank" rel="noopener noreferrer">
+            Map ↗
+          </a>
+        </div>
+      </div>
+    </article>
+
+    <article class="card">
+      <img class="card-image"
+        src="https://images.unsplash.com/photo-1514306191717-452ec28c7814?auto=format&fit=crop&w=900&q=85"
+        alt="Movie theater experience" loading="lazy">
+      <div class="card-body">
+        <div class="tag">Movie Landmark</div>
+        <h3>TCL Chinese Theatre</h3>
+        <p>
+          A celebrated Hollywood movie palace
+          known for premieres and celebrity
+          handprints and footprints.
+        </p>
+        <div class="card-actions">
+          <a href="https://www.tclchinesetheatres.com/"
+             target="_blank" rel="noopener noreferrer">
+            Official Site ↗
+          </a>
+          <a class="secondary"
+             href="https://www.google.com/maps/search/?api=1&query=TCL+Chinese+Theatre"
+             target="_blank" rel="noopener noreferrer">
+            Map ↗
+          </a>
+        </div>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<!-- CELEBRITY HOTSPOTS -->
+
 <section class="container" id="hotspots">
-<div class="section-heading"><div class="kicker">Star-Studded Destinations</div><h2>Hollywood's Legendary Hotspots</h2><p>Discover world-famous venues with Hollywood history, entertainment connections, and unforgettable atmospheres.</p></div>
-<div class="card-grid">
-<article class="card" id="landmarks"><img src="https://images.unsplash.com/photo-1534258936925-c58bed479fcb?auto=format&fit=crop&w=800&q=80" alt="Hollywood and Los Angeles" loading="lazy"><div class="card-body"><span class="tag">Iconic Landmark</span><h3>The Hollywood Sign</h3><p>The world-famous landmark overlooking Los Angeles. Explore public viewing locations and visitor information.</p><div class="card-links"><a href="https://www.hollywoodsign.org/" target="_blank" rel="noopener noreferrer">Official Website ↗</a><a href="https://www.google.com/maps/search/?api=1&query=Hollywood+Sign+Los+Angeles" target="_blank" rel="noopener noreferrer">Map ↗</a></div></div></article>
-<article class="card"><img src="https://images.unsplash.com/photo-1519501025264-65ba15a82390?auto=format&fit=crop&w=800&q=80" alt="City nightlife" loading="lazy"><div class="card-body"><span class="tag">Hollywood History</span><h3>Hollywood Walk of Fame</h3><p>Explore the famous sidewalk stars honoring entertainment legends along Hollywood Boulevard and Vine Street.</p><div class="card-links"><a href="https://walkoffame.com/" target="_blank" rel="noopener noreferrer">Official Website ↗</a><a href="https://www.google.com/maps/search/?api=1&query=Hollywood+Walk+of+Fame" target="_blank" rel="noopener noreferrer">Map ↗</a></div></div></article>
-<article class="card"><img src="https://images.unsplash.com/photo-1514306191717-452ec28c7814?auto=format&fit=crop&w=800&q=80" alt="Cinema experience" loading="lazy"><div class="card-body"><span class="tag">Movie Landmark</span><h3>TCL Chinese Theatre</h3><p>Discover one of Hollywood's most celebrated movie palaces and its famous celebrity handprints and footprints.</p><div class="card-links"><a href="https://www.tclchinesetheatres.com/" target="_blank" rel="noopener noreferrer">Official Website ↗</a><a href="https://www.google.com/maps/search/?api=1&query=TCL+Chinese+Theatre" target="_blank" rel="noopener noreferrer">Map ↗</a></div></div></article>
-</div>
+
+  <div class="heading">
+    <div class="eyebrow">Hollywood Glamour</div>
+    <h2>Celebrity <span class="gradient">Hotspots</span></h2>
+    <p>
+      Famous public destinations associated with
+      Hollywood celebrities and entertainment history.
+    </p>
+  </div>
+
+  <div class="grid">
+
+    <article class="card">
+      <img class="card-image"
+        src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=900&q=85"
+        alt="Elegant restaurant" loading="lazy">
+      <div class="card-body">
+        <div class="tag">Hollywood Classic</div>
+        <h3>Musso & Frank Grill</h3>
+        <p>
+          A legendary Hollywood restaurant
+          with a long history of serving
+          actors, writers and entertainment personalities.
+        </p>
+        <div class="card-actions">
+          <a href="https://mussoandfrank.com/"
+             target="_blank" rel="noopener noreferrer">
+            Official Site ↗
+          </a>
+          <a class="secondary"
+             href="https://www.google.com/maps/search/?api=1&query=Musso+and+Frank+Grill"
+             target="_blank" rel="noopener noreferrer">
+            Map ↗
+          </a>
+        </div>
+      </div>
+    </article>
+
+    <article class="card">
+      <img class="card-image"
+        src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=900&q=85"
+        alt="Upscale restaurant interior" loading="lazy">
+      <div class="card-body">
+        <div class="tag">Celebrity-Associated Dining</div>
+        <h3>Craig's</h3>
+        <p>
+          A well-known West Hollywood
+          restaurant associated with
+          entertainment industry dining.
+        </p>
+        <div class="card-actions">
+          <a href="https://www.craigs.la/"
+             target="_blank" rel="noopener noreferrer">
+            Official Site ↗
+          </a>
+          <a class="secondary"
+             href="https://www.google.com/maps/search/?api=1&query=Craigs+West+Hollywood"
+             target="_blank" rel="noopener noreferrer">
+            Map ↗
+          </a>
+        </div>
+      </div>
+    </article>
+
+    <article class="card">
+      <img class="card-image"
+        src="https://images.unsplash.com/photo-1552566626-52f8b828add9?auto=format&fit=crop&w=900&q=85"
+        alt="Restaurant dining interior" loading="lazy">
+      <div class="card-body">
+        <div class="tag">Beverly Hills Icon</div>
+        <h3>The Polo Lounge</h3>
+        <p>
+          A celebrated dining destination
+          at The Beverly Hills Hotel,
+          known for its Hollywood heritage.
+        </p>
+        <div class="card-actions">
+          <a href="https://www.dorchestercollection.com/los-angeles/the-beverly-hills-hotel"
+             target="_blank" rel="noopener noreferrer">
+            Hotel Site ↗
+          </a>
+          <a class="secondary"
+             href="https://www.google.com/maps/search/?api=1&query=Polo+Lounge+Beverly+Hills+Hotel"
+             target="_blank" rel="noopener noreferrer">
+            Map ↗
+          </a>
+        </div>
+      </div>
+    </article>
+
+  </div>
 </section>
+
+<!-- NIGHTLIFE -->
+
 <section class="container" id="nightlife">
-<div class="section-heading"><div class="kicker">After Dark</div><h2>Legendary Hollywood Nightlife</h2><p>Discover historic clubs, live music destinations, and the electric atmosphere of the Sunset Strip.</p></div>
-<div class="card-grid">
-<article class="card"><img src="https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&w=800&q=80" alt="Live music nightlife" loading="lazy"><div class="card-body"><span class="tag">Sunset Strip</span><h3>Whisky a Go Go</h3><p>One of the Sunset Strip's most legendary live music venues, with decades of rock-and-roll history.</p><div class="card-links"><a href="https://whiskyagogo.com/" target="_blank" rel="noopener noreferrer">Official Website ↗</a><a href="https://www.google.com/maps/search/?api=1&query=Whisky+a+Go+Go+West+Hollywood" target="_blank" rel="noopener noreferrer">Map ↗</a></div></div></article>
-<article class="card"><img src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=800&q=80" alt="Concert crowd and colorful lights" loading="lazy"><div class="card-body"><span class="tag">Live Entertainment</span><h3>The Roxy Theatre</h3><p>A historic Sunset Strip venue known for intimate performances and its connections to generations of music legends.</p><div class="card-links"><a href="https://www.theroxy.com/" target="_blank" rel="noopener noreferrer">Official Website ↗</a><a href="https://www.google.com/maps/search/?api=1&query=The+Roxy+Theatre+West+Hollywood" target="_blank" rel="noopener noreferrer">Map ↗</a></div></div></article>
-<article class="card"><img src="https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=800&q=80" alt="Concert lighting and performance" loading="lazy"><div class="card-body"><span class="tag">Rock History</span><h3>Rainbow Bar & Grill</h3><p>An iconic Sunset Strip gathering place celebrated for its rock music history and Hollywood nightlife atmosphere.</p><div class="card-links"><a href="https://www.rainbowbarandgrill.com/" target="_blank" rel="noopener noreferrer">Official Website ↗</a><a href="https://www.google.com/maps/search/?api=1&query=Rainbow+Bar+and+Grill+West+Hollywood" target="_blank" rel="noopener noreferrer">Map ↗</a></div></div></article>
-</div>
+
+  <div class="heading">
+    <div class="eyebrow">Hollywood After Dark</div>
+    <h2>Legendary <span class="gradient">Nightlife</span></h2>
+    <p>
+      Explore the Sunset Strip, historic music clubs
+      and Hollywood's famous nightlife destinations.
+    </p>
+  </div>
+
+  <div class="grid">
+
+    <article class="card">
+      <img class="card-image"
+        src="https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&w=900&q=85"
+        alt="Live music performance" loading="lazy">
+      <div class="card-body">
+        <div class="tag">Sunset Strip</div>
+        <h3>Whisky a Go Go</h3>
+        <p>
+          One of the Sunset Strip's
+          legendary live music venues
+          with decades of rock-and-roll history.
+        </p>
+        <div class="card-actions">
+          <a href="https://whiskyagogo.com/"
+             target="_blank" rel="noopener noreferrer">
+            Official Site ↗
+          </a>
+          <a class="secondary"
+             href="https://www.google.com/maps/search/?api=1&query=Whisky+a+Go+Go+West+Hollywood"
+             target="_blank" rel="noopener noreferrer">
+            Map ↗
+          </a>
+        </div>
+      </div>
+    </article>
+
+    <article class="card">
+      <img class="card-image"
+        src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=900&q=85"
+        alt="Concert crowd and lights" loading="lazy">
+      <div class="card-body">
+        <div class="tag">Live Entertainment</div>
+        <h3>The Roxy Theatre</h3>
+        <p>
+          A historic Sunset Strip venue
+          known for intimate performances
+          and generations of music legends.
+        </p>
+        <div class="card-actions">
+          <a href="https://www.theroxy.com/"
+             target="_blank" rel="noopener noreferrer">
+            Official Site ↗
+          </a>
+          <a class="secondary"
+             href="https://www.google.com/maps/search/?api=1&query=The+Roxy+Theatre+West+Hollywood"
+             target="_blank" rel="noopener noreferrer">
+            Map ↗
+          </a>
+        </div>
+      </div>
+    </article>
+
+    <article class="card">
+      <img class="card-image"
+        src="https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=900&q=85"
+        alt="Concert lights" loading="lazy">
+      <div class="card-body">
+        <div class="tag">Rock History</div>
+        <h3>Rainbow Bar & Grill</h3>
+        <p>
+          An iconic Sunset Strip gathering
+          place celebrated for its
+          rock music history.
+        </p>
+        <div class="card-actions">
+          <a href="https://www.rainbowbarandgrill.com/"
+             target="_blank" rel="noopener noreferrer">
+            Official Site ↗
+          </a>
+          <a class="secondary"
+             href="https://www.google.com/maps/search/?api=1&query=Rainbow+Bar+and+Grill+West+Hollywood"
+             target="_blank" rel="noopener noreferrer">
+            Map ↗
+          </a>
+        </div>
+      </div>
+    </article>
+
+  </div>
 </section>
+
+<!-- DINING -->
+
 <section class="container" id="dining">
-<div class="section-heading"><div class="kicker">Dine Like a Star</div><h2>Hollywood Dining Icons</h2><p>Explore famous restaurants with memorable settings and connections to Hollywood culture.</p></div>
-<div class="card-grid">
-<article class="card"><img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=800&q=80" alt="Upscale restaurant interior" loading="lazy"><div class="card-body"><span class="tag">Historic Hollywood</span><h3>Musso & Frank Grill</h3><p>Hollywood's historic dining institution, famous for classic cuisine and generations of entertainment industry patrons.</p><div class="card-links"><a href="https://mussoandfrank.com/" target="_blank" rel="noopener noreferrer">Official Website ↗</a><a href="https://www.google.com/maps/search/?api=1&query=Musso+and+Frank+Grill" target="_blank" rel="noopener noreferrer">Map ↗</a></div></div></article>
-<article class="card"><img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=800&q=80" alt="Elegant restaurant dining area" loading="lazy"><div class="card-body"><span class="tag">Celebrity-Associated Dining</span><h3>Craig's</h3><p>A well-known West Hollywood restaurant frequently associated with entertainment industry dining and celebrity culture.</p><div class="card-links"><a href="https://www.craigs.la/" target="_blank" rel="noopener noreferrer">Official Website ↗</a><a href="https://www.google.com/maps/search/?api=1&query=Craigs+West+Hollywood" target="_blank" rel="noopener noreferrer">Map ↗</a></div></div></article>
-<article class="card"><img src="https://images.unsplash.com/photo-1552566626-52f8b828add9?auto=format&fit=crop&w=800&q=80" alt="Restaurant tables and warm lighting" loading="lazy"><div class="card-body"><span class="tag">Beverly Hills Classic</span><h3>The Polo Lounge</h3><p>A legendary dining destination at The Beverly Hills Hotel, celebrated for its Hollywood heritage and elegant setting.</p><div class="card-links"><a href="https://www.dorchestercollection.com/los-angeles/the-beverly-hills-hotel" target="_blank" rel="noopener noreferrer">Hotel Website ↗</a><a href="https://www.google.com/maps/search/?api=1&query=Polo+Lounge+Beverly+Hills+Hotel" target="_blank" rel="noopener noreferrer">Map ↗</a></div></div></article>
-</div>
+
+  <div class="heading">
+    <div class="eyebrow">Taste of Hollywood</div>
+    <h2>Dining <span class="gradient">Like a Star</span></h2>
+    <p>
+      Classic Hollywood institutions
+      and glamorous Beverly Hills dining.
+    </p>
+  </div>
+
+  <div class="panel">
+    <div>
+      <h3>🍽️ Discover Hollywood Dining</h3>
+      <p>
+        Explore restaurants across Hollywood,
+        West Hollywood and Beverly Hills.
+        Find menus, locations and reservation
+        information through current listings.
+      </p>
+    </div>
+    <a class="btn btn-pink"
+       href="https://www.google.com/maps/search/?api=1&query=restaurants+Hollywood+West+Hollywood+Beverly+Hills"
+       target="_blank" rel="noopener noreferrer">
+       EXPLORE RESTAURANTS ↗
+    </a>
+  </div>
+
 </section>
-<section class="container" id="discover">
-<div class="live-panel">
-<div><div class="kicker" style="color:#ff99df;font-weight:bold;letter-spacing:2px;margin-bottom:9px">YOUR HOLLYWOOD ADVENTURE STARTS HERE</div><h2>🎬 Lights. Camera. Explore!</h2><p>Find Hollywood attractions, studio tours, live entertainment, famous streets, and unforgettable experiences. Follow official venue links for current schedules, prices, and availability.</p></div>
-<a class="btn btn-primary" href="https://www.discoverlosangeles.com/" target="_blank" rel="noopener noreferrer">EXPLORE LOS ANGELES ↗</a>
-</div>
+
+<!-- SHOWS AND EXPERIENCES -->
+
+<section class="container" id="experiences">
+
+  <div class="heading">
+    <div class="eyebrow">The Hollywood Experience</div>
+    <h2>Shows, Tours & <span class="gradient">Entertainment</span></h2>
+    <p>
+      Attractions, studio tours, live performances
+      and famous Hollywood experiences.
+    </p>
+  </div>
+
+  <div class="panel">
+    <div>
+      <h3>🎬 Your Hollywood Adventure Starts Here</h3>
+      <p>
+        Discover movie studio tours, entertainment venues,
+        famous streets and unforgettable Los Angeles
+        attractions. Confirm schedules and admission
+        details directly with providers.
+      </p>
+    </div>
+    <a class="btn btn-pink"
+       href="https://www.discoverlosangeles.com/"
+       target="_blank" rel="noopener noreferrer">
+       EXPLORE LOS ANGELES ↗
+    </a>
+  </div>
+
 </section>
+
+<!-- HOLLYWOOD PARKING LOCATOR -->
+
+<section class="container" id="parking">
+  <div class="heading">
+    <div class="eyebrow">Park Smart. Explore More.</div>
+    <h2>🅿️ Hollywood <span class="gradient">Parking Locator</span></h2>
+    <p>
+      Find public parking garages, privately operated paid parking,
+      and street parking around Hollywood Boulevard, the Sunset Strip,
+      West Hollywood and Beverly Hills. Open a map to inspect
+      locations, directions, posted rates and operating hours.
+    </p>
+  </div>
+
+  <div class="grid">
+    <article class="card">
+      <div class="card-body">
+        <div class="card-icon">🏢</div>
+        <div class="tag">Public & Municipal Parking</div>
+        <h3>Public Parking Garages</h3>
+        <p>Search for public parking facilities around Hollywood's attractions, theaters and shopping districts.</p>
+        <div class="card-actions">
+          <a href="https://www.google.com/maps/search/?api=1&amp;query=public+parking+garages+Hollywood+Los+Angeles" target="_blank" rel="noopener noreferrer">VIEW GARAGES ↗</a>
+        </div>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="card-body">
+        <div class="card-icon">🚘</div>
+        <div class="tag">Private & Paid Parking</div>
+        <h3>Paid Garages & Lots</h3>
+        <p>Browse private parking garages and lots, compare available provider offers and check restrictions before parking.</p>
+        <div class="card-actions">
+          <a href="https://www.google.com/maps/search/?api=1&amp;query=paid+parking+garages+Hollywood+California" target="_blank" rel="noopener noreferrer">FIND PAID PARKING ↗</a>
+        </div>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="card-body">
+        <div class="card-icon">🅿️</div>
+        <div class="tag">Street Parking</div>
+        <h3>Meters & Street Parking</h3>
+        <p>Find street-parking areas and consult local parking regulations. Always check signs, meter limits and street-sweeping rules.</p>
+        <div class="card-actions">
+          <a href="https://www.google.com/maps/search/?api=1&amp;query=metered+street+parking+Hollywood+Los+Angeles" target="_blank" rel="noopener noreferrer">EXPLORE STREET PARKING ↗</a>
+        </div>
+      </div>
+    </article>
+  </div>
+
+  <div class="heading" style="margin-top:48px">
+    <div class="eyebrow">Parking Near the Action</div>
+    <h2>Choose Your <span class="gradient">Hollywood Destination</span></h2>
+  </div>
+
+  <div class="buttons">
+    <a class="btn btn-outline" href="https://www.google.com/maps/search/?api=1&amp;query=parking+near+Hollywood+Walk+of+Fame" target="_blank" rel="noopener noreferrer">⭐ Walk of Fame Parking ↗</a>
+    <a class="btn btn-outline" href="https://www.google.com/maps/search/?api=1&amp;query=parking+near+TCL+Chinese+Theatre+Hollywood" target="_blank" rel="noopener noreferrer">🎬 Chinese Theatre Parking ↗</a>
+    <a class="btn btn-outline" href="https://www.google.com/maps/search/?api=1&amp;query=parking+near+Sunset+Strip+West+Hollywood" target="_blank" rel="noopener noreferrer">🌃 Sunset Strip Parking ↗</a>
+    <a class="btn btn-outline" href="https://www.google.com/maps/search/?api=1&amp;query=parking+garages+Beverly+Hills+California" target="_blank" rel="noopener noreferrer">✨ Beverly Hills Parking ↗</a>
+  </div>
+
+  <div class="map-frame" style="margin-top:30px">
+    <iframe title="Hollywood parking garage location map" src="https://www.google.com/maps?q=parking%20garages%20Hollywood%20Los%20Angeles&amp;output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+  </div>
+
+  <div class="panel" style="margin-top:25px">
+    <div>
+      <h3>🚗 Compare Parking Options</h3>
+      <p>Check parking marketplaces for available listings, estimated rates and reservation options. Provider listings, fees and availability can change.</p>
+    </div>
+    <div class="buttons">
+      <a class="btn btn-gold" href="https://spothero.com/" target="_blank" rel="noopener noreferrer">SPOTHERO ↗</a>
+      <a class="btn btn-pink" href="https://www.parkwhiz.com/" target="_blank" rel="noopener noreferrer">PARKWHIZ ↗</a>
+    </div>
+  </div>
+  <p class="note">Map locations and parking links are provided by third parties. H0H.com does not independently verify space availability, prices, accessibility or garage hours. Check posted signs and provider terms before parking.</p>
+</section>
+
+<!-- HOLLYWOOD REAL ESTATE -->
+
+<section class="container" id="real-estate">
+  <div class="heading">
+    <div class="eyebrow">Live. Work. Invest.</div>
+    <h2>🏡 Hollywood <span class="gradient">Real Estate</span></h2>
+    <p>Explore properties for sale and rentals in Hollywood, Hollywood Hills, West Hollywood and Beverly Hills. Search current listings directly with property platforms.</p>
+  </div>
+
+  <div class="grid">
+    <article class="card">
+      <div class="card-body">
+        <div class="card-icon">🏠</div>
+        <div class="tag">Homes & Condos for Sale</div>
+        <h3>Buy a Hollywood Home</h3>
+        <p>Discover houses, condominiums and other homes for sale. Browse listings, photos and property details on established real estate websites.</p>
+        <div class="card-actions">
+          <a href="https://www.zillow.com/hollywood-los-angeles-ca/" target="_blank" rel="noopener noreferrer">ZILLOW ↗</a>
+          <a class="secondary" href="https://www.redfin.com/neighborhood/1136/CA/Los-Angeles/Hollywood" target="_blank" rel="noopener noreferrer">REDFIN ↗</a>
+        </div>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="card-body">
+        <div class="card-icon">🏙️</div>
+        <div class="tag">Apartments & Rentals</div>
+        <h3>Find Your Next Rental</h3>
+        <p>Search apartments, condos and rental homes. Review availability, lease terms, application requirements and pricing with the listing provider.</p>
+        <div class="card-actions">
+          <a href="https://www.apartments.com/hollywood-los-angeles-ca/" target="_blank" rel="noopener noreferrer">APARTMENTS.COM ↗</a>
+          <a class="secondary" href="https://www.zillow.com/hollywood-los-angeles-ca/rentals/" target="_blank" rel="noopener noreferrer">RENTALS ↗</a>
+        </div>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="card-body">
+        <div class="card-icon">🌴</div>
+        <div class="tag">Explore Nearby Neighborhoods</div>
+        <h3>Hollywood Hills & Beyond</h3>
+        <p>Explore homes and rentals across Hollywood Hills, West Hollywood and Beverly Hills, each with its own lifestyle and location.</p>
+        <div class="card-actions">
+          <a href="https://www.google.com/maps/search/?api=1&amp;query=Hollywood+Hills+West+Hollywood+Beverly+Hills+California" target="_blank" rel="noopener noreferrer">EXPLORE AREAS ↗</a>
+        </div>
+      </div>
+    </article>
+  </div>
+  <p class="note">H0H.com is an independent directory and does not act as a real estate broker, property manager or listing agent. Property listings are displayed on external services, which control their accuracy, availability, terms and contact information. No brokerage representation is offered by H0H.com.</p>
+</section>
+
+<!-- HOLLYWOOD MAP -->
+
 <section class="container" id="map">
-<div class="section-heading"><div class="kicker">Find Your Way</div><h2>📍 Explore Hollywood on the Map</h2><p>Navigate Hollywood Boulevard, the Sunset Strip, West Hollywood, Beverly Hills, and nearby attractions.</p></div>
-<div style="border-radius:22px;overflow:hidden;border:1px solid #ffffff44;background:#221233">
-<iframe title="Hollywood California map" src="https://www.google.com/maps?q=Hollywood%2C%20Los%20Angeles%2C%20CA&output=embed" width="100%" height="390" style="border:0;display:block" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-</div>
-<div class="actions" style="margin-top:22px"><a class="btn btn-outline" href="https://www.google.com/maps/search/?api=1&query=Hollywood+California+attractions" target="_blank" rel="noopener noreferrer">OPEN FULL HOLLYWOOD MAP ↗</a></div>
-<p class="note">Venue information, operating hours, ticket availability, admission policies, and events may change. Always confirm details with the official venue before visiting. Celebrity appearances are not guaranteed.</p>
+
+  <div class="heading">
+    <div class="eyebrow">Find Your Way</div>
+    <h2>📍 Explore the <span class="gradient">Hollywood Map</span></h2>
+    <p>
+      Discover Hollywood Boulevard, the Sunset Strip,
+      West Hollywood, Beverly Hills and nearby attractions.
+    </p>
+  </div>
+
+  <div class="map-frame">
+    <iframe
+      title="Hollywood California Map"
+      src="https://www.google.com/maps?q=Hollywood%2C%20Los%20Angeles%2C%20CA&output=embed"
+      loading="lazy"
+      referrerpolicy="no-referrer-when-downgrade">
+    </iframe>
+  </div>
+
+  <div class="buttons" style="margin-top:25px">
+    <a class="btn btn-outline"
+       href="https://www.google.com/maps/search/?api=1&query=Hollywood+California+attractions"
+       target="_blank" rel="noopener noreferrer">
+       OPEN FULL HOLLYWOOD MAP ↗
+    </a>
+    <a class="btn btn-pink"
+       href="https://www.google.com/maps/@34.098,-118.343,12z/data=!5m1!1e1"
+       target="_blank" rel="noopener noreferrer">
+       🚗 LIVE HOLLYWOOD TRAFFIC ↗
+    </a>
+  </div>
+
+  <p class="note">
+    Traffic information is supplied by Google Maps.
+    Venue operating hours, events, tickets,
+    reservations and availability may change.
+    Confirm details directly with official providers.
+  </p>
+
 </section>
+
 </main>
+
+<!-- FOOTER -->
+
 <footer>
-<strong>H0H.com</strong><div>HOLLYWOOD HOTSPOTS</div><div>Your VIP Guide to Everything Hollywood</div>
-<p>Independent entertainment and visitor guide. Not affiliated with the Hollywood Sign Trust, venues, celebrities, or entertainment companies unless expressly stated. Venue names and trademarks belong to their respective owners. Images are illustrative and may not depict the listed venues.</p>
-<div>© <span id="year">2026</span> H0H.com. All rights reserved.</div>
+
+  <div class="footer-brand">H0H.com</div>
+
+  <strong style="color:#ff72c7;letter-spacing:2px">
+    HOLLYWOOD HOTSPOTS
+  </strong>
+
+  <div>Your VIP Guide to Everything Hollywood</div>
+
+  <p>
+    Casting Calls & Auditions • Hollywood News •
+    Celebrity Hotspots • Nightlife • Restaurants •
+    Famous Landmarks • Entertainment •
+    Hollywood Live Time, Weather & Traffic •
+    Parking Locator • Real Estate Sales & Rentals
+  </p>
+
+  <p>
+    H0H.com is an independent entertainment
+    and visitor information directory.
+    It is not a casting agency, talent representative,
+    news publisher, booking provider or real estate brokerage.
+    External links do not imply affiliation,
+    sponsorship or endorsement.
+    Trademarks belong to their respective owners.
+  </p>
+
+  <p>
+    Casting opportunities, venue details,
+    weather and traffic conditions may change.
+    Weather information is provided by Open-Meteo
+    and may be delayed or unavailable.
+    Destination photographs are illustrative
+    and may not depict the specific listed venues.
+  </p>
+
+  <div>
+    &copy; <span id="year">2026</span> H0H.com.
+    All rights reserved.
+  </div>
+
 </footer>
-<script>document.getElementById('year').textContent=new Date().getFullYear();</script>
+
+<!-- AUTOMATIC TIME AND WEATHER -->
+
+<script>
+"use strict";
+
+/*
+  HOLLYWOOD LIVE
+  Location: Hollywood, Los Angeles, California
+  Time zone: America/Los_Angeles
+  Weather: Open-Meteo
+  No API key required for eligible noncommercial use.
+*/
+
+const timeElement =
+  document.getElementById("hollywood-time");
+
+const weatherElement =
+  document.getElementById("hollywood-weather");
+
+const timeFormatter = new Intl.DateTimeFormat(
+  "en-US",
+  {
+    timeZone:"America/Los_Angeles",
+    hour:"numeric",
+    minute:"2-digit",
+    second:"2-digit",
+    hour12:true
+  }
+);
+
+function updateHollywoodTime() {
+  timeElement.textContent =
+    timeFormatter.format(new Date());
+}
+
+updateHollywoodTime();
+
+setInterval(updateHollywoodTime,1000);
+
+/* WEATHER CONDITION DESCRIPTIONS */
+
+function weatherDescription(code) {
+  if(code === 0) return "Clear";
+  if(code === 1) return "Mostly Clear";
+  if(code === 2) return "Partly Cloudy";
+  if(code === 3) return "Cloudy";
+  if(code === 45 || code === 48) return "Foggy";
+  if(code >= 51 && code <= 57) return "Drizzle";
+  if(code >= 61 && code <= 67) return "Rain";
+  if(code >= 71 && code <= 77) return "Snow";
+  if(code >= 80 && code <= 82) return "Showers";
+  if(code >= 85 && code <= 86) return "Snow Showers";
+  if(code >= 95) return "Thunderstorms";
+  return "Current Conditions";
+}
+
+function weatherEmoji(code) {
+  if(code === 0 || code === 1) return "☀️";
+  if(code === 2) return "🌤️";
+  if(code === 3) return "☁️";
+  if(code === 45 || code === 48) return "🌫️";
+  if(code >= 95) return "⛈️";
+  if(code >= 71 && code <= 77) return "❄️";
+  if(code >= 85 && code <= 86) return "❄️";
+  if(code >= 51 && code <= 82) return "🌧️";
+  return "🌤️";
+}
+
+let lastWeatherSuccess = false;
+
+async function updateHollywoodWeather() {
+
+  const url =
+    "https://api.open-meteo.com/v1/forecast" +
+    "?latitude=34.1016" +
+    "&longitude=-118.3269" +
+    "&current=temperature_2m,weather_code" +
+    "&temperature_unit=fahrenheit" +
+    "&timezone=America%2FLos_Angeles";
+
+  try {
+    const response = await fetch(url, {
+      cache:"no-store"
+    });
+
+    if(!response.ok) {
+      throw new Error("Weather unavailable");
+    }
+
+    const data = await response.json();
+
+    if(
+      !data.current ||
+      !Number.isFinite(data.current.temperature_2m) ||
+      !Number.isFinite(data.current.weather_code)
+    ) {
+      throw new Error("Invalid weather response");
+    }
+
+    const temperature =
+      Math.round(data.current.temperature_2m);
+
+    const code = data.current.weather_code;
+
+    weatherElement.textContent =
+      weatherEmoji(code) + " " +
+      temperature + "°F · " +
+      weatherDescription(code);
+
+    lastWeatherSuccess = true;
+
+    weatherElement.title =
+      "Current Hollywood conditions from Open-Meteo";
+
+  } catch(error) {
+
+    if(lastWeatherSuccess) {
+      weatherElement.title =
+        "Weather update failed. Showing last available reading.";
+      weatherElement.textContent =
+        "Update unavailable";
+    } else {
+      weatherElement.textContent =
+        "Weather unavailable";
+    }
+
+  }
+}
+
+updateHollywoodWeather();
+
+/* Refresh every 15 minutes while the page is open. */
+
+setInterval(
+  updateHollywoodWeather,
+  15 * 60 * 1000
+);
+
+/* Refresh when visitor returns to the page. */
+
+document.addEventListener(
+  "visibilitychange",
+  function() {
+    if(!document.hidden) {
+      updateHollywoodTime();
+      updateHollywoodWeather();
+    }
+  }
+);
+
+/* AUTOMATIC COPYRIGHT YEAR */
+
+document.getElementById("year").textContent =
+  new Date().getFullYear();
+
+</script>
+
 </body>
 </html>
